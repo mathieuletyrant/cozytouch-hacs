@@ -154,8 +154,13 @@ def get_capability_infos(  # noqa: C901
         capability["name"] = "target_temperature_dhw"
         capability["type"] = "temperature_adjustment_number"
         capability["category"] = "sensor"
-        capability["lowestValueCapabilityId"] = 160
-        capability["highestValueCapabilityId"] = 161
+        if modelId == 2374:
+            capability["lowestValueCapabilityId"] = 253
+            capability["highestValueCapabilityId"] = 252
+            capability["step"] = 1
+        else:
+            capability["lowestValueCapabilityId"] = 160
+            capability["highestValueCapabilityId"] = 161
 
     elif capabilityId == 25:
         capability["name"] = "number_of_starts_ch_pump"
@@ -480,6 +485,12 @@ def get_capability_infos(  # noqa: C901
         capability["type"] = "prog"
         capability["category"] = "diag"
 
+    elif capabilityId == 218:
+        capability["name"] = "wifi_connected"
+        capability["type"] = "binary"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:wifi"
+
     elif capabilityId == 219:
         capability["name"] = "wifi_ssid"
         capability["type"] = "string"
@@ -500,12 +511,22 @@ def get_capability_infos(  # noqa: C901
         else:
             capability["capabilityDuplicate"] = 222
 
+    elif capabilityId == 228:
+        capability["name"] = "absence_dhw_temperature"
+        capability["type"] = "temperature"
+        capability["category"] = "diag"
+
     elif capabilityId == 231:
         capability["name"] = "target_temperature"
         capability["type"] = "temperature_adjustment_number"
         capability["category"] = "sensor"
-        capability["lowestValueCapabilityId"] = 105301
-        capability["highestValueCapabilityId"] = 105304
+        if modelId == 2374:
+            capability["lowestValueCapabilityId"] = 253
+            capability["highestValueCapabilityId"] = 252
+            capability["step"] = 1
+        else:
+            capability["lowestValueCapabilityId"] = 105301
+            capability["highestValueCapabilityId"] = 105304
 
     elif capabilityId == 232:
         capability["name"] = "boost_total_time"
@@ -552,6 +573,16 @@ def get_capability_infos(  # noqa: C901
     elif capabilityId == 251:
         capability["name"] = "prog_07"
         capability["type"] = "progtime"
+        capability["category"] = "diag"
+
+    elif capabilityId == 252:
+        capability["name"] = "target_temperature_max"
+        capability["type"] = "temperature"
+        capability["category"] = "diag"
+
+    elif capabilityId == 253:
+        capability["name"] = "target_temperature_min"
+        capability["type"] = "temperature"
         capability["category"] = "diag"
 
     elif capabilityId == 258:
@@ -602,11 +633,29 @@ def get_capability_infos(  # noqa: C901
         capability["type"] = "percentage"
         capability["category"] = "sensor"
 
+    elif capabilityId == 280:
+        capability["name"] = "cold_water_temperature"
+        capability["type"] = "temperature"
+        capability["category"] = "sensor"
+        capability["icon"] = "mdi:coolant-temperature"
+
     elif capabilityId == 283:
         capability["name"] = "off_peak_hours"
         capability["type"] = "binary"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:clock-outline"
+
+    elif capabilityId == 292:
+        capability["name"] = "hot_water_level_requested"
+        capability["type"] = "int"
+        capability["category"] = "sensor"
+        capability["icon"] = "mdi:water-plus"
+
+    elif capabilityId == 293:
+        capability["name"] = "current_hot_water_level"
+        capability["type"] = "int"
+        capability["category"] = "sensor"
+        capability["icon"] = "mdi:water-check"
 
     elif capabilityId == 315:
         capability["name"] = "timezone"
@@ -800,6 +849,16 @@ def get_capability_infos(  # noqa: C901
         capability["lowest_value"] = 5
         capability["highest_value"] = 60
         capability["step"] = 5
+
+    elif capabilityId == 105300:
+        capability["name"] = "water_temperature_limit"
+        capability["type"] = "temperature"
+        capability["category"] = "diag"
+
+    elif capabilityId == 105304:
+        capability["name"] = "max_target_temperature_derogation"
+        capability["type"] = "temperature"
+        capability["category"] = "diag"
 
     elif capabilityId == 105906:
         capability["name"] = "Target 105906"

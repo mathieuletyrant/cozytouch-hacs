@@ -1,18 +1,124 @@
 # Cozytouch
 This is an Atlantic Cozytouch cloud integration. Atlantic use multiple protocols, in my case the protocol is different than the one implemented by official integration (overkiz).
 
-This has been tested using on : 
-  - `Atlantic Naema 2 Micro 25` gas boiler using a `Ǹavilink Radio-Connect 128` thermostat
-  - `Atlantic Naema 2 Duo 25` gas boiler using a `Ǹavilink Radio-Connect 128` thermostat
-  - `Atlantic Naia 2 Micro 25` gas boiler using a `Ǹavilink Radio-Connect 128` thermostat
-  - `Atlantic Loria Duo 6006 R32` heat pump using a `Navilink Radio-Connect 128` thermostat
-  - `Takao M3` air conditionning
-  - `HUB Navizone` air conditionning gateway driving room units
+## Supported devices
+
+Every Cozytouch device is identified by a numeric `modelId`, and each one needs
+its own mapping before its capabilities turn into Home Assistant entities. The
+tables below are the whole of what is mapped today.
+
+Most of these mappings were built from a single user's capture of their own
+unit. They say what that device reported — not that every feature has been
+exercised on every variant.
+
+### Boilers
+
+| modelId | Model |
+| ------: | ----- |
+| 56 | Naema 2 Micro 25 |
+| 61 | Naia 2 Micro 25 |
+| 65 | Naema 2 Duo 25 |
+| 1444 | Naema 3 Micro 25 |
+
+### Heat pumps
+
+| modelId | Model |
+| ------: | ----- |
+| 76 | Alfea Extensa Duo AI UE |
+| 211 | Alfea Extensa Duo A.I. 3 R32 |
+
+### Thermostats
+
+| modelId | Model |
+| ------: | ----- |
+| 235 | Thermostat Navilink Connect |
+| 418 | Atlantic Loria Duo 6006 |
+
+### Water heaters
+
+| modelId | Model |
+| ------: | ----- |
+| 236 | Sauter Phazy |
+| 386 | PHAZY VS 300L 3000M |
+| 387 | PHAZY VM 150L 2200M |
+| 388 | PHAZY VM 200L 2200M |
+| 389 | AQUEO ACI HYB VS 300L 3000M |
+| 390 | AQUEO ACI HYB VM 150L 2200M |
+| 391 | AQUEO ACI HYB VM 200L 2200M |
+| 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
+| 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
+| 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
+| 1369, 1376 | Calypso Split |
+| 1371, 1372 | Aeromax SPLIT 3 |
+| 1641 | Atlantic Explorer V5 (200L) |
+| 1642 | Atlantic Explorer V5 (270L) |
+| 1644 | Atlantic Explorer V5 (240L) |
+| 1645 | Atlantic Explorer V5 (270L with coil) |
+| 1656 | Aeromax 6 |
+| 1657 | Calypso 200L |
+| 1658 | Calypso connecté |
+| 1957 | LINEO CONNECTE MP 100L 2250W |
+| 1962 | Thermor Malicio 3 65L |
+| 1966 | Thermor Malicio 3 120L |
+| 2346 | Egeo VS 250L |
+| 2374 | Explorer EVO 3 (260L) |
+
+### Towel racks
+
+| modelId | Model |
+| ------: | ----- |
+| 1381 | KELUD 1750W BLC |
+| 1382 | KELUD 1750W Anthracite Standard |
+| 1388 | Doris étroit 1500W BLC |
+| 1543 | Asama Connecté II Ventilo 1750W Blanc |
+| 1546 | Asama Connecté II Ventilo 1500W ANTH |
+| 1547 | Asama Connecté II Ventilo 1750W ANTH |
+| 1551 | Asama Connecté II Ventilo 1750W Noir |
+| 1595 | Doris étroit 1300W CARAT |
+| 1622 | Thermor Riva 5 |
+
+### Air conditioning
+
+Room units do not talk to the cloud themselves : they sit behind a gateway,
+which reports each of them under its own `modelId`. Adding the gateway is what
+brings the rooms in.
+
+| modelId | Model |
+| ------: | ----- |
+| 557-561, 1734 | Air conditioner (room unit) |
+| 562-570 | Air conditioner user interface |
+
+### Gateways
+
+| modelId | Model |
+| ------: | ----- |
+| 556 | Naviclim Hub |
+| 1353 | Calypso Split Interface |
+| 1457 | HUB Cozytouch |
+| 1758 | HUB Navizone |
+| 1763 | FLAT/S4 IOTHUB |
+
+### Confirmed on real hardware
+
+These are the devices the mappings were originally written against, and that are
+known to work end to end :
+
+  - `Atlantic Naema 2 Micro 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
+  - `Atlantic Naema 2 Duo 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
+  - `Atlantic Naia 2 Micro 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
+  - `Atlantic Loria Duo 6006 R32` heat pump, through a `Navilink Radio-Connect 128` thermostat
+  - `Takao M3` air conditioning
+  - `HUB Navizone` air conditioning gateway driving room units
   - `Kelud 1750W` towel rack
   - `Sauter Asama Connecté II Ventilo 1750W` towel rack
 
-A special mapping needs to be done for each model type, feel free to create an issue to help supporting your device.
+### My device is not listed
 
+It will show up as `Unknown product (…)`, and only its generic capabilities will
+work. To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
+with the model id, and tick `Create entities for unknown capabilities` when
+adding the device (see [Configuration](#configuration)) : that exposes every raw
+capability the device reports, which is exactly what a mapping is built from.
 
 ## Installation
 

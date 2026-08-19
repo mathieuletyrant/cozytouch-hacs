@@ -25,14 +25,14 @@ AIR_CONDITIONERS = {557, 558, 559, 560, 561}
 # Every model id the table maps, as opposed to the ones it sends to UNKNOWN.
 MAPPED_MODEL_IDS = frozenset(
     modelId
-    for modelId in range(1, 2100)
+    for modelId in range(1, 2500)
     if get_model_infos(modelId)["type"] is not CozytouchDeviceType.UNKNOWN
 )
 
 
 def test_the_table_maps_the_models_these_tests_walk():
     """A sanity floor: the walk above found the table, not an empty range."""
-    assert len(MAPPED_MODEL_IDS) == 50
+    assert len(MAPPED_MODEL_IDS) == 63
     assert AIR_CONDITIONERS < MAPPED_MODEL_IDS
 
 

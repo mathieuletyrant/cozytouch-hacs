@@ -121,6 +121,51 @@ MODEL_GROUPS = [
         },
     ),
     (
+        386,
+        {
+            "modelId": 386,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "PHAZY VS 300L 3000M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        387,
+        {
+            "modelId": 387,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "PHAZY VM 150L 2200M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        388,
+        {
+            "modelId": 388,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "PHAZY VM 200L 2200M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
         389,
         {
             "modelId": 389,
@@ -141,6 +186,66 @@ MODEL_GROUPS = [
             "modelId": 390,
             "HVACModesCapabilityId": {7, 8},
             "name": "AQUEO ACI HYB VM 150L 2200M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        391,
+        {
+            "modelId": 391,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "AQUEO ACI HYB VM 200L 2200M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        392,
+        {
+            "modelId": 392,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "DURALIS CONNECT ACI HYB VS 300L 3000M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        393,
+        {
+            "modelId": 393,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "DURALIS CONNECT ACI HYB VM 150L 2200M",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        394,
+        {
+            "modelId": 394,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "DURALIS CONNECT ACI HYB VM 200L 2200M",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -412,6 +517,16 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1595,
+        {
+            "modelId": 1595,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Doris étroit 1300W CARAT",
+            "type": CozytouchDeviceType.TOWEL_RACK,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+        },
+    ),
+    (
         1444,
         {
             "modelId": 1444,
@@ -562,6 +677,46 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1658,
+        {
+            "modelId": 1658,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Calypso connecté",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        1763,
+        {
+            "modelId": 1763,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "FLAT/S4 IOTHUB",
+            "type": CozytouchDeviceType.HUB,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
+        1962,
+        {
+            "modelId": 1962,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Thermor Malicio 3 65L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
         1966,
         {
             "modelId": 1966,
@@ -585,6 +740,36 @@ MODEL_GROUPS = [
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {0: HEATING_MODE_MANUAL, 3: HEATING_MODE_ECO_PLUS},
+        },
+    ),
+    (
+        2346,
+        {
+            "modelId": 2346,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Egeo VS 250L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        2374,
+        {
+            "modelId": 2374,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Explorer EVO 3 (260L)",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
         },
     ),
     (

@@ -144,21 +144,21 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 389:
-        modelInfos["name"] = "AQUEO ACI HYB VS 300L 3000M"
-        modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
-        modelInfos["HVACModes"] = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-        modelInfos["HeatingModes"] = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 390:
-        modelInfos["name"] = "AQUEO ACI HYB VM 150L 2200M"
+    elif 386 <= modelId <= 394:
+        # One ACI HYB hybrid water heater platform sold under three brands, in
+        # VS 300L, VM 150L and VM 200L variants. Only the commercial name
+        # changes between the nine ids, so they share a branch.
+        modelInfos["name"] = {
+            386: "PHAZY VS 300L 3000M",
+            387: "PHAZY VM 150L 2200M",
+            388: "PHAZY VM 200L 2200M",
+            389: "AQUEO ACI HYB VS 300L 3000M",
+            390: "AQUEO ACI HYB VM 150L 2200M",
+            391: "AQUEO ACI HYB VM 200L 2200M",
+            392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
+            393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
+            394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
+        }[modelId]
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
         modelInfos["HVACModes"] = {
             0: HVACMode.OFF,
@@ -328,6 +328,14 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             4: HVACMode.HEAT,
         }
 
+    elif modelId == 1595:
+        modelInfos["name"] = "Doris étroit 1300W CARAT"
+        modelInfos["type"] = CozytouchDeviceType.TOWEL_RACK
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
     elif modelId == 1444:
         modelInfos["name"] = "Naema 3 Micro 25"
         modelInfos["type"] = CozytouchDeviceType.GAZ_BOILER
@@ -459,6 +467,41 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             4: HEATING_MODE_PROG,
         }
 
+    elif modelId == 1658:
+        modelInfos["name"] = "Calypso connecté"
+        modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos["HeatingModes"] = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
+    elif modelId == 1763:
+        modelInfos["name"] = "FLAT/S4 IOTHUB"
+        modelInfos["type"] = CozytouchDeviceType.HUB
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+        }
+
+    elif modelId == 1962:
+        modelInfos["name"] = "Thermor Malicio 3 65L"
+        modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos["HeatingModes"] = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
     elif modelId == 1966:
         modelInfos["name"] = "Thermor Malicio 3 120L"
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
@@ -485,6 +528,34 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             0: HEATING_MODE_MANUAL,
             3: HEATING_MODE_ECO_PLUS,
         }
+    elif modelId == 2346:
+        modelInfos["name"] = "Egeo VS 250L"
+        modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos["HeatingModes"] = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
+    elif modelId == 2374:
+        modelInfos["name"] = "Explorer EVO 3 (260L)"
+        modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
+        modelInfos["HVACModes"] = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos["HeatingModes"] = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
     else:
         modelInfos["name"] = "Unknown product (" + str(modelId) + ")"
         modelInfos["type"] = CozytouchDeviceType.UNKNOWN
