@@ -20,7 +20,11 @@ You can install it using HACS or manually.
 
 #### With HACS
 
-[![Add HACS repository.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=gduteil&repository=cozytouch&category=integration)
+This integration is not in the HACS default store, so add it as a custom repository first:
+
+[![Add HACS repository.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mathieuletyrant&repository=cozytouch-hacs&category=integration)
+
+Or manually, in HACS : `⋮ -> Custom repositories`, URL `https://github.com/mathieuletyrant/cozytouch-hacs`, type `Integration`.
 
 More informations about HACS [here](https://hacs.xyz/).
 
@@ -44,3 +48,11 @@ Select the device you want to add.
 
 Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping).
 
+## Versioning
+
+Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
+
+## Credits
+
+This integration started as a fork of [gduteil/cozytouch](https://github.com/gduteil/cozytouch)
+and is now maintained independently here. All the original work is theirs.

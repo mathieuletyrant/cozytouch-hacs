@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, CalVer (ex: 2026.8.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+
+      - name: Check the version looks like CalVer
+        run: |
+          echo "${{ github.event.inputs.version }}" | grep -Eq '^[0-9]{4}\.[0-9]{1,2}\.[0-9]+$' \
+            || { echo "Expected YEAR.MONTH.PATCH, got '${{ github.event.inputs.version }}'"; exit 1; }
+
+      - name: Refuse to reuse an existing tag
+        run: |
+          git rev-parse -q --verify "refs/tags/${{ github.event.inputs.version }}" >/dev/null \
+            && { echo "Tag ${{ github.event.inputs.version }} already exists"; exit 1; } || true
+
+      - uses: "actions/setup-python@v5"
+        with:
+          python-version: "3.13"
+
+      - name: Install test requirements
+        run: pip install -r requirements_test.txt
+
+      - name: Run pytest
+        run: pytest tests/ -q
+
+      - name: Write the version into the manifest
+        run: |
+          python - <<'PY'
+          import json, os, re
+
+          path = "custom_components/cozytouch/manifest.json"
+          version = os.environ["VERSION"]
+
+          with open(path) as f:
+              source = f.read()
+
+          patched, count = re.subn(r'("version"\s*:\s*)"[^"]*"', r'\1"%s"' % version, source)
+          assert count == 1, "expected exactly one version key, found %d" % count
+          assert json.loads(patched)["version"] == version
+
+          with open(path, "w") as f:
+              f.write(patched)
+          PY
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+
+      - name: Commit and tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add custom_components/cozytouch/manifest.json
+          git commit -m "Release ${{ github.event.inputs.version }}"
+          git tag "${{ github.event.inputs.version }}"
+          git push origin HEAD:main
+          git push origin "${{ github.event.inputs.version }}"
+
+      - name: Create the GitHub release
+        run: gh release create "${{ github.event.inputs.version }}" --title "${{ github.event.inputs.version }}" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
