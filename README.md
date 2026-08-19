@@ -116,9 +116,19 @@ known to work end to end :
 
 It will show up as `Unknown product (…)`, and only its generic capabilities will
 work. To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
-with the model id, and tick `Create entities for unknown capabilities` when
-adding the device (see [Configuration](#configuration)) : that exposes every raw
-capability the device reports, which is exactly what a mapping is built from.
+and attach a diagnostics dump :
+
+`Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download diagnostics`
+
+The file lists every device on the account with its model id, says which ones
+the mapping already knows, and for the device this entry drives, which capability
+ids nothing names yet. That last list is what a mapping is built from. Your
+credentials and address are stripped out before the file is written.
+
+If you want to see the unmapped capabilities as entities in the meantime, tick
+`Create entities for unknown capabilities` when adding the device (see
+[Configuration](#configuration)). It is useful for working out what a value
+means, and noisy enough that you will want it off again afterwards.
 
 ## Installation
 

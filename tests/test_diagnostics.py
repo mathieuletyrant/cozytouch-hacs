@@ -1,0 +1,135 @@
+"""Tests for the diagnostics dump.
+
+The dump exists so someone with unmapped hardware can hand over what the API
+says about it without editing a JSON by hand. Two things have to hold for that
+to be worth anything: an unmapped model has to be visible as unmapped, and the
+capability ids nothing names have to be listed rather than silently dropped.
+Those are what a maintainer reads first, and they are what these tests pin.
+
+Hub.get_diagnostics is called unbound, against a stand-in carrying only the
+attributes it touches. Building a real Hub means a DataUpdateCoordinator and a
+running HomeAssistant, none of which the method uses.
+"""
+
+from types import SimpleNamespace
+
+import pytest
+
+from custom_components.cozytouch.hub import Hub
+
+
+def make_hub(devices, deviceId, zones=None):
+    """A stand-in exposing only what get_diagnostics reads."""
+    hub = SimpleNamespace(
+        _devices=devices,
+        _deviceId=deviceId,
+        _setup={"id": 1532156, "name": "setup1"},
+        _zones=zones if zones is not None else [],
+        _localization={"country": "FR"},
+    )
+    hub.get_zone_name = lambda zoneId=None: next(
+        (z["name"] for z in hub._zones if z.get("id") == zoneId), str(zoneId)
+    )
+    return hub
+
+
+def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):
+    return {
+        "deviceId": deviceId,
+        "name": name,
+        "modelId": modelId,
+        "productId": 65,
+        "zoneId": zoneId,
+        "gatewaySerialNumber": "3022-6760-8541",
+        "tags": [],
+        "capabilities": capabilities or [],
+    }
+
+
+def test_an_unmapped_model_is_reported_as_unmapped():
+    """The whole point of a dump is to name what the table does not."""
+    hub = make_hub([device(1, 9999)], deviceId=1)
+
+    reported = Hub.get_diagnostics(hub)["devices"][0]
+
+    assert reported["modelId"] == 9999
+    assert reported["model"]["isMapped"] is False
+    assert reported["model"]["name"] == "Unknown product (9999)"
+
+
+def test_a_mapped_model_carries_its_name_and_type():
+    hub = make_hub([device(1, 557)], deviceId=1)
+
+    reported = Hub.get_diagnostics(hub)["devices"][0]
+
+    assert reported["model"]["isMapped"] is True
+    assert reported["model"]["name"] == "Air Conditioner (#1)"
+    assert reported["model"]["type"] == "ac"
+
+
+def test_capabilities_split_into_what_is_named_and_what_is_not():
+    """303 is mapped, 100044 is not; a report needs to show both."""
+    hub = make_hub(
+        [
+            device(
+                1,
+                557,
+                capabilities=[
+                    {"capabilityId": 303, "value": "0"},
+                    {"capabilityId": 100044, "value": "[72,88]"},
+                ],
+            )
+        ],
+        deviceId=1,
+    )
+
+    caps = Hub.get_diagnostics(hub)["devices"][0]["capabilities"]
+
+    assert caps["mapped"][303] == "error_code"
+    assert caps["unmapped"] == [100044]
+    assert caps["values"][100044] == "[72,88]"
+
+
+def test_devices_this_entry_does_not_drive_carry_no_capability_block():
+    """The hub only keeps capabilities for its own device.
+
+    A device the entry does not drive genuinely has none stored, which is not
+    the same as a device that reports none. Null says the first; an empty list
+    would be read as the second.
+    """
+    hub = make_hub([device(1, 557), device(2, 1457, name="HUB")], deviceId=1)
+
+    driven, other = Hub.get_diagnostics(hub)["devices"]
+
+    assert driven["isConfiguredHere"] is True
+    assert driven["capabilities"] is not None
+    assert other["isConfiguredHere"] is False
+    assert other["capabilities"] is None
+
+
+def test_the_zone_name_is_resolved_rather_than_left_as_an_id():
+    hub = make_hub(
+        [device(1, 557, zoneId=991904)],
+        deviceId=1,
+        zones=[{"id": 991904, "name": "Chambre 2"}],
+    )
+
+    assert Hub.get_diagnostics(hub)["devices"][0]["zoneName"] == "Chambre 2"
+
+
+def test_model_flags_are_reported_so_a_report_shows_what_was_wired():
+    """Which optional features a model declares decides its entity list."""
+    hub = make_hub([device(1, 557)], deviceId=1)
+
+    infos = Hub.get_diagnostics(hub)["devices"][0]["model"]["infos"]
+
+    assert infos["ecoModeAvailable"] == "False"
+    assert infos["quietModeAvailable"] == "True"
+    assert "name" not in infos and "type" not in infos
+
+
+@pytest.mark.parametrize("key", ["setup", "zones", "localization", "devices"])
+def test_the_dump_carries_the_sections_a_report_is_built_from(key):
+    hub = make_hub([device(1, 557)], deviceId=1)
+
+    assert key in Hub.get_diagnostics(hub)

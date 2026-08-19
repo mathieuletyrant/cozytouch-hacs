@@ -18,7 +18,7 @@ from homeassistant.util import dt as dt_util
 
 from .capability import get_capability_infos
 from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
-from .model import get_model_infos
+from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -471,6 +471,79 @@ class Hub(DataUpdateCoordinator):
                             capabilities.append(capability_infos)
 
         return capabilities
+
+    def get_diagnostics(self) -> dict:
+        """Describe the account as the API reports it, for a diagnostics dump.
+
+        Every device the setup returns is listed, whether or not this config
+        entry drives it, because what a mapping needs first is the model ids a
+        user actually owns. Capabilities are only held for the entry's own
+        device -- update_devices_from_json_data drops the others -- so the rest
+        carry a null capability block rather than an empty one that would read
+        as "reports nothing".
+        """
+        devices = []
+        for dev in self._devices:
+            modelInfos = get_model_infos(dev["modelId"])
+            entry_owns_it = dev["deviceId"] == self._deviceId
+
+            capabilities = None
+            if entry_owns_it:
+                availableCapabilityIds = {
+                    cap["capabilityId"] for cap in dev["capabilities"]
+                }
+                mapped, unmapped = {}, []
+                for cap in dev["capabilities"]:
+                    infos = get_capability_infos(
+                        modelInfos,
+                        cap["capabilityId"],
+                        cap["value"],
+                        availableCapabilityIds,
+                    )
+                    if infos:
+                        mapped[cap["capabilityId"]] = infos.get("name")
+                    else:
+                        unmapped.append(cap["capabilityId"])
+
+                capabilities = {
+                    "mapped": mapped,
+                    "unmapped": sorted(unmapped),
+                    "values": {
+                        cap["capabilityId"]: cap["value"] for cap in dev["capabilities"]
+                    },
+                }
+
+            devices.append(
+                {
+                    "deviceId": dev["deviceId"],
+                    "name": dev["name"],
+                    "modelId": dev["modelId"],
+                    "productId": dev["productId"],
+                    "zoneId": dev["zoneId"],
+                    "zoneName": self.get_zone_name(dev["zoneId"]),
+                    "tags": dev["tags"],
+                    "isConfiguredHere": entry_owns_it,
+                    "model": {
+                        "name": modelInfos["name"],
+                        "type": str(modelInfos["type"]),
+                        "isMapped": modelInfos["type"]
+                        is not CozytouchDeviceType.UNKNOWN,
+                        "infos": {
+                            key: str(value)
+                            for key, value in modelInfos.items()
+                            if key not in ("name", "type")
+                        },
+                    },
+                    "capabilities": capabilities,
+                }
+            )
+
+        return {
+            "setup": copy.deepcopy(self._setup),
+            "zones": copy.deepcopy(self._zones),
+            "localization": copy.deepcopy(self._localization),
+            "devices": devices,
+        }
 
     def get_capability_value(
         self, capabilityId: int, defaultIfNotExist: str | None = "0"

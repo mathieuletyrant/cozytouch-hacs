@@ -56,8 +56,13 @@ capture, so a test going green says "nobody changed this by accident", never
 5. `README.md` — the table for that device class.
 
 Devices the integration cannot map fall through to `Unknown product (…)`.
-Users get their capabilities dumped by ticking `Create entities for unknown
-capabilities` during setup, and that dump is what a mapping is built from.
+What a mapping gets built from is the diagnostics dump (`diagnostics.py`, backed
+by `Hub.get_diagnostics`) : every device on the account with its model id,
+whether the table knows it, and the capability ids nothing names yet. Ask a
+reporter for that file before anything else. The older
+`Create entities for unknown capabilities` option still exists and turns each
+unmapped capability into an entity, which is for working out what a value means
+rather than for reporting.
 
 ## Commit messages
 
