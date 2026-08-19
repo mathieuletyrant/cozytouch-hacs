@@ -64,7 +64,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add custom_components/cozytouch/manifest.json
-          git commit -m "Release ${{ github.event.inputs.version }}"
+          git diff --cached --quiet \
+            || git commit -m "Release ${{ github.event.inputs.version }}"
           git tag "${{ github.event.inputs.version }}"
           git push origin HEAD:main
           git push origin "${{ github.event.inputs.version }}"
