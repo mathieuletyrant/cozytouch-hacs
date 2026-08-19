@@ -1,0 +1,77 @@
+# Atlantic Cozytouch — Home Assistant integration
+
+A custom integration talking to Atlantic's Cozytouch cloud. It is not the
+official `overkiz` integration : Atlantic runs several protocols, and this one
+covers the boilers, water heaters, towel racks and air conditioners that speak
+the Cozytouch API rather than Overkiz.
+
+## Repository topology
+
+This repo started as a fork of `gduteil/cozytouch` and now stands on its own.
+Three remotes, each with a job :
+
+| Remote     | Repository                     | What goes there |
+| ---------- | ------------------------------ | --------------- |
+| `origin`   | `mathieuletyrant/cozytouch-hacs` | Our `main`. This is what HACS installs. |
+| `fork`     | `mathieuletyrant/cozytouch`      | Branches backing the pull requests still open upstream. |
+| `upstream` | `gduteil/cozytouch`              | Read-only. Fetch to see what the original project does. |
+
+`main` tracks `origin`. The PR branches track `fork`, so `git push` on one of
+them updates the upstream pull request and nothing else. Do not repoint them.
+
+## Tests
+
+Python 3.13, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
+The system `python3` on this machine is too old — build a venv with
+`uv venv --python 3.13`.
+
+The suite is **characterisation tests**. They pin the mapping as it stands, not
+as it ought to be : most entries were reverse-engineered from one user's
+capture, so a test going green says "nobody changed this by accident", never
+"this is correct".
+
+- `tests/test_model.py` — one case per branch of `get_model_infos`, comparing
+  the whole returned dict. Ids that resolve differently inside a shared branch
+  get their own case.
+- `tests/test_capability.py` — walks every mapped model id to check which
+  models a flag reaches and whether the gates in `capability.py` still follow
+  the flag they were written for. It carries a hard count of mapped ids;
+  adding models means updating that number, and widening the walk's range if
+  the new id falls outside it.
+
+## Adding a device
+
+1. `custom_components/cozytouch/model.py` — a branch in `get_model_infos`
+   returning at minimum `name`, `type` and `HVACModes`. Optional flags are
+   documented in the module docstring; **only declare a flag when the device
+   actually needs it**, because `capability.py` reads them to decide which
+   entities exist, and a flag set on a shared branch reaches every model in it.
+2. `custom_components/cozytouch/capability.py` — only if the device reports
+   capability ids nothing maps yet. Model-specific behaviour goes behind
+   `if modelId == …`, never a change to the shared default.
+3. Translations — a new capability name needs an entry in **all three** of
+   `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
+   the alphabetical order and column alignment already in the file.
+4. Tests — a case in `MODEL_GROUPS`, and the count in `test_capability.py`.
+5. `README.md` — the table for that device class.
+
+Devices the integration cannot map fall through to `Unknown product (…)`.
+Users get their capabilities dumped by ticking `Create entities for unknown
+capabilities` during setup, and that dump is what a mapping is built from.
+
+## Commit messages
+
+Subject is a sentence saying what changed for the user, in the present tense,
+no prefix and no ticket number : *"Stop offering an eco mode the room air
+conditioners do not have"*, not *"fix(ac): eco mode"*.
+
+The body leads with **why** — the observed behaviour, what the Cozytouch app
+does, what a capture showed — and only then what the change does. State the
+evidence and its limits : which model ids a finding covers, which it does not,
+what was left alone for lack of a report. Wrap at 76 columns.
+
+## House style
+
+Comments explain why a value is what it is — which capability id the device
+reports, what the app shows, what a capture proved. They do not restate the
+code. Match the density already in the file.

@@ -11,7 +11,7 @@ Most of these mappings were built from a single user's capture of their own
 unit. They say what that device reported — not that every feature has been
 exercised on every variant.
 
-### Boilers
+### Boilers / Chaudières
 
 | modelId | Model |
 | ------: | ----- |
@@ -20,7 +20,7 @@ exercised on every variant.
 | 65 | Naema 2 Duo 25 |
 | 1444 | Naema 3 Micro 25 |
 
-### Heat pumps
+### Heat pumps / Pompes à chaleur
 
 | modelId | Model |
 | ------: | ----- |
@@ -34,7 +34,7 @@ exercised on every variant.
 | 235 | Thermostat Navilink Connect |
 | 418 | Atlantic Loria Duo 6006 |
 
-### Water heaters
+### Water heaters / Chauffe-eau
 
 | modelId | Model |
 | ------: | ----- |
@@ -63,7 +63,7 @@ exercised on every variant.
 | 2346 | Egeo VS 250L |
 | 2374 | Explorer EVO 3 (260L) |
 
-### Towel racks
+### Towel racks / Sèche-serviettes
 
 | modelId | Model |
 | ------: | ----- |
@@ -77,7 +77,7 @@ exercised on every variant.
 | 1595 | Doris étroit 1300W CARAT |
 | 1622 | Thermor Riva 5 |
 
-### Air conditioning
+### Air conditioning / Climatisation
 
 Room units do not talk to the cloud themselves : they sit behind a gateway,
 which reports each of them under its own `modelId`. Adding the gateway is what
@@ -88,7 +88,7 @@ brings the rooms in.
 | 557-561, 1734 | Air conditioner (room unit) |
 | 562-570 | Air conditioner user interface |
 
-### Gateways
+### Gateways / Passerelles
 
 | modelId | Model |
 | ------: | ----- |
