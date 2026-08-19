@@ -162,3 +162,20 @@ Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
 
 This integration started as a fork of [gduteil/cozytouch](https://github.com/gduteil/cozytouch)
 and is now maintained independently here. All the original work is theirs.
+
+Several device mappings come from pull requests opened against that project by
+people who owned the hardware and worked out what it reported. Their work is
+here because they did it :
+
+| Device | modelId | By |
+| ------ | ------: | -- |
+| ACI HYB water heaters (PHAZY / AQUEO / DURALIS) | 386-394 | [@FreeTHX](https://github.com/FreeTHX), [@beorn-](https://github.com/beorn-) |
+| Doris étroit 1300W CARAT | 1595 | [@tomcastleman](https://github.com/tomcastleman) |
+| Calypso connecté | 1658 | [@picosam](https://github.com/picosam) |
+| FLAT/S4 IOTHUB gateway | 1763 | [@Joonel](https://github.com/Joonel) |
+| Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
+| Egeo VS 250L | 2346 | [@Mathieu-Pasco-Breillot](https://github.com/Mathieu-Pasco-Breillot) |
+| Explorer EVO 3 (260L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
+
+Where only part of a pull request was taken, the commit that took it says which
+part and why the rest was left alone.
