@@ -41,6 +41,10 @@ capture, so a test going green says "nobody changed this by accident", never
   time entity raise.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
+- `tests/test_topology.py` — the gateway link. The API reports the parent in
+  `masterDeviceId`, but a device is registered under its config entry, so the
+  link can only be drawn when the gateway was set up too; these pin that a
+  missing gateway yields no link rather than a dangling one.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
   the flag they were written for. It carries a hard count of mapped ids;

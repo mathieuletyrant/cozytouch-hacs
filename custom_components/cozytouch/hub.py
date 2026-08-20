@@ -18,7 +18,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.util import dt as dt_util
 
 from .capability import get_capability_infos
-from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
+from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID, DOMAIN
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,6 +29,22 @@ REQUEST_TIMEOUT = ClientTimeout(total=30)
 
 # How often the coordinator asks Atlantic for a device's capabilities.
 POLL_INTERVAL = timedelta(seconds=60)
+
+# What the API declares about a device on top of the fields that drive
+# behaviour. Nothing reads these to decide anything: they are carried because a
+# diagnostics dump is what a mapping gets built from, and the vendor's own name
+# and family for a model the table does not know is the first thing worth
+# having. On the one account these were read from, only the gateway carries a
+# real longName and a modelFamily -- its children report an internal name or a
+# literal "---" -- so what other product families put here is still open.
+# docs/api-surface.md has the detail.
+API_DECLARED_FIELDS = (
+    "longName",
+    "modelFamily",
+    "productRange",
+    "masterDeviceId",
+    "isAvailable",
+)
 
 
 # A config entry that carries its hub, so platforms can read it off the entry
@@ -61,7 +77,6 @@ class Hub(DataUpdateCoordinator):
         # shared by every hub: an account with one config entry per device --
         # a gateway plus a room unit per zone -- had them all writing over each
         # other's setup, and the last one to connect won.
-        self._localization: dict = {}
         self._setup: dict = {}
         self._zones: list | dict = {}
 
@@ -185,12 +200,6 @@ class Hub(DataUpdateCoordinator):
                         None, self.update_devices_from_json_data, json_data
                     )
 
-                    # Store country to retrieve localization informations
-                    if "address" in json_data[0]:
-                        await self._update_localization(
-                            json_data[0]["address"].get("country", None)
-                        )
-
                 self.online = True
 
             except CannotConnect:
@@ -258,6 +267,12 @@ class Hub(DataUpdateCoordinator):
 
                 self._devices.append(device)
                 deviceIndex = len(self._devices) - 1
+
+            # Refreshed on every setup view rather than set once at creation:
+            # isAvailable moves as a device drops off the gateway, and a device
+            # renamed in the app should not keep its old longName.
+            for field in API_DECLARED_FIELDS:
+                self._devices[deviceIndex][field] = remote_device.get(field)
 
             # Only retrieve capabilites from current device
             if self._deviceId == remote_device["deviceId"]:
@@ -424,6 +439,36 @@ class Hub(DataUpdateCoordinator):
 
         return "Unknown"
 
+    def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
+        """Identifiers of the gateway this device hangs off, when HA has it.
+
+        The API declares the topology itself: every room unit and thermal zone
+        on the account carries the gateway's id in masterDeviceId. Home
+        Assistant can only draw the link if the gateway was set up too, since a
+        device here is registered under its own config entry id -- so this
+        returns None for a gateway, and for a child whose gateway nobody added.
+
+        None rather than a guess matters: HA logs a warning when via_device
+        names a device that is not in the registry.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        masterDeviceId = None
+        for dev in self._devices:
+            if dev["deviceId"] == deviceId:
+                masterDeviceId = dev.get("masterDeviceId")
+                break
+
+        if not masterDeviceId:
+            return None
+
+        for entry in self._hass.config_entries.async_entries(DOMAIN):
+            if entry.data.get("deviceId") == masterDeviceId:
+                return (DOMAIN, entry.entry_id)
+
+        return None
+
     def get_capabilities_for_device(self, deviceId: int | None = None):
         """Get capabilities for a device."""
 
@@ -522,6 +567,10 @@ class Hub(DataUpdateCoordinator):
                     "zoneName": self.get_zone_name(dev["zoneId"]),
                     "tags": dev["tags"],
                     "isConfiguredHere": entry_owns_it,
+                    # Straight from the API, under the API's own names, so a
+                    # report can be compared against docs/api-surface.md
+                    # without a translation step.
+                    **{field: dev.get(field) for field in API_DECLARED_FIELDS},
                     "model": {
                         "name": modelInfos["name"],
                         "type": str(modelInfos["type"]),
@@ -540,7 +589,6 @@ class Hub(DataUpdateCoordinator):
         return {
             "setup": copy.deepcopy(self._setup),
             "zones": copy.deepcopy(self._zones),
-            "localization": copy.deepcopy(self._localization),
             "devices": devices,
         }
 
@@ -760,32 +808,6 @@ class Hub(DataUpdateCoordinator):
                         response.status,
                         str(response.request_info),
                     )
-
-    async def _update_localization(self, country: str):
-        if len(self._localization) == 0:
-            headers = {
-                "Authorization": f"Bearer {self._access_token}",
-                "Content-Type": "application/json",
-            }
-            try:
-                async with self._session.get(
-                    COZYTOUCH_ATLANTIC_API + "/magellan/refs/countries",
-                    headers=headers,
-                    timeout=REQUEST_TIMEOUT,
-                ) as response:
-                    try:
-                        json_data = await response.json()
-                        if isinstance(json_data, list):
-                            for localization in json_data:
-                                if localization.get("countryCode", "") == country:
-                                    self._localization = copy.deepcopy(localization)
-                                    break
-
-                    except ContentTypeError:
-                        self._localization = {}
-            except (ClientError, asyncio.TimeoutError) as err:
-                _LOGGER.warning("Could not fetch localization: %s", err)
-                self._localization = {}
 
 
 class CannotConnect(exceptions.HomeAssistantError):

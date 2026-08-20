@@ -25,7 +25,6 @@ def make_hub(devices, deviceId, zones=None):
         _deviceId=deviceId,
         _setup={"id": 1532156, "name": "setup1"},
         _zones=zones if zones is not None else [],
-        _localization={"country": "FR"},
     )
     hub.get_zone_name = lambda zoneId=None: next(
         (z["name"] for z in hub._zones if z.get("id") == zoneId), str(zoneId)
@@ -128,7 +127,42 @@ def test_model_flags_are_reported_so_a_report_shows_what_was_wired():
     assert "name" not in infos and "type" not in infos
 
 
-@pytest.mark.parametrize("key", ["setup", "zones", "localization", "devices"])
+def test_what_the_api_itself_calls_the_device_is_carried_through():
+    """A dump is what an unmapped model gets mapped from, so the vendor's own
+    name and family for it are worth more than the ones our table invented."""
+    hub = make_hub(
+        [
+            device(1, 9999)
+            | {
+                "longName": "HUB Navizone",
+                "modelFamily": "Air_Conditioning",
+                "productRange": None,
+                "masterDeviceId": None,
+                "isAvailable": True,
+            }
+        ],
+        deviceId=1,
+    )
+
+    reported = Hub.get_diagnostics(hub)["devices"][0]
+
+    assert reported["longName"] == "HUB Navizone"
+    assert reported["modelFamily"] == "Air_Conditioning"
+    assert reported["isAvailable"] is True
+
+
+def test_fields_the_api_leaves_out_read_as_none_rather_than_failing():
+    """Only the gateway carried a modelFamily on the account these were read
+    from; a room unit reports null, and a dump has to survive that."""
+    hub = make_hub([device(1, 557)], deviceId=1)
+
+    reported = Hub.get_diagnostics(hub)["devices"][0]
+
+    assert reported["modelFamily"] is None
+    assert reported["masterDeviceId"] is None
+
+
+@pytest.mark.parametrize("key", ["setup", "zones", "devices"])
 def test_the_dump_carries_the_sections_a_report_is_built_from(key):
     hub = make_hub([device(1, 557)], deviceId=1)
 
