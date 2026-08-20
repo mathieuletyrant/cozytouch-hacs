@@ -7,6 +7,7 @@ import logging
 
 import voluptuous as vol
 
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, entity_registry as er
@@ -91,16 +92,22 @@ def _resolve_hub(hass: HomeAssistant, entity_id: str):
             "Developer tools > States -- renaming an entity does not change it."
         )
 
-    # The lookup below is the real check: an entity from another integration
-    # cannot have a config entry known to this one.
-    hub = hass.data.get(DOMAIN, {}).get(registry_entry.config_entry_id)
-    if hub is None:
+    # Two separate things to rule out, which the old hass.data lookup conflated:
+    # an entity from another integration, and one of ours whose entry is not
+    # loaded and therefore has no hub on it yet.
+    entry = hass.config_entries.async_get_entry(registry_entry.config_entry_id or "")
+    if entry is None or entry.domain != DOMAIN:
         raise ServiceValidationError(
-            f"{entity_id} is provided by {registry_entry.platform}, not by a "
-            "loaded Cozytouch entry"
+            f"{entity_id} is provided by {registry_entry.platform}, not by "
+            "Cozytouch"
         )
 
-    return hub
+    if entry.state is not ConfigEntryState.LOADED:
+        raise ServiceValidationError(
+            f"The Cozytouch entry behind {entity_id} is not loaded ({entry.state})"
+        )
+
+    return entry.runtime_data
 
 
 @callback

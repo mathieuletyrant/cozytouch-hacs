@@ -21,9 +21,11 @@ them updates the upstream pull request and nothing else. Do not repoint them.
 
 ## Tests
 
-Python 3.13, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
+Python 3.14, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
 The system `python3` on this machine is too old — build a venv with
-`uv venv --python 3.13`.
+`uv venv --python 3.14`. The version matters: Home Assistant 2026.8 requires
+Python 3.14.2, so a 3.13 environment silently resolves to an older HA than
+anyone is running.
 
 The suite is **characterisation tests**. They pin the mapping as it stands, not
 as it ought to be : most entries were reverse-engineered from one user's
@@ -33,6 +35,12 @@ capture, so a test going green says "nobody changed this by accident", never
 - `tests/test_model.py` — one case per branch of `get_model_infos`, comparing
   the whole returned dict. Ids that resolve differently inside a shared branch
   get their own case.
+- `tests/test_regressions.py` — bugs that were live and that no table walk
+  would have reached: state that used to sit on the `Hub` class and so was
+  shared by every config entry, and a shadowed `time` import that made every
+  time entity raise.
+- `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
+  unnamed capability ids get listed, since that is what a dump is read for.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
   the flag they were written for. It carries a hard count of mapped ids;

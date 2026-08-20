@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import asyncio
 import copy
-from datetime import UTC, datetime, time as t, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 import json
 import logging
 
 from aiohttp import ClientError, ClientSession, ClientTimeout, ContentTypeError, FormData
 
 from homeassistant import exceptions
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -27,17 +28,15 @@ _LOGGER = logging.getLogger(__name__)
 REQUEST_TIMEOUT = ClientTimeout(total=30)
 
 
+# A config entry that carries its hub, so platforms can read it off the entry
+# instead of looking it up in hass.data by id.
+type CozytouchConfigEntry = ConfigEntry[Hub]
+
+
 class Hub(DataUpdateCoordinator):
     """Atlantic Cozytouch Hub."""
 
     manufacturer = "Atlantic Group"
-    _localization = {}
-    _setup = {}
-    _zones = {}
-
-    _timestamp_away_mode_last_change = None
-    _timestamp_away_mode_start = None
-    _timestamp_away_mode_end = None
 
     def __init__(
         self,
@@ -45,14 +44,28 @@ class Hub(DataUpdateCoordinator):
         username: str,
         password: str,
         deviceId: int | None = None,
+        config_entry: ConfigEntry | None = None,
     ) -> None:
         """Init hub."""
         super().__init__(
             hass,
             _LOGGER,
+            config_entry=config_entry,
             name="Cozytouch_" + str(deviceId),
             update_interval=timedelta(seconds=60),
         )
+        # Per-account state. These used to sit on the class, where one dict was
+        # shared by every hub: an account with one config entry per device --
+        # a gateway plus a room unit per zone -- had them all writing over each
+        # other's setup, and the last one to connect won.
+        self._localization: dict = {}
+        self._setup: dict = {}
+        self._zones: list | dict = {}
+
+        self._timestamp_away_mode_last_change = None
+        self._timestamp_away_mode_start = None
+        self._timestamp_away_mode_end = None
+
         self._session = ClientSession()
         self._host = "none"
         self._hass = hass

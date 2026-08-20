@@ -7,14 +7,14 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
     BinarySensorEntity,
 )
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo, EntityCategory
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .hub import Hub
+from .hub import CozytouchConfigEntry, Hub
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -22,19 +22,12 @@ _LOGGER = logging.getLogger(__name__)
 # config flow setup
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: CozytouchConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up entry."""
     # Retrieve the coordinator object
-    try:
-        coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    except KeyError:
-        _LOGGER.error(
-            "%s: can not init binaries sensors: failed to get the hub object",
-            config_entry.title,
-        )
-        return
+    coordinator = config_entry.runtime_data
 
     async_add_entities(
         [CloudConnectivity(coordinator, config_entry.title, config_entry.entry_id)],

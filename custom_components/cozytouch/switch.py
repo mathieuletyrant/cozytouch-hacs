@@ -1,17 +1,16 @@
 """Switches for Atlantic Cozytouch integration."""
 from __future__ import annotations
 
-from datetime import datetime, time
+from datetime import datetime
 import logging
 
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
-from .hub import Hub
+from .hub import CozytouchConfigEntry, Hub
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,19 +19,12 @@ _LOGGER = logging.getLogger(__name__)
 # config flow setup
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: CozytouchConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up entry."""
     # Retrieve the hub object
-    try:
-        hub = hass.data[DOMAIN][config_entry.entry_id]
-    except KeyError:
-        _LOGGER.error(
-            "%s: can not init switches: failed to get the hub object",
-            config_entry.title,
-        )
-        return
+    hub = config_entry.runtime_data
 
     # Init switches
     switches = []

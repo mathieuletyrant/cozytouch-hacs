@@ -27,8 +27,6 @@ from homeassistant.components.climate.const import (
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
-    FAN_OFF,
-    FAN_ON,
 )
 
 from .const import (
@@ -382,7 +380,7 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             0: HVACMode.OFF,
             4: HVACMode.HEAT,
         }
-       
+
     elif modelId == 1641:
         modelInfos["name"] = "Atlantic Explorer V5 (200L)"
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
@@ -396,7 +394,7 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             3: HEATING_MODE_ECO_PLUS,
             4: HEATING_MODE_PROG,
         }
-       
+
     elif modelId == 1642:
         modelInfos["name"] = "Atlantic Explorer V5 (270L)"
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
@@ -438,7 +436,7 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             3: HEATING_MODE_ECO_PLUS,
             4: HEATING_MODE_PROG,
         }
-   
+
     elif modelId == 1656:
         modelInfos["name"] = "Aeromax 6"
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER
@@ -515,7 +513,7 @@ def get_model_infos(modelId: int, zoneName: str | None = None):
             3: HEATING_MODE_ECO_PLUS,
             4: HEATING_MODE_PROG,
         }
-       
+
     elif modelId == 1957:
         modelInfos["name"] = "LINEO CONNECTE MP 100L 2250W"
         modelInfos["type"] = CozytouchDeviceType.WATER_HEATER

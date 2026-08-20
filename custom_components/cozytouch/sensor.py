@@ -13,8 +13,8 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
+    EntityCategory,
     PERCENTAGE,
     UnitOfEnergy,
     UnitOfPower,
@@ -24,12 +24,12 @@ from homeassistant.const import (
     UnitOfVolume,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo, EntityCategory
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, CozytouchCapabilityVariableType
-from .hub import Hub
+from .hub import CozytouchConfigEntry, Hub
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,21 +37,14 @@ _LOGGER = logging.getLogger(__name__)
 # config flow setup
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: CozytouchConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Modern (thru config entry) sensors setup."""
     _LOGGER.debug("%s: setting up sensor plateform", config_entry.title)
     # Retrieve the serial reader object
     # Retrieve the hub object
-    try:
-        hub = hass.data[DOMAIN][config_entry.entry_id]
-    except KeyError:
-        _LOGGER.error(
-            "%s: can not init sensors: failed to get the hub object",
-            config_entry.title,
-        )
-        return
+    hub = config_entry.runtime_data
 
     # Init sensors
     sensors = []
