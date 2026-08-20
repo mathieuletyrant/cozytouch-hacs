@@ -23,6 +23,12 @@ Unauthenticated requests are enough to map the **gateway's** route table: it
 answers 401 on a path it knows and 404 on one it does not. That is how the
 list below was built without spending logins.
 
+The gateway is WSO2 API Manager (`Welcome to APIM` at the root, an `apimadmin`
+cookie, `/api` redirecting to a Carbon admin console). It is a proxy, so a 404
+means "no API is published on this path at the gateway", not "the backend has
+no such thing". Its admin plane under `/carbon/` is off limits -- that is their
+infrastructure, not the device API.
+
 The trap: the gateway's table is not the backend's. `/magellan/refs/countries`
 answers 401 unauthenticated -- the gateway routes it -- and 404 with an HTML
 error page once a token is attached. A 401 therefore means "the gateway
@@ -46,9 +52,10 @@ Base: `https://apis.groupe-atlantic.com`
 | `POST /magellan/executions/writecapability` | used, writes |
 | `GET /magellan/executions/{id}` | used, polls a write |
 | `PUT /magellan/v2/setups/{id}/…` | used, away mode |
-| `GET /magellan/cozytouch/setupview` | v1, still routed. Not tried |
+| `GET /magellan/cozytouch/setupview` | v1. Dead: 404 + HTML with a token, like refs/countries |
 | `GET /magellan/devices` | works, unused, adds nothing (see below) |
 | `GET /magellan/setups` | works, unused. `[{id, name}]` |
+| `GET /magellan/setups/{id}` | 405, GET not allowed. The collection is all there is |
 | `GET /magellan/gateways` | works, unused. `[{id, serialNumber}]` |
 | `GET /magellan/zones` | works, unused. `[{id, name, zoneType, numberOfDevices}]` |
 | `GET /magellan/refs/countries` | **dead.** 404 + HTML with a token. `_update_localization` has been failing silently |
@@ -109,6 +116,25 @@ nothing in the integration reads.
 `/magellan/devices` returns a flat list whose fields are a strict subset of the
 same device block. It adds nothing.
 
+## The setup view has no second data plane
+
+Its top-level keys are `absence`, `address`, `area`, `currency`, `devices`,
+`gateways`, `id`, `mainDHWEnergy`, `mainHeatingEnergy`, `name`,
+`numberOfPersons`, `numberOfRooms`, `rateLimit`, `setupBuildingDate`, `type`,
+`zones`. That is the whole payload. There is no `programs`, `schedules` or
+`consumptions` hiding a second source of data, and the `/magellan/` collection
+routes above are all subsets of what is here. The functional data plane is
+this one response.
+
+`rateLimit` is new to us: 30 on this account, the server declaring its own
+limit. The units are unknown -- nothing decodes them -- but the integration
+polls every 60s per device and is under it on any reading. It is now carried
+into the dump.
+
+`type`, `mainHeatingEnergy`, `mainDHWEnergy`, `setupBuildingDate` and a zone's
+`zoneType` are all integer enums with no catalogue to decode them: the same
+guessing problem as capability ids, one level up.
+
 ### What this covers, and what it does not
 
 One account: one Navizone gateway, three room air conditioners, three thermal
@@ -126,10 +152,6 @@ reports answer it.
   the place to look, and would be a far bigger prize than any endpoint here.
 - **Other product families.** Once a boiler or water-heater dump arrives with
   the fields this PR added, the table above can be finished.
-- **`setupview` (v1).** Still routed and never tried. Older API versions
-  sometimes carry fields a newer one dropped.
-- **`GET /magellan/setups/{id}`.** The collection returns only `{id, name}`;
-  the item might return more. `v2/setups` answers 405 on GET.
 - **Error messages as a schema leak.** A `writecapability` with an
   out-of-range value may name the accepted bounds in its rejection. That is a
   write, so only against a device you own, and only one at a time.

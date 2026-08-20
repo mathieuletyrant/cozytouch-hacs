@@ -189,6 +189,11 @@ class Hub(DataUpdateCoordinator):
                         "name",
                         "numberOfPersons",
                         "numberOfRooms",
+                        # The account's own declared rate limit. Units unknown
+                        # -- no catalogue decodes it -- so it is carried to the
+                        # dump rather than acted on; the poll interval is fixed
+                        # at 60s, comfortably under it on any reading of "30".
+                        "rateLimit",
                         "setupBuildingDate",
                         "type",
                     ):

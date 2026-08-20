@@ -14,7 +14,7 @@ Run from the repository root:
     pbpaste > ~/.cozytouch-pass          # keeps the password out of the
     COZYTOUCH_USER=you@example.com \     # shell history
       COZYTOUCH_PASS_FILE=~/.cozytouch-pass \
-      python3 scripts/probe_api.py [--new-routes]
+      python3 scripts/probe_api.py [--new-routes] [--explore]
     rm -f ~/.cozytouch-pass
 
 Reads are cheap: the integration itself polls one of these routes every 60
@@ -83,6 +83,13 @@ ROUTES_NEW = (
     "/magellan/setups",
     "/magellan/gateways",
     "/magellan/zones",
+)
+
+# Routes not yet tried at all. setupview is the v1 the integration replaced;
+# an older version sometimes carries a field a newer one dropped. The rest ask
+# whether an item returns more than its collection listing.
+ROUTES_EXPLORE = (
+    "/magellan/cozytouch/setupview",
 )
 
 
@@ -180,6 +187,22 @@ def main() -> None:
     print(f"=== /magellan/cozytouch/setupviewv2 -> {status}")
     device_ids = []
     if isinstance(setup, list) and setup:
+        # Everything the integration reads lives in devices[]; the other
+        # top-level keys have never been looked at.
+        print(f"  top-level keys: {sorted(setup[0].keys())}")
+        for key, val in setup[0].items():
+            if key == "devices":
+                continue
+            if isinstance(val, list):
+                sample = f"[{len(val)} items]" + (
+                    f", first keys {sorted(val[0].keys())}"
+                    if val and isinstance(val[0], dict) else ""
+                )
+                print(f"    {key} = {sample}")
+            elif isinstance(val, dict):
+                print(f"    {key} = keys {sorted(val.keys())}")
+            else:
+                print(f"    {key} = {json.dumps(val)[:80]}")
         for device in setup[0].get("devices", []):
             device_ids.append(device["deviceId"])
             print(f"  device {device['deviceId']} modelId={device.get('modelId')}")
@@ -197,6 +220,12 @@ def main() -> None:
     routes += [f"/magellan/capabilities/?deviceId={d}" for d in device_ids[:1]]
     if "--new-routes" in sys.argv:
         routes += list(ROUTES_NEW)
+    if "--explore" in sys.argv:
+        routes += list(ROUTES_EXPLORE)
+        # An item endpoint may say more than the collection did.
+        _, setups = get(API + "/magellan/setups", access_token)
+        if isinstance(setups, list) and setups:
+            routes.append(f"/magellan/setups/{setups[0].get('id')}")
 
     for route in routes:
         status, body = get(API + route, access_token)
