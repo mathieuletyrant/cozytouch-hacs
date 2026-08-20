@@ -30,6 +30,22 @@ REQUEST_TIMEOUT = ClientTimeout(total=30)
 # How often the coordinator asks Atlantic for a device's capabilities.
 POLL_INTERVAL = timedelta(seconds=60)
 
+# What the API declares about a device on top of the fields that drive
+# behaviour. Nothing reads these to decide anything: they are carried because a
+# diagnostics dump is what a mapping gets built from, and the vendor's own name
+# and family for a model the table does not know is the first thing worth
+# having. On the one account these were read from, only the gateway carries a
+# real longName and a modelFamily -- its children report an internal name or a
+# literal "---" -- so what other product families put here is still open.
+# docs/api-surface.md has the detail.
+API_DECLARED_FIELDS = (
+    "longName",
+    "modelFamily",
+    "productRange",
+    "masterDeviceId",
+    "isAvailable",
+)
+
 
 # A config entry that carries its hub, so platforms can read it off the entry
 # instead of looking it up in hass.data by id.
@@ -258,6 +274,12 @@ class Hub(DataUpdateCoordinator):
 
                 self._devices.append(device)
                 deviceIndex = len(self._devices) - 1
+
+            # Refreshed on every setup view rather than set once at creation:
+            # isAvailable moves as a device drops off the gateway, and a device
+            # renamed in the app should not keep its old longName.
+            for field in API_DECLARED_FIELDS:
+                self._devices[deviceIndex][field] = remote_device.get(field)
 
             # Only retrieve capabilites from current device
             if self._deviceId == remote_device["deviceId"]:
@@ -522,6 +544,10 @@ class Hub(DataUpdateCoordinator):
                     "zoneName": self.get_zone_name(dev["zoneId"]),
                     "tags": dev["tags"],
                     "isConfiguredHere": entry_owns_it,
+                    # Straight from the API, under the API's own names, so a
+                    # report can be compared against docs/api-surface.md
+                    # without a translation step.
+                    **{field: dev.get(field) for field in API_DECLARED_FIELDS},
                     "model": {
                         "name": modelInfos["name"],
                         "type": str(modelInfos["type"]),
