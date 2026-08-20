@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cozytouch — zones, modèles, capacités</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  img, svg { max-width: 100%; }
+
+  :root {
+    --bg: #F6F8FA;
+    --surface: #FFFFFF;
+    --surface-sunk: #EDF1F5;
+    --ink: #141920;
+    --ink-soft: #58626F;
+    --ink-faint: #8B95A3;
+    --rule: #DBE1E8;
+    --rule-strong: #BFC8D2;
+    --declared: #0B6480;
+    --declared-wash: #E4F0F5;
+    --reported: #8E5307;
+    --reported-wash: #F7EEE1;
+
+    --measure: 34rem;
+    --step-0: 1rem;
+    --step-1: 1.1875rem;
+    --step-2: 1.5rem;
+    --step-3: 2.125rem;
+    --step-4: 2.875rem;
+
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono", Menlo,
+      Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E1216;
+      --surface: #161B21;
+      --surface-sunk: #1B2129;
+      --ink: #E7EBF0;
+      --ink-soft: #98A3B1;
+      --ink-faint: #6C7784;
+      --rule: #262E38;
+      --rule-strong: #38424E;
+      --declared: #63C6E4;
+      --declared-wash: #12262E;
+      --reported: #E2A752;
+      --reported-wash: #2A2115;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0E1216;
+    --surface: #161B21;
+    --surface-sunk: #1B2129;
+    --ink: #E7EBF0;
+    --ink-soft: #98A3B1;
+    --ink-faint: #6C7784;
+    --rule: #262E38;
+    --rule-strong: #38424E;
+    --declared: #63C6E4;
+    --declared-wash: #12262E;
+    --reported: #E2A752;
+    --reported-wash: #2A2115;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--step-0);
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 62rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+  }
+
+  .measure { max-width: var(--measure); }
+
+  /* ── masthead ─────────────────────────────────────────── */
+  header {
+    padding: 4.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2.5rem;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: var(--step-4);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin: 0;
+    max-width: var(--measure);
+  }
+
+  /* ── sections ─────────────────────────────────────────── */
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: var(--step-2);
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  h2 .n {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--declared);
+    flex: none;
+  }
+
+  h3 {
+    font-family: var(--mono);
+    font-size: var(--step-0);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin: 0.5rem 0 0;
+  }
+
+  p { margin: 0; max-width: var(--measure); }
+
+  ul { margin: 0; padding-left: 1.15rem; max-width: var(--measure); }
+  li { margin-bottom: 0.4rem; }
+  li::marker { color: var(--ink-faint); }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.875em;
+    background: var(--surface-sunk);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+
+  strong { font-weight: 650; }
+
+  .decl { color: var(--declared); font-weight: 600; }
+  .rept { color: var(--reported); font-weight: 600; }
+
+  /* ── figures ──────────────────────────────────────────── */
+  figure {
+    margin: 0.75rem 0 0;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-x: auto;
+  }
+
+  figure svg {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-width: 30rem;
+    color: var(--ink);
+  }
+
+  figcaption {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: var(--measure);
+  }
+
+  figcaption b { color: var(--ink); font-weight: 600; }
+
+  /* ── key/legend line ─────────────────────────────────── */
+  .key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+  .key span { display: flex; align-items: center; gap: 0.4rem; }
+  .swatch {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 2px;
+    flex: none;
+  }
+
+  /* ── tables ───────────────────────────────────────────── */
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+    min-width: 26rem;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 0.5rem 1.25rem 0.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    border-bottom-color: var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  td.num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ── callout ──────────────────────────────────────────── */
+  .note {
+    background: var(--reported-wash);
+    border-left: 2px solid var(--reported);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: var(--measure);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .note .label {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--reported);
+  }
+
+  .note p { max-width: none; }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--ink-faint);
+    max-width: var(--measure);
+  }
+
+  a { color: var(--declared); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, :focus-visible { outline: 2px solid var(--declared); outline-offset: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Atlantic Cozytouch · modèle de domaine</p>
+    <h1>Zones, modèles,<br>capacités</h1>
+    <p class="standfirst">
+      Ce que l'API d'Atlantic renvoie, et par quelles étapes ça devient une entité
+      dans Home Assistant. Quatre schémas, chacun sur une chose qui se lit mal en prose.
+    </p>
+    <div class="key">
+      <span><i class="swatch" style="background: var(--declared)"></i> ce que la table déclare</span>
+      <span><i class="swatch" style="background: var(--reported)"></i> ce que l'appareil remonte</span>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════ 1 -->
+  <section>
+    <h2><span class="n">01</span> Un compte, des zones, des appareils</h2>
+    <p>
+      Tout part d'un seul appel, <code>/magellan/cozytouch/setupviewv2</code>, qui renvoie
+      le compte entier. Deux listes côte à côte : les <strong>zones</strong> (les pièces) et
+      les <strong>appareils</strong>. Un appareil ne contient pas sa zone — il porte un
+      <code>zoneId</code> qui pointe dedans.
+    </p>
+    <p>
+      C'est cette jointure qui explique la confusion récurrente sur les
+      <code>THZONE</code> : deux appareils différents peuvent porter le même
+      <code>zoneId</code>. Ce sont deux vues de la même pièce, pas deux machines.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 780 340" role="img"
+           aria-label="Le payload setupviewv2 : une liste de zones et une liste d'appareils, jointes par zoneId, avec ROOM_0 et THZONE_0 partageant la zone 991904 et tous deux rattachés au gateway par masterDeviceId.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+          <marker id="a1d" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-faint)"/>
+          </marker>
+        </defs>
+
+        <!-- headers -->
+        <text x="0" y="14" font-family="ui-monospace, monospace" font-size="11"
+              letter-spacing="1.2" fill="var(--ink-faint)">ZONES[]</text>
+        <text x="300" y="14" font-family="ui-monospace, monospace" font-size="11"
+              letter-spacing="1.2" fill="var(--ink-faint)">DEVICES[]</text>
+
+        <!-- zones -->
+        <rect x="0" y="26" width="200" height="46" rx="4"
+              fill="var(--surface-sunk)" stroke="var(--rule-strong)"/>
+        <text x="14" y="46" font-family="ui-monospace, monospace" font-size="12"
+              fill="currentColor">991894</text>
+        <text x="14" y="62" font-size="11" fill="var(--ink-soft)">zoneTechnique</text>
+
+        <rect x="0" y="152" width="200" height="46" rx="4"
+              fill="var(--surface-sunk)" stroke="var(--rule-strong)"/>
+        <text x="14" y="172" font-family="ui-monospace, monospace" font-size="12"
+              fill="currentColor">991904</text>
+        <text x="14" y="188" font-size="11" fill="var(--ink-soft)">Mezzanine</text>
+
+        <!-- devices -->
+        <rect x="300" y="26" width="300" height="58" rx="4"
+              fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="314" y="46" font-size="12.5" font-weight="600" fill="currentColor">HUB Cozytouch</text>
+        <text x="314" y="63" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">modelId 1457 · zoneId 991894</text>
+        <text x="314" y="77" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">master —</text>
+
+        <rect x="300" y="118" width="300" height="58" rx="4"
+              fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="314" y="138" font-size="12.5" font-weight="600" fill="currentColor">ROOM_0</text>
+        <text x="314" y="155" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">modelId 557 · zoneId 991904</text>
+        <text x="314" y="169" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">77 capacités</text>
+
+        <rect x="300" y="210" width="300" height="58" rx="4"
+              fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="314" y="230" font-size="12.5" font-weight="600" fill="currentColor">THZONE_0</text>
+        <text x="314" y="247" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">modelId 1505 · zoneId 991904</text>
+        <text x="314" y="261" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">3 capacités · « PAC air/air »</text>
+
+        <!-- zoneId joins -->
+        <path d="M 300 55 L 250 55 L 250 49 L 200 49" fill="none"
+              stroke="var(--ink-faint)" stroke-dasharray="3 3" marker-end="url(#a1d)"/>
+        <path d="M 300 147 L 250 147 L 250 175 L 200 175" fill="none"
+              stroke="var(--ink-faint)" stroke-dasharray="3 3" marker-end="url(#a1d)"/>
+        <path d="M 300 239 L 250 239 L 250 175 L 200 175" fill="none"
+              stroke="var(--ink-faint)" stroke-dasharray="3 3" marker-end="url(#a1d)"/>
+        <text x="228" y="110" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-faint)" text-anchor="middle">zoneId</text>
+
+        <!-- masterDeviceId -->
+        <path d="M 600 147 L 660 147 L 660 55 L 600 55" fill="none"
+              stroke="currentColor" marker-end="url(#a1)"/>
+        <path d="M 600 239 L 690 239 L 690 55 L 600 55" fill="none"
+              stroke="currentColor" marker-end="url(#a1)"/>
+        <text x="716" y="151" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-soft)">masterDeviceId</text>
+
+        <!-- shared-zone emphasis -->
+        <rect x="292" y="110" width="316" height="166" rx="6" fill="none"
+              stroke="var(--reported)" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="450" y="300" font-size="11.5" fill="var(--reported)"
+              text-anchor="middle" font-weight="600">même zoneId — une seule pièce</text>
+      </svg>
+      <figcaption>
+        Capture réelle d'un compte à un seul climatiseur. <b>ROOM_0</b> est l'unité,
+        <b>THZONE_0</b> est la zone thermique associée : même <code>zoneId</code>, même
+        appareil maître. Le second n'est pas une machine manquante, et le mapper comme un
+        climatiseur créerait deux entités <code>climate</code> pour la même pièce.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ 2 -->
+  <section>
+    <h2><span class="n">02</span> Une entrée de configuration = un appareil</h2>
+    <p>
+      C'est le point le plus contre-intuitif de l'intégration, et la cause de la plupart
+      des « je ne vois pas ma clim ». Le formulaire d'ajout demande de choisir
+      <strong>un</strong> appareil dans la liste. Ajouter la passerelle n'ajoute pas
+      les pièces qu'elle pilote.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 780 300" role="img"
+           aria-label="Trois appareils du compte, mais deux entrées de configuration seulement. Chaque entrée construit son propre Hub avec sa propre session et son propre sondage, et ne stocke les capacités que de son appareil.">
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <text x="0" y="14" font-family="ui-monospace, monospace" font-size="11"
+              letter-spacing="1.2" fill="var(--ink-faint)">CE QUE LE COMPTE CONTIENT</text>
+        <text x="330" y="14" font-family="ui-monospace, monospace" font-size="11"
+              letter-spacing="1.2" fill="var(--ink-faint)">CE QUI EST AJOUTÉ</text>
+
+        <!-- devices -->
+        <rect x="0" y="30" width="190" height="34" rx="4" fill="none" stroke="currentColor"/>
+        <text x="12" y="52" font-size="12" fill="currentColor">HUB Cozytouch</text>
+
+        <rect x="0" y="80" width="190" height="34" rx="4" fill="none" stroke="currentColor"/>
+        <text x="12" y="102" font-size="12" fill="currentColor">ROOM_0</text>
+
+        <rect x="0" y="130" width="190" height="34" rx="4" fill="none"
+              stroke="var(--rule-strong)" stroke-dasharray="4 3"/>
+        <text x="12" y="152" font-size="12" fill="var(--ink-faint)">THZONE_0</text>
+
+        <!-- entries -->
+        <rect x="330" y="30" width="240" height="64" rx="4"
+              fill="var(--declared-wash)" stroke="var(--declared)" stroke-width="1.5"/>
+        <text x="344" y="50" font-size="12" font-weight="600" fill="currentColor">entrée « HUB Cozytouch »</text>
+        <text x="344" y="67" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-soft)">Hub · session · poll 60 s</text>
+        <text x="344" y="81" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-soft)">capacités du HUB seulement</text>
+
+        <rect x="330" y="110" width="240" height="64" rx="4"
+              fill="var(--declared-wash)" stroke="var(--declared)" stroke-width="1.5"/>
+        <text x="344" y="130" font-size="12" font-weight="600" fill="currentColor">entrée « Air Conditioner »</text>
+        <text x="344" y="147" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-soft)">Hub · session · poll 60 s</text>
+        <text x="344" y="161" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-soft)">capacités de ROOM_0 seulement</text>
+
+        <rect x="330" y="196" width="240" height="34" rx="4" fill="none"
+              stroke="var(--rule-strong)" stroke-dasharray="4 3"/>
+        <text x="344" y="218" font-size="12" fill="var(--ink-faint)">jamais ajoutée</text>
+
+        <!-- arrows -->
+        <path d="M 190 47 L 330 55" fill="none" stroke="currentColor" marker-end="url(#a2)"/>
+        <path d="M 190 97 L 330 135" fill="none" stroke="currentColor" marker-end="url(#a2)"/>
+        <path d="M 190 147 L 330 210" fill="none" stroke="var(--rule-strong)"
+              stroke-dasharray="4 3" marker-end="url(#a2)"/>
+        <text x="258" y="30" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-faint)" text-anchor="middle">un choix</text>
+        <text x="258" y="42" font-family="ui-monospace, monospace" font-size="10"
+              fill="var(--ink-faint)" text-anchor="middle">à la fois</text>
+
+        <line x1="0" y1="262" x2="780" y2="262" stroke="var(--rule)"/>
+        <text x="0" y="284" font-size="11.5" fill="var(--reported)" font-weight="600">
+          Conséquence : n appareils = n entrées = n sondages par minute, et un dump de
+          diagnostics par entrée.
+        </text>
+      </svg>
+      <figcaption>
+        Chaque entrée construit son propre <code>Hub</code>, avec sa propre session HTTP et
+        son propre cycle de sondage. Le hub ne conserve les capacités que de
+        <b>son</b> appareil — d'où la nécessité de télécharger un dump de diagnostics par
+        zone plutôt qu'un seul.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ 3 -->
+  <section>
+    <h2><span class="n">03</span> Déclaré <span style="color:var(--ink-faint);font-weight:400">×</span> remonté</h2>
+    <p>
+      C'est le mécanisme central, et celui qu'on lit systématiquement de travers.
+      Le <code>modelId</code> donne un <strong class="decl">profil</strong> : ce que
+      l'appareil <em>peut</em> avoir. L'appareil, lui, publie une liste de
+      <strong class="rept">capacités</strong> : ce qu'il a vraiment. Une fonctionnalité
+      n'existe que si les deux sont d'accord.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 780 320" role="img"
+           aria-label="Le modelId donne un profil qui déclare des modes de ventilation ; l'appareil doit aussi remonter la capacité 100801. Les deux conditions sont combinées par un ET logique. Deux appareils réels de la même famille donnent des résultats opposés.">
+        <defs>
+          <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <!-- declared branch -->
+        <rect x="0" y="24" width="150" height="46" rx="4"
+              fill="none" stroke="var(--declared)" stroke-width="1.5"/>
+        <text x="12" y="44" font-family="ui-monospace, monospace" font-size="12"
+              fill="currentColor">modelId 557</text>
+        <text x="12" y="60" font-size="10.5" fill="var(--ink-soft)">le produit</text>
+
+        <rect x="210" y="24" width="220" height="46" rx="4"
+              fill="var(--declared-wash)" stroke="var(--declared)" stroke-width="1.5"/>
+        <text x="222" y="44" font-size="12" font-weight="600" fill="currentColor">profil ROOM_AC</text>
+        <text x="222" y="60" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">déclare fanModes</text>
+
+        <path d="M 150 47 L 210 47" fill="none" stroke="var(--declared)" marker-end="url(#a3)"/>
+        <text x="180" y="38" font-family="ui-monospace, monospace" font-size="9.5"
+              fill="var(--ink-faint)" text-anchor="middle">model.py</text>
+
+        <!-- reported branch -->
+        <rect x="0" y="118" width="150" height="46" rx="4"
+              fill="none" stroke="var(--reported)" stroke-width="1.5"/>
+        <text x="12" y="138" font-family="ui-monospace, monospace" font-size="12"
+              fill="currentColor">l'appareil</text>
+        <text x="12" y="154" font-size="10.5" fill="var(--ink-soft)">ce qu'il publie</text>
+
+        <rect x="210" y="118" width="220" height="46" rx="4"
+              fill="var(--reported-wash)" stroke="var(--reported)" stroke-width="1.5"/>
+        <text x="222" y="138" font-size="12" font-weight="600" fill="currentColor">capacité 100801</text>
+        <text x="222" y="154" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="var(--ink-soft)">présente ? absente ?</text>
+
+        <path d="M 150 141 L 210 141" fill="none" stroke="var(--reported)" marker-end="url(#a3)"/>
+
+        <!-- AND -->
+        <circle cx="500" cy="94" r="26" fill="var(--surface-sunk)" stroke="var(--rule-strong)"/>
+        <text x="500" y="99" font-family="ui-monospace, monospace" font-size="13"
+              text-anchor="middle" fill="currentColor" font-weight="600">ET</text>
+        <path d="M 430 47 L 466 82" fill="none" stroke="var(--declared)" marker-end="url(#a3)"/>
+        <path d="M 430 141 L 466 106" fill="none" stroke="var(--reported)" marker-end="url(#a3)"/>
+
+        <rect x="580" y="70" width="200" height="48" rx="4"
+              fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="592" y="90" font-size="12" font-weight="600" fill="currentColor">contrôle ventilation</text>
+        <text x="592" y="106" font-size="10.5" fill="var(--ink-soft)">l'entité existe</text>
+        <path d="M 526 94 L 580 94" fill="none" stroke="currentColor" marker-end="url(#a3)"/>
+
+        <!-- evidence -->
+        <line x1="0" y1="212" x2="780" y2="212" stroke="var(--rule)"/>
+        <text x="0" y="234" font-family="ui-monospace, monospace" font-size="10"
+              letter-spacing="1.1" fill="var(--ink-faint)">DEUX APPAREILS RÉELS, MÊME FAMILLE</text>
+
+        <text x="0" y="262" font-size="12" fill="currentColor">ROOM_4 · modelId 557</text>
+        <text x="230" y="262" font-family="ui-monospace, monospace" font-size="11"
+              fill="var(--reported)">100801 remontée</text>
+        <text x="430" y="262" font-size="12" fill="currentColor">→ ventilation, oscillation</text>
+
+        <text x="0" y="288" font-size="12" fill="currentColor">ROOM_5 · modelId 1734</text>
+        <text x="230" y="288" font-family="ui-monospace, monospace" font-size="11"
+              fill="var(--ink-faint)">absente</text>
+        <text x="430" y="288" font-size="12" fill="var(--ink-soft)">→ aucun des deux</text>
+      </svg>
+      <figcaption>
+        Deux zones d'une même pompe à chaleur gainable, rapportées par le même utilisateur.
+        Le profil déclare la ventilation dans les deux cas ; seule celle qui publie
+        <code>100801</code> obtient le contrôle. <b>Un profil un peu trop généreux est donc
+        sans danger</b> — ce qui compte, c'est de ne pas se tromper de <em>nature</em>
+        d'appareil.
+      </figcaption>
+    </figure>
+
+    <div class="note">
+      <span class="label">Ce que ça implique pour la table</span>
+      <p>
+        Une ligne de <code>MODELS</code> décrit une capacité <em>potentielle</em>, pas une
+        liste de fonctionnalités. Lire le profil <code>ROOM_AC</code> comme « tous les
+        557-561 ont la ventilation » est faux.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ 4 -->
+  <section>
+    <h2><span class="n">04</span> D'un numéro de capacité à une entité</h2>
+    <p>
+      Une capacité arrive comme une paire : un numéro et une valeur. Le mapping en tire
+      trois choses, et chacune part vers une destination différente.
+    </p>
+
+    <figure>
+      <svg viewBox="0 0 780 360" role="img"
+           aria-label="La capacité 303 traverse get_capability_infos, qui produit un nom, un type et une catégorie. Le nom devient une clé de traduction résolue en français, le type décide de la plateforme Home Assistant, la catégorie décide si l'entité est principale ou de diagnostic.">
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <!-- input -->
+        <rect x="250" y="20" width="280" height="44" rx="4"
+              fill="var(--reported-wash)" stroke="var(--reported)" stroke-width="1.5"/>
+        <text x="264" y="40" font-family="ui-monospace, monospace" font-size="12"
+              fill="currentColor">capacité 303 = "0"</text>
+        <text x="264" y="55" font-size="10.5" fill="var(--ink-soft)">+ le profil, + la liste des capacités remontées</text>
+
+        <path d="M 390 64 L 390 96" fill="none" stroke="currentColor" marker-end="url(#a4)"/>
+        <text x="400" y="84" font-family="ui-monospace, monospace" font-size="9.5"
+              fill="var(--ink-faint)">get_capability_infos</text>
+
+        <!-- result -->
+        <rect x="190" y="100" width="400" height="44" rx="4"
+              fill="var(--surface-sunk)" stroke="var(--rule-strong)"/>
+        <text x="204" y="127" font-family="ui-monospace, monospace" font-size="11.5"
+              fill="currentColor">name "error_code" · type "string" · category "diag"</text>
+
+        <!-- three branches -->
+        <path d="M 260 144 L 260 176 L 120 176 L 120 208" fill="none"
+              stroke="currentColor" marker-end="url(#a4)"/>
+        <path d="M 390 144 L 390 208" fill="none" stroke="currentColor" marker-end="url(#a4)"/>
+        <path d="M 520 144 L 520 176 L 660 176 L 660 208" fill="none"
+              stroke="currentColor" marker-end="url(#a4)"/>
+
+        <!-- branch: name -->
+        <rect x="10" y="212" width="220" height="76" rx="4" fill="none" stroke="currentColor"/>
+        <text x="24" y="232" font-family="ui-monospace, monospace" font-size="10"
+              letter-spacing="1" fill="var(--ink-faint)">LE NOM</text>
+        <text x="24" y="252" font-size="11.5" fill="var(--ink-soft)">devient une clé de traduction</text>
+        <text x="24" y="270" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="currentColor">translations/fr.json</text>
+        <text x="24" y="284" font-size="12" font-weight="600" fill="currentColor">« Code d'erreur »</text>
+
+        <!-- branch: type -->
+        <rect x="280" y="212" width="220" height="76" rx="4" fill="none" stroke="currentColor"/>
+        <text x="294" y="232" font-family="ui-monospace, monospace" font-size="10"
+              letter-spacing="1" fill="var(--ink-faint)">LE TYPE</text>
+        <text x="294" y="252" font-size="11.5" fill="var(--ink-soft)">choisit la plateforme</text>
+        <text x="294" y="270" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="currentColor">sensor · climate · number</text>
+        <text x="294" y="284" font-family="ui-monospace, monospace" font-size="10.5"
+              fill="currentColor">switch · select · time…</text>
+
+        <!-- branch: category -->
+        <rect x="550" y="212" width="220" height="76" rx="4" fill="none" stroke="currentColor"/>
+        <text x="564" y="232" font-family="ui-monospace, monospace" font-size="10"
+              letter-spacing="1" fill="var(--ink-faint)">LA CATÉGORIE</text>
+        <text x="564" y="252" font-size="11.5" fill="var(--ink-soft)">principale ou diagnostic</text>
+        <text x="564" y="270" font-size="11.5" fill="var(--ink-soft)">décide où l'entité</text>
+        <text x="564" y="284" font-size="11.5" fill="var(--ink-soft)">apparaît sur la fiche</text>
+
+        <!-- fallthrough -->
+        <line x1="0" y1="316" x2="780" y2="316" stroke="var(--rule)"/>
+        <text x="0" y="340" font-size="11.5" fill="var(--ink-soft)">
+          Une capacité que rien ne nomme est ignorée — sauf si l'option
+          « créer les entités inconnues » est cochée, qui la sort en
+          <tspan font-family="ui-monospace, monospace">Capability_303</tspan>.
+        </text>
+      </svg>
+      <figcaption>
+        Le nom n'est jamais un libellé : c'est une clé. C'est pourquoi ajouter une capacité
+        oblige à ajouter aussi son entrée de traduction — sinon Home Assistant affiche
+        <code>error_code</code> tel quel.
+      </figcaption>
+    </figure>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════ 5 -->
+  <section>
+    <h2><span class="n">05</span> Les ordres de grandeur</h2>
+    <p>
+      Utile pour situer où se trouve le travail. La table des modèles est petite et
+      largement répétitive ; le mapping des capacités est là où la complexité vit.
+    </p>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Où</th>
+            <th>Quoi</th>
+            <th>Combien</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>model.py</code></td>
+            <td>modelIds nommés un par un</td>
+            <td class="num">48</td>
+          </tr>
+          <tr>
+            <td><code>model.py</code></td>
+            <td>modelIds nommés d'après leur zone</td>
+            <td class="num">15</td>
+          </tr>
+          <tr>
+            <td><code>model.py</code></td>
+            <td>profils partagés</td>
+            <td class="num">7</td>
+          </tr>
+          <tr>
+            <td><code>model.py</code></td>
+            <td>types d'appareil</td>
+            <td class="num">9</td>
+          </tr>
+          <tr>
+            <td><code>capability.py</code></td>
+            <td>branches de capacité</td>
+            <td class="num">115</td>
+          </tr>
+          <tr>
+            <td><code>capability.py</code></td>
+            <td>types d'entité produits</td>
+            <td class="num">23</td>
+          </tr>
+          <tr>
+            <td>issue&nbsp;#86 (upstream)</td>
+            <td>noms internes Atlantic connus</td>
+            <td class="num">165</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Sur un climatiseur réel qui publie 77 capacités, 31 sont nommées aujourd'hui.
+      Les 46 autres n'ont de mapping nulle part — et le CSV de l'issue #86 en nomme 30.
+    </p>
+  </section>
+
+  <footer>
+    Chiffres relevés dans le code au 20 août 2026, sur
+    <code>mathieuletyrant/cozytouch-hacs</code>. Les captures d'appareils citées
+    proviennent des issues #147 et #167 du dépôt d'origine.
+  </footer>
+
+</div>
+</body>
+</html>
