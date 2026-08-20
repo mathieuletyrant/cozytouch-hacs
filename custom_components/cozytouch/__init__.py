@@ -1,8 +1,6 @@
 """The Atlantic Cozytouch integration."""
 from __future__ import annotations
 
-from datetime import timedelta
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -26,8 +24,6 @@ PLATFORMS: list[Platform] = [
 ]
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
-
-SCAN_INTERVAL = timedelta(seconds=10)
 
 
 def _setting(entry: ConfigEntry, key: str) -> bool:

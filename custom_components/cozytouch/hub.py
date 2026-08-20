@@ -27,6 +27,9 @@ _LOGGER = logging.getLogger(__name__)
 # will stall _async_update_data forever, blocking all subsequent polls.
 REQUEST_TIMEOUT = ClientTimeout(total=30)
 
+# How often the coordinator asks Atlantic for a device's capabilities.
+POLL_INTERVAL = timedelta(seconds=60)
+
 
 # A config entry that carries its hub, so platforms can read it off the entry
 # instead of looking it up in hass.data by id.
@@ -52,7 +55,7 @@ class Hub(DataUpdateCoordinator):
             _LOGGER,
             config_entry=config_entry,
             name="Cozytouch_" + str(deviceId),
-            update_interval=timedelta(seconds=60),
+            update_interval=POLL_INTERVAL,
         )
         # Per-account state. These used to sit on the class, where one dict was
         # shared by every hub: an account with one config entry per device --
@@ -92,18 +95,6 @@ class Hub(DataUpdateCoordinator):
             )
 
         self._timestamps_away_mode_capability_id = None
-
-        # Load json for test during dev
-        self._test_load = False
-        if self._test_load:
-            self._dump_json = False
-            self.online = True
-            with open(
-                self._hass.config.config_dir + "/cozytouch_eoras2.json",
-                encoding="utf-8",
-            ) as json_file:
-                file_contents = json_file.read()
-                self.update_devices_from_json_data(json.loads(file_contents))
 
     @property
     def hub_id(self) -> str:
@@ -200,10 +191,6 @@ class Hub(DataUpdateCoordinator):
                             json_data[0]["address"].get("country", None)
                         )
 
-                    # Store zones informations
-                    if "zones" in json_data[0]:
-                        copy.deepcopy(json_data[0]["zones"])
-
                 self.online = True
 
             except CannotConnect:
@@ -228,8 +215,9 @@ class Hub(DataUpdateCoordinator):
                 json_object = json.dumps(json_data, indent=4)
                 outfile.write(json_object)
 
-        # Get zones
-        if len(self._zones) == 0 and "zones" in json_data[0]:
+        # Refreshed on every setup view, not just the first: renaming a zone in
+        # the Cozytouch app has to reach the entity names it feeds.
+        if "zones" in json_data[0]:
             self._zones = copy.deepcopy(json_data[0]["zones"])
 
         # Start by removing old devices
@@ -291,8 +279,6 @@ class Hub(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         _LOGGER.debug("_async_update_data %d", self._deviceId)
-        if self._test_load:
-            return
 
         # Proactively re-authenticate if the token is about to expire
         if self.online and datetime.now(UTC).timestamp() >= self._token_expiry:
@@ -582,88 +568,85 @@ class Hub(DataUpdateCoordinator):
                 if dev["deviceId"] == self._deviceId:
                     for capability in dev["capabilities"]:
                         if capabilityId == capability["capabilityId"]:
-                            if self._test_load:
-                                capability["value"] = value
-                            else:
-                                try:
-                                    # Write capability value
-                                    async with self._session.post(
-                                        COZYTOUCH_ATLANTIC_API
-                                        + "/magellan/executions/writecapability",
-                                        json={
-                                            "capabilityId": capabilityId,
-                                            "deviceId": self._deviceId,
-                                            "value": value,
-                                        },
-                                        headers={
-                                            "Authorization": f"Bearer {self._access_token}",
-                                            "Content-Type": "application/json",
-                                        },
-                                        timeout=REQUEST_TIMEOUT,
-                                    ) as response:
-                                        if response.status == 201:
-                                            # Check completion
-                                            executionId = await response.json()
-                                            completed = False
-                                            nbRetry = 0
-                                            while not completed:
-                                                async with self._session.get(
-                                                    COZYTOUCH_ATLANTIC_API
-                                                    + "/magellan/executions/"
-                                                    + str(executionId),
-                                                    headers={
-                                                        "Authorization": f"Bearer {self._access_token}",
-                                                        "Content-Type": "application/json",
-                                                    },
-                                                    timeout=REQUEST_TIMEOUT,
-                                                ) as executionResponse:
-                                                    try:
-                                                        execution_data = (
-                                                            await executionResponse.json()
+                            try:
+                                # Write capability value
+                                async with self._session.post(
+                                    COZYTOUCH_ATLANTIC_API
+                                    + "/magellan/executions/writecapability",
+                                    json={
+                                        "capabilityId": capabilityId,
+                                        "deviceId": self._deviceId,
+                                        "value": value,
+                                    },
+                                    headers={
+                                        "Authorization": f"Bearer {self._access_token}",
+                                        "Content-Type": "application/json",
+                                    },
+                                    timeout=REQUEST_TIMEOUT,
+                                ) as response:
+                                    if response.status == 201:
+                                        # Check completion
+                                        executionId = await response.json()
+                                        completed = False
+                                        nbRetry = 0
+                                        while not completed:
+                                            async with self._session.get(
+                                                COZYTOUCH_ATLANTIC_API
+                                                + "/magellan/executions/"
+                                                + str(executionId),
+                                                headers={
+                                                    "Authorization": f"Bearer {self._access_token}",
+                                                    "Content-Type": "application/json",
+                                                },
+                                                timeout=REQUEST_TIMEOUT,
+                                            ) as executionResponse:
+                                                try:
+                                                    execution_data = (
+                                                        await executionResponse.json()
+                                                    )
+                                                    execution_state = (
+                                                        execution_data.get(
+                                                            "state", False
                                                         )
-                                                        execution_state = (
-                                                            execution_data.get(
-                                                                "state", False
-                                                            )
+                                                    )
+                                                    if execution_state == 1:
+                                                        _LOGGER.info(
+                                                            "Execution_state waiting execution"
                                                         )
-                                                        if execution_state == 1:
-                                                            _LOGGER.info(
-                                                                "Execution_state waiting execution"
-                                                            )
-                                                        elif execution_state == 2:
-                                                            _LOGGER.info(
-                                                                "Execution_state in progress"
-                                                            )
-                                                        elif execution_state == 3:
-                                                            _LOGGER.info(
-                                                                "Execution_state completed"
-                                                            )
-                                                            completed = True
-                                                            break
-                                                        else:
-                                                            _LOGGER.info(
-                                                                "Execution_state error"
-                                                            )
-                                                            break
-
-                                                    except ContentTypeError:
-                                                        self.online = False
+                                                    elif execution_state == 2:
+                                                        _LOGGER.info(
+                                                            "Execution_state in progress"
+                                                        )
+                                                    elif execution_state == 3:
+                                                        _LOGGER.info(
+                                                            "Execution_state completed"
+                                                        )
+                                                        completed = True
+                                                        break
+                                                    else:
+                                                        _LOGGER.info(
+                                                            "Execution_state error"
+                                                        )
                                                         break
 
-                                                nbRetry += 1
-                                                if nbRetry > 5:
+                                                except ContentTypeError:
+                                                    self.online = False
                                                     break
 
-                                                await asyncio.sleep(1)
+                                            nbRetry += 1
+                                            if nbRetry > 5:
+                                                break
 
-                                            if completed:
-                                                capability["value"] = value
-                                except (ClientError, asyncio.TimeoutError) as err:
-                                    _LOGGER.warning(
-                                        "Network error writing capability %d: %s",
-                                        capabilityId,
-                                        err,
-                                    )
+                                            await asyncio.sleep(1)
+
+                                        if completed:
+                                            capability["value"] = value
+                            except (ClientError, asyncio.TimeoutError) as err:
+                                _LOGGER.warning(
+                                    "Network error writing capability %d: %s",
+                                    capabilityId,
+                                    err,
+                                )
                             break
 
     def away_mode_init(self, timestampStart, timestampEnd):
