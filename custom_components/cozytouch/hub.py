@@ -18,7 +18,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.util import dt as dt_util
 
 from .capability import get_capability_infos
-from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
+from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID, DOMAIN
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
@@ -438,6 +438,36 @@ class Hub(DataUpdateCoordinator):
                 return dev["gatewaySerialNumber"]
 
         return "Unknown"
+
+    def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
+        """Identifiers of the gateway this device hangs off, when HA has it.
+
+        The API declares the topology itself: every room unit and thermal zone
+        on the account carries the gateway's id in masterDeviceId. Home
+        Assistant can only draw the link if the gateway was set up too, since a
+        device here is registered under its own config entry id -- so this
+        returns None for a gateway, and for a child whose gateway nobody added.
+
+        None rather than a guess matters: HA logs a warning when via_device
+        names a device that is not in the registry.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        masterDeviceId = None
+        for dev in self._devices:
+            if dev["deviceId"] == deviceId:
+                masterDeviceId = dev.get("masterDeviceId")
+                break
+
+        if not masterDeviceId:
+            return None
+
+        for entry in self._hass.config_entries.async_entries(DOMAIN):
+            if entry.data.get("deviceId") == masterDeviceId:
+                return (DOMAIN, entry.entry_id)
+
+        return None
 
     def get_capabilities_for_device(self, deviceId: int | None = None):
         """Get capabilities for a device."""

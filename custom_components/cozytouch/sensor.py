@@ -364,13 +364,21 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
     def device_info(self) -> DeviceInfo:
         """Return the device info."""
         modelInfos = self.coordinator.get_model_infos()
-        return DeviceInfo(
+        info = DeviceInfo(
             identifiers={(DOMAIN, self._device_uniq_id)},
             manufacturer="Atlantic",
             name=modelInfos["name"],
             model=modelInfos["name"],
             serial_number=self.coordinator.get_serial_number(),
         )
+        # Hang the device under its gateway when that is set up too, instead
+        # of leaving every room unit at the top of the list. via_device is
+        # deprecated for via_device_id, which needs a registry lookup and a
+        # newer HA than this integration asks for.
+        via_device = self.coordinator.get_via_device()
+        if via_device is not None:
+            info["via_device"] = via_device
+        return info
 
     @property
     def native_value(self):
