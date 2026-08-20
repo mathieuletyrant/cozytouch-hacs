@@ -35,6 +35,10 @@ capture, so a test going green says "nobody changed this by accident", never
 - `tests/test_model.py` — one case per branch of `get_model_infos`, comparing
   the whole returned dict. Ids that resolve differently inside a shared branch
   get their own case.
+- `tests/test_model_table.py` — the shape of the `MODELS` table rather than any
+  device: that a row declares only keys something actually reads (a mistyped
+  flag is otherwise silent), that no id is claimed twice, and that the returned
+  dict is a copy so no caller can poison a shared profile.
 - `tests/test_regressions.py` — bugs that were live and that no table walk
   would have reached: state that used to sit on the `Hub` class and so was
   shared by every config entry, and a shadowed `time` import that made every
@@ -49,11 +53,12 @@ capture, so a test going green says "nobody changed this by accident", never
 
 ## Adding a device
 
-1. `custom_components/cozytouch/model.py` — a branch in `get_model_infos`
-   returning at minimum `name`, `type` and `HVACModes`. Optional flags are
-   documented in the module docstring; **only declare a flag when the device
-   actually needs it**, because `capability.py` reads them to decide which
-   entities exist, and a flag set on a shared branch reaches every model in it.
+1. `custom_components/cozytouch/model.py` — one line in the `MODELS` table,
+   `modelId: ("Commercial name", PROFILE)`, reusing one of the named profiles.
+   Do not copy a profile to change one detail; put the detail on the model's
+   own line with `PROFILE | {...}`, the way 1957 and 418 do. Devices whose name
+   comes from their room live in `ZONE_NAMED` instead. The module docstring is
+   written for a contributor who does not read Python — keep it that way.
 2. `custom_components/cozytouch/capability.py` — only if the device reports
    capability ids nothing maps yet. Model-specific behaviour goes behind
    `if modelId == …`, never a change to the shared default.
