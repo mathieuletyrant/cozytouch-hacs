@@ -32,7 +32,7 @@ MAPPED_MODEL_IDS = frozenset(
 
 def test_the_table_maps_the_models_these_tests_walk():
     """A sanity floor: the walk above found the table, not an empty range."""
-    assert len(MAPPED_MODEL_IDS) == 63
+    assert len(MAPPED_MODEL_IDS) == 70
     assert AIR_CONDITIONERS < MAPPED_MODEL_IDS
 
 

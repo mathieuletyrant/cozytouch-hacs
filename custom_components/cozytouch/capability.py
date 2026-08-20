@@ -531,13 +531,13 @@ def get_capability_infos(  # noqa: C901
     elif capabilityId == 232:
         capability["name"] = "boost_total_time"
         capability["type"] = "time"
-        capability["category"] = "diagnostic"
+        capability["category"] = "diag"
         capability["icon"] = "mdi:clock-outline"
 
     elif capabilityId == 233:
         capability["name"] = "boost_remaining_time"
         capability["type"] = "time"
-        capability["category"] = "diagnostic"
+        capability["category"] = "diag"
         capability["icon"] = "mdi:clock-outline"
 
     elif capabilityId == 245:
@@ -825,7 +825,7 @@ def get_capability_infos(  # noqa: C901
     elif capabilityId == 102023:
         capability["name"] = "air_circulation_remaining_time"
         capability["type"] = "time"
-        capability["category"] = "diagnostic"
+        capability["category"] = "diag"
         capability["icon"] = "mdi:fan-clock"
 
     elif capabilityId == 102024:

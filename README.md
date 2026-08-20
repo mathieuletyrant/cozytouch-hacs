@@ -87,6 +87,11 @@ brings the rooms in.
 | ------: | ----- |
 | 557-561, 1734 | Air conditioner (room unit) |
 | 562-570 | Air conditioner user interface |
+| 1505-1510 | Thermal zone |
+
+A thermal zone sits alongside the room unit that heats it and shares its zone.
+It reports what kind of room this is, and nothing to control — so it is named,
+but it gets no climate entity of its own.
 
 ### Gateways / Passerelles
 
@@ -95,6 +100,7 @@ brings the rooms in.
 | 556 | Naviclim Hub |
 | 1353 | Calypso Split Interface |
 | 1457 | HUB Cozytouch |
+| 1681 | HUB SHOGUN - PRT sans fil |
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
 
