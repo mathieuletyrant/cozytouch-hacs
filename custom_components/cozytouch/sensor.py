@@ -325,6 +325,16 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
             translation_key if translation_key else self.entity_description.name
         )
 
+        # A capability can ask to arrive switched off. It is still mapped, named
+        # and searchable in the entity registry, but it holds no state and costs
+        # nothing in the recorder until someone turns it on. That is the right
+        # default for the values the API reports about itself -- supported-mode
+        # bitmasks, scheduling constants -- which are worth having available and
+        # not worth showing to everybody.
+        self._attr_entity_registry_enabled_default = self._capability.get(
+            "enabled_by_default", True
+        )
+
         if "category" in self._capability:
             if self._capability["category"] == "diag":
                 self._attr_entity_category = EntityCategory.DIAGNOSTIC
