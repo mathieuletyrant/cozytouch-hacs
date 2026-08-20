@@ -77,7 +77,6 @@ class Hub(DataUpdateCoordinator):
         # shared by every hub: an account with one config entry per device --
         # a gateway plus a room unit per zone -- had them all writing over each
         # other's setup, and the last one to connect won.
-        self._localization: dict = {}
         self._setup: dict = {}
         self._zones: list | dict = {}
 
@@ -200,12 +199,6 @@ class Hub(DataUpdateCoordinator):
                     await asyncio.get_event_loop().run_in_executor(
                         None, self.update_devices_from_json_data, json_data
                     )
-
-                    # Store country to retrieve localization informations
-                    if "address" in json_data[0]:
-                        await self._update_localization(
-                            json_data[0]["address"].get("country", None)
-                        )
 
                 self.online = True
 
@@ -566,7 +559,6 @@ class Hub(DataUpdateCoordinator):
         return {
             "setup": copy.deepcopy(self._setup),
             "zones": copy.deepcopy(self._zones),
-            "localization": copy.deepcopy(self._localization),
             "devices": devices,
         }
 
@@ -786,32 +778,6 @@ class Hub(DataUpdateCoordinator):
                         response.status,
                         str(response.request_info),
                     )
-
-    async def _update_localization(self, country: str):
-        if len(self._localization) == 0:
-            headers = {
-                "Authorization": f"Bearer {self._access_token}",
-                "Content-Type": "application/json",
-            }
-            try:
-                async with self._session.get(
-                    COZYTOUCH_ATLANTIC_API + "/magellan/refs/countries",
-                    headers=headers,
-                    timeout=REQUEST_TIMEOUT,
-                ) as response:
-                    try:
-                        json_data = await response.json()
-                        if isinstance(json_data, list):
-                            for localization in json_data:
-                                if localization.get("countryCode", "") == country:
-                                    self._localization = copy.deepcopy(localization)
-                                    break
-
-                    except ContentTypeError:
-                        self._localization = {}
-            except (ClientError, asyncio.TimeoutError) as err:
-                _LOGGER.warning("Could not fetch localization: %s", err)
-                self._localization = {}
 
 
 class CannotConnect(exceptions.HomeAssistantError):

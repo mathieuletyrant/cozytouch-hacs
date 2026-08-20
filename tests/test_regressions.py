@@ -25,7 +25,6 @@ def setup_payload(zones, devices=()):
     "attribute",
     [
         "_setup",
-        "_localization",
         "_zones",
         "_timestamp_away_mode_last_change",
         "_timestamp_away_mode_start",

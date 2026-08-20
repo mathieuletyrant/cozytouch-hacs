@@ -1,4 +1,4 @@
-"""Probe the Cozytouch API and print the shape of what each route returns.
+r"""Probe the Cozytouch API and print the shape of what each route returns.
 
 A discovery tool, not part of the integration. Read-only: it authenticates,
 GETs, and prints keys rather than a full dump, so the output can be pasted

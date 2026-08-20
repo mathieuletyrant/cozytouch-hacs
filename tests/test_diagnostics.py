@@ -25,7 +25,6 @@ def make_hub(devices, deviceId, zones=None):
         _deviceId=deviceId,
         _setup={"id": 1532156, "name": "setup1"},
         _zones=zones if zones is not None else [],
-        _localization={"country": "FR"},
     )
     hub.get_zone_name = lambda zoneId=None: next(
         (z["name"] for z in hub._zones if z.get("id") == zoneId), str(zoneId)
@@ -163,7 +162,7 @@ def test_fields_the_api_leaves_out_read_as_none_rather_than_failing():
     assert reported["masterDeviceId"] is None
 
 
-@pytest.mark.parametrize("key", ["setup", "zones", "localization", "devices"])
+@pytest.mark.parametrize("key", ["setup", "zones", "devices"])
 def test_the_dump_carries_the_sections_a_report_is_built_from(key):
     hub = make_hub([device(1, 557)], deviceId=1)
 
