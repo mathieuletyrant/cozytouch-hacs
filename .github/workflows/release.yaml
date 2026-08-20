@@ -70,7 +70,31 @@ jobs:
           git push origin HEAD:main
           git push origin "${{ github.event.inputs.version }}"
 
+      - name: Write the release notes
+        # --generate-notes lists merged pull requests. Everything here lands
+        # straight on main, so it produced a bare compare link. The commit
+        # subjects are the changelog.
+        run: |
+          PREVIOUS=$(git describe --tags --abbrev=0 "${{ github.event.inputs.version }}^" 2>/dev/null || true)
+
+          {
+            if [ -n "$PREVIOUS" ]; then
+              git log --no-merges --format='- %s (%h)' \
+                --invert-grep --grep='^Release ' \
+                "$PREVIOUS..${{ github.event.inputs.version }}"
+              echo
+              echo "**Full changelog**: ${{ github.server_url }}/${{ github.repository }}/compare/$PREVIOUS...${{ github.event.inputs.version }}"
+            else
+              git log --no-merges --format='- %s (%h)' "${{ github.event.inputs.version }}"
+            fi
+          } > release-notes.md
+
+          cat release-notes.md
+
       - name: Create the GitHub release
-        run: gh release create "${{ github.event.inputs.version }}" --title "${{ github.event.inputs.version }}" --generate-notes
+        run: |
+          gh release create "${{ github.event.inputs.version }}" \
+            --title "${{ github.event.inputs.version }}" \
+            --notes-file release-notes.md
         env:
           GH_TOKEN: ${{ github.token }}
