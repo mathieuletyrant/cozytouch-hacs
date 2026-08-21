@@ -165,7 +165,7 @@
             },
             "domestic_hot_water_mode":
             {
-                "name": "Mode Eau Chaude",
+                "name": "Mode ECS",
                 "state":
                 {
                     "manual": "Manuel",
@@ -205,7 +205,7 @@
             "dhw_power_consumption":    { "name": "Consommation ECS" },
             "dhw_pump":                 { "name": "Pompe ECS" },
             "dhw_temperature":          { "name": "Température ECS" },
-            "domestic_hot_water":       { "name": "Eau Chaude" },
+            "domestic_hot_water":       { "name": "ECS" },
             "eco_mode":                 { "name": "Mode Eco" },
             "exhaust_temperature":      { "name": "Température Échappement" },
             "flame":                    { "name": "Flamme" },
@@ -337,8 +337,8 @@
             "air_circulation":    { "name": "Brassage d'air" },
             "away_mode":          { "name": "Absence" },
             "boost_mode":         { "name": "Mode Boost" },
-            "domestic_hot_water": { "name": "Eau Chaude" },
-            "domestic_hot_water_boost": { "name": "Boost Eau Chaude" },
+            "domestic_hot_water": { "name": "ECS" },
+            "domestic_hot_water_boost": { "name": "Boost ECS" },
             "eco_mode":           { "name": "Mode Eco" },
             "powerful_mode":      { "name": "Mode Powerful" },
             "presence_mode":      { "name": "Mode Présence" },
