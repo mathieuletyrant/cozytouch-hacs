@@ -34,8 +34,8 @@ TRANSLATIONS = (
 # translation to find.
 PLACEHOLDER = re.compile(r"^(Capability_|Temp_|Target )")
 
-# A model that reports one of everything, so the walk below reaches every branch
-# rather than only the ones an air conditioner happens to have.
+# A capability-id superset, so the walk below can reach every mapping branch
+# rather than only the ids a single device happens to report.
 EVERY_ID = frozenset(range(1, 400)) | frozenset(range(100000, 106000))
 
 
