@@ -37,6 +37,7 @@ SELF_DESCRIBING_CAPABILITIES = {
     294: "temperature_update_step",
     295: "schedule_time_step",
     296: "schedule_minimum_interval",
+    236: "max_dhw_schedule_slots_per_day",
     306: "max_schedule_slots_per_day",
     350: "supported_air_mixing_speeds",
     100002: "supported_ventilation_options",
@@ -891,6 +892,26 @@ def get_capability_infos(  # noqa: C901
         capability["type"] = "switch"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:fan"
+
+    elif capabilityId == 150:
+        # Home-level fault code, sibling of the room (303) and DHW (290) codes.
+        capability["name"] = "home_error_code"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:alert-circle-outline"
+
+    elif 237 <= capabilityId <= 243:
+        # Domestic-hot-water weekly program, one capability per day, monday first.
+        capability["name"] = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
+        capability["type"] = "prog"
+        capability["category"] = "diag"
+
+    elif capabilityId == 290:
+        # DHW fault code, same raw matrix shape as the room error code (303).
+        capability["name"] = "dhw_error_code"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:alert-circle-outline"
 
     elif capabilityId == 102005:
         # The set of air-circulation modes this device supports.
