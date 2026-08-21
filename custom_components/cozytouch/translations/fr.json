@@ -163,9 +163,9 @@
                     "high": "Rapide"
                 }
             },
-            "heating_mode":
+            "domestic_hot_water_mode":
             {
-                "name": "Mode Chauffe",
+                "name": "Mode Eau Chaude",
                 "state":
                 {
                     "manual": "Manuel",
@@ -198,7 +198,6 @@
             "condenser_temperature":    { "name": "Temperature Condensateur" },
             "cooling_temperature_max":  { "name": "Consigne froid max" },
             "cooling_temperature_min":  { "name": "Consigne froid min" },
-            "current_hot_water_level":  { "name": "Niveau d'eau chaude actuel" },
             "dhw_power_consumption":    { "name": "Consommation ECS" },
             "dhw_pump":                 { "name": "Pompe ECS" },
             "dhw_temperature":          { "name": "Température ECS" },
@@ -210,7 +209,8 @@
             "heat_pump_z1":             { "name": "PAC Z1" },
             "heat_pump_z2":             { "name": "PAC Z2" },
             "hot_water_available":      { "name": "Hot Water Available" },
-            "hot_water_level_requested": { "name": "Niveau d'eau chaude demandé" },
+            "hot_water_showers_expected": { "name": "Douches attendues" },
+            "hot_water_showers_remaining": { "name": "Douches restantes" },
             "interface_fw":             { "name": "Interface FW" },
             "max_schedule_slots_per_day": { "name": "Créneaux max par jour" },
             "max_schedule_slots_per_week": { "name": "Créneaux max par semaine" },
@@ -334,6 +334,7 @@
             "away_mode":          { "name": "Absence" },
             "boost_mode":         { "name": "Mode Boost" },
             "domestic_hot_water": { "name": "Eau Chaude" },
+            "domestic_hot_water_boost": { "name": "Boost Eau Chaude" },
             "eco_mode":           { "name": "Mode Eco" },
             "powerful_mode":      { "name": "Mode Powerful" },
             "presence_mode":      { "name": "Mode Présence" },

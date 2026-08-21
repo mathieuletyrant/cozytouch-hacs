@@ -281,7 +281,8 @@ def get_capability_infos(  # noqa: C901
         capability["icon"] = "mdi:faucet"
 
     elif capabilityId == 87:
-        capability["name"] = "heating_mode"
+        # water-boiler icon: this is the domestic-hot-water mode, not heating.
+        capability["name"] = "domestic_hot_water_mode"
         capability["type"] = "select"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:water-boiler"
@@ -458,7 +459,8 @@ def get_capability_infos(  # noqa: C901
         capability["enabled_by_default"] = False
 
     elif capabilityId == 165:
-        capability["name"] = "boost_mode"
+        # water-boiler icon: a domestic-hot-water boost, not the generic boost.
+        capability["name"] = "domestic_hot_water_boost"
         capability["type"] = "switch"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:water-boiler"
@@ -698,13 +700,16 @@ def get_capability_infos(  # noqa: C901
         capability["icon"] = "mdi:clock-outline"
 
     elif capabilityId == 292:
-        capability["name"] = "hot_water_level_requested"
+        # Not a level: the app counts showers. Atlantic water heaters display a
+        # number of expected/remaining showers rather than a percentage.
+        capability["name"] = "hot_water_showers_expected"
         capability["type"] = "int"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:water-plus"
 
     elif capabilityId == 293:
-        capability["name"] = "current_hot_water_level"
+        # Remaining showers, the counterpart of 292 -- see the note there.
+        capability["name"] = "hot_water_showers_remaining"
         capability["type"] = "int"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:water-check"
