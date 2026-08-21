@@ -891,6 +891,33 @@ def get_capability_infos(  # noqa: C901
         capability["category"] = "sensor"
         capability["icon"] = "mdi:fan"
 
+    elif capabilityId == 150:
+        # Home-level fault code, sibling of the room (303) and DHW (290) codes.
+        capability["name"] = "home_error_code"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:alert-circle-outline"
+
+    elif capabilityId == 236:
+        # How many program milestones the DHW schedule allows per day.
+        capability["name"] = "dhw_prog_max_milestones_per_day"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:calendar-clock"
+
+    elif 237 <= capabilityId <= 243:
+        # Domestic-hot-water weekly program, one capability per day, monday first.
+        capability["name"] = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
+        capability["type"] = "prog"
+        capability["category"] = "diag"
+
+    elif capabilityId == 290:
+        # DHW fault code, same raw matrix shape as the room error code (303).
+        capability["name"] = "dhw_error_code"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:alert-circle-outline"
+
     elif capabilityId == 104044:
         capability["name"] = "boost_mode"
         capability["type"] = "switch"
