@@ -177,6 +177,10 @@
         "sensor": {
             "error_code":                     { "name": "Code d'erreur" },
             "air_circulation_remaining_time": { "name": "Durée Brassage Restante" },
+            "air_circulation_supported_modes": { "name": "Modes de brassage disponibles" },
+            "air_circulation_time_max": { "name": "Durée Brassage Max" },
+            "air_circulation_time_min": { "name": "Durée Brassage Min" },
+            "air_circulation_time_step": { "name": "Pas Durée Brassage" },
             "absence_dhw_temperature":  { "name": "Température ECS absence" },
             "air_conditioner":          { "name": "Climatisation" },
             "available_operating_services": { "name": "Services disponibles" },
