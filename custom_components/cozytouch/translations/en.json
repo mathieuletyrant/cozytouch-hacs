@@ -177,6 +177,10 @@
         "sensor": {
             "error_code":                     { "name": "Error Code" },
             "air_circulation_remaining_time": { "name": "Air Circulation Remaining Time" },
+            "air_circulation_supported_modes": { "name": "Air Circulation Supported Modes" },
+            "air_circulation_time_max": { "name": "Air Circulation Time Max" },
+            "air_circulation_time_min": { "name": "Air Circulation Time Min" },
+            "air_circulation_time_step": { "name": "Air Circulation Time Step" },
             "absence_dhw_temperature":  { "name": "Absence DHW Temperature" },
             "air_conditioner":          { "name": "Air Conditioner" },
             "available_operating_services": { "name": "Available Operating Services" },

@@ -870,8 +870,9 @@ def get_capability_infos(  # noqa: C901
         capability["modelList"] = "AirCirculationSpeeds"
 
     elif capabilityId == 102021:
-        # Air circulation runs for a set number of minutes; 102025 and 102026 sit
-        # next to it at 15 and 300 and look like the bounds
+        # Air circulation runs for a set number of minutes. Its bounds and step
+        # are reported alongside: 102025 the minimum (15), 102026 the maximum
+        # (300), 102022 the step -- exposed as their own diag entities below.
         capability["name"] = "air_circulation_total_time"
         capability["type"] = "minutes_adjustment_number"
         capability["category"] = "sensor"
@@ -890,6 +891,34 @@ def get_capability_infos(  # noqa: C901
         capability["type"] = "switch"
         capability["category"] = "sensor"
         capability["icon"] = "mdi:fan"
+
+    elif capabilityId == 102005:
+        # The set of air-circulation modes this device supports.
+        capability["name"] = "air_circulation_supported_modes"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan"
+
+    elif capabilityId == 102022:
+        # Step for the air-circulation duration (102021).
+        capability["name"] = "air_circulation_time_step"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
+
+    elif capabilityId == 102025:
+        # Minimum air-circulation duration; the lower bound of 102021.
+        capability["name"] = "air_circulation_time_min"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
+
+    elif capabilityId == 102026:
+        # Maximum air-circulation duration; the upper bound of 102021.
+        capability["name"] = "air_circulation_time_max"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
 
     elif capabilityId == 104044:
         capability["name"] = "boost_mode"
