@@ -37,6 +37,7 @@ SELF_DESCRIBING_CAPABILITIES = {
     294: "temperature_update_step",
     295: "schedule_time_step",
     296: "schedule_minimum_interval",
+    236: "max_dhw_schedule_slots_per_day",
     306: "max_schedule_slots_per_day",
     350: "supported_air_mixing_speeds",
     100002: "supported_ventilation_options",
@@ -870,8 +871,9 @@ def get_capability_infos(  # noqa: C901
         capability["modelList"] = "AirCirculationSpeeds"
 
     elif capabilityId == 102021:
-        # Air circulation runs for a set number of minutes; 102025 and 102026 sit
-        # next to it at 15 and 300 and look like the bounds
+        # Air circulation runs for a set number of minutes. Its bounds and step
+        # are reported alongside: 102025 the minimum (15), 102026 the maximum
+        # (300), 102022 the step -- exposed as their own diag entities below.
         capability["name"] = "air_circulation_total_time"
         capability["type"] = "minutes_adjustment_number"
         capability["category"] = "sensor"
@@ -898,13 +900,6 @@ def get_capability_infos(  # noqa: C901
         capability["category"] = "diag"
         capability["icon"] = "mdi:alert-circle-outline"
 
-    elif capabilityId == 236:
-        # How many program milestones the DHW schedule allows per day.
-        capability["name"] = "dhw_prog_max_milestones_per_day"
-        capability["type"] = "int"
-        capability["category"] = "diag"
-        capability["icon"] = "mdi:calendar-clock"
-
     elif 237 <= capabilityId <= 243:
         # Domestic-hot-water weekly program, one capability per day, monday first.
         capability["name"] = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
@@ -917,6 +912,34 @@ def get_capability_infos(  # noqa: C901
         capability["type"] = "string"
         capability["category"] = "diag"
         capability["icon"] = "mdi:alert-circle-outline"
+
+    elif capabilityId == 102005:
+        # The set of air-circulation modes this device supports.
+        capability["name"] = "air_circulation_supported_modes"
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan"
+
+    elif capabilityId == 102022:
+        # Step for the air-circulation duration (102021).
+        capability["name"] = "air_circulation_time_step"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
+
+    elif capabilityId == 102025:
+        # Minimum air-circulation duration; the lower bound of 102021.
+        capability["name"] = "air_circulation_time_min"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
+
+    elif capabilityId == 102026:
+        # Maximum air-circulation duration; the upper bound of 102021.
+        capability["name"] = "air_circulation_time_max"
+        capability["type"] = "int"
+        capability["category"] = "diag"
+        capability["icon"] = "mdi:fan-clock"
 
     elif capabilityId == 104044:
         capability["name"] = "boost_mode"
