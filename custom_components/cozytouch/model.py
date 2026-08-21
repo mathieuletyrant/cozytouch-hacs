@@ -274,6 +274,8 @@ MODELS: dict[int, tuple[str, dict]] = {
     1656: ("Aeromax 6", WATER_HEATER),
     1657: ("Calypso 200L", WATER_HEATER),
     1658: ("Calypso connecté", WATER_HEATER),
+    # Drives a ducted heat pump, one room unit and one thermal zone per room.
+    1681: ("HUB SHOGUN - PRT sans fil", GATEWAY),
     1758: ("HUB Navizone", GATEWAY | {"awayModeTemperatureAvailable": False}),
     1763: ("FLAT/S4 IOTHUB", GATEWAY),
     # The app offers no scheduling for this one.
@@ -298,6 +300,18 @@ MODELS: dict[int, tuple[str, dict]] = {
 #
 # (first id, last id): ("Label ", PROFILE)
 
+# A room's own record, sitting alongside the unit that heats it and sharing its
+# zoneId. It reports what type of room this is and a request to make the unit
+# identify itself -- no temperature, no mode, nothing to drive. Named so it
+# stops reading as "Unknown product", and given no climate: a device that owns
+# no climate must not produce a second climate entity for a room that already
+# has one.
+THERMAL_ZONE = {
+    "type": CozytouchDeviceType.AC_CONTROLLER,
+    "HVACModes": OFF_ONLY,
+}
+
+
 ZONE_NAMED: dict[tuple[int, int], tuple[str, dict]] = {
     # Behind a Naviclim (556) or Navizone (1758) gateway. The app offers no eco
     # mode for these anywhere, and capability 100507 has read 0 since
@@ -307,6 +321,9 @@ ZONE_NAMED: dict[tuple[int, int], tuple[str, dict]] = {
     # A separate product. No report either way on its eco mode, so it keeps the
     # default rather than inheriting a decision made about 557-561.
     (1734, 1734): ("Air Conditioner ", ROOM_AC),
+    # One per room on a ducted installation, counting up alongside the room
+    # units. Six of them were reported on a six-zone heat pump.
+    (1505, 1510): ("Thermal Zone ", THERMAL_ZONE),
 }
 
 

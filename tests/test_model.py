@@ -773,6 +773,26 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1505,
+        {
+            "modelId": 1505,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Thermal Zone (#1)",
+            "type": CozytouchDeviceType.AC_CONTROLLER,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
+        1681,
+        {
+            "modelId": 1681,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "HUB SHOGUN - PRT sans fil",
+            "type": CozytouchDeviceType.HUB,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
         9999,
         {
             "modelId": 9999,
@@ -795,7 +815,7 @@ def test_model_group(modelId, expected):
     assert get_model_infos(modelId) == expected
 
 
-@pytest.mark.parametrize("modelId", [557, 561, 562, 570])
+@pytest.mark.parametrize("modelId", [557, 561, 562, 570, 1505, 1510])
 def test_a_zone_name_replaces_the_numbered_name(modelId):
     """Units in a zone are named after the room, not their position."""
     assert get_model_infos(modelId, "Chambre parentale")["name"].endswith(
