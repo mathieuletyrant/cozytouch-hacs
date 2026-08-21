@@ -60,7 +60,11 @@ capture, so a test going green says "nobody changed this by accident", never
    entities exist, and a flag set on a shared branch reaches every model in it.
 2. `custom_components/cozytouch/capability.py` — only if the device reports
    capability ids nothing maps yet. Model-specific behaviour goes behind
-   `if modelId == …`, never a change to the shared default.
+   `if modelId == …`, never a change to the shared default. A capability whose
+   encoding is unverified belongs in `SELF_DESCRIBING_CAPABILITIES`: named,
+   surfaced as a raw string, and `enabled_by_default` False, so it costs nobody
+   anything until someone turns it on to investigate. Claim a type only where
+   the unit is actually known.
 3. Translations — a new capability name needs an entry in **all three** of
    `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
    the alphabetical order and column alignment already in the file.

@@ -16,6 +16,46 @@ PROG_DAYS = (
 )
 
 
+# Capabilities the device uses to describe itself: what it supports, what its
+# scheduler allows, which controls exist. Named from the capability list shared
+# in gduteil/cozytouch#86, which gives Atlantic's own identifier for each id --
+# but not the unit, nor the encoding, nor how to read a bitmask.
+#
+# So they are surfaced as raw strings under a real name and switched off by
+# default: there for anyone investigating their own hardware, invisible to
+# everyone else. A device reports dozens of these, and turning them all on for
+# every user would bury the handful of entities that mean something.
+#
+# Promoting one to a typed entity takes someone watching it change against the
+# Cozytouch app and reporting what it does. Until then, the honest thing is to
+# show the value and not claim to know what it is.
+SELF_DESCRIBING_CAPABILITIES = {
+    73: "available_thermostat_modes",
+    157: "override_setpoint_activation",
+    166: "available_operating_services",
+    217: "available_system_modes",
+    294: "temperature_update_step",
+    295: "schedule_time_step",
+    296: "schedule_minimum_interval",
+    306: "max_schedule_slots_per_day",
+    350: "supported_air_mixing_speeds",
+    100002: "supported_ventilation_options",
+    100004: "available_ventilation_controls",
+    100013: "available_schedule_types",
+    100021: "supported_ventilation_controls",
+    100022: "supported_operating_services",
+    100023: "supported_system_modes",
+    100024: "available_ventilation_options",
+    100102: "ventilation_adaptive_planning",
+    100103: "ventilation_unexpected_events",
+    100300: "schedule_start_day",
+    100301: "max_schedule_slots_per_week",
+    100450: "ventilation_heating_anticipation",
+    100800: "ventilation_fan_speed_mode",
+    104050: "open_window_detection",
+}
+
+
 def get_capability_infos(  # noqa: C901
     modelInfos: dict,
     capabilityId: int,
@@ -404,6 +444,18 @@ def get_capability_infos(  # noqa: C901
         capability["lowest_value"] = 19
         capability["highest_value"] = 28
         capability["step"] = 0.5
+
+    elif capabilityId in (162, 163):
+        # The cooling counterpart of the 160/161 heating bounds. Two independent
+        # reverse-engineering efforts name these the same way, so the unit is
+        # not a guess -- but nothing reads them yet. Wiring them as the climate
+        # entity's min and max while cooling is a separate change.
+        capability["name"] = (
+            "cooling_temperature_min" if capabilityId == 162 else "cooling_temperature_max"
+        )
+        capability["type"] = "temperature"
+        capability["category"] = "diag"
+        capability["enabled_by_default"] = False
 
     elif capabilityId == 165:
         capability["name"] = "boost_mode"
@@ -879,6 +931,12 @@ def get_capability_infos(  # noqa: C901
         capability["name"] = "Temp_" + str(capabilityId)
         capability["type"] = "temperature_adjustment_number"
         capability["category"] = "sensor"
+
+    elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
+        capability["name"] = SELF_DESCRIBING_CAPABILITIES[capabilityId]
+        capability["type"] = "string"
+        capability["category"] = "diag"
+        capability["enabled_by_default"] = False
 
     else:
         return None
