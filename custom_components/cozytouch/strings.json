@@ -163,9 +163,9 @@
                     "high": "High"
                 }
             },
-            "heating_mode":
+            "domestic_hot_water_mode":
             {
-                "name": "Heating Mode",
+                "name": "Domestic Hot Water Mode",
                 "state":
                 {
                     "manual": "Manual",
@@ -198,7 +198,6 @@
             "condenser_temperature":    { "name": "Condenser Temperature" },
             "cooling_temperature_max":  { "name": "Cooling Temperature Max" },
             "cooling_temperature_min":  { "name": "Cooling Temperature Min" },
-            "current_hot_water_level":  { "name": "Current Hot Water Level" },
             "dhw_power_consumption":    { "name": "DHW Power consumption" },
             "dhw_pump":                 { "name": "DHW Pump" },
             "dhw_temperature":          { "name": "DHW Temperature" },
@@ -210,7 +209,8 @@
             "heat_pump_z1":             { "name": "Heat Pump Z1" },
             "heat_pump_z2":             { "name": "Heat Pump Z2" },
             "hot_water_available":      { "name": "Hot Water Available" },
-            "hot_water_level_requested": { "name": "Hot Water Level Requested" },
+            "hot_water_showers_expected": { "name": "Hot Water Showers Expected" },
+            "hot_water_showers_remaining": { "name": "Hot Water Showers Remaining" },
             "interface_fw":             { "name": "Interface FW" },
             "max_schedule_slots_per_day": { "name": "Max Schedule Slots Per Day" },
             "max_schedule_slots_per_week": { "name": "Max Schedule Slots Per Week" },
@@ -334,6 +334,7 @@
             "away_mode":          { "name": "Away Mode" },
             "boost_mode":         { "name": "Boost Mode" },
             "domestic_hot_water": { "name": "Domestic Hot Water" },
+            "domestic_hot_water_boost": { "name": "Domestic Hot Water Boost" },
             "eco_mode":           { "name": "Eco Mode" },
             "powerful_mode":      { "name": "Powerful Mode" },
             "presence_mode":      { "name": "Presence Mode" },
