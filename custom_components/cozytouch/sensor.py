@@ -17,7 +17,6 @@ from homeassistant.const import (
     EntityCategory,
     PERCENTAGE,
     UnitOfEnergy,
-    UnitOfPower,
     UnitOfPressure,
     UnitOfSoundPressure,
     UnitOfTemperature,
@@ -139,30 +138,6 @@ async def async_setup_entry(
                     native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
                 )
             )
-        elif capability["type"] == "power":
-            native_unit_of_measurement = capability.get(
-                "displayed_unit_of_measurement", UnitOfPower.WATT
-            )
-
-            display_factor = 1.0
-            if native_unit_of_measurement == UnitOfPower.KILO_WATT:
-                display_factor = 0.001
-
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.POWER,
-                    native_unit_of_measurement=capability.get(
-                        "displayed_unit_of_measurement", UnitOfPower.WATT
-                    ),
-                    displayed_unit_of_measurement=capability.get(
-                        "displayed_unit_of_measurement", None
-                    ),
-                )
-            )
         elif capability["type"] == "energy":
             native_unit_of_measurement = capability.get(
                 "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
@@ -214,7 +189,11 @@ async def async_setup_entry(
                     config_title=config_entry.title,
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
-                    device_class=SensorDeviceClass.BATTERY,
+                    # No device class: percentage is the unit, not the meaning.
+                    # SensorDeviceClass.BATTERY was the closest match and made
+                    # hot_water_available (271) read as a battery level, icon
+                    # and voice assistants included.
+                    device_class=None,
                     native_unit_of_measurement=PERCENTAGE,
                 )
             )
