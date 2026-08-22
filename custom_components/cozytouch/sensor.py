@@ -214,7 +214,11 @@ async def async_setup_entry(
                     config_title=config_entry.title,
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
-                    device_class=SensorDeviceClass.BATTERY,
+                    # No device class: percentage is the unit, not the meaning.
+                    # SensorDeviceClass.BATTERY was the closest match and made
+                    # hot_water_available (271) read as a battery level, icon
+                    # and voice assistants included.
+                    device_class=None,
                     native_unit_of_measurement=PERCENTAGE,
                 )
             )
