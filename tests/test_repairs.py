@@ -9,6 +9,9 @@ The cases worth keeping are the ones about what the ask costs the user. It is
 made once per model rather than once per device; it stops once they have
 answered; it goes away by itself when a release maps the thing; and the report
 it hands them carries the model id and nothing about their household.
+
+One case pins something that was taken out rather than put in : no attempt is
+made to work out which devices are not really products.
 """
 
 import asyncio
@@ -80,7 +83,7 @@ def make_entry(title="Salon", options=None, unmapped=(101, 102)):
     )
 
 
-def check(monkeypatch, modelId, entry=None, names=("Salon", "Salon")):
+def check(monkeypatch, modelId, entry=None):
     """Run the check against a hub reporting one model, and report the calls."""
     registry = FakeRegistry()
     monkeypatch.setattr(repairs, "ir", registry)
@@ -88,7 +91,6 @@ def check(monkeypatch, modelId, entry=None, names=("Salon", "Salon")):
     hub = SimpleNamespace(
         get_model_id=lambda: modelId,
         get_model_infos=lambda: get_model_infos(modelId),
-        get_reported_names=lambda: names,
     )
     repairs.async_check_model_mapping(
         SimpleNamespace(), entry or make_entry(), hub
@@ -294,51 +296,27 @@ def test_an_entry_that_went_away_mid_flow_is_not_written_to():
     assert entries.updated == []
 
 
-# --- things the API lists that are not products ---------------------------
+# --- what is deliberately not filtered ------------------------------------
 
 
-@pytest.mark.parametrize(
-    "names",
-    [
-        ("THZone_0", "---"),
-        ("thzone_2", None),
-        (None, "THZone_1"),
-        ("Salon", "---"),
-    ],
-)
-def test_an_internal_object_of_the_api_is_not_asked_about(monkeypatch, names):
-    """A thermal zone has no product behind it : no mapping would give it an
-    entity, so its owner has nothing to send and no reason to be asked."""
-    registry = check(monkeypatch, UNMAPPED_MODEL, names=names)
+@pytest.mark.parametrize("title", ["THZone_0", "---", "Salon"])
+def test_an_unmapped_model_is_asked_about_whatever_it_is_called(
+    monkeypatch, title
+):
+    """The API returns its thermal zones as if they were devices, and nothing
+    tells one apart from a real device nobody has mapped yet : the gateway's
+    id is in masterDeviceId on both, modelFamily is null on both, and
+    capabilities are only fetched for the configured device.
 
-    assert registry.created == []
-
-
-def test_a_device_someone_named_after_a_zone_is_still_asked_about(monkeypatch):
-    """People call a real radiator "Zone de nuit". The markers are the API's
-    own, matched from the start of the name, not looked for anywhere in it."""
-    registry = check(monkeypatch, UNMAPPED_MODEL, names=("Zone de nuit", None))
+    A filter was tried on those names and taken back out. The two ways of
+    being wrong do not cost the same -- a zone reported is an issue closed in
+    seconds, a real device silenced is someone never finding out why their
+    hardware is half-supported -- so this pins that nothing is guessed. A
+    filter added later has to break this case, and read why first.
+    """
+    registry = check(monkeypatch, UNMAPPED_MODEL, make_entry(title=title))
 
     assert len(registry.created) == 1
-
-
-def test_an_issue_already_raised_for_one_goes_away(monkeypatch):
-    """Recognising it later should not leave the question hanging on screen."""
-    registry = check(monkeypatch, UNMAPPED_MODEL, names=("THZone_0", "---"))
-
-    assert registry.deleted == [("cozytouch", "unknown_model_99999")]
-
-
-def test_the_names_come_back_as_the_api_gave_them():
-    """Neither field carries the same thing on every product, so the filter
-    reads both rather than picking one."""
-    hub = SimpleNamespace(
-        _devices=[{"deviceId": 1, "name": "THZone_0", "longName": "---"}],
-        _deviceId=1,
-    )
-
-    assert Hub.get_reported_names(hub) == ("THZone_0", "---")
-    assert Hub.get_reported_names(hub, 2) == (None, None)
 
 
 # --- what the report is made of ------------------------------------------

@@ -30,38 +30,10 @@ ISSUE_FORM = "unmapped_model.yml"
 
 UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
 
-# The API lists things that are not products. A thermal zone is the one seen so
-# far : it hangs off a gateway, reports a model id no table knows, and there is
-# nothing behind it to describe -- no mapping would give it an entity, so its
-# owner has nothing to send and no reason to be asked.
-#
-# Two markers, neither of them certain. "---" is the longName placeholder
-# docs/api-surface.md records against the thermal zones of the one probed
-# account (models 1505-1507). The prefixes are names reported from an account
-# rather than read off a capture kept here, so they are matched loosely, on
-# either name, and the list is meant to grow as more turn up. A prefix rather
-# than a substring on purpose : people call a real device "Zone de nuit".
-PLACEHOLDER_LONG_NAME = "---"
-VIRTUAL_DEVICE_PREFIXES = ("thzone",)
-
 # Where the acknowledgement is kept. Written by the fix flow, read on every
 # setup: the model stays unmapped until a release maps it, so without this the
 # issue would come back at each restart at someone who already did their part.
 REPORTED_MODELS = "reported_models"
-
-
-def _is_not_a_product(hub) -> bool:
-    """Whether the API is listing an internal object rather than hardware."""
-    reported = [name for name in hub.get_reported_names() if name]
-
-    if any(name.strip() == PLACEHOLDER_LONG_NAME for name in reported):
-        return True
-
-    return any(
-        name.lower().startswith(prefix)
-        for name in reported
-        for prefix in VIRTUAL_DEVICE_PREFIXES
-    )
 
 
 def _report_url(modelId: int, unmapped: list[int]) -> str:
@@ -104,6 +76,15 @@ def async_check_model_mapping(
     others, but a diagnostics dump only carries capability values for the
     configured one -- which is what a mapping gets built from -- so asking
     about the rest would ask for a file that cannot answer.
+
+    Everything the table does not know is asked about, including the thermal
+    zones the API returns as if they were devices. Nothing separates one of
+    those from a real device that nobody has mapped yet : the gateway's id
+    sits in masterDeviceId on both, modelFamily is null on both, and
+    capabilities are only fetched for the configured device. Any rule would be
+    a guess, and the two ways of being wrong do not cost the same -- a zone
+    reported is an issue closed in seconds, a real device silenced is someone
+    never finding out why their hardware is half-supported.
     """
     modelId = hub.get_model_id()
     if modelId is None:
@@ -111,10 +92,7 @@ def async_check_model_mapping(
 
     issue_id = UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
 
-    mapped = hub.get_model_infos()["type"] is not CozytouchDeviceType.UNKNOWN
-    if mapped or _is_not_a_product(hub):
-        # Both are reasons there is nothing to ask, and either can become true
-        # for a device that was already asked about, so the issue goes with it.
+    if hub.get_model_infos()["type"] is not CozytouchDeviceType.UNKNOWN:
         ir.async_delete_issue(hass, DOMAIN, issue_id)
         return
 

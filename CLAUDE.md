@@ -42,11 +42,11 @@ capture, so a test going green says "nobody changed this by accident", never
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
-  model and not at all about the API's own internal objects, that its
-  pre-filled report carries the model and capability ids and nothing about the
-  household, that its query keys still match the issue form's field ids, that
-  answering it stops the asking, and that a release mapping the model clears
-  it.
+  model and about every model the table does not know, whatever the API calls
+  the device, that its pre-filled report carries the model and capability ids
+  and nothing about the household, that its query keys still match the issue
+  form's field ids, that answering it stops the asking, and that a release
+  mapping the model clears it.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a
