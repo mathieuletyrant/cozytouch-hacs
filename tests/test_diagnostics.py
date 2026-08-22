@@ -29,6 +29,11 @@ def make_hub(devices, deviceId, zones=None):
     hub.get_zone_name = lambda zoneId=None: next(
         (z["name"] for z in hub._zones if z.get("id") == zoneId), str(zoneId)
     )
+    # get_diagnostics reads the named/unnamed split off the hub rather than
+    # working it out again, so the stand-in has to carry the real one.
+    hub.get_capability_names = lambda deviceId=None: Hub.get_capability_names(
+        hub, deviceId
+    )
     return hub
 
 
