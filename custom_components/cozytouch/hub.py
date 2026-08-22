@@ -433,6 +433,21 @@ class Hub(DataUpdateCoordinator):
 
         return get_model_infos(-1)
 
+    def get_model_id(self, deviceId: int | None = None) -> int | None:
+        """The model id the API reports, which is what the mapping is keyed on.
+
+        get_model_infos answers what the table made of it; this answers what
+        the device said, which is what a bug report has to carry.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        for dev in self._devices:
+            if dev["deviceId"] == deviceId:
+                return dev["modelId"]
+
+        return None
+
     def get_serial_number(self, deviceId: int | None = None) -> str:
         """Get serial number."""
         if not deviceId:

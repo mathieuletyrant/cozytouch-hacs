@@ -357,6 +357,12 @@
             "swing_mode":         { "name": "Mode Oscillation" }
         }
     },
+    "issues": {
+        "unknown_model": {
+            "title": "Un appareil que cette intégration ne connaît pas",
+            "description": "**{device_name}** annonce l'identifiant de modèle `{model_id}`, qu'aucune table de l'intégration ne connaît. Ses capacités génériques fonctionnent ; tout ce qui lui est propre manque, et il s'affiche sous le nom `Unknown product ({model_id})`.\n\nPour le faire cartographier, téléchargez un fichier de diagnostic depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics* et joignez-le à un ticket. Ce fichier liste les identifiants de capacités que rien ne nomme encore, et c'est à partir de là qu'une correspondance se construit. Vos identifiants de connexion et votre adresse en sont retirés avant écriture.\n\nSi vous préférez ne pas le faire, ignorez ce signalement : Home Assistant ne le représentera qu'après une mise à jour."
+        }
+    },
     "services": {
         "set_schedule": {
             "name": "Programmer une journée",

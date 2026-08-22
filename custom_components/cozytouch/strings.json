@@ -357,6 +357,12 @@
             "swing_mode":         { "name": "Swing Mode" }
         }
     },
+    "issues": {
+        "unknown_model": {
+            "title": "A device this integration does not know",
+            "description": "**{device_name}** reports model id `{model_id}`, which nothing in the integration maps. Its generic capabilities work; everything specific to it is missing, and it reads as `Unknown product ({model_id})`.\n\nTo get it mapped, download a diagnostics dump from *Settings > Devices & Services > Atlantic Cozytouch > ⋮ > Download diagnostics* and attach it to an issue. That file lists the capability ids nothing names yet, which is what a mapping is built from. Your credentials and address are stripped out before it is written.\n\nIf you would rather not, ignore this issue -- Home Assistant only brings an ignored issue back after an upgrade."
+        }
+    },
     "services": {
         "set_schedule": {
             "name": "Set a day program",

@@ -115,7 +115,12 @@ known to work end to end :
 ### My device is not listed
 
 It will show up as `Unknown product (…)`, and only its generic capabilities will
-work. To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
+work. Home Assistant says so on its own : an unmapped device raises a repair
+under `Settings -> System -> Repairs`, naming the model id and asking for the
+file below. Ignoring it is fine, and it comes back after a Home Assistant
+upgrade; a release that adds the mapping clears it for good.
+
+To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
 and attach a diagnostics dump :
 
 `Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download diagnostics`
