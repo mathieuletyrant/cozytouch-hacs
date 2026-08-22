@@ -433,6 +433,21 @@ class Hub(DataUpdateCoordinator):
 
         return get_model_infos(-1)
 
+    def get_unmapped_models(self) -> list[int]:
+        """Every model id on the account the table has no branch for.
+
+        The whole account rather than this entry's own device : the setup view
+        lists them all, and one report that covers everything is one issue for
+        the person who has to write it, instead of one per device.
+        """
+        unmapped = {
+            dev["modelId"]
+            for dev in self._devices
+            if get_model_infos(dev["modelId"])["type"] is CozytouchDeviceType.UNKNOWN
+        }
+
+        return sorted(unmapped)
+
     def get_model_id(self, deviceId: int | None = None) -> int | None:
         """The model id the API reports, which is what the mapping is keyed on.
 

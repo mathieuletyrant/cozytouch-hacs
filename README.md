@@ -117,9 +117,11 @@ known to work end to end :
 It will show up as `Unknown product (…)`, and only its generic capabilities will
 work. Home Assistant says so on its own : an unmapped device raises a repair
 under `Settings -> System -> Repairs`. Opening it hands you a link to an issue
-already carrying the model id and the capability ids nothing names yet, and
-nothing else about your home; attach the dump below to it and the repair stops
-asking. A release that adds the mapping clears it either way.
+already carrying every unmapped model on the account, with the capability ids
+nothing names for each and nothing else about your home -- so a gateway with
+three unknown zones is one issue, not four. Attach the dump below to it, and
+answering that one dialog stops the others asking too. A release that adds a
+mapping clears them either way.
 
 To do it by hand instead, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
 and attach a diagnostics dump :

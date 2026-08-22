@@ -36,29 +36,71 @@ UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
 REPORTED_MODELS = "reported_models"
 
 
-def _report_url(modelId: int, unmapped: list[int]) -> str:
+def _account_report(hass: HomeAssistant, entry: ConfigEntry) -> dict[int, list[int]]:
+    """Every unmapped model on the account, with the ids nothing names for it.
+
+    The setup view lists the whole account, so any one entry can see every
+    model the table does not know. The capability ids can only come from the
+    entries Home Assistant has actually loaded -- a hub holds capabilities for
+    its own device and no other -- so a device nobody added contributes its
+    model id and an empty list, which is still the half a mapping starts from.
+    """
+    report = {modelId: [] for modelId in entry.runtime_data.get_unmapped_models()}
+
+    for other in hass.config_entries.async_entries(DOMAIN):
+        hub = getattr(other, "runtime_data", None)
+        if hub is None:
+            continue
+
+        modelId = hub.get_model_id()
+        if modelId in report:
+            _, unnamed = hub.get_capability_names()
+            report[modelId] = unnamed
+
+    return report
+
+
+def _report_url(report: dict[int, list[int]]) -> str:
     """A new-issue link with the report already filled in.
 
-    Deliberately only the model id and the capability ids nothing names : those
-    are what a mapping is built from, and they say nothing about the household.
-    Values stay out -- among them are the wifi SSID (219) and the gateway
-    serial -- and so does the device name, which people call after a room or a
-    child. A URL is clicked without being read. The dump the form asks for
-    carries all of that, stripped, and is attached knowingly.
+    Deliberately only the model ids and the capability ids nothing names :
+    those are what a mapping is built from, and they say nothing about the
+    household. Values stay out -- among them are the wifi SSID (219) and the
+    gateway serial -- and so does the device name, which people call after a
+    room or a child. A URL is clicked without being read. The dump the form
+    asks for carries all of that, stripped, and is attached knowingly.
     """
+    models = sorted(report)
     query = urlencode(
         {
             # The keys after `template` are the ids of that form's fields, which
             # is how GitHub fills them in. Renaming one there breaks the link
             # quietly -- it just arrives empty -- so the two move together.
             "template": ISSUE_FORM,
-            "title": f"Unmapped model {modelId}",
-            "model_id": str(modelId),
-            "capability_ids": ", ".join(str(id) for id in unmapped) or "none",
+            "title": "Unmapped model" + ("s " if len(models) > 1 else " ")
+            + ", ".join(str(modelId) for modelId in models),
+            "model_ids": ", ".join(str(modelId) for modelId in models),
+            "capability_ids": "\n".join(
+                f"{modelId}: " + (", ".join(str(id) for id in report[modelId]) or "none")
+                for modelId in models
+            ),
         }
     )
 
     return f"{ISSUE_TRACKER}/new?{query}"
+
+
+def _already_reported(hass: HomeAssistant) -> set[int]:
+    """Models somebody has already sent a report for.
+
+    Read across every entry, because one report speaks for the whole account :
+    answering the dialog on one device has to settle the devices it covered.
+    """
+    reported: set[int] = set()
+    for entry in hass.config_entries.async_entries(DOMAIN):
+        reported.update(entry.options.get(REPORTED_MODELS, []))
+
+    return reported
 
 
 @callback
@@ -96,7 +138,7 @@ def async_check_model_mapping(
         ir.async_delete_issue(hass, DOMAIN, issue_id)
         return
 
-    if modelId in entry.options.get(REPORTED_MODELS, []):
+    if modelId in _already_reported(hass):
         return
 
     ir.async_create_issue(
@@ -116,7 +158,7 @@ def async_check_model_mapping(
 
 
 class UnknownModelRepairFlow(RepairsFlow):
-    """Hands over a written report, and stops asking once it is sent."""
+    """Hands over one written report, and stops asking about all of it."""
 
     def __init__(self, entry_id: str, modelId: int) -> None:
         """Remember which entry and model the issue was raised for."""
@@ -128,48 +170,73 @@ class UnknownModelRepairFlow(RepairsFlow):
         return await self.async_step_confirm()
 
     async def async_step_confirm(self, user_input=None):
-        """Show the report, and record that it was sent."""
-        if user_input is not None:
-            self._async_remember_it_was_reported()
-            return self.async_create_entry(data={})
+        """Show the report, and settle everything it covered."""
+        report = self._report()
 
-        entry = self.hass.config_entries.async_get_entry(self._entry_id)
-        unmapped: list[int] = []
-        if entry is not None and hasattr(entry, "runtime_data"):
-            # The ids are read now rather than stored on the issue: a device
-            # that gained a capability since setup should report the one it has.
-            _, unmapped = entry.runtime_data.get_capability_names()
+        if user_input is not None:
+            self._async_remember_it_was_reported(report)
+            self._async_drop_the_other_issues(report)
+            return self.async_create_entry(data={})
 
         return self.async_show_form(
             step_id="confirm",
             data_schema=vol.Schema({}),
             description_placeholders={
                 "model_id": str(self._modelId),
-                "capability_ids": ", ".join(str(id) for id in unmapped) or "-",
-                "report_url": _report_url(self._modelId, unmapped),
+                "model_ids": ", ".join(str(modelId) for modelId in sorted(report))
+                or str(self._modelId),
+                "report_url": _report_url(report or {self._modelId: []}),
             },
         )
 
-    @callback
-    def _async_remember_it_was_reported(self) -> None:
-        """Take this model off the list of things to ask about.
+    def _report(self) -> dict[int, list[int]]:
+        """What this dialog speaks for.
 
-        Stored on the config entry, which reloads the integration on any write
-        -- the same reload changing an option causes. That is the cost of the
-        issue not coming back at the next restart.
+        Read when the dialog opens rather than stored on the issue : a device
+        that gained a capability, or an entry added since, belongs in the
+        report someone is about to send.
+        """
+        entry = self.hass.config_entries.async_get_entry(self._entry_id)
+        if entry is None or getattr(entry, "runtime_data", None) is None:
+            return {}
+
+        return _account_report(self.hass, entry)
+
+    @callback
+    def _async_remember_it_was_reported(self, report: dict[int, list[int]]) -> None:
+        """Take everything the report covered off the list of things to ask.
+
+        Written to the one entry the dialog was opened from, and read back
+        across all of them, so this costs a single reload -- the same reload
+        changing an option causes -- rather than one per device.
         """
         entry = self.hass.config_entries.async_get_entry(self._entry_id)
         if entry is None:
             return
 
         reported = list(entry.options.get(REPORTED_MODELS, []))
-        if self._modelId in reported:
+        fresh = [modelId for modelId in sorted(report) if modelId not in reported]
+        if not fresh:
             return
 
         self.hass.config_entries.async_update_entry(
             entry,
-            options={**entry.options, REPORTED_MODELS: [*reported, self._modelId]},
+            options={**entry.options, REPORTED_MODELS: [*reported, *fresh]},
         )
+
+    @callback
+    def _async_drop_the_other_issues(self, report: dict[int, list[int]]) -> None:
+        """Close the repairs raised for the other devices in the report.
+
+        One issue was sent for all of them, so leaving their dialogs standing
+        would ask the same person for the same file again. The one this flow
+        belongs to is deleted by Home Assistant when the flow finishes.
+        """
+        for modelId in report:
+            if modelId != self._modelId:
+                ir.async_delete_issue(
+                    self.hass, DOMAIN, UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
+                )
 
 
 async def async_create_fix_flow(
