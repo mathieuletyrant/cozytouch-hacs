@@ -41,6 +41,9 @@ capture, so a test going green says "nobody changed this by accident", never
   time entity raise.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
+- `tests/test_services.py` — the schedule services : the matrix `set_schedule`
+  builds, and the round trip that is the promise of `get_schedule`, since what
+  it returns has to be writable again unchanged.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a
