@@ -46,8 +46,8 @@ capture, so a test going green says "nobody changed this by accident", never
   the device, that one dialog's report covers the whole account and answering
   it settles every repair that report spoke for, that the report carries the
   model and capability ids and nothing about the household, that its query
-  keys still match the issue form's field ids, and that a release mapping a
-  model clears it.
+  keys still match the issue form's field ids and that every field they do not
+  fill is required, and that a release mapping a model clears it.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a

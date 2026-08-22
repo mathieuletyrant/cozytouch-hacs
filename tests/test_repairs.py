@@ -329,6 +329,26 @@ def test_the_link_fills_in_fields_the_form_actually_has():
     assert set(query) - {"template", "title"} <= ids
 
 
+def test_a_field_the_link_cannot_fill_is_required():
+    """The dialog fills in two fields. Everything else is a thing only the
+    person with the hardware knows -- the commercial name, what the app shows,
+    the dump -- and an optional field arrives empty, which costs the round trip
+    the pre-filled link was written to save."""
+    with io.open(
+        f".github/ISSUE_TEMPLATE/{repairs.ISSUE_FORM}", encoding="utf-8"
+    ) as handle:
+        form = yaml.safe_load(handle)
+
+    filled = set(parse_qs(urlparse(repairs._report_url({1: [2]})).query))
+
+    for element in form["body"]:
+        if "id" not in element or element["id"] in filled:
+            continue
+
+        required = element.get("validations", {}).get("required")
+        assert required, f"{element['id']} is neither filled in nor required"
+
+
 def test_the_link_says_nothing_about_the_household(monkeypatch):
     """A URL is clicked without being read. Capability values hold the wifi
     SSID and the gateway serial, and people name a device after a room or a

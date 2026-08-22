@@ -37,9 +37,27 @@ body:
     attributes:
       label: What the device is
       description: >
-        The brand and commercial name on the box, and what the Cozytouch app
-        shows for it. A mapping is written against what the app does, so a
-        screenshot of its controls is worth more than any description.
+        The brand and commercial name on the box, per model id if the report
+        covers several. This is where the name in the mapping comes from --
+        the API only names the gateway.
+    validations:
+      required: true
+
+  - type: textarea
+    id: app
+    attributes:
+      label: What the Cozytouch app offers for it
+      description: >
+        The modes the app lists for this device (heating, cooling, automatic,
+        eco, boost, …), the fan speeds and swing positions if it has them, and
+        whether it offers a quiet mode and an absence temperature. A
+        screenshot of the mode picker answers most of this at once.
+
+
+        Asked because nothing else can answer it. The mapping has to say which
+        raw value means which mode, and a device reporting a capability does
+        not mean the app exposes it -- the room units behind a Navizone report
+        an eco capability the app never shows.
     validations:
       required: true
 
@@ -54,6 +72,11 @@ body:
         and the capability ids nothing names yet, which is what the mapping is
         built from. Your credentials and address are stripped out before the
         file is written.
+
+
+        One file per unmapped device, please : a dump carries the capability
+        values of the device it was downloaded from, and identity only for the
+        rest of the account.
     validations:
       required: true
 
@@ -63,3 +86,5 @@ body:
       label: Versions
       description: Home Assistant, and the version of this integration.
       placeholder: "HA 2026.8.1, cozytouch 2026.8.2"
+    validations:
+      required: true
