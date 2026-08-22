@@ -433,6 +433,36 @@ class Hub(DataUpdateCoordinator):
 
         return get_model_infos(-1)
 
+    def get_unmapped_models(self) -> list[int]:
+        """Every model id on the account the table has no branch for.
+
+        The whole account rather than this entry's own device : the setup view
+        lists them all, and one report that covers everything is one issue for
+        the person who has to write it, instead of one per device.
+        """
+        unmapped = {
+            dev["modelId"]
+            for dev in self._devices
+            if get_model_infos(dev["modelId"])["type"] is CozytouchDeviceType.UNKNOWN
+        }
+
+        return sorted(unmapped)
+
+    def get_model_id(self, deviceId: int | None = None) -> int | None:
+        """The model id the API reports, which is what the mapping is keyed on.
+
+        get_model_infos answers what the table made of it; this answers what
+        the device said, which is what a bug report has to carry.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        for dev in self._devices:
+            if dev["deviceId"] == deviceId:
+                return dev["modelId"]
+
+        return None
+
     def get_serial_number(self, deviceId: int | None = None) -> str:
         """Get serial number."""
         if not deviceId:
@@ -521,6 +551,45 @@ class Hub(DataUpdateCoordinator):
 
         return capabilities
 
+    def get_capability_names(
+        self, deviceId: int | None = None
+    ) -> tuple[dict[int, str], list[int]]:
+        """Split what a device reports into what the mapping names and what it
+        does not.
+
+        The second half is what a bug report about an unmapped model is made
+        of, and it is read both by the diagnostics dump and by the repair that
+        asks for one -- so the rule for "named" lives here rather than in each.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        for dev in self._devices:
+            if dev["deviceId"] != deviceId:
+                continue
+
+            modelInfos = get_model_infos(dev["modelId"])
+            availableCapabilityIds = {
+                cap["capabilityId"] for cap in dev["capabilities"]
+            }
+
+            mapped, unmapped = {}, []
+            for cap in dev["capabilities"]:
+                infos = get_capability_infos(
+                    modelInfos,
+                    cap["capabilityId"],
+                    cap["value"],
+                    availableCapabilityIds,
+                )
+                if infos:
+                    mapped[cap["capabilityId"]] = infos.get("name")
+                else:
+                    unmapped.append(cap["capabilityId"])
+
+            return mapped, sorted(unmapped)
+
+        return {}, []
+
     def get_diagnostics(self) -> dict:
         """Describe the account as the API reports it, for a diagnostics dump.
 
@@ -538,25 +607,11 @@ class Hub(DataUpdateCoordinator):
 
             capabilities = None
             if entry_owns_it:
-                availableCapabilityIds = {
-                    cap["capabilityId"] for cap in dev["capabilities"]
-                }
-                mapped, unmapped = {}, []
-                for cap in dev["capabilities"]:
-                    infos = get_capability_infos(
-                        modelInfos,
-                        cap["capabilityId"],
-                        cap["value"],
-                        availableCapabilityIds,
-                    )
-                    if infos:
-                        mapped[cap["capabilityId"]] = infos.get("name")
-                    else:
-                        unmapped.append(cap["capabilityId"])
+                mapped, unmapped = self.get_capability_names(dev["deviceId"])
 
                 capabilities = {
                     "mapped": mapped,
-                    "unmapped": sorted(unmapped),
+                    "unmapped": unmapped,
                     "values": {
                         cap["capabilityId"]: cap["value"] for cap in dev["capabilities"]
                     },

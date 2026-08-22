@@ -115,7 +115,15 @@ known to work end to end :
 ### My device is not listed
 
 It will show up as `Unknown product (…)`, and only its generic capabilities will
-work. To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
+work. Home Assistant says so on its own : an unmapped device raises a repair
+under `Settings -> System -> Repairs`. Opening it hands you a link to an issue
+already carrying every unmapped model on the account, with the capability ids
+nothing names for each and nothing else about your home -- so a gateway with
+three unknown zones is one issue, not four. Attach the dump below to it, and
+answering that one dialog stops the others asking too. A release that adds a
+mapping clears them either way.
+
+To do it by hand instead, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
 and attach a diagnostics dump :
 
 `Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download diagnostics`

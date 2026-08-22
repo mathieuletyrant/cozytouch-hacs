@@ -10,6 +10,7 @@ import homeassistant.helpers.config_validation as cv
 from . import hub
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry
+from .repairs import async_check_model_mapping
 from .services import async_register_services
 
 PLATFORMS: list[Platform] = [
@@ -71,6 +72,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
         # has to be released here or the retry leaks it
         await theHub.close()
         raise
+
+    # Once the devices are loaded, and only for a setup that got this far:
+    # an unmapped model is worth a word to the user, a failed setup is not.
+    async_check_model_mapping(hass, entry, theHub)
 
     return True
 
