@@ -1,0 +1,49 @@
+name: Something is wrong
+description: An entity reads the wrong thing, a control does nothing, setup fails
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: >
+        What you did, what the integration showed, and what the Cozytouch app
+        shows for the same thing. That last one is what settles most of these :
+        the app is the reference for what a device is meant to do.
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: The brand and commercial name, and the model id if you have it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >
+        **Settings → Devices & Services → Atlantic Cozytouch → ⋮ → Download
+        diagnostics**, dragged in here. Credentials and address are stripped
+        out before the file is written. Anything about a capability value is
+        guesswork without it.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log
+      description: >
+        Anything the log says about `cozytouch`. Turn the detail up with
+        `logger.set_level` on `custom_components.cozytouch` if it says nothing.
+      render: text
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Home Assistant, and the version of this integration.
+      placeholder: "HA 2026.8.1, cozytouch 2026.8.2"
+    validations:
+      required: true

@@ -18,6 +18,8 @@ import re
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
 
+import yaml
+
 import pytest
 
 from custom_components.cozytouch import repairs
@@ -78,7 +80,7 @@ def make_entry(title="Salon", options=None, unmapped=(101, 102)):
     )
 
 
-def check(monkeypatch, modelId, entry=None):
+def check(monkeypatch, modelId, entry=None, names=("Salon", "Salon")):
     """Run the check against a hub reporting one model, and report the calls."""
     registry = FakeRegistry()
     monkeypatch.setattr(repairs, "ir", registry)
@@ -86,6 +88,7 @@ def check(monkeypatch, modelId, entry=None):
     hub = SimpleNamespace(
         get_model_id=lambda: modelId,
         get_model_infos=lambda: get_model_infos(modelId),
+        get_reported_names=lambda: names,
     )
     repairs.async_check_model_mapping(
         SimpleNamespace(), entry or make_entry(), hub
@@ -211,11 +214,28 @@ def test_the_link_carries_the_report_already_written():
     result, _ = run_flow(make_entry(unmapped=(101, 207)))
 
     url = urlparse(result["description_placeholders"]["report_url"])
-    body = parse_qs(url.query)["body"][0]
+    query = parse_qs(url.query)
 
     assert url.path.endswith("/issues/new")
-    assert "99999" in parse_qs(url.query)["title"][0]
-    assert "101, 207" in body
+    assert query["template"] == [repairs.ISSUE_FORM]
+    assert "99999" in query["title"][0]
+    assert query["model_id"] == ["99999"]
+    assert query["capability_ids"] == ["101, 207"]
+
+
+def test_the_link_fills_in_fields_the_form_actually_has():
+    """GitHub matches these against the form's element ids and drops what it
+    does not recognise, so a field renamed on one side arrives empty on the
+    other with nothing said about it."""
+    with io.open(
+        f".github/ISSUE_TEMPLATE/{repairs.ISSUE_FORM}", encoding="utf-8"
+    ) as handle:
+        form = yaml.safe_load(handle)
+
+    ids = {element["id"] for element in form["body"] if "id" in element}
+    query = parse_qs(urlparse(repairs._report_url(1, [2])).query)
+
+    assert set(query) - {"template", "title"} <= ids
 
 
 def test_the_link_says_nothing_about_the_household():
@@ -272,6 +292,53 @@ def test_an_entry_that_went_away_mid_flow_is_not_written_to():
     asyncio.run(flow.async_step_confirm({}))
 
     assert entries.updated == []
+
+
+# --- things the API lists that are not products ---------------------------
+
+
+@pytest.mark.parametrize(
+    "names",
+    [
+        ("THZone_0", "---"),
+        ("thzone_2", None),
+        (None, "THZone_1"),
+        ("Salon", "---"),
+    ],
+)
+def test_an_internal_object_of_the_api_is_not_asked_about(monkeypatch, names):
+    """A thermal zone has no product behind it : no mapping would give it an
+    entity, so its owner has nothing to send and no reason to be asked."""
+    registry = check(monkeypatch, UNMAPPED_MODEL, names=names)
+
+    assert registry.created == []
+
+
+def test_a_device_someone_named_after_a_zone_is_still_asked_about(monkeypatch):
+    """People call a real radiator "Zone de nuit". The markers are the API's
+    own, matched from the start of the name, not looked for anywhere in it."""
+    registry = check(monkeypatch, UNMAPPED_MODEL, names=("Zone de nuit", None))
+
+    assert len(registry.created) == 1
+
+
+def test_an_issue_already_raised_for_one_goes_away(monkeypatch):
+    """Recognising it later should not leave the question hanging on screen."""
+    registry = check(monkeypatch, UNMAPPED_MODEL, names=("THZone_0", "---"))
+
+    assert registry.deleted == [("cozytouch", "unknown_model_99999")]
+
+
+def test_the_names_come_back_as_the_api_gave_them():
+    """Neither field carries the same thing on every product, so the filter
+    reads both rather than picking one."""
+    hub = SimpleNamespace(
+        _devices=[{"deviceId": 1, "name": "THZone_0", "longName": "---"}],
+        _deviceId=1,
+    )
+
+    assert Hub.get_reported_names(hub) == ("THZone_0", "---")
+    assert Hub.get_reported_names(hub, 2) == (None, None)
 
 
 # --- what the report is made of ------------------------------------------

@@ -433,6 +433,26 @@ class Hub(DataUpdateCoordinator):
 
         return get_model_infos(-1)
 
+    def get_reported_names(
+        self, deviceId: int | None = None
+    ) -> tuple[str | None, str | None]:
+        """What the API calls a device : its name, then its longName.
+
+        Both, because neither carries the same thing on every product -- the
+        gateway puts a real product name in longName while its children get an
+        internal token or the literal "---", and docs/api-surface.md has the
+        detail. The only reader so far is looking for those placeholders, and
+        they turn up in one field or the other.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        for dev in self._devices:
+            if dev["deviceId"] == deviceId:
+                return dev.get("name"), dev.get("longName")
+
+        return None, None
+
     def get_model_id(self, deviceId: int | None = None) -> int | None:
         """The model id the API reports, which is what the mapping is keyed on.
 

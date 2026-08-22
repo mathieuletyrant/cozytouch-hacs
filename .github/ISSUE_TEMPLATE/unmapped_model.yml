@@ -1,0 +1,60 @@
+name: Unmapped device
+description: A device shows up as "Unknown product (…)"
+title: "Unmapped model "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Home Assistant can fill most of this in for you : an unmapped device
+        raises a repair under **Settings → System → Repairs**, and opening it
+        gives you a link to this form with the two id fields already set.
+
+  - type: input
+    id: model_id
+    attributes:
+      label: Model id
+      description: The number in `Unknown product (…)`.
+      placeholder: "1457"
+    validations:
+      required: true
+
+  - type: input
+    id: capability_ids
+    attributes:
+      label: Capability ids nothing maps
+      description: >
+        Listed in the repair dialog, and in the `unmapped` block of the
+        diagnostics file. Leave as `none` if there are none.
+      placeholder: "101, 207, 1044"
+
+  - type: textarea
+    id: device
+    attributes:
+      label: What the device is
+      description: >
+        The brand and commercial name on the box, and what the Cozytouch app
+        shows for it. A mapping is written against what the app does, so a
+        screenshot of its controls is worth more than any description.
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >
+        Drag the file in here.
+        **Settings → Devices & Services → Atlantic Cozytouch → ⋮ → Download
+        diagnostics**. It lists every device on the account with its model id
+        and the capability ids nothing names yet, which is what the mapping is
+        built from. Your credentials and address are stripped out before the
+        file is written.
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Home Assistant, and the version of this integration.
+      placeholder: "HA 2026.8.1, cozytouch 2026.8.2"

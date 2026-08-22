@@ -25,12 +25,43 @@ from .model import CozytouchDeviceType
 
 ISSUE_TRACKER = "https://github.com/mathieuletyrant/cozytouch-hacs/issues"
 
+# The form the link opens. Lives in .github/ISSUE_TEMPLATE/.
+ISSUE_FORM = "unmapped_model.yml"
+
 UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
+
+# The API lists things that are not products. A thermal zone is the one seen so
+# far : it hangs off a gateway, reports a model id no table knows, and there is
+# nothing behind it to describe -- no mapping would give it an entity, so its
+# owner has nothing to send and no reason to be asked.
+#
+# Two markers, neither of them certain. "---" is the longName placeholder
+# docs/api-surface.md records against the thermal zones of the one probed
+# account (models 1505-1507). The prefixes are names reported from an account
+# rather than read off a capture kept here, so they are matched loosely, on
+# either name, and the list is meant to grow as more turn up. A prefix rather
+# than a substring on purpose : people call a real device "Zone de nuit".
+PLACEHOLDER_LONG_NAME = "---"
+VIRTUAL_DEVICE_PREFIXES = ("thzone",)
 
 # Where the acknowledgement is kept. Written by the fix flow, read on every
 # setup: the model stays unmapped until a release maps it, so without this the
 # issue would come back at each restart at someone who already did their part.
 REPORTED_MODELS = "reported_models"
+
+
+def _is_not_a_product(hub) -> bool:
+    """Whether the API is listing an internal object rather than hardware."""
+    reported = [name for name in hub.get_reported_names() if name]
+
+    if any(name.strip() == PLACEHOLDER_LONG_NAME for name in reported):
+        return True
+
+    return any(
+        name.lower().startswith(prefix)
+        for name in reported
+        for prefix in VIRTUAL_DEVICE_PREFIXES
+    )
 
 
 def _report_url(modelId: int, unmapped: list[int]) -> str:
@@ -40,18 +71,20 @@ def _report_url(modelId: int, unmapped: list[int]) -> str:
     are what a mapping is built from, and they say nothing about the household.
     Values stay out -- among them are the wifi SSID (219) and the gateway
     serial -- and so does the device name, which people call after a room or a
-    child. The dump the body asks for carries all that, stripped, and the user
-    attaches it knowingly.
+    child. A URL is clicked without being read. The dump the form asks for
+    carries all of that, stripped, and is attached knowingly.
     """
-    body = (
-        f"Model id: {modelId}\n"
-        f"Capability ids nothing maps: {', '.join(str(id) for id in unmapped) or 'none'}\n"
-        "\n"
-        "Diagnostics dump: please drag the file into this issue.\n"
-        "Settings > Devices & Services > Atlantic Cozytouch > \u22ee > Download "
-        "diagnostics\n"
+    query = urlencode(
+        {
+            # The keys after `template` are the ids of that form's fields, which
+            # is how GitHub fills them in. Renaming one there breaks the link
+            # quietly -- it just arrives empty -- so the two move together.
+            "template": ISSUE_FORM,
+            "title": f"Unmapped model {modelId}",
+            "model_id": str(modelId),
+            "capability_ids": ", ".join(str(id) for id in unmapped) or "none",
+        }
     )
-    query = urlencode({"title": f"Unmapped model {modelId}", "body": body})
 
     return f"{ISSUE_TRACKER}/new?{query}"
 
@@ -78,7 +111,10 @@ def async_check_model_mapping(
 
     issue_id = UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
 
-    if hub.get_model_infos()["type"] is not CozytouchDeviceType.UNKNOWN:
+    mapped = hub.get_model_infos()["type"] is not CozytouchDeviceType.UNKNOWN
+    if mapped or _is_not_a_product(hub):
+        # Both are reasons there is nothing to ask, and either can become true
+        # for a device that was already asked about, so the issue goes with it.
         ir.async_delete_issue(hass, DOMAIN, issue_id)
         return
 
