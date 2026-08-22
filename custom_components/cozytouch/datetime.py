@@ -63,68 +63,6 @@ async def async_setup_entry(
         async_add_entities(datetimes, True)
 
 
-class CozytouchDateTime(DateTimeEntity, CozytouchSensor):
-    """Class for datetime entity."""
-
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-        separator: str | None = None,
-        timestamp_index: int | None = None,
-        attr_uniq_id: str | None = None,
-    ) -> None:
-        """Initialize a datetime Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            attr_uniq_id=attr_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-            value_type=CozytouchCapabilityVariableType.STRING,
-        )
-        self._separator = separator
-        self._timestamp_index = timestamp_index
-
-    async def async_set_value(self, value: datetime) -> None:
-        """Update the current value."""
-        oldValue = self.coordinator.get_capability_value(
-            self._capability["capabilityId"]
-        )
-        if oldValue is not None:
-            oldValue = oldValue.translate(str.maketrans("", "", "[]"))
-            oldTimestamps = oldValue.split(self._separator, 2)
-            if self._timestamp_index < len(oldTimestamps):
-                oldTimestamps[self._timestamp_index] = str(int(value.timestamp()))
-
-            newValue = "[" + ",".join(oldTimestamps) + "]"
-            await self.coordinator.set_capability_value(
-                self._capability["capabilityId"], newValue
-            )
-
-    @property
-    def value(self) -> datetime | None:
-        """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
-        if value is not None:
-            value = value.translate(str.maketrans("", "", "[]"))
-            timestamps = value.split(self._separator, 2)
-            if self._timestamp_index < len(timestamps):
-                timestamp = int(timestamps[self._timestamp_index])
-                if timestamp > 0:
-                    return datetime.fromtimestamp(
-                        int(timestamp), tz=dt_util.DEFAULT_TIME_ZONE
-                    )
-
-                return None
-
-
 class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
     """Class for away mode datetime entity."""
 
