@@ -5,6 +5,16 @@ official `overkiz` integration : Atlantic runs several protocols, and this one
 covers the boilers, water heaters, towel racks and air conditioners that speak
 the Cozytouch API rather than Overkiz.
 
+## Where to read first
+
+This file says what to do and where. Two documents say how the thing works,
+and are worth reading before a change rather than after :
+
+| Document | What it answers |
+| -------- | --------------- |
+| `docs/architecture.md` | How a capability id becomes an entity, what the Hub owns, which invariants hold, and the rough edges that are real and inherited. |
+| `docs/api-surface.md` | What the API does and does not expose. Read it before probing anything : ~90 paths are already ruled out, and there is no capability catalogue to fetch. |
+
 ## Repository topology
 
 This repo started as a fork of `gduteil/cozytouch` and now stands on its own.
@@ -70,6 +80,11 @@ capture, so a test going green says "nobody changed this by accident", never
    the alphabetical order and column alignment already in the file.
 4. Tests — a case in `MODEL_GROUPS`, and the count in `test_capability.py`.
 5. `README.md` — the table for that device class.
+
+`scripts/dump_capability_map.py` prints what the two tables now resolve to, per
+device type. Nothing has to be regenerated — run it when you want the answer.
+A new device *type* needs a probe model id added to it, which is the same edit
+as adding the type to `model.py`.
 
 Devices the integration cannot map fall through to `Unknown product (…)`.
 What a mapping gets built from is the diagnostics dump (`diagnostics.py`, backed
