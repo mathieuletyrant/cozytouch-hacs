@@ -359,8 +359,15 @@
     },
     "issues": {
         "unknown_model": {
-            "title": "Un appareil que cette intégration ne connaît pas",
-            "description": "**{device_name}** annonce l'identifiant de modèle `{model_id}`, qu'aucune table de l'intégration ne connaît. Ses capacités génériques fonctionnent ; tout ce qui lui est propre manque, et il s'affiche sous le nom `Unknown product ({model_id})`.\n\nPour le faire cartographier, téléchargez un fichier de diagnostic depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics* et joignez-le à un ticket. Ce fichier liste les identifiants de capacités que rien ne nomme encore, et c'est à partir de là qu'une correspondance se construit. Vos identifiants de connexion et votre adresse en sont retirés avant écriture.\n\nSi vous préférez ne pas le faire, ignorez ce signalement : Home Assistant ne le représentera qu'après une mise à jour."
+            "title": "{device_name} est un modèle que cette intégration ne connaît pas",
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Envoyer le signalement",
+                        "description": "L'identifiant de modèle `{model_id}` n'est pas dans la table de correspondance : seules les capacités génériques de cet appareil fonctionnent. Ce qui manque est une correspondance que quelqu'un doit écrire, et l'écrire demande deux choses de votre part.\n\n[Ouvrir un ticket pré-rempli]({report_url}). Il porte déjà l'identifiant de modèle et les identifiants de capacités que rien ne nomme encore (`{capability_ids}`) -- et rien d'autre sur votre logement.\n\nJoignez-y ensuite un fichier de diagnostic, depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics*. Ce fichier porte les valeurs des capacités, vos identifiants de connexion et votre adresse en étant retirés.\n\nChoisissez **Valider** une fois envoyé et la question ne reviendra plus. Une version qui ajoute la correspondance l'efface de toute façon."
+                    }
+                }
+            }
         }
     },
     "services": {
