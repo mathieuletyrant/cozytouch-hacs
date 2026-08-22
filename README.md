@@ -178,6 +178,13 @@ Only some values are mapped for now, you can select `Create entities for unknown
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
 
+`main` is protected, so a release is two steps. First a pull request setting
+`version` in `custom_components/cozytouch/manifest.json` to the version being
+released ; then a `Release` workflow dispatch naming that same version. The
+workflow refuses to run while the manifest says something else, and otherwise
+tags the commit and writes the notes from the commit subjects since the
+previous tag.
+
 ## Credits
 
 This integration started as a fork of [gduteil/cozytouch](https://github.com/gduteil/cozytouch)

@@ -28,6 +28,24 @@ jobs:
           git rev-parse -q --verify "refs/tags/${{ github.event.inputs.version }}" >/dev/null \
             && { echo "Tag ${{ github.event.inputs.version }} already exists"; exit 1; } || true
 
+      # main is protected : changes go through a pull request. So the job
+      # cannot write the version itself, and the bump has to be merged before
+      # a release is dispatched. Checked here, before the slow steps, so a
+      # forgotten bump costs seconds rather than a minute of pip.
+      - name: Check the manifest carries the version being released
+        run: |
+          CURRENT=$(jq -r .version custom_components/cozytouch/manifest.json)
+          if [ "$CURRENT" != "$VERSION" ]; then
+            echo "manifest.json says $CURRENT, not $VERSION."
+            echo
+            echo "Set \"version\" to $VERSION in"
+            echo "custom_components/cozytouch/manifest.json, merge that pull"
+            echo "request, then dispatch this workflow again."
+            exit 1
+          fi
+        env:
+          VERSION: ${{ github.event.inputs.version }}
+
       - uses: "actions/setup-python@v5"
         with:
           python-version: "3.14"
@@ -38,42 +56,18 @@ jobs:
       - name: Run pytest
         run: pytest tests/ -q
 
-      - name: Write the version into the manifest
+      - name: Tag the commit
         run: |
-          python - <<'PY'
-          import json, os, re
-
-          path = "custom_components/cozytouch/manifest.json"
-          version = os.environ["VERSION"]
-
-          with open(path) as f:
-              source = f.read()
-
-          patched, count = re.subn(r'("version"\s*:\s*)"[^"]*"', r'\1"%s"' % version, source)
-          assert count == 1, "expected exactly one version key, found %d" % count
-          assert json.loads(patched)["version"] == version
-
-          with open(path, "w") as f:
-              f.write(patched)
-          PY
+          git tag "$VERSION"
+          git push origin "$VERSION"
         env:
           VERSION: ${{ github.event.inputs.version }}
 
-      - name: Commit and tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add custom_components/cozytouch/manifest.json
-          git diff --cached --quiet \
-            || git commit -m "Release ${{ github.event.inputs.version }}"
-          git tag "${{ github.event.inputs.version }}"
-          git push origin HEAD:main
-          git push origin "${{ github.event.inputs.version }}"
-
       - name: Write the release notes
-        # --generate-notes lists merged pull requests. Everything here lands
-        # straight on main, so it produced a bare compare link. The commit
-        # subjects are the changelog.
+        # --generate-notes lists merged pull requests, which for 2026.8.2 was a
+        # bare compare link and nothing else. The commit subjects are the
+        # changelog. The grep drops the "Release x" bumps older releases
+        # committed themselves, back when this job could push to main.
         run: |
           PREVIOUS=$(git describe --tags --abbrev=0 "${{ github.event.inputs.version }}^" 2>/dev/null || true)
 
