@@ -145,9 +145,10 @@ sub-devices.
 ## The capability mapping
 
 `get_capability_infos(modelInfos, capabilityId, capabilityValue, availableCapabilityIds)`
-answers for 172 ids. `docs/capability-reference.md` is the generated table of
-all of them; regenerate it with `scripts/dump_capability_map.py` after
-touching either table.
+answers for 172 ids. Reading the chain end to end is one way to find out what
+one of them becomes; `scripts/dump_capability_map.py` is the other — it walks
+every id against one model per device type and prints the answer. It writes
+nothing, so there is no table anywhere to fall out of date.
 
 Three return values, and they are not the same:
 
@@ -166,6 +167,20 @@ the switch platform and a `CozytouchBinarySensor` on the sensor platform. An
 datetimes. A `climate` capability produces a climate entity and a sensor. This
 is inherited behaviour, not an accident to clean up casually — the entity ids
 are in people's dashboards.
+
+Which type reaches which platform is only visible by reading the seven
+`async_setup_entry` functions, so here it is once:
+
+| type | platform |
+| --- | --- |
+| `climate` | climate **+** sensor |
+| `string`, `int`, `temperature`, `pressure`, `energy`, `volume`, `water_consumption`, `percentage`, `signal`, `time`, `timezone`, `prog`, `progtime`, `binary` | sensor |
+| `switch` | sensor **+** switch |
+| `away_mode_switch` | sensor **+** switch |
+| `away_mode_timestamps` | sensor ×2 **+** datetime ×2 |
+| `temperature_adjustment_number`, `temperature_percent_adjustment_number`, `hours_adjustment_number`, `minutes_adjustment_number` | number |
+| `select` | select |
+| `time_adjustment` | time — but nothing produces this type, see the rough edges |
 
 It also runs the other way. A device can report two ids for the same thing —
 222 and 226 both carry the away-mode window — so the mapping names each as a
