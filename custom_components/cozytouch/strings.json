@@ -357,13 +357,48 @@
             "swing_mode":         { "name": "Swing Mode" }
         }
     },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Every day",
+                "weekdays":  "Weekdays",
+                "weekend":   "Weekend",
+                "monday":    "Monday",
+                "tuesday":   "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday":  "Thursday",
+                "friday":    "Friday",
+                "saturday":  "Saturday",
+                "sunday":    "Sunday"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Heating",
+                "cooling":   "Cooling"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Starts at",
+                "temperature": "Temperature"
+            }
+        }
+    },
     "services": {
+        "get_schedule": {
+            "name": "Read a week's program",
+            "description": "Returns the seven day programs of a device, in the shape \"Set a day program\" takes.",
+            "fields": {
+                "program":  { "name": "Program", "description": "Heating or cooling." }
+            }
+        },
         "set_schedule": {
             "name": "Set a day program",
             "description": "Writes the same time program to one or more days, for heating or cooling.",
             "fields": {
                 "program":  { "name": "Program", "description": "Heating or cooling." },
-                "days":     { "name": "Days", "description": "The days that will receive this program." },
+                "days":     { "name": "Days", "description": "The days that will receive this program. Every day, Weekdays and Weekend stand for the days they name." },
                 "slots":    { "name": "Slots", "description": "List of time/temperature pairs. The first slot must start at 00:00, ten at most." }
             }
         }

@@ -164,6 +164,47 @@ Select the device you want to add.
 
 Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping).
 
+## Scheduling
+
+Two actions write and read the weekly program the device holds itself, the one
+the Cozytouch app calls *Chauffage* and *Refroidissement*. It keeps running when
+Home Assistant is off, which is the difference with scheduling the climate
+entity from an automation.
+
+`Cozytouch: Set a day program` writes one day program to as many days as you
+pick. Days can be named one by one or through `Every day`, `Weekdays` and
+`Weekend`. The first slot has to start at `00:00` -- the device has no target
+temperature for the hours before the first one -- and a day holds ten slots at
+most, fewer if the device says so.
+
+`Cozytouch: Read a week's program` returns the seven days of a program in the
+shape the other action takes, so a program can be read, edited and written
+back rather than retyped :
+
+```yaml
+- action: cozytouch.get_schedule
+  target:
+    entity_id: climate.salon
+  data:
+    program: heating
+  response_variable: schedule
+
+- action: cozytouch.set_schedule
+  target:
+    entity_id: climate.salon
+  data:
+    program: heating
+    days: [weekend]
+    slots: "{{ schedule['climate.salon'].days.monday }}"
+```
+
+On Home Assistant older than 2025.7 the slots field is still a YAML editor
+rather than a list of time and temperature pickers : the schema'd form is not
+something those frontends can draw. Everything else works the same.
+
+Temperatures are whole degrees. Every program captured from a real device holds
+integers, so a half degree has never been confirmed to survive the write.
+
 ## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).

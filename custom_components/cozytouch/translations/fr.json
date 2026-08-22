@@ -357,13 +357,48 @@
             "swing_mode":         { "name": "Mode Oscillation" }
         }
     },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Tous les jours",
+                "weekdays":  "Jours de semaine",
+                "weekend":   "Week-end",
+                "monday":    "Lundi",
+                "tuesday":   "Mardi",
+                "wednesday": "Mercredi",
+                "thursday":  "Jeudi",
+                "friday":    "Vendredi",
+                "saturday":  "Samedi",
+                "sunday":    "Dimanche"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Chauffage",
+                "cooling":   "Refroidissement"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Commence à",
+                "temperature": "Température"
+            }
+        }
+    },
     "services": {
+        "get_schedule": {
+            "name": "Lire la programmation d'une semaine",
+            "description": "Renvoie les sept programmes journaliers d'un appareil, dans la forme qu'attend « Programmer une journée ».",
+            "fields": {
+                "program":  { "name": "Programme", "description": "Chauffage ou refroidissement." }
+            }
+        },
         "set_schedule": {
             "name": "Programmer une journée",
             "description": "Écrit le même programme horaire sur un ou plusieurs jours, pour le chauffage ou le refroidissement.",
             "fields": {
                 "program":  { "name": "Programme", "description": "Chauffage ou refroidissement." },
-                "days":     { "name": "Jours", "description": "Les jours qui recevront ce programme." },
+                "days":     { "name": "Jours", "description": "Les jours qui recevront ce programme. Tous les jours, Jours de semaine et Week-end désignent les jours qu'ils nomment." },
                 "slots":    { "name": "Créneaux", "description": "Liste de paires heure/température. Le premier créneau doit commencer à 00:00, dix au maximum." }
             }
         }
