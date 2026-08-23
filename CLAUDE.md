@@ -79,6 +79,13 @@ capture, so a test going green says "nobody changed this by accident", never
   time entity raise.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
+- `tests/test_sensor_values.py` — what the value builders in `sensor.py`
+  return, character for character : the zero padding on a duration, the double
+  space before a temperature, a setpoint arriving from JSON as a float and
+  still reading as a whole number. This is the file whose strings end up on a
+  dashboard, so **the assertions are the current output, not the nicer output**
+  — including one case pinned as wrong on purpose, the timezone offset applied
+  twice. Changing any of these should mean changing a test in the same commit.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

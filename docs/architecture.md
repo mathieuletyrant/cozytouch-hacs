@@ -57,8 +57,8 @@ config entry ──> Hub (DataUpdateCoordinator + API client)
                     a dict — name, type, category, wiring —
                     which each platform filters on `type`
                                   │
-   ┌────────┬────────┬───────┬────┴────┬────────┬────────┬──────┐
- climate  sensor   switch  number   select  datetime   time   binary_sensor
+   ┌────────┬────────┬───────┬────┴────┬────────┬─────────────┐
+ climate  sensor   switch  number   select  datetime   binary_sensor
 ```
 
 `binary_sensor` is the odd one out: it is not capability-driven at all. It
@@ -180,7 +180,6 @@ Which type reaches which platform is only visible by reading the seven
 | `away_mode_timestamps` | sensor ×2 **+** datetime ×2 |
 | `temperature_adjustment_number`, `temperature_percent_adjustment_number`, `hours_adjustment_number`, `minutes_adjustment_number` | number |
 | `select` | select |
-| `time_adjustment` | time — but nothing produces this type, see the rough edges |
 
 It also runs the other way. A device can report two ids for the same thing —
 222 and 226 both carry the away-mode window — so the mapping names each as a
@@ -284,14 +283,22 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-168 tests, all characterisation tests. They pin the mapping as it stands, not
+217 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
-All of them are table tests. **Nothing tests `hub.py`** — not the reconnect
-path, not token expiry, not the write-execution polling — so the invariants
-this document states about them are documented and unverified. That is the
-largest hole in the suite, and it is worth knowing before changing the file.
+Almost all of them are table tests. The exception is
+`tests/test_sensor_values.py`, which pins what the value builders in
+`sensor.py` return character for character — the zero padding, the double space
+before a temperature, a float setpoint still reading as a whole number. That
+file renders the strings people actually look at and had no tests at all, which
+is how a formatting change can be both invisible in review and visible on every
+dashboard.
+
+**Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
+write-execution polling — so the invariants this document states about them are
+documented and unverified. That is the largest hole left in the suite, and it is
+worth knowing before changing the file.
 
 `CLAUDE.md` has the per-file breakdown and the venv instructions. Two things
 worth repeating: `test_capability.py` carries a hard count of mapped model ids
@@ -309,21 +316,14 @@ the configuration and the reason for every rule that is switched off.
 Things that are true of the code today and would otherwise be discovered the
 hard way. Most are inherited from upstream.
 
-- **`time.py` builds nothing.** It looks for capabilities of type
-  `time_adjustment`; no capability produces that type. Durations are typed
-  `time` instead, which routes to `CozytouchTimeSensor` — read-only. So the
-  platform loads and creates zero entities, and durations cannot be set from
-  Home Assistant except through the `*_adjustment_number` types.
-- **`sensor.py` handles a `power` type nothing produces.** Every consumption
-  capability is typed `energy`.
-- **Three capabilities say `diagnostic` where the rest say `diag`.** 232
-  (`boost_total_time`), 233 (`boost_remaining_time`) and 102023
-  (`air_circulation_remaining_time`). `sensor.py` matches `diag` and `config`
-  and falls through to no category otherwise, so those three appear as ordinary
-  sensors rather than diagnostic ones. Everything else in the file uses `diag`.
-- **`percentage` maps to `SensorDeviceClass.BATTERY`.** It reaches 169
-  (`radio_signal`) and 271 (`hot_water_available`), so remaining hot water is
-  presented to Home Assistant as a battery level.
+This list is only worth having if it is accurate, and it had gone stale: five
+entries described code that had already been fixed or removed — a `time`
+platform that no longer exists, a `power` type, three capabilities filed under
+`diagnostic`, `percentage` claiming `SensorDeviceClass.BATTERY`, and an unused
+`CozytouchDateTime`. They were checked one by one against the tree and dropped.
+Anything below has been re-verified; add to it in the same spirit, and delete
+from it when a change makes an entry untrue.
+
 - **`signal` maps to `SIGNAL_STRENGTH` with `UnitOfSoundPressure.DECIBEL`.**
   The unit string is `dB`, which is valid for the device class, but it is
   reached through the sound-pressure enum.
@@ -334,9 +334,10 @@ hard way. Most are inherited from upstream.
   adding the offset again for anyone not on UTC. `tz=UTC` is the fix; it changes
   what the sensor displays, so it wants a capture of what the Cozytouch app
   shows before it is made. The line carries a `noqa: DTZ006` so the linter does
-  not have to be argued with twice.
-- **`CozytouchDateTime` is defined and never instantiated.**
-  `CozytouchAwayModeDateTime` is the class the platform builds.
+  not have to be argued with twice, and
+  `tests/test_sensor_values.py::test_the_timezone_offset_is_applied_twice_outside_utc`
+  pins it, so making the fix shows up as that test failing rather than as a
+  silent shift in what people see.
 - **A few capabilities are deliberate placeholders.** 101–104 come out as
   `Capability_101`…, 105906/105907 as `Target 105906`…, and 312 is commented
   `For test`. The coverage test skips them by regex, which is why they have no
