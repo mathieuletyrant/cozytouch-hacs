@@ -9,7 +9,7 @@ import homeassistant.helpers.config_validation as cv
 
 from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub
+from .hub import CozytouchConfigEntry, CozytouchRuntimeData, Hub
 from .repairs import async_check_model_mapping
 from .services import async_register_services
 
@@ -31,19 +31,22 @@ def _setting(entry: ConfigEntry, key: str) -> bool:
     return entry.options.get(key, entry.data.get(key, False))
 
 
-async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Reload so the new options are picked up."""
+async def _async_entry_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload so new options -- or a device added or removed -- are picked up.
+
+    Home Assistant fires the update listeners for a subentry change as well as
+    for an options change, which is what builds the hub for a device somebody
+    just added without asking them to reload by hand.
+    """
     await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) -> bool:
     """Set up Atlantic Cozytouch from a config entry."""
-    account = CozytouchAccount(
-        hass, entry.data["username"], entry.data["password"]
-    )
+    account = CozytouchAccount(hass, entry.data["username"], entry.data["password"])
     account.set_dump_json(_setting(entry, "dump_json"))
 
-    entry.async_on_unload(entry.add_update_listener(_async_options_updated))
+    entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
     async_register_services(hass)
 
     if not await account.connect():
@@ -51,17 +54,38 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
         # is available
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
-    theHub = Hub(hass, account, entry.data["deviceId"], config_entry=entry)
-    entry.runtime_data = theHub
+    create_unknown = _setting(entry, "create_unknown")
+    hubs: dict[str, Hub] = {}
+    for subentry_id, subentry in entry.subentries.items():
+        hub = Hub(
+            hass,
+            account,
+            subentry.data["deviceId"],
+            config_entry=entry,
+            subentry_id=subentry_id,
+        )
+        hub.set_create_entities_for_unknown_entities(create_unknown)
+        hubs[subentry_id] = hub
 
-    theHub.set_create_entities_for_unknown_entities(_setting(entry, "create_unknown"))
-    # raises ConfigEntryNotReady if the first poll fails, which gets us a retry
-    await theHub.async_config_entry_first_refresh()
+    entry.runtime_data = CozytouchRuntimeData(account, hubs)
+
+    # The setup view has already filled in a capability list for every device,
+    # so the entities can be built from what it said. Each hub's first poll
+    # only refreshes values -- one device failing it leaves that device's
+    # entities stale rather than taking the whole account down, which is what
+    # a first refresh that raises would do to its four siblings.
+    #
+    # One at a time on purpose: the account declares a rateLimit nothing
+    # decodes, and firing one request per device at once is the shape most
+    # likely to meet it.
+    for hub in hubs.values():
+        await hub.async_refresh()
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Once the devices are loaded, and only for a setup that got this far:
     # an unmapped model is worth a word to the user, a failed setup is not.
-    async_check_model_mapping(hass, entry, theHub)
+    async_check_model_mapping(hass, entry)
 
     return True
 

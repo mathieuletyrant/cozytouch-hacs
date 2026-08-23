@@ -26,7 +26,16 @@ def make_hub(devices, deviceId, zones=None):
         setup={"id": 1532156, "name": "setup1"},
         zones=zones if zones is not None else [],
     )
-    hub = SimpleNamespace(_account=account, _deviceId=deviceId)
+    hub = SimpleNamespace(
+        _account=account,
+        _deviceId=deviceId,
+        # the devices somebody added, which is what isConfiguredHere reports
+        _entry=SimpleNamespace(
+            subentries={
+                f"sub-{deviceId}": SimpleNamespace(data={"deviceId": deviceId})
+            }
+        ),
+    )
     hub.get_zone_name = lambda zoneId=None: next(
         (z["name"] for z in account.zones if z.get("id") == zoneId), str(zoneId)
     )

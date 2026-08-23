@@ -26,13 +26,21 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up entry."""
-    # Retrieve the coordinator object
-    coordinator = config_entry.runtime_data
-
-    async_add_entities(
-        [CloudConnectivity(coordinator, config_entry.title, config_entry.entry_id)],
-        True,
-    )
+    # One connectivity sensor per device rather than per account : it is the
+    # device page it shows up on, and what it reports -- whether the account
+    # reached the Cozytouch cloud -- is the same answer for all of them.
+    for subentry_id, subentry in config_entry.subentries.items():
+        async_add_entities(
+            [
+                CloudConnectivity(
+                    config_entry.runtime_data.hubs[subentry_id],
+                    subentry.title,
+                    subentry_id,
+                )
+            ],
+            True,
+            config_subentry_id=subentry_id,
+        )
 
 
 class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):

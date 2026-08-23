@@ -41,212 +41,214 @@ async def async_setup_entry(
 ) -> None:
     """Modern (thru config entry) sensors setup."""
     _LOGGER.debug("%s: setting up sensor plateform", config_entry.title)
-    # Retrieve the serial reader object
-    # Retrieve the hub object
-    hub = config_entry.runtime_data
+    # One device per subentry, and its entities are registered under it :
+    # the subentry id is the identity that used to be the entry's own, back
+    # when an entry meant a device.
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    # Init sensors
-    sensors = []
-    capabilities = hub.get_capabilities_for_device(config_entry.data["deviceId"])
-    for capability in capabilities:
-        if capability["type"] in ("string", "int"):
-            # Use a CozytouchSensor for integers
-            sensors.append(
-                CozytouchSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+        # Init sensors
+        sensors = []
+        capabilities = hub.get_capabilities_for_device()
+        for capability in capabilities:
+            if capability["type"] in ("string", "int"):
+                # Use a CozytouchSensor for integers
+                sensors.append(
+                    CozytouchSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "temperature":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.TEMPERATURE,
-                    native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+            elif capability["type"] == "temperature":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.TEMPERATURE,
+                        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+                    )
                 )
-            )
-        elif capability["type"] == "pressure":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.PRESSURE,
-                    native_unit_of_measurement=UnitOfPressure.BAR,
+            elif capability["type"] == "pressure":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.PRESSURE,
+                        native_unit_of_measurement=UnitOfPressure.BAR,
+                    )
                 )
-            )
-        elif capability["type"] == "away_mode_timestamps":
-            sensors.append(
-                CozytouchAwayModeTimestampSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_0",
-                    coordinator=hub,
-                    name=capability["name_0"],
-                    icon=capability.get("icon_0", None),
-                    separator=",",
-                    timestamp_index=0,
+            elif capability["type"] == "away_mode_timestamps":
+                sensors.append(
+                    CozytouchAwayModeTimestampSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        attr_uniq_id=subentry_id + "_0",
+                        coordinator=hub,
+                        name=capability["name_0"],
+                        icon=capability.get("icon_0", None),
+                        separator=",",
+                        timestamp_index=0,
+                    )
                 )
-            )
 
-            sensors.append(
-                CozytouchAwayModeTimestampSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_1",
-                    coordinator=hub,
-                    name=capability["name_1"],
-                    icon=capability.get("icon_1", None),
-                    separator=",",
-                    timestamp_index=1,
+                sensors.append(
+                    CozytouchAwayModeTimestampSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        attr_uniq_id=subentry_id + "_1",
+                        coordinator=hub,
+                        name=capability["name_1"],
+                        icon=capability.get("icon_1", None),
+                        separator=",",
+                        timestamp_index=1,
+                    )
                 )
-            )
-        elif capability["type"] in ("switch", "binary"):
-            sensors.append(
-                CozytouchBinarySensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] in ("switch", "binary"):
+                sensors.append(
+                    CozytouchBinarySensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "away_mode_switch":
-            sensors.append(
-                CozytouchAwayModeSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "away_mode_switch":
+                sensors.append(
+                    CozytouchAwayModeSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "signal":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-                    native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
+            elif capability["type"] == "signal":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+                        native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
+                    )
                 )
-            )
-        elif capability["type"] == "energy":
-            native_unit_of_measurement = capability.get(
-                "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
-            )
+            elif capability["type"] == "energy":
+                native_unit_of_measurement = capability.get(
+                    "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
+                )
 
-            display_factor = 1.0
-            if native_unit_of_measurement == UnitOfEnergy.KILO_WATT_HOUR:
-                display_factor = 0.001
+                display_factor = 1.0
+                if native_unit_of_measurement == UnitOfEnergy.KILO_WATT_HOUR:
+                    display_factor = 0.001
 
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.ENERGY,
-                    state_class=SensorStateClass.TOTAL_INCREASING,
-                    native_unit_of_measurement=native_unit_of_measurement,
-                    display_factor=display_factor,
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.ENERGY,
+                        state_class=SensorStateClass.TOTAL_INCREASING,
+                        native_unit_of_measurement=native_unit_of_measurement,
+                        display_factor=display_factor,
+                    )
                 )
-            )
-        elif capability["type"] == "volume":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.VOLUME,
-                    native_unit_of_measurement=UnitOfVolume.LITERS,
+            elif capability["type"] == "volume":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.VOLUME,
+                        native_unit_of_measurement=UnitOfVolume.LITERS,
+                    )
                 )
-            )
-        elif capability["type"] == "water_consumption":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.WATER,
-                    native_unit_of_measurement=UnitOfVolume.LITERS,
-                    state_class=SensorStateClass.TOTAL_INCREASING,
+            elif capability["type"] == "water_consumption":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        device_class=SensorDeviceClass.WATER,
+                        native_unit_of_measurement=UnitOfVolume.LITERS,
+                        state_class=SensorStateClass.TOTAL_INCREASING,
+                    )
                 )
-            )
-        elif capability["type"] == "percentage":
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    # No device class: percentage is the unit, not the meaning.
-                    # SensorDeviceClass.BATTERY was the closest match and made
-                    # hot_water_available (271) read as a battery level, icon
-                    # and voice assistants included.
-                    device_class=None,
-                    native_unit_of_measurement=PERCENTAGE,
+            elif capability["type"] == "percentage":
+                sensors.append(
+                    CozytouchUnitSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                        # No device class: percentage is the unit, not the meaning.
+                        # SensorDeviceClass.BATTERY was the closest match and made
+                        # hot_water_available (271) read as a battery level, icon
+                        # and voice assistants included.
+                        device_class=None,
+                        native_unit_of_measurement=PERCENTAGE,
+                    )
                 )
-            )
-        elif capability["type"] == "time":
-            sensors.append(
-                CozytouchTimeSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "time":
+                sensors.append(
+                    CozytouchTimeSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
 
-        elif capability["type"] == "timezone":
-            sensors.append(
-                CozytouchTimezoneSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "timezone":
+                sensors.append(
+                    CozytouchTimezoneSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "prog":
-            sensors.append(
-                CozytouchProgSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "prog":
+                sensors.append(
+                    CozytouchProgSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "progtime":
-            sensors.append(
-                CozytouchProgTimeSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "progtime":
+                sensors.append(
+                    CozytouchProgTimeSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
-        elif capability["type"] == "climate":
-            sensors.append(
-                CozytouchSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
+            elif capability["type"] == "climate":
+                sensors.append(
+                    CozytouchSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
                 )
-            )
 
-    # Add the entities to HA
-    if len(sensors) > 0:
-        async_add_entities(sensors, True)
+        # Add the entities to HA
+        if len(sensors) > 0:
+            async_add_entities(sensors, True, config_subentry_id=subentry_id)
 
 
 class CozytouchSensor(SensorEntity, CoordinatorEntity):

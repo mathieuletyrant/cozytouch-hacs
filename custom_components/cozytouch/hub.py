@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 import logging
 
@@ -21,9 +22,23 @@ _LOGGER = logging.getLogger(__name__)
 POLL_INTERVAL = timedelta(seconds=60)
 
 
-# A config entry that carries its hub, so platforms can read it off the entry
-# instead of looking it up in hass.data by id.
-type CozytouchConfigEntry = ConfigEntry[Hub]
+@dataclass
+class CozytouchRuntimeData:
+    """What a loaded config entry carries.
+
+    One account -- one login, one setup view -- and one hub per device, keyed
+    by the subentry that device was added as. The subentry id is also the
+    identity every entity of that device is registered under, so this mapping
+    is what turns "which entity" into "which device" everywhere else.
+    """
+
+    account: CozytouchAccount
+    hubs: dict[str, Hub]
+
+
+# A config entry that carries its account and hubs, so platforms can read them
+# off the entry instead of looking them up in hass.data by id.
+type CozytouchConfigEntry = ConfigEntry[CozytouchRuntimeData]
 
 
 class Hub(DataUpdateCoordinator):
@@ -44,6 +59,7 @@ class Hub(DataUpdateCoordinator):
         account: CozytouchAccount,
         deviceId: int | None = None,
         config_entry: ConfigEntry | None = None,
+        subentry_id: str | None = None,
     ) -> None:
         """Init hub."""
         super().__init__(
@@ -55,6 +71,8 @@ class Hub(DataUpdateCoordinator):
         )
         self._account = account
         self._hass = hass
+        self._entry = config_entry
+        self._subentry_id = subentry_id
         self._deviceId = deviceId
         self._create_unknown = False
 
@@ -70,6 +88,15 @@ class Hub(DataUpdateCoordinator):
     def account(self) -> CozytouchAccount:
         """The account this device hangs off."""
         return self._account
+
+    @property
+    def subentry_id(self) -> str | None:
+        """The subentry this device was added as.
+
+        It is the identity of the device everywhere it is visible : the device
+        registry entry, and the unique id of every entity built from it.
+        """
+        return self._subentry_id
 
     @property
     def online(self) -> bool:
@@ -186,8 +213,8 @@ class Hub(DataUpdateCoordinator):
 
         The API declares the topology itself: every room unit and thermal zone
         on the account carries the gateway's id in masterDeviceId. Home
-        Assistant can only draw the link if the gateway was set up too, since a
-        device here is registered under its own config entry id -- so this
+        Assistant can only draw the link if the gateway was added too, since a
+        device here is registered under the subentry it was added as -- so this
         returns None for a gateway, and for a child whose gateway nobody added.
 
         None rather than a guess matters: HA logs a warning when via_device
@@ -205,9 +232,9 @@ class Hub(DataUpdateCoordinator):
         if not masterDeviceId:
             return None
 
-        for entry in self._hass.config_entries.async_entries(DOMAIN):
-            if entry.data.get("deviceId") == masterDeviceId:
-                return (DOMAIN, entry.entry_id)
+        for subentry_id, subentry in self._entry.subentries.items():
+            if subentry.data.get("deviceId") == masterDeviceId:
+                return (DOMAIN, subentry_id)
 
         return None
 
@@ -299,14 +326,24 @@ class Hub(DataUpdateCoordinator):
     def get_diagnostics(self) -> dict:
         """Describe the account as the API reports it, for a diagnostics dump.
 
-        Every device the setup returns is listed, whether or not this config
-        entry drives it, because what a mapping needs first is the model ids a
-        user actually owns -- and now with the capability ids to go with them,
-        since the setup view carries a capability list for every device on the
+        Every device the setup returns is listed, whether or not somebody
+        added it, because what a mapping needs first is the model ids a user
+        actually owns -- and now with the capability ids to go with them, since
+        the setup view carries a capability list for every device on the
         account and the account keeps all of them. For a device nobody added,
         that list is whatever the last setup view said rather than a fresh
         poll, which is still what a mapping is written from.
+
+        `isConfiguredHere` says which devices have a subentry, and so which
+        lists a 60-second poll keeps fresh. It is a property of the account and
+        not of the hub that happened to be asked : any of them describes the
+        whole thing, and one dump per account is the point.
         """
+        configured = {
+            subentry.data.get("deviceId")
+            for subentry in self._entry.subentries.values()
+        }
+
         devices = []
         for dev in self._account.devices:
             modelInfos = get_model_infos(dev["modelId"])
@@ -321,7 +358,7 @@ class Hub(DataUpdateCoordinator):
                     "zoneId": dev["zoneId"],
                     "zoneName": self.get_zone_name(dev["zoneId"]),
                     "tags": dev["tags"],
-                    "isConfiguredHere": dev["deviceId"] == self._deviceId,
+                    "isConfiguredHere": dev["deviceId"] in configured,
                     # Straight from the API, under the API's own names, so a
                     # report can be compared against docs/api-surface.md
                     # without a translation step.
