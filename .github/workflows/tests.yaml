@@ -42,9 +42,10 @@ jobs:
             homeassistant: "2026.8.3"
             requirements: "requirements_test.txt"
           # The floor hacs.json declares. Tested so that the declaration keeps
-          # meaning something.
-          - python: "3.12.3"
-            homeassistant: "2024.12.0"
+          # meaning something -- tests/test_floor.py is the part of the suite
+          # this job exists for.
+          - python: "3.13.7"
+            homeassistant: "2025.4.0"
             requirements: "requirements_test_min.txt"
     steps:
       - uses: "actions/checkout@v4"

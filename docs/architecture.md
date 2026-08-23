@@ -27,27 +27,33 @@ Everything else is plumbing around those two.
 
 ## The shape of a running install
 
-One config entry drives **one device**. An account with a gateway and three
-room air conditioners is four entries, and each one builds its own `Hub`, its
-own `aiohttp` session, and its own 60-second poll. They share nothing but the
-Atlantic account.
+One config entry is **one Atlantic account**, and one subentry of it is **one
+device**. An account with a gateway and three room air conditioners is one
+entry with four subentries: one login, one setup view, and one 60-second poll
+per device, because that poll is the only part that is genuinely per device.
 
-That is why the per-account state on `Hub` matters: it used to live on the
-class, so the four hubs wrote over each other's setup and the last one to
-connect won. `tests/test_regressions.py` pins it to the instance now.
+It was one entry per device until the account entry landed, which is why the
+per-account state matters: four entries each held their own copy of a payload
+describing all four, and that state lived on the `Hub` *class* for a while, so
+they wrote over each other and the last one to connect won. It is one object
+now, shared on purpose. `tests/test_regressions.py` pins both halves — nothing
+on the class, and one login when ten hubs reconnect at once.
 
 ```
-config entry ──> Hub (DataUpdateCoordinator + API client)
-                  │
-                  │  POST /users/token                       once, then on expiry
-                  │  GET  /magellan/cozytouch/setupviewv2    on every (re)connect
-                  │  GET  /magellan/capabilities/?deviceId=  every 60s
-                  │
-                  ├─ _setup     the account: address, zones count, rateLimit…
-                  ├─ _zones     zone id → name, refreshed on every setup view
-                  └─ _devices   every device on the account, but capabilities
-                                only for the one this entry drives
-                                  │
+config entry (the account) ──> CozytouchAccount
+                                │
+                                │  POST /users/token                      once, then on expiry
+                                │  GET  /magellan/cozytouch/setupviewv2   on every (re)connect
+                                │
+                                ├─ setup     address, zones count, rateLimit…
+                                ├─ zones     zone id → name, refreshed on every setup view
+                                └─ devices   every device on the account, each with the
+                                             capability list the setup view gave for it
+                                │
+  subentry (a device) ──> Hub (DataUpdateCoordinator)
+                                │
+                                │  GET /magellan/capabilities/?deviceId=  every 60s
+                                │
                     get_capabilities_for_device()
                                   │
                        for each reported capability:
@@ -61,29 +67,43 @@ config entry ──> Hub (DataUpdateCoordinator + API client)
  climate  sensor   switch  number   select  datetime   binary_sensor
 ```
 
+Each platform's `async_setup_entry` loops over `entry.subentries` and adds its
+entities with `config_subentry_id=`, which is what puts them under the right
+device.
+
 `binary_sensor` is the odd one out: it is not capability-driven at all. It
-builds exactly one entity per entry, a connectivity sensor reflecting
-`hub.online`.
+builds exactly one entity per subentry, a connectivity sensor reflecting
+`hub.online` — which is the *account's* connection, the same answer for every
+device on it.
 
-## The Hub is two things at once
+## The account and the hub
 
-`hub.py` is the largest file and does not separate its two jobs. `Hub`
-subclasses `DataUpdateCoordinator` *and* is the HTTP client. Worth knowing
-before changing it:
+`account.py` is the HTTP client and everything the account declares.
+`hub.py` is a `DataUpdateCoordinator` per device plus the mapping accessors
+the platforms call. Worth knowing before changing either:
 
-**Reconnect is driven by `self.online`.** Almost every failure path sets it
-to `False` and raises `UpdateFailed`; the next poll sees `online is False`
-and calls `connect()` again, which re-authenticates and re-fetches the setup
-view. There is no separate retry loop — the coordinator's own schedule is it.
-Token expiry is handled the same way, pre-emptively: `_token_expiry` is set
-60 seconds short of what the server said, and crossing it just flips `online`.
+**Reconnect is driven by `account.online`.** Almost every failure path clears
+it and raises `UpdateFailed`; the next poll sees it False and calls
+`connect()`, which re-authenticates and re-fetches the setup view. There is no
+separate retry loop — the coordinators' own schedule is it. Token expiry is
+handled the same way, pre-emptively: `_token_expiry` is set 60 seconds short of
+what the server said, and crossing it just clears `online`.
 
-**The session is owned, and leaks if you forget it.** Home Assistant does not
-call `async_unload_entry` when setup fails, and it discards the hub and builds
-a fresh one on each retry. So the session is closed by hand: `__init__.py`
-holds three `await theHub.close()` calls — one when the first connect fails,
-one when the first refresh or the platform setup raises, one on unload — and
-`config_flow.py` a fourth for the throwaway hub it builds to test credentials.
+`connect()` is idempotent under an `asyncio.Lock`, and re-checks `online` once
+the lock is held. Every hub on the account clears the flag and reaches for the
+login on the same beat, and repeated *failed* logins are the one thing that
+could lock a Cozytouch account out (`docs/api-surface.md`).
+
+**The session belongs to Home Assistant.** `async_get_clientsession(hass)`,
+which is closed at shutdown. There is nothing to close by hand, which matters
+because HA does not call `async_unload_entry` when a setup fails — it discards
+whatever the setup built and tries again.
+
+**Setup does not depend on the polls landing.** The setup view carries a
+capability list for every device, so the entities are built from what it said;
+each hub's first poll only refreshes values. Only the account's `connect()`
+raises `ConfigEntryNotReady`, so one flaky device leaves its own entities stale
+instead of failing a setup its siblings share.
 
 **Writes are not fire-and-forget.** `set_capability_value` POSTs to
 `writecapability`, gets an execution id back, then polls
@@ -94,7 +114,8 @@ next poll corrects it.
 
 **Away mode is the exception to everything.** It is the one feature that does
 not go through `writecapability` alone: the absence window is `PUT` to
-`/magellan/v2/setups/{id}` — a setup-level resource, not a device one — and
+`/magellan/v2/setups/{id}` — a setup-level resource, not a device one, which
+is why `set_absence` lives on the account and the staging on the hub — and
 only then written to the timestamps capability. And it is deferred: editing
 the start or end datetime entity stages the value on the hub and stamps
 `_timestamp_away_mode_last_change`; `_async_update_data` commits it once that
@@ -232,12 +253,18 @@ an hour would be a lie.
 
 Unique ids key on the capability id, never on the name:
 
-    sensor    cozytouch_{entry_id}_{capabilityId}
-    select    cozytouch_{entry_id}_{capabilityId}   (same shape, other platform)
-    switch    cozytouch_{entry_id}_switch_{capabilityId}
-    number    cozytouch_{entry_id}_number_{capabilityId}
-    climate   cozytouch_{entry_id}_climate_{capabilityId}
-    datetime  {entry_id}_0 / _1          (away mode, not domain-prefixed)
+    sensor    cozytouch_{subentry_id}_{capabilityId}
+    select    cozytouch_{subentry_id}_{capabilityId}  (same shape, other platform)
+    switch    cozytouch_{subentry_id}_switch_{capabilityId}
+    number    cozytouch_{subentry_id}_number_{capabilityId}
+    climate   cozytouch_{subentry_id}_climate_{capabilityId}
+    datetime  {subentry_id}_0 / _1        (away mode, not domain-prefixed)
+
+Every platform funnels that id through one parameter, `config_uniq_id`, which
+is also what the device is registered under — `identifiers={(DOMAIN, it)}`. It
+was the config entry id when an entry meant a device. Nothing else in the
+integration builds an identity, which is why moving to subentries touched one
+argument per platform.
 
 So renaming a capability changes its translation key and its friendly name and
 leaves every existing entity in place. Recent commits rely on this — four
@@ -250,24 +277,27 @@ an entry in all three of `strings.json`, `translations/en.json` and
 `tests/test_capability_coverage.py` walks every name the mapping can produce
 and fails on the gap, so this is caught rather than discovered by a user.
 
-Devices are registered per config entry, and hung under their gateway via
-`get_via_device` — but only when the gateway was set up as an entry of its
-own. The API declares the parent in `masterDeviceId`, so the topology is
-reported rather than inferred; what has to be got right is not claiming a link
-to a device Home Assistant doesn't have. `tests/test_topology.py` pins that.
+Devices are registered per subentry, and hung under their gateway via
+`get_via_device` — but only when the gateway was added as a device of its own.
+The API declares the parent in `masterDeviceId`, so the topology is reported
+rather than inferred; what has to be got right is not claiming a link to a
+device Home Assistant doesn't have. `tests/test_topology.py` pins that.
 
 ## Diagnostics is the intake path
 
 `get_diagnostics` is not a debugging afterthought, it is how new hardware gets
-mapped. It lists **every** device on the account — not just the one this entry
-drives — with its model id, whether the table knows it, and, for the entry's
-own device, the capability ids that came back `None`. That last list is
-literally what a new mapping is written from. Credentials and anything that
-would place the account at an address are redacted.
+mapped. One dump per account. It lists **every** device the setup view returned
+— including the ones nobody added — with its model id, whether the table knows
+it, and the capability ids that came back `None`. That last list is literally
+what a new mapping is written from, and unmapped hardware is usually hardware
+nobody has added yet, which is why it is no longer held back to the configured
+device. Credentials and anything that would place the account at an address
+are redacted.
 
-Devices this entry does not drive carry a `null` capability block rather than
-an empty one, because the hub only keeps capabilities for its own device and
-an empty list would read as "this device reports nothing".
+`isConfiguredHere` says which devices have a subentry, and so which capability
+lists a 60-second poll keeps fresh rather than the last setup view. It is read
+off the entry's subentries, so the dump does not depend on which hub produced
+it.
 
 ## The services
 
@@ -279,13 +309,15 @@ since otherwise the start of the day would have no target.
 
 It resolves the hub through the entity registry rather than `hass.data`, which
 lets it tell apart "that entity belongs to another integration" from "that is
-ours but its entry isn't loaded".
+ours but its entry isn't loaded". The registry entry's `config_subentry_id` is
+the last hop: it names which device, and so which hub.
 
 ## Testing
 
-217 tests, all characterisation tests. They pin the mapping as it stands, not
-as it ought to be: most entries came from one user's capture of one device, so
-green means "nobody changed this by accident", never "this is correct".
+247 tests, almost all characterisation tests. They pin the mapping as it
+stands, not as it ought to be: most entries came from one user's capture of one
+device, so green means "nobody changed this by accident", never "this is
+correct".
 
 Almost all of them are table tests. The exception is
 `tests/test_sensor_values.py`, which pins what the value builders in
@@ -295,10 +327,16 @@ file renders the strings people actually look at and had no tests at all, which
 is how a formatting change can be both invisible in review and visible on every
 dashboard.
 
-**Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
-write-execution polling — so the invariants this document states about them are
-documented and unverified. That is the largest hole left in the suite, and it is
-worth knowing before changing the file.
+**Almost nothing tests the API client.** `tests/test_regressions.py` now covers
+the connect lock, a refused login and what the setup view fills in; token
+expiry and the write-execution polling are still documented and unverified.
+That is the largest hole left in the suite, and it is worth knowing before
+changing `account.py`.
+
+`tests/test_floor.py` is what makes the second CI job mean something: it
+imports every module — the suite otherwise imports four of them — and names the
+subentry APIs the declared minimum Home Assistant has to provide. The floor was
+set by running it, not by reading a changelog.
 
 `CLAUDE.md` has the per-file breakdown and the venv instructions. Two things
 worth repeating: `test_capability.py` carries a hard count of mapped model ids
@@ -342,14 +380,13 @@ from it when a change makes an entry untrue.
   `Capability_101`…, 105906/105907 as `Target 105906`…, and 312 is commented
   `For test`. The coverage test skips them by regex, which is why they have no
   translations.
-- **`_zoneId` on the hub is only assigned for devices already in the list**, so
-  it holds whichever device matched last rather than this entry's. Nothing in
-  production calls `get_zone_name()` without an argument, so the value is never
-  read; it would bite the moment something did.
-- **`config_flow` declares `CONN_CLASS_LOCAL_PUSH`** while the manifest declares
-  `cloud_polling`, which is what actually happens. The constant is legacy and
-  unread by current Home Assistant.
-- **`validate_input` is annotated `-> dict[str, Any]` and returns a `Hub`.**
+- **A version 1 config entry cannot be loaded.** One entry per device became
+  one entry per account with a subentry per device, and no
+  `async_migrate_entry` was written — nobody was running the integration yet.
+  Such an entry lands in `MIGRATION_ERROR`, and the fix is to remove the
+  integration and add it again.
+- **`create_unknown` is account-wide**, so turning it on to investigate one
+  device adds raw entities on all of them.
 
 ## Where the boundaries are
 

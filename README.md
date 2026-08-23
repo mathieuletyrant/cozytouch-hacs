@@ -130,13 +130,15 @@ and attach a diagnostics dump :
 
 `Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download diagnostics`
 
-The file lists every device on the account with its model id, says which ones
-the mapping already knows, and for the device this entry drives, which capability
-ids nothing names yet. That last list is what a mapping is built from. Your
-credentials and address are stripped out before the file is written.
+One file covers the whole account. It lists every device the API reports with
+its model id, says which ones the mapping already knows, and for each of them
+which capability ids nothing names yet -- including the devices you have not
+added, which is usually where an unmapped model is. That last list is what a
+mapping is built from. Your credentials and address are stripped out before
+the file is written.
 
 If you want to see the unmapped capabilities as entities in the meantime, tick
-`Create entities for unknown capabilities` when adding the device (see
+`Create entities for unknown capabilities` when adding the account (see
 [Configuration](#configuration)). It is useful for working out what a value
 means, and noisy enough that you will want it off again afterwards.
 
@@ -168,11 +170,23 @@ Search for `cozytouch` and select the `Atlantic Cozytouch` integration.
 
 Enter your Cozytouch credentials.
 
-If connection is working, you should have a list of devices configured on your account.
+If the connection works, you get the list of devices on your account : the
+gateway, and each unit or thermal zone it reports. Tick the ones you want
+entities for. You get **one entry for the account**, with **one device per
+device you picked**, so the credentials are sent once and the account is
+polled once whatever you own.
 
-Select the device you want to add.
+To add a device later, use `Add device` on the integration page. To stop
+following one, delete it from there.
 
-Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping).
+Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping). It applies to the whole account.
+
+> **Upgrading from an earlier release** : the integration used to be set up
+> one entry per device, and there is no automatic migration -- Home Assistant
+> will say the entry cannot be migrated. Remove the integration and add it
+> again. The devices and their entities are recreated
+> under the account, which means new entity ids, so a dashboard or an
+> automation naming them has to be pointed at the new ones.
 
 ## Versioning
 
