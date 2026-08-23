@@ -1,0 +1,24 @@
+# The environment for tests/integration, which drive a real Home Assistant
+# instead of calling functions against stand-ins.
+# pytest-homeassistant-custom-component is Home Assistant core's own pytest
+# plugin, republished for components that live outside the core tree: the
+# `hass` fixture, MockConfigEntry, the entity and device registries and the
+# rest of what HA's own component tests are written against.
+#
+# It is a separate file rather than another line in requirements_test.txt
+# because it pins the whole test stack, pytest included -- 0.13.357 wants
+# pytest 9.0.3 and requirements_test.txt pins 9.1.1, so the two cannot share
+# an environment. Splitting them also keeps the unit suite installable without
+# HA's test dependencies, which are numpy, SQLAlchemy and a dozen more.
+#
+# The version is picked for the Home Assistant it carries: 0.13.357 pins
+# homeassistant==2026.8.3, the release requirements_test.txt pins, so both
+# jobs test the same HA. There is one plugin release per HA release and the
+# mapping is only visible in the release's metadata -- read it rather than
+# assuming a version number lines up.
+#
+# No equivalent of requirements_test_min.txt: the floor job exists to prove
+# hacs.json's claim installs and imports, and running these tests against a
+# 2024.12 plugin release would mean a second pin set, and old pytest, for a
+# suite that tests our code and not HA's.
+pytest-homeassistant-custom-component==0.13.357

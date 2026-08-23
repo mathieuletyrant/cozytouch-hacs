@@ -119,3 +119,13 @@ convention = "pep257"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Home Assistant core's test plugin registers itself under the name
+# `homeassistant`, so an environment that merely has
+# pytest-homeassistant-custom-component installed arms its autouse fixtures for
+# every test collected -- and one of them calls asyncio.get_event_loop(), which
+# errored out 73 of this suite's 217 tests, none of which has an event loop or
+# wants one. The two suites are meant to live in separate venvs
+# (requirements_test_ha.txt says why); this is what keeps the unit suite
+# working in one that has both. Harmless when the plugin is not installed:
+# `-p no:` only adds a name to the blocked set.
+addopts = "-p no:homeassistant"

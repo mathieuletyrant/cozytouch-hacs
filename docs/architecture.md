@@ -250,9 +250,12 @@ an entry in all three of `strings.json`, `translations/en.json` and
 `tests/test_capability_coverage.py` walks every name the mapping can produce
 and fails on the gap, so this is caught rather than discovered by a user.
 
-Devices are registered per config entry, and hung under their gateway via
-`get_via_device` — but only when the gateway was set up as an entry of its
-own. The API declares the parent in `masterDeviceId`, so the topology is
+Devices are registered per config entry, under an identifier that is the
+entry's id and not the Atlantic `deviceId` — so removing an entry and adding the
+same physical device back leaves the old device behind rather than adopting it,
+which `tests/integration/test_entry_lifecycle.py` pins. They are hung under
+their gateway via `get_via_device` — but only when the gateway was set up as an
+entry of its own. The API declares the parent in `masterDeviceId`, so the topology is
 reported rather than inferred; what has to be got right is not claiming a link
 to a device Home Assistant doesn't have. `tests/test_topology.py` pins that.
 
@@ -283,30 +286,49 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-217 tests, all characterisation tests. They pin the mapping as it stands, not
+237 tests, all characterisation tests. They pin the behaviour as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
-Almost all of them are table tests. The exception is
-`tests/test_sensor_values.py`, which pins what the value builders in
-`sensor.py` return character for character — the zero padding, the double space
-before a temperature, a float setpoint still reading as a whole number. That
-file renders the strings people actually look at and had no tests at all, which
-is how a formatting change can be both invisible in review and visible on every
-dashboard.
+They come in two kinds, and the split is which side of Home Assistant they sit
+on.
 
-**Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
-write-execution polling — so the invariants this document states about them are
-documented and unverified. That is the largest hole left in the suite, and it is
-worth knowing before changing the file.
+217 of them call into the tables and the value builders directly, against
+stand-ins — no `hass`, no config entry. Almost all are table tests. The
+exception is `tests/test_sensor_values.py`, which pins what the value builders
+in `sensor.py` return character for character — the zero padding, the double
+space before a temperature, a float setpoint still reading as a whole number.
+That file renders the strings people actually look at and had no tests at all,
+which is how a formatting change can be both invisible in review and visible on
+every dashboard.
 
-`CLAUDE.md` has the per-file breakdown and the venv instructions. Two things
-worth repeating: `test_capability.py` carries a hard count of mapped model ids
-(63) and walks `range(1, 2500)` — adding a model means updating the count, and
-adding one above 2500 means widening the walk — and the requirements are pinned
-exactly, so the version of Home Assistant the tests run against is a decision
-somebody made rather than whatever pip found. CI runs the suite twice, once on
-that pin and once on the oldest release `hacs.json` claims to support.
+The other 20 live in `tests/integration/` and build a real Home Assistant, using
+its own pytest plugin: they walk the config flow, set an entry up, and read the
+entity and device registries. That is the only way to reach the code between the
+tables and the user — `config_flow.py` and `async_setup_entry` had no tests of
+any kind — and the only way to see a failed setup, since Home Assistant does not
+call `async_unload_entry` for one, so the three `await hub.close()` calls in
+`__init__.py` are unreachable from anything that does not let the real
+config-entry machinery run the failure.
+
+`hub.py` is **partly** tested now, and it is worth knowing which part: those
+tests drive `connect`, `close` and one poll through `async_setup_entry`, with a
+stand-in in place of the aiohttp session. The reconnect path, token expiry and
+the write-execution polling are still untested, so the invariants this document
+states about *them* remain documented and unverified. That is the largest hole
+left in the suite.
+
+`CLAUDE.md` has the per-file breakdown, the two commands and the venv
+instructions. Three things worth repeating: `test_capability.py` carries a hard
+count of mapped model ids (63) and walks `range(1, 2500)` — adding a model means
+updating the count, and adding one above 2500 means widening the walk; the
+requirements are pinned exactly, so the version of Home Assistant the tests run
+against is a decision somebody made rather than whatever pip found; and the
+integration tests want a venv of their own, because Home Assistant's test plugin
+arms autouse fixtures for every test in the environment and the unit suite has
+no event loop for them. CI runs three jobs: the unit suite on the pin, the unit
+suite on the oldest release `hacs.json` claims to support, and the integration
+suite on the pin.
 
 `ruff check .` is the other half, and CI gates on it. `pyproject.toml` carries
 the configuration and the reason for every rule that is switched off.
@@ -350,6 +372,27 @@ from it when a change makes an entry untrue.
   `cloud_polling`, which is what actually happens. The constant is legacy and
   unread by current Home Assistant.
 - **`validate_input` is annotated `-> dict[str, Any]` and returns a `Hub`.**
+- **Every entity reads `unknown` from setup until the next poll.** Setup does
+  fetch the capabilities — `async_config_entry_first_refresh` is what makes a
+  dead API fail cleanly — but an entity's value is only assigned in
+  `_handle_coordinator_update`, and `CoordinatorEntity` does not call that with
+  the data that was already there when the entity was added. So a Home Assistant
+  restart leaves the dashboard blank for up to `POLL_INTERVAL`, 60 seconds,
+  although the values arrived in the first second.
+  `tests/integration/test_entry_lifecycle.py::test_the_values_only_arrive_with_the_next_poll`
+  pins it, so a fix shows up as that test failing.
+- **The account password makes a round trip through the device-picker form.**
+  Each option's value in `async_step_user` is a `str(dict)` carrying the
+  credentials, read back with `ast.literal_eval` in `async_step_select_device`.
+  It is the only state that step keeps, and the entry it writes needs it, but it
+  does mean the password is part of a form served to the browser.
+- **Two config-flow errors say the wrong thing.** A rejected password and a
+  setup view the Hub cannot read both come back as `invalid_auth`, so an
+  Atlantic outage tells the user their password is wrong; and the "no new
+  device" case sets the sentence `No new device found` as the error key, where
+  every other branch sets a key `strings.json` translates, so that dialog shows
+  the raw English in every language. Both are pinned in
+  `tests/integration/test_config_flow.py`.
 
 ## Where the boundaries are
 

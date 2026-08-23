@@ -39,15 +39,35 @@ floor, so an older interpreter makes the install fail rather than resolve
 backwards to an HA nobody runs.
 
 The requirements are pinned, not `>=`, for that reason — see the comment at
-the top of the file for what the unpinned version did. There are two of them :
+the top of the file for what the unpinned version did. There are three of them :
 
 | File | What it is |
 | ---- | ---------- |
 | `requirements_test.txt` | the environment to develop in, and CI's main job |
 | `requirements_test_min.txt` | the oldest HA `hacs.json` claims to support, so the claim is tested |
+| `requirements_test_ha.txt` | `tests/integration`, which needs Home Assistant's own test plugin |
 
 Raising the floor means editing `requirements_test_min.txt` and `hacs.json`
 together, and the Python it is paired with in `.github/workflows/tests.yaml`.
+
+`requirements_test_ha.txt` wants **its own venv**, not a line added to the
+first: it pins the whole test stack, pytest included, and it brings Home
+Assistant's test plugin, which registers itself for every test collected in the
+environment — with it installed alongside the unit suite, 73 of those 217 tests
+error out on an autouse fixture that wants an event loop. `pyproject.toml`
+turns the plugin back off with `-p no:homeassistant` so a shared venv still
+works, but two venvs is the arrangement the pins describe.
+
+Two suites, two commands :
+
+| Command | What runs |
+| ------- | --------- |
+| `pytest tests/ -q` | the unit suite, under `pyproject.toml` |
+| `pytest -c pytest-ha.ini -q` | `tests/integration`, under its own config |
+
+They stay apart because the integration tests need pytest-asyncio in auto mode
+and the unit suite has no pytest-asyncio at all; `tests/conftest.py` keeps
+either run from collecting the other's tests, so neither command needs a `-k`.
 
 ## Lint
 
@@ -102,6 +122,34 @@ capture, so a test going green says "nobody changed this by accident", never
   the flag they were written for. It carries a hard count of mapped ids;
   adding models means updating that number, and widening the walk's range if
   the new id falls outside it.
+
+`tests/integration/` is the other kind : those build a real Home Assistant and
+drive the integration through it, which is the only way to reach the config
+flow, `async_setup_entry` and the entity registry. Everything above calls
+functions against stand-ins and so reaches none of that.
+
+- `tests/integration/conftest.py` — the fake account, and the fake API it is
+  served from. The HTTP boundary is faked by replacing `hub.ClientSession`
+  rather than with the plugin's `aioclient_mock`, because the Hub builds its own
+  aiohttp session instead of asking `homeassistant.helpers.aiohttp_client` for
+  the shared one, and `aioclient_mock` only intercepts the shared one. The
+  stand-in records whether it was closed, which is the point of half the cases.
+- `tests/integration/test_config_flow.py` — the flow as the user walks it :
+  which devices are offered, what the entry ends up holding, and what a
+  rejected password shows. Two habits are pinned rather than fixed — the
+  credentials make a round trip through the form as a stringified dict, and the
+  "no new device" case shows an English sentence where every other error shows a
+  translation key.
+- `tests/integration/test_entry_lifecycle.py` — what a set-up entry produces
+  (which entities exist, which are registered and left disabled, what the
+  device registry holds) and what it releases. The session-closing cases are
+  the ones worth keeping : Home Assistant does not call `async_unload_entry`
+  for a setup that failed, so the three `await hub.close()` calls in
+  `__init__.py` are only reachable from a test that lets the real config-entry
+  machinery run the failure. One case pins something wrong on purpose, like
+  `test_sensor_values.py` does : entities read `unknown` from setup until the
+  next poll, because a `CoordinatorEntity` is not called with the data that was
+  already there when it was added.
 
 ## Adding a device
 
