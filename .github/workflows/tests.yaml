@@ -27,7 +27,7 @@ jobs:
       - name: Run ruff
         run: ruff check --output-format=github .
 
-  pytest:
+  pytest-matrix:
     name: pytest (HA ${{ matrix.homeassistant }} on Python ${{ matrix.python }})
     runs-on: "ubuntu-latest"
     strategy:
@@ -62,3 +62,24 @@ jobs:
         run: pip show homeassistant pytest | grep -E "^(Name|Version)"
       - name: Run pytest
         run: pytest tests/ -q
+
+  # Everything outside this file refers to a check by its name, and a matrix
+  # renames every job it touches: `pytest` became `pytest (HA … on Python …)`,
+  # twice. Anything that required the old name -- the branch protection rule
+  # requiring `ruff`, `pytest` and `validate-hacs` above all -- then waits
+  # forever for a check that no longer reports, which looks exactly like the
+  # tests never starting.
+  #
+  # So the name stays, on a job that does nothing but agree with the matrix.
+  # `needs` on a matrix job is the aggregate: success only if every leg
+  # succeeded. `if: always()` because a skipped job reports neither pass nor
+  # fail, and the point of this one is to always report something.
+  pytest:
+    runs-on: "ubuntu-latest"
+    needs: pytest-matrix
+    if: always()
+    steps:
+      - name: Fail unless every combination passed
+        run: |
+          echo "pytest-matrix: ${{ needs.pytest-matrix.result }}"
+          test "${{ needs.pytest-matrix.result }}" = "success"
