@@ -44,7 +44,7 @@
                 }
             },
             "abort": {
-                "cannot_connect": "[%key:component::cozytouch::config::error::cannot_connect%]",
+                "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",
                 "no_new_devices": "Every device this account reports is already set up"
             }
         }
