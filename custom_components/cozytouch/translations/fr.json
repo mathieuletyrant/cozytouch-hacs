@@ -6,21 +6,34 @@
                 "data": {
                     "username": "Utilisateur",
                     "password": "Mot de passe"
+                },
+                "data_description": {
+                    "username": "L'adresse e-mail avec laquelle l'application Cozytouch se connecte.",
+                    "password": "Le mot de passe de ce compte. Il ne part que vers les serveurs d'Atlantic."
                 }
             },
             "select_device": {
+                "title": "Choisir un appareil",
+                "description": "Une entrée porte un appareil. Relancez le flux pour ajouter le suivant.",
                 "data": {
-                    "create_unknown": "Créer des entités pour les capabilities inconnues",
+                    "device": "Appareil",
+                    "create_unknown": "Créer des entités pour les capacités inconnues",
                     "dump_json": "Générer un fichier JSON avec les données reçues"
+                },
+                "data_description": {
+                    "device": "Les appareils déjà configurés ne sont pas listés.",
+                    "create_unknown": "Transforme chaque capacité que l'intégration ne sait pas nommer en entité de diagnostic, pour découvrir ce que valent ses valeurs. Pour signaler un appareil inconnu, téléchargez plutôt les diagnostics.",
+                    "dump_json": "Écrit la réponse brute de l'API dans Cozytouch.json, dans le répertoire de configuration, à chaque rafraîchissement."
                 }
             }
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "Cet appareil est déjà configuré"
         },
         "error": {
             "cannot_connect": "Connexion aux serveurs Atlantic Cozytouch impossible",
-            "invalid_auth": "Authentication invalide",
+            "invalid_auth": "Authentification invalide",
+            "no_new_device": "Tous les appareils de ce compte sont déjà configurés",
             "unknown": "Erreur inconnue"
         }
     },
@@ -28,9 +41,32 @@
         "step": {
             "init": {
                 "data": {
-                    "create_unknown": "Créer des entités pour les capabilities inconnues",
+                    "create_unknown": "Créer des entités pour les capacités inconnues",
                     "dump_json": "Générer un fichier JSON avec les données reçues"
+                },
+                "data_description": {
+                    "create_unknown": "Transforme chaque capacité que l'intégration ne sait pas nommer en entité de diagnostic, pour découvrir ce que valent ses valeurs. Pour signaler un appareil inconnu, téléchargez plutôt les diagnostics.",
+                    "dump_json": "Écrit la réponse brute de l'API dans Cozytouch.json, dans le répertoire de configuration, à chaque rafraîchissement."
                 }
+            }
+        }
+    },
+    "selector": {
+        "program": {
+            "options": {
+                "heating": "Chauffage",
+                "cooling": "Refroidissement"
+            }
+        },
+        "weekday": {
+            "options": {
+                "monday": "Lundi",
+                "tuesday": "Mardi",
+                "wednesday": "Mercredi",
+                "thursday": "Jeudi",
+                "friday": "Vendredi",
+                "saturday": "Samedi",
+                "sunday": "Dimanche"
             }
         }
     },

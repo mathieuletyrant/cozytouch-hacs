@@ -111,7 +111,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except CannotConnect:
                 errors["base"] = "invalid_auth"
             except NoNewDevice:
-                errors["base"] = "No new device found"
+                # A translation key, not a sentence : anything the form does not
+                # find under config.error is shown to the user verbatim.
+                errors["base"] = "no_new_device"
             except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"

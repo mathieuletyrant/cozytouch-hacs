@@ -9,6 +9,7 @@ set_schedule:
       example: cooling
       selector:
         select:
+          translation_key: program
           options:
             - heating
             - cooling
@@ -17,6 +18,7 @@ set_schedule:
       example: '["monday", "tuesday"]'
       selector:
         select:
+          translation_key: weekday
           multiple: true
           options:
             - monday

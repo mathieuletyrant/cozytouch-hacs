@@ -6,21 +6,34 @@
                 "data": {
                     "username": "Username",
                     "password": "Password"
+                },
+                "data_description": {
+                    "username": "The e-mail address the Cozytouch app signs in with.",
+                    "password": "The password of that account. It only ever goes to Atlantic's servers."
                 }
             },
             "select_device": {
+                "title": "Pick a device",
+                "description": "One entry holds one device. Run the flow again to add the next one.",
                 "data": {
+                    "device": "Device",
                     "create_unknown": "Create entities for unknown capabilities",
                     "dump_json": "Dump a JSON file with received data"
+                },
+                "data_description": {
+                    "device": "Devices already set up are left out of the list.",
+                    "create_unknown": "Turns every capability the integration cannot name into a diagnostic entity, to work out what its values mean. To report an unknown device, download the diagnostics instead.",
+                    "dump_json": "Writes the raw API answer to Cozytouch.json in the configuration directory, on every refresh."
                 }
             }
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "This device is already configured"
         },
         "error": {
             "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",
             "invalid_auth": "Invalid Atlantic Cozytouch authentication",
+            "no_new_device": "Every device on this account is already set up",
             "unknown": "Unknown error"
         }
     },
@@ -30,7 +43,30 @@
                 "data": {
                     "create_unknown": "Create entities for unknown capabilities",
                     "dump_json": "Dump a JSON file with received data"
+                },
+                "data_description": {
+                    "create_unknown": "Turns every capability the integration cannot name into a diagnostic entity, to work out what its values mean. To report an unknown device, download the diagnostics instead.",
+                    "dump_json": "Writes the raw API answer to Cozytouch.json in the configuration directory, on every refresh."
                 }
+            }
+        }
+    },
+    "selector": {
+        "program": {
+            "options": {
+                "heating": "Heating",
+                "cooling": "Cooling"
+            }
+        },
+        "weekday": {
+            "options": {
+                "monday": "Monday",
+                "tuesday": "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday": "Thursday",
+                "friday": "Friday",
+                "saturday": "Saturday",
+                "sunday": "Sunday"
             }
         }
     },
