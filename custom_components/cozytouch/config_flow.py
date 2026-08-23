@@ -12,7 +12,6 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant import exceptions
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow as BaseConfigFlow,
@@ -24,7 +23,10 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
-from .account import CozytouchAccount
+# CannotConnect comes from account.py, which is where it is raised. Declaring
+# a second one here would put two different classes under one name, either of
+# which could shadow the other depending on import order.
+from .account import CannotConnect, CozytouchAccount
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -287,7 +289,3 @@ class OptionsFlowHandler(OptionsFlow):
                 }
             ),
         )
-
-
-class CannotConnect(exceptions.HomeAssistantError):
-    """Error to indicate we cannot connect."""

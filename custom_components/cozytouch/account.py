@@ -140,9 +140,20 @@ class CozytouchAccount:
 
         Idempotent on purpose : `online` is the whole reconnect mechanism, and
         every hub on the account flips it and calls this. Re-checking it once
-        the lock is held is what keeps that from costing one login per device
-        -- repeated *failed* logins are the one thing that could lock an
-        account out (docs/api-surface.md).
+        the lock is held is what keeps a *successful* reconnect from costing
+        one login per device -- five coordinators on one beat make one request.
+
+        It does **not** collapse a failing one. A refused login leaves `online`
+        False, so each waiter in turn takes the lock, sees that, and tries
+        again : five sequential attempts a minute rather than five concurrent
+        ones. Since repeated *failed* logins are the one thing that could lock
+        an account out (docs/api-surface.md), that matters -- and the fix is
+        not a cooldown here. It is to stop retrying at all, by telling Home
+        Assistant the credentials were refused rather than that the network
+        was down, which is what raising ConfigEntryAuthFailed does : the
+        coordinator answers it by opening a reauth dialog and, in
+        `_async_refresh`, by not rescheduling itself. That is what #19 is for,
+        and this docstring is the note to whoever merges it.
         """
         if self.online:
             return True
