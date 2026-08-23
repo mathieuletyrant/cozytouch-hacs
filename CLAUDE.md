@@ -80,6 +80,14 @@ capture, so a test going green says "nobody changed this by accident", never
   shared by every config entry, a shadowed `time` import that made every time
   entity raise, and the connect lock without which every device on an account
   logs in separately.
+- `tests/test_reauth.py` — the split between a refused password and a server
+  that is not answering, end to end : what the token endpoint said, what
+  `connect()` raises, what setup and the poll turn it into, and what the reauth
+  dialog does with the password somebody types. Its `FakeSession` is the only
+  stand-in in the suite that reaches the HTTP layer, so it is where the rest of
+  `account.py` gets tested when somebody gets to it. One case pins a
+  *limitation* on purpose : a refused login is retried once per waiting hub,
+  and if that number ever drops the case should say why.
 - `tests/test_floor.py` — what the Home Assistant version `hacs.json` declares
   has to provide. It imports every module, which the rest of the suite does not
   — four of them, and none touching the config flow or the platforms — and

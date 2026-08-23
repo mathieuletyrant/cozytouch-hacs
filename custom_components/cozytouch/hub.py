@@ -118,7 +118,11 @@ class Hub(DataUpdateCoordinator):
         self._account.check_token()
 
         if not self._account.online:
-            if not await self._account.connect():
+            # ConfigEntryAuthFailed passes straight through the coordinator,
+            # which answers it by opening a reauth dialog and by not
+            # rescheduling itself. UpdateFailed would only book another attempt
+            # with the same rejected password.
+            if not await self._account.connect_or_auth_failed():
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
 
             # A reconnect re-reads the setup view, which carries the capability

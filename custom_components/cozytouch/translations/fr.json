@@ -8,6 +8,13 @@
                     "password": "Mot de passe"
                 }
             },
+            "reauth_confirm": {
+                "title": "Saisissez à nouveau votre mot de passe Cozytouch",
+                "description": "Atlantic refuse désormais le mot de passe enregistré pour {username}. Saisissez le mot de passe actuel pour reconnecter tous les appareils de ce compte.",
+                "data": {
+                    "password": "Mot de passe"
+                }
+            },
             "devices": {
                 "title": "Appareils à ajouter",
                 "description": "Tout ce que ce compte déclare, passerelles et zones thermiques comprises. Laissez de côté ce dont vous ne voulez pas d'entités ; vous pourrez l'ajouter plus tard depuis la page de l'intégration.",
@@ -20,6 +27,7 @@
         },
         "abort": {
             "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+            "reauth_successful": "La ré-authentification a réussi",
             "no_devices": "Ce compte Cozytouch ne déclare aucun appareil"
         },
         "error": {
@@ -44,6 +52,7 @@
                 }
             },
             "abort": {
+                "invalid_auth": "Atlantic refuse le mot de passe enregistré pour ce compte ; reconnectez-le au préalable",
                 "cannot_connect": "Connexion aux serveurs Atlantic Cozytouch impossible",
                 "no_new_devices": "Tous les appareils déclarés par ce compte sont déjà configurés"
             }

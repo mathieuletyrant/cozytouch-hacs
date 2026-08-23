@@ -7,6 +7,7 @@ the integration page.
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 import logging
 from typing import Any
 
@@ -15,6 +16,7 @@ import voluptuous as vol
 from homeassistant.config_entries import (
     ConfigEntry,
     ConfigFlow as BaseConfigFlow,
+    ConfigFlowResult,
     ConfigSubentryFlow,
     OptionsFlow,
     SubentryFlowResult,
@@ -23,10 +25,10 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
-# CannotConnect comes from account.py, which is where it is raised. Declaring
-# a second one here would put two different classes under one name, either of
-# which could shadow the other depending on import order.
-from .account import CannotConnect, CozytouchAccount
+# Both come from account.py, which is where they are raised. Declaring them
+# here again would put two different classes under one name, either of which
+# could shadow the other depending on import order.
+from .account import CannotConnect, CozytouchAccount, InvalidAuth
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,6 +43,12 @@ async def validate_input(hass: HomeAssistant, data: dict) -> CozytouchAccount:
     """Validate the user input allows us to connect.
 
     Data has the keys from DATA_SCHEMA with values provided by the user.
+
+    Raises InvalidAuth when the account refused the credentials -- it comes
+    straight out of `connect()`, which is the one failure it does not swallow
+    -- and CannotConnect when the account could not be asked. The caller shows
+    a different message for each, since "check your password" is unhelpful
+    advice during an outage.
     """
     account = CozytouchAccount(hass, data["username"], data["password"])
     if not await account.connect():
@@ -127,8 +135,12 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 account = await validate_input(self.hass, user_input)
-            except CannotConnect:
+            except InvalidAuth:
                 errors["base"] = "invalid_auth"
+            except CannotConnect:
+                # Used to say invalid_auth too, so a timeout told people their
+                # password was wrong and sent them off to reset it.
+                errors["base"] = "cannot_connect"
             except Exception:
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
@@ -199,6 +211,63 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
         )
 
 
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
+        """Start over from a password Atlantic no longer accepts.
+
+        Home Assistant calls this when setup or a poll raises
+        ConfigEntryAuthFailed. Before that path existed, a changed Cozytouch
+        password left the account retrying the old one for as long as the
+        installation ran, saying only that it could not connect.
+        """
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Ask for the password again, and check it before storing it.
+
+        One entry per account, so this is one dialog and one write. It is also
+        why there is no loop over sibling entries here: the credentials exist
+        in exactly one place, and reloading that entry brings every device on
+        the account back with it.
+        """
+        entry = self._get_reauth_entry()
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            # The username is not asked for again. Changing it would point the
+            # entry at a different account, where the deviceId of every
+            # subentry means nothing or, worse, something else.
+            try:
+                await validate_input(
+                    self.hass,
+                    {
+                        "username": entry.data["username"],
+                        "password": user_input["password"],
+                    },
+                )
+            except InvalidAuth:
+                errors["base"] = "invalid_auth"
+            except CannotConnect:
+                errors["base"] = "cannot_connect"
+            except Exception:
+                _LOGGER.exception("Unexpected exception")
+                errors["base"] = "unknown"
+            else:
+                return self.async_update_reload_and_abort(
+                    entry, data_updates={"password": user_input["password"]}
+                )
+
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema({vol.Required("password"): str}),
+            description_placeholders={"username": entry.data["username"]},
+            errors=errors,
+        )
+
+
 class DeviceSubentryFlowHandler(ConfigSubentryFlow):
     """Add one more device of an account that is already set up."""
 
@@ -217,6 +286,10 @@ class DeviceSubentryFlowHandler(ConfigSubentryFlow):
         if self._devices is None:
             try:
                 account = await validate_input(self.hass, dict(entry.data))
+            except InvalidAuth:
+                # The stored password has gone stale. Saying so beats an empty
+                # device list, and the reauth dialog is one poll away.
+                return self.async_abort(reason="invalid_auth")
             except CannotConnect:
                 return self.async_abort(reason="cannot_connect")
 

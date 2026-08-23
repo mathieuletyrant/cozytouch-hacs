@@ -101,6 +101,22 @@ def test_an_integration_can_declare_which_subentries_it_supports():
     assert hasattr(ConfigFlow, "async_get_supported_subentry_types")
 
 
+def test_the_reauth_helpers_exist():
+    """The reauth step reads its entry and writes back through these two.
+
+    Both are conveniences Home Assistant added at some point, so they belong in
+    the list of things the declared floor has to have rather than in a
+    traceback on somebody's old install.
+    """
+    from homeassistant.config_entries import ConfigFlow
+
+    assert hasattr(ConfigFlow, "_get_reauth_entry")
+
+    parameters = inspect.signature(ConfigFlow.async_update_reload_and_abort).parameters
+
+    assert "data_updates" in parameters
+
+
 def test_the_declared_floor_is_the_one_the_tests_run_against():
     """hacs.json and requirements_test_min.txt have to say the same thing, or
     the job proving the floor is proving a different one.

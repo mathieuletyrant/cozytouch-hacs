@@ -8,6 +8,13 @@
                     "password": "Password"
                 }
             },
+            "reauth_confirm": {
+                "title": "Re-enter your Cozytouch password",
+                "description": "Atlantic no longer accepts the stored password for {username}. Enter the current one to reconnect every device on this account.",
+                "data": {
+                    "password": "Password"
+                }
+            },
             "devices": {
                 "title": "Devices to add",
                 "description": "Everything this account reports, gateways and thermal zones included. Leave out what you do not want entities for; you can add it later from the integration page.",
@@ -20,6 +27,7 @@
         },
         "abort": {
             "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+            "reauth_successful": "Re-authentication was successful",
             "no_devices": "This Cozytouch account reports no device"
         },
         "error": {
@@ -44,6 +52,7 @@
                 }
             },
             "abort": {
+                "invalid_auth": "Atlantic no longer accepts the stored password for this account; reconnect it first",
                 "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",
                 "no_new_devices": "Every device this account reports is already set up"
             }

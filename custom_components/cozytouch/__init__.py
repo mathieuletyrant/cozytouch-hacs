@@ -49,9 +49,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
     async_register_services(hass)
 
-    if not await account.connect():
-        # tells HA to retry setup with exponential backoff until the network
-        # is available
+    # ConfigEntryNotReady tells HA to retry with exponential backoff until the
+    # network is back; a refused password comes out of here as
+    # ConfigEntryAuthFailed instead, which asks for a new one rather than
+    # retrying the old one until somebody goes looking.
+    if not await account.connect_or_auth_failed():
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
     create_unknown = _setting(entry, "create_unknown")

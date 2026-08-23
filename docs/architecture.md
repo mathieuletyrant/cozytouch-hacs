@@ -90,9 +90,32 @@ handled the same way, pre-emptively: `_token_expiry` is set 60 seconds short of
 what the server said, and crossing it just clears `online`.
 
 `connect()` is idempotent under an `asyncio.Lock`, and re-checks `online` once
-the lock is held. Every hub on the account clears the flag and reaches for the
-login on the same beat, and repeated *failed* logins are the one thing that
-could lock a Cozytouch account out (`docs/api-surface.md`).
+the lock is held, so a successful reconnect costs one login however many
+devices asked for it. A *failing* one is not collapsed: the flag stays clear,
+so each waiter tries in turn. That is right for a network failure and wrong for
+a refused password, which is why the next paragraph exists.
+
+**A refused password is the one failure that is not retried.** No number of
+attempts fixes wrong credentials, and repeated *failed* logins are the one
+thing that could lock a Cozytouch account out (`docs/api-surface.md`). So
+`InvalidAuth` — raised only for the token endpoint's `invalid_grant`, never for
+a merely malformed response — is the one exception `connect()` lets out instead
+of folding into `online = False`. `connect_or_auth_failed` turns it into
+`ConfigEntryAuthFailed`, which is what makes Home Assistant ask for the
+password; it also stops the coordinator that raised it from rescheduling
+itself, which is what ends the loop rather than slowing it down.
+
+```
+invalid_grant ──> InvalidAuth ──> ConfigEntryAuthFailed ──> async_step_reauth
+anything else ──> online = False ──> ConfigEntryNotReady / UpdateFailed ──> retry
+```
+
+The reauth step asks for the password only, never the username: changing that
+would point the entry at a different account, where the `deviceId` of every
+subentry means nothing or something else. And because the account is one entry,
+it is one dialog and one write — with an entry per device it took a loop
+copying the new password to every sibling, or each of them raised a prompt of
+its own for the same password.
 
 **The session belongs to Home Assistant.** `async_get_clientsession(hass)`,
 which is closed at shutdown. There is nothing to close by hand, which matters
@@ -314,7 +337,7 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-247 tests, almost all characterisation tests. They pin the mapping as it
+265 tests, most of them characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
 correct".
@@ -327,11 +350,14 @@ file renders the strings people actually look at and had no tests at all, which
 is how a formatting change can be both invisible in review and visible on every
 dashboard.
 
-**Almost nothing tests the API client.** `tests/test_regressions.py` now covers
-the connect lock, a refused login and what the setup view fills in; token
-expiry and the write-execution polling are still documented and unverified.
-That is the largest hole left in the suite, and it is worth knowing before
-changing `account.py`.
+**Almost nothing tests the API client.** `tests/test_reauth.py` reaches the
+HTTP layer -- a `FakeSession` answering from a script -- and covers one path
+end to end: what the token endpoint said, what `connect()` raises, what setup
+and the poll make of it, and what the dialog does with the password somebody
+types. `tests/test_regressions.py` covers the connect lock and what the setup
+view fills in. Token expiry, the write-execution polling and the away-mode PUT
+are still documented and unverified. That is the largest hole left in the
+suite; `FakeSession` is the thing to extend when closing it.
 
 `tests/test_floor.py` is what makes the second CI job mean something: it
 imports every module — the suite otherwise imports four of them — and names the

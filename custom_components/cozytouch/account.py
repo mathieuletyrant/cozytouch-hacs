@@ -29,6 +29,7 @@ from aiohttp import ClientError, ClientTimeout, ContentTypeError, FormData
 
 from homeassistant import exceptions
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
@@ -143,17 +144,15 @@ class CozytouchAccount:
         the lock is held is what keeps a *successful* reconnect from costing
         one login per device -- five coordinators on one beat make one request.
 
-        It does **not** collapse a failing one. A refused login leaves `online`
-        False, so each waiter in turn takes the lock, sees that, and tries
-        again : five sequential attempts a minute rather than five concurrent
-        ones. Since repeated *failed* logins are the one thing that could lock
-        an account out (docs/api-surface.md), that matters -- and the fix is
-        not a cooldown here. It is to stop retrying at all, by telling Home
-        Assistant the credentials were refused rather than that the network
-        was down, which is what raising ConfigEntryAuthFailed does : the
-        coordinator answers it by opening a reauth dialog and, in
-        `_async_refresh`, by not rescheduling itself. That is what #19 is for,
-        and this docstring is the note to whoever merges it.
+        It does not collapse a failing one : a failure leaves `online` False,
+        so each waiter in turn takes the lock, sees that, and tries again.
+        That is deliberate for a network failure -- retrying is the answer --
+        and wrong for a refused password, which no number of attempts fixes
+        and which repeated *failed* logins could get an account locked out
+        for (docs/api-surface.md). So `InvalidAuth` is the one exception this
+        does **not** fold into `online = False`: it propagates, and
+        `connect_or_auth_failed` turns it into the signal that stops the
+        retrying rather than scheduling more of it.
         """
         if self.online:
             return True
@@ -173,6 +172,25 @@ class CozytouchAccount:
                 self.online = False
 
         return self.online
+
+    async def connect_or_auth_failed(self) -> bool:
+        """connect(), with a refused password raised rather than returned.
+
+        `ConfigEntryAuthFailed` is what Home Assistant acts on : it opens the
+        reauth dialog, and `_async_refresh` stops rescheduling the coordinator
+        that raised it -- which is what turns "retry the rejected password
+        every minute for as long as the installation runs" into "ask once".
+
+        The two callers -- setup and the poll -- differ only in what they make
+        of a plain False, so the translation that has to be identical lives
+        here and the retry semantics stay with them.
+        """
+        try:
+            return await self.connect()
+        except InvalidAuth as err:
+            raise ConfigEntryAuthFailed(
+                "Atlantic Cozytouch rejected the stored credentials"
+            ) from err
 
     async def _authenticate(self) -> None:
         """POST /users/token, and remember when it stops being good."""
@@ -194,8 +212,13 @@ class CozytouchAccount:
         ) as response:
             token = await response.json()
 
-            if "error" in token and token["error"] == "invalid_grant":
-                raise CannotConnect
+            # The one answer that means the credentials are wrong. OAuth2
+            # spells it invalid_grant and Atlantic uses the standard spelling.
+            # Anything else malformed is a bad response, not a bad password:
+            # telling somebody their password is wrong because the gateway
+            # hiccuped sends them off to reset a password that was fine.
+            if token.get("error") == "invalid_grant":
+                raise InvalidAuth
 
             if "token_type" not in token:
                 raise CannotConnect
@@ -528,6 +551,15 @@ class CozytouchAccount:
 
 class CannotConnect(exceptions.HomeAssistantError):
     """Error to indicate we cannot connect."""
+
+
+class InvalidAuth(exceptions.HomeAssistantError):
+    """Error to indicate the account refused the username and password.
+
+    Distinct from CannotConnect because the two want opposite handling:
+    CannotConnect is retried until the network comes back, InvalidAuth never
+    resolves without somebody typing a new password.
+    """
 
 
 class CozytouchApiError(exceptions.HomeAssistantError):
