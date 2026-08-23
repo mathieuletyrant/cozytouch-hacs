@@ -4,7 +4,6 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
 import homeassistant.helpers.config_validation as cv
 
 from . import hub
@@ -50,14 +49,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     async_register_services(hass)
 
-    await theHub.connect()
-    if not theHub.online:
-        # HA discards this hub and builds a new one on each retry, so release the
-        # aiohttp session here or every attempt leaks one
+    try:
+        # ConfigEntryNotReady tells HA to retry with exponential backoff until
+        # the network is available; ConfigEntryAuthFailed tells it to stop
+        # retrying and ask for the password instead. Which of the two it is
+        # comes from the hub, since only it saw the answer.
+        await theHub.async_connect_or_raise()
+    except Exception:
+        # HA discards this hub and builds a new one on each retry, so release
+        # the aiohttp session here or every attempt leaks one
         await theHub.close()
-        # tells HA to retry setup with exponential backoff until the network
-        # is available
-        raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
+        raise
 
     entry.runtime_data = theHub
 

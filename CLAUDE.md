@@ -79,6 +79,11 @@ capture, so a test going green says "nobody changed this by accident", never
   time entity raise.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
+- `tests/test_reauth.py` — the split between a refused password and a server
+  that is not answering, end to end : what the token endpoint said, what
+  `connect` raises, what setup and the coordinator turn it into, and what the
+  reauth dialog does with the password somebody types. The only tests that
+  reach `hub.py`, via a scripted `FakeSession` standing in for aiohttp.
 - `tests/test_sensor_values.py` — what the value builders in `sensor.py`
   return, character for character : the zero padding on a duration, the double
   space before a temperature, a setpoint arriving from JSON as a float and

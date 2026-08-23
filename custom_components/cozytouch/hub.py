@@ -19,6 +19,7 @@ from aiohttp import (
 from homeassistant import exceptions
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -123,12 +124,23 @@ class Hub(DataUpdateCoordinator):
         return self._id
 
     async def test_connection(self) -> bool:
-        """Test connection."""
+        """Test connection.
+
+        Raises InvalidAuth if the credentials are the problem; returns False
+        for everything else, so a caller can tell "wrong password" from "the
+        servers are down" instead of reporting one as the other.
+        """
         await self.connect()
         return self.online
 
     async def connect(self) -> bool:
-        """Connect to Cozytouch server."""
+        """Connect to Cozytouch server.
+
+        InvalidAuth propagates rather than being swallowed into `online =
+        False`. Every other failure is still a False: the difference is that
+        retrying fixes a network problem and never fixes a wrong password, so
+        the two cannot share a code path that only knows how to retry.
+        """
         if self.online is False:
             try:
                 async with self._session.post(
@@ -149,8 +161,14 @@ class Hub(DataUpdateCoordinator):
                 ) as response:
                     token = await response.json()
 
-                    if "error" in token and token["error"] == "invalid_grant":
-                        raise CannotConnect
+                    # The one answer that means the credentials are wrong.
+                    # OAuth2 spells it invalid_grant, and Atlantic uses the
+                    # standard spelling. Anything else malformed is treated as
+                    # a bad response rather than a bad password, because
+                    # telling somebody their password is wrong when the
+                    # gateway hiccuped is its own kind of damage.
+                    if token.get("error") == "invalid_grant":
+                        raise InvalidAuth
 
                     if "token_type" not in token:
                         raise CannotConnect
@@ -220,6 +238,24 @@ class Hub(DataUpdateCoordinator):
                 self.online = False
 
         return self.online
+
+    async def async_connect_or_raise(self) -> None:
+        """Connect, turning a refused login into what Home Assistant acts on.
+
+        ConfigEntryAuthFailed is the signal that starts a reauth flow -- the
+        coordinator raises it at the user, and setup does the same. Without it
+        a changed Cozytouch password looks exactly like an outage, and the
+        entry retries the old password until somebody goes looking.
+        """
+        try:
+            await self.connect()
+        except InvalidAuth as err:
+            raise ConfigEntryAuthFailed(
+                "Atlantic Cozytouch rejected the stored credentials"
+            ) from err
+
+        if not self.online:
+            raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
     async def close(self) -> None:
         """Close session."""
@@ -387,7 +423,16 @@ class Hub(DataUpdateCoordinator):
                 ) from err
 
         else:
-            await self.connect()
+            # ConfigEntryAuthFailed passes straight through the coordinator,
+            # which answers it by starting a reauth flow. UpdateFailed would
+            # only schedule another attempt with the same rejected password.
+            try:
+                await self.connect()
+            except InvalidAuth as err:
+                raise ConfigEntryAuthFailed(
+                    "Atlantic Cozytouch rejected the stored credentials"
+                ) from err
+
             if not self.online:
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
 
@@ -885,3 +930,12 @@ class Hub(DataUpdateCoordinator):
 
 class CannotConnect(exceptions.HomeAssistantError):
     """Error to indicate we cannot connect."""
+
+
+class InvalidAuth(exceptions.HomeAssistantError):
+    """Error to indicate the account refused the username and password.
+
+    Distinct from CannotConnect because the two want opposite handling:
+    CannotConnect is retried until the network comes back, InvalidAuth never
+    resolves without somebody typing a new password.
+    """

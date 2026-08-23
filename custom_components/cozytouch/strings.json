@@ -13,10 +13,18 @@
                     "create_unknown": "Create entities for unknown capabilities",
                     "dump_json": "Dump a JSON file with received data"
                 }
+            },
+            "reauth_confirm": {
+                "title": "Re-enter your Cozytouch password",
+                "description": "Atlantic no longer accepts the stored password for {username}. Enter the current one to reconnect every device on this account.",
+                "data": {
+                    "password": "Password"
+                }
             }
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]",
+            "reauth_successful": "Re-authentication was successful"
         },
         "error": {
             "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",

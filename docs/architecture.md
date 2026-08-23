@@ -78,6 +78,26 @@ view. There is no separate retry loop — the coordinator's own schedule is it.
 Token expiry is handled the same way, pre-emptively: `_token_expiry` is set
 60 seconds short of what the server said, and crossing it just flips `online`.
 
+**A refused password is the one failure that is not retried.** Retrying is the
+right answer to everything except wrong credentials, which no number of
+attempts fixes. So `InvalidAuth` — raised only for the token endpoint's
+`invalid_grant`, never for a merely malformed response — is the one exception
+`connect()` lets out instead of folding into `online = False`. Setup and
+`_async_update_data` turn it into `ConfigEntryAuthFailed`, which is what makes
+Home Assistant ask for the password rather than schedule another attempt:
+
+```
+invalid_grant ──> InvalidAuth ──> ConfigEntryAuthFailed ──> async_step_reauth
+anything else ──> online = False ──> ConfigEntryNotReady / UpdateFailed ──> retry
+```
+
+The reauth step asks for the password only, never the username: changing that
+would point the entry at a different account, where its stored `deviceId`
+means nothing or something else. And because an account is one entry per
+device, the new password is written to **every** entry sharing that username,
+not just the one whose dialog was answered — otherwise each of the others
+raises its own reauth prompt for the same password.
+
 **The session is owned, and leaks if you forget it.** Home Assistant does not
 call `async_unload_entry` when setup fails, and it discards the hub and builds
 a fresh one on each retry. So the session is closed by hand: `__init__.py`
@@ -283,9 +303,12 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-217 tests, all characterisation tests. They pin the mapping as it stands, not
-as it ought to be: most entries came from one user's capture of one device, so
-green means "nobody changed this by accident", never "this is correct".
+233 tests, most of them characterisation tests. They pin the mapping as it
+stands, not as it ought to be: most entries came from one user's capture of one
+device, so green means "nobody changed this by accident", never "this is
+correct". `test_reauth.py` is the exception — it tests behaviour that was
+designed rather than discovered, so there it is fair to read green as "this is
+right".
 
 Almost all of them are table tests. The exception is
 `tests/test_sensor_values.py`, which pins what the value builders in
@@ -295,10 +318,13 @@ file renders the strings people actually look at and had no tests at all, which
 is how a formatting change can be both invisible in review and visible on every
 dashboard.
 
-**Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
-write-execution polling — so the invariants this document states about them are
-documented and unverified. That is the largest hole left in the suite, and it is
-worth knowing before changing the file.
+`tests/test_reauth.py` is the only file that reaches `hub.py`, and it covers
+one path: what happens when the credentials are refused. **The rest of the hub
+is untested** — token expiry, the write-execution polling, the reconnect
+bookkeeping — so the invariants this document states about them are documented
+and unverified. That is the largest hole left in the suite, and it is worth
+knowing before changing the file. The `FakeSession` in `test_reauth.py` is the
+thing to extend when closing it.
 
 `CLAUDE.md` has the per-file breakdown and the venv instructions. Two things
 worth repeating: `test_capability.py` carries a hard count of mapped model ids
