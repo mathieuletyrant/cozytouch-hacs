@@ -102,6 +102,17 @@ capture, so a test going green says "nobody changed this by accident", never
   the flag they were written for. It carries a hard count of mapped ids;
   adding models means updating that number, and widening the walk's range if
   the new id falls outside it.
+- `tests/test_capability_coverage.py` — the wiring between the two tables and
+  the platforms : that every capability the mapping produces reaches a platform
+  and the other way round, that a self-describing capability arrives switched
+  off, and that every name it produces has a translation.
+- `tests/test_translations.py` — what the three JSON files promise a user. The
+  four failures pinned here were all live: a `[%key:…%]` reference, which only
+  the build that ships core resolves; an `errors["base"]` set to a sentence
+  rather than a key; a form field with no label; and a service `select` with no
+  `translation_key`, so its options read as the raw YAML values. The fifth case
+  is the convention — Home Assistant asks for sentence case, and every name
+  here was in title case.
 
 ## Adding a device
 
@@ -119,7 +130,12 @@ capture, so a test going green says "nobody changed this by accident", never
    the unit is actually known.
 3. Translations — a new capability name needs an entry in **all three** of
    `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
-   the alphabetical order and column alignment already in the file.
+   the alphabetical order and column alignment already in the file. Names go in
+   **sentence case** — first word capitalised, the rest lower unless it is an
+   acronym the hardware uses (`DHW`, `V40`, `Z1`) — which is what Home
+   Assistant asks for and what `tests/test_translations.py` checks. Write the
+   English out in full rather than a `[%key:…%]` reference: nothing resolves
+   one outside core.
 4. Tests — a case in `MODEL_GROUPS`, and the count in `test_capability.py`.
 5. `README.md` — the table for that device class.
 
