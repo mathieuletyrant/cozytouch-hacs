@@ -12,23 +12,22 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
+from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import Hub
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
+async def validate_input(hass: HomeAssistant, data: dict) -> CozytouchAccount:
     """Validate the user input allows us to connect.
 
     Data has the keys from DATA_SCHEMA with values provided by the user.
     """
-    hub = Hub(hass, data["username"], data["password"])
-    result = await hub.test_connection()
-    if not result:
+    account = CozytouchAccount(hass, data["username"], data["password"])
+    if not await account.connect():
         raise CannotConnect
 
-    return hub
+    return account
 
 
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -54,8 +53,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             try:
-                hub = await validate_input(self.hass, user_input)
-                devices = hub.devices()
+                account = await validate_input(self.hass, user_input)
+                devices = account.device_summaries()
 
                 new_devices = []
                 current_entries = self._async_current_entries()

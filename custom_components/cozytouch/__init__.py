@@ -7,9 +7,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 import homeassistant.helpers.config_validation as cv
 
-from . import hub
+from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry
+from .hub import CozytouchConfigEntry, Hub
 from .repairs import async_check_model_mapping
 from .services import async_register_services
 
@@ -38,24 +38,20 @@ async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry) -> Non
 
 async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) -> bool:
     """Set up Atlantic Cozytouch from a config entry."""
-    theHub = hub.Hub(
-        hass,
-        entry.data["username"],
-        entry.data["password"],
-        entry.data["deviceId"],
-        config_entry=entry,
+    account = CozytouchAccount(
+        hass, entry.data["username"], entry.data["password"]
     )
+    account.set_dump_json(_setting(entry, "dump_json"))
 
-    theHub.set_dump_json(_setting(entry, "dump_json"))
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     async_register_services(hass)
 
-    await theHub.connect()
-    if not theHub.online:
+    if not await account.connect():
         # tells HA to retry setup with exponential backoff until the network
         # is available
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
+    theHub = Hub(hass, account, entry.data["deviceId"], config_entry=entry)
     entry.runtime_data = theHub
 
     theHub.set_create_entities_for_unknown_entities(_setting(entry, "create_unknown"))

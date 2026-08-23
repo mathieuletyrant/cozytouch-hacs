@@ -8,8 +8,8 @@ somebody set it up as an entry of its own. Claiming a link to a device that is
 not there earns a warning from the device registry, which is what these pin.
 
 Hub.get_via_device is called unbound against a stand-in, the way the
-diagnostics tests do -- it reads three attributes and none of them need a
-coordinator.
+diagnostics tests do -- it reads the account's device list and the entry store,
+and neither needs a coordinator.
 """
 
 from types import SimpleNamespace
@@ -24,7 +24,7 @@ ROOM_ID = 27906641
 def make_hub(devices, deviceId, entries=()):
     """A stand-in exposing only what get_via_device reads."""
     return SimpleNamespace(
-        _devices=devices,
+        _account=SimpleNamespace(devices=devices),
         _deviceId=deviceId,
         _hass=SimpleNamespace(
             config_entries=SimpleNamespace(async_entries=lambda domain: list(entries))

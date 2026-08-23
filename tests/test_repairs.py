@@ -25,6 +25,7 @@ import pytest
 import yaml
 
 from custom_components.cozytouch import repairs
+from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.model import get_model_infos
 
@@ -98,6 +99,13 @@ def make_entry(
         title=title,
         options=options or {},
         runtime_data=hub,
+    )
+
+
+def hub_holding(devices, deviceId=None):
+    """A hub stand-in over an account holding the given devices."""
+    return SimpleNamespace(
+        _account=SimpleNamespace(devices=devices), _deviceId=deviceId
     )
 
 
@@ -443,8 +451,8 @@ def test_the_account_is_read_off_any_one_of_its_devices():
     """Every hub holds the whole setup view, which is what makes one dialog
     able to speak for devices its own entry knows nothing about.
     """
-    hub = SimpleNamespace(
-        _devices=[
+    account = SimpleNamespace(
+        devices=[
             {"deviceId": 1, "modelId": 235},
             {"deviceId": 2, "modelId": 99999},
             {"deviceId": 3, "modelId": 88888},
@@ -452,13 +460,13 @@ def test_the_account_is_read_off_any_one_of_its_devices():
         ]
     )
 
-    assert Hub.get_unmapped_models(hub) == [88888, 99999]
+    assert CozytouchAccount.get_unmapped_models(account) == [88888, 99999]
 
 
 def test_the_mapping_splits_what_it_names_from_what_it_does_not():
     """One rule, read by the diagnostics dump and by the repair alike."""
-    hub = SimpleNamespace(
-        _devices=[
+    hub = hub_holding(
+        [
             {
                 "deviceId": 1,
                 "modelId": 235,
@@ -468,7 +476,7 @@ def test_the_mapping_splits_what_it_names_from_what_it_does_not():
                 ],
             }
         ],
-        _deviceId=1,
+        deviceId=1,
     )
 
     mapped, unmapped = Hub.get_capability_names(hub)
@@ -479,7 +487,7 @@ def test_the_mapping_splits_what_it_names_from_what_it_does_not():
 
 def test_a_device_the_hub_does_not_hold_splits_into_nothing():
     """The caller has to be able to tell "names nothing" from "not there"."""
-    hub = SimpleNamespace(_devices=[], _deviceId=7)
+    hub = hub_holding([], deviceId=7)
 
     assert Hub.get_capability_names(hub) == ({}, [])
 
@@ -488,12 +496,12 @@ def test_the_model_id_comes_back_as_the_api_reported_it():
     """get_model_infos answers what the table made of the id; a bug report
     needs the id itself, which is what this accessor is for.
     """
-    hub = SimpleNamespace(
-        _devices=[
+    hub = hub_holding(
+        [
             {"deviceId": 1, "modelId": 1457},
             {"deviceId": 2, "modelId": 99999},
         ],
-        _deviceId=2,
+        deviceId=2,
     )
 
     assert Hub.get_model_id(hub) == 99999
@@ -502,7 +510,7 @@ def test_the_model_id_comes_back_as_the_api_reported_it():
 
 def test_a_device_the_hub_does_not_hold_has_no_model_id():
     """The caller has to be able to tell "not mapped" from "not there"."""
-    hub = SimpleNamespace(_devices=[], _deviceId=7)
+    hub = hub_holding([], deviceId=7)
 
     assert Hub.get_model_id(hub) is None
 
