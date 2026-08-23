@@ -106,7 +106,7 @@ capture, so a test going green says "nobody changed this by accident", never
   the platforms : that every capability the mapping produces reaches a platform
   and the other way round, that a self-describing capability arrives switched
   off, and that every name it produces has a translation.
-- `tests/test_translations.py` — what the three JSON files promise a user. The
+- `tests/test_translations.py` — what the two JSON files promise a user. The
   four failures pinned here were all live: a `[%key:…%]` reference, which only
   the build that ships core resolves; an `errors["base"]` set to a sentence
   rather than a key; a form field with no label; and a service `select` with no
@@ -128,9 +128,11 @@ capture, so a test going green says "nobody changed this by accident", never
    surfaced as a raw string, and `enabled_by_default` False, so it costs nobody
    anything until someone turns it on to investigate. Claim a type only where
    the unit is actually known.
-3. Translations — a new capability name needs an entry in **all three** of
-   `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
-   the alphabetical order and column alignment already in the file. Names go in
+3. Translations — a new capability name needs an entry in **both** of
+   `translations/en.json` and `translations/fr.json`, kept in the alphabetical
+   order and column alignment already in the file. There is no `strings.json`
+   here on purpose : Home Assistant only ever loads `translations/<lang>.json`,
+   and the file core generates `en.json` from is one more copy to keep in step. Names go in
    **sentence case** — first word capitalised, the rest lower unless it is an
    acronym the hardware uses (`DHW`, `V40`, `Z1`) — which is what Home
    Assistant asks for and what `tests/test_translations.py` checks. Write the

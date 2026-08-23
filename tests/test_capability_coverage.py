@@ -31,7 +31,6 @@ from custom_components.cozytouch.capability import (
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 TRANSLATIONS = (
-    "custom_components/cozytouch/strings.json",
     "custom_components/cozytouch/translations/en.json",
     "custom_components/cozytouch/translations/fr.json",
 )

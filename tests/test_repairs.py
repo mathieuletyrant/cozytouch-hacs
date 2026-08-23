@@ -29,7 +29,6 @@ from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.model import get_model_infos
 
 TRANSLATIONS = (
-    "custom_components/cozytouch/strings.json",
     "custom_components/cozytouch/translations/en.json",
     "custom_components/cozytouch/translations/fr.json",
 )

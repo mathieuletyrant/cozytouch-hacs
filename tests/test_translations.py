@@ -1,4 +1,4 @@
-"""What the three translation files promise, and what actually reaches a user.
+"""What the two translation files promise, and what actually reaches a user.
 
 Every string here is read by Home Assistant at runtime and by nothing else, so
 the ways they break are quiet ones. Four have been live in this repo:
@@ -30,7 +30,6 @@ import pytest
 import yaml
 
 TRANSLATIONS = (
-    "custom_components/cozytouch/strings.json",
     "custom_components/cozytouch/translations/en.json",
     "custom_components/cozytouch/translations/fr.json",
 )
@@ -80,12 +79,7 @@ def form_fields(translations, flow):
 
 @pytest.mark.parametrize("path", TRANSLATIONS)
 def test_no_translation_file_ships_an_unresolved_reference(path):
-    """Nothing outside core resolves `[%key:…%]`; the user reads the brackets.
-
-    strings.json is checked too. It is not loaded at runtime, but it is the
-    file the other two are kept in step with, so a reference left there is a
-    reference copied into them the next time someone adds a string.
-    """
+    """Nothing outside core resolves `[%key:…%]`; the user reads the brackets."""
     text = pathlib.Path(path).read_text(encoding="utf-8")
 
     assert "[%key:" not in text

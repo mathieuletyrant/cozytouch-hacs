@@ -244,9 +244,12 @@ leaves every existing entity in place. Recent commits rely on this — four
 water-heater capabilities were renamed without breaking anyone's history.
 
 The name doubles as the translation key, which is why a new capability needs
-an entry in all three of `strings.json`, `translations/en.json` and
-`translations/fr.json`. Miss one and Home Assistant shows the raw key —
-`available_system_modes` — in the UI.
+an entry in both of `translations/en.json` and `translations/fr.json`. Miss one
+and Home Assistant shows the raw key — `available_system_modes` — in the UI.
+Those two are the whole set : `translations/<lang>.json` is the only thing Home
+Assistant loads, and a custom integration has nothing that turns core's
+`strings.json` into `en.json`, so keeping one would mean writing every string
+twice.
 `tests/test_capability_coverage.py` walks every name the mapping can produce
 and fails on the gap, so this is caught rather than discovered by a user.
 
