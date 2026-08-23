@@ -52,9 +52,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
 
     await theHub.connect()
     if not theHub.online:
-        # HA discards this hub and builds a new one on each retry, so release the
-        # aiohttp session here or every attempt leaks one
-        await theHub.close()
         # tells HA to retry setup with exponential backoff until the network
         # is available
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
@@ -62,16 +59,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     entry.runtime_data = theHub
 
     theHub.set_create_entities_for_unknown_entities(_setting(entry, "create_unknown"))
-    try:
-        # raises ConfigEntryNotReady if the first poll fails, which also gets us
-        # a retry -- but only if we hand the session back first
-        await theHub.async_config_entry_first_refresh()
-        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    except Exception:
-        # HA does not call async_unload_entry when setup fails, so the session
-        # has to be released here or the retry leaks it
-        await theHub.close()
-        raise
+    # raises ConfigEntryNotReady if the first poll fails, which gets us a retry
+    await theHub.async_config_entry_first_refresh()
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Once the devices are loaded, and only for a setup that got this far:
     # an unmapped model is worth a word to the user, a failed setup is not.
@@ -82,9 +72,4 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
 
 async def async_unload_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) -> bool:
     """Unload a config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unload_ok:
-        # a reload builds a brand new hub, so the old session has to go with it
-        await entry.runtime_data.close()
-
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

@@ -8,17 +8,12 @@ from datetime import UTC, datetime, timedelta
 import json
 import logging
 
-from aiohttp import (
-    ClientError,
-    ClientSession,
-    ClientTimeout,
-    ContentTypeError,
-    FormData,
-)
+from aiohttp import ClientError, ClientTimeout, ContentTypeError, FormData
 
 from homeassistant import exceptions
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -90,7 +85,10 @@ class Hub(DataUpdateCoordinator):
         self._timestamp_away_mode_start = None
         self._timestamp_away_mode_end = None
 
-        self._session = ClientSession()
+        # Home Assistant's own session, not one of ours: it is closed when
+        # Home Assistant stops, so there is nothing left to leak when a setup
+        # fails and the hub it built is discarded.
+        self._session = async_get_clientsession(hass)
         self._host = "none"
         self._hass = hass
         self._username = username
@@ -220,10 +218,6 @@ class Hub(DataUpdateCoordinator):
                 self.online = False
 
         return self.online
-
-    async def close(self) -> None:
-        """Close session."""
-        await self._session.close()
 
     def update_devices_from_json_data(self, json_data) -> None:
         """Update the devices list."""
