@@ -114,8 +114,7 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
         elif self._timestamp_index == 1:
             value = self.coordinator.get_away_mode_end()
 
-        if value is not None:
-            if value > 0:
-                return datetime.fromtimestamp(value, tz=dt_util.DEFAULT_TIME_ZONE)
+        if value is not None and value > 0:
+            return datetime.fromtimestamp(value, tz=dt_util.DEFAULT_TIME_ZONE)
 
         return None

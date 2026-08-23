@@ -129,12 +129,14 @@ def test_model_flags_are_reported_so_a_report_shows_what_was_wired():
 
     assert infos["ecoModeAvailable"] == "False"
     assert infos["quietModeAvailable"] == "True"
-    assert "name" not in infos and "type" not in infos
+    assert "name" not in infos
+    assert "type" not in infos
 
 
 def test_what_the_api_itself_calls_the_device_is_carried_through():
     """A dump is what an unmapped model gets mapped from, so the vendor's own
-    name and family for it are worth more than the ones our table invented."""
+    name and family for it are worth more than the ones our table invented.
+    """
     hub = make_hub(
         [
             device(1, 9999)
@@ -158,7 +160,8 @@ def test_what_the_api_itself_calls_the_device_is_carried_through():
 
 def test_fields_the_api_leaves_out_read_as_none_rather_than_failing():
     """Only the gateway carried a modelFamily on the account these were read
-    from; a room unit reports null, and a dump has to survive that."""
+    from; a room unit reports null, and a dump has to survive that.
+    """
     hub = make_hub([device(1, 557)], deviceId=1)
 
     reported = Hub.get_diagnostics(hub)["devices"][0]

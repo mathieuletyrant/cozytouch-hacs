@@ -284,14 +284,25 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-137 tests, all characterisation tests. They pin the mapping as it stands, not
+168 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
-`CLAUDE.md` has the per-file breakdown and the venv instructions. The one
-thing worth repeating: `test_capability.py` carries a hard count of mapped
-model ids (63) and walks `range(1, 2500)`. Adding a model means updating the
-count, and adding one above 2500 means widening the walk.
+All of them are table tests. **Nothing tests `hub.py`** — not the reconnect
+path, not token expiry, not the write-execution polling — so the invariants
+this document states about them are documented and unverified. That is the
+largest hole in the suite, and it is worth knowing before changing the file.
+
+`CLAUDE.md` has the per-file breakdown and the venv instructions. Two things
+worth repeating: `test_capability.py` carries a hard count of mapped model ids
+(63) and walks `range(1, 2500)` — adding a model means updating the count, and
+adding one above 2500 means widening the walk — and the requirements are pinned
+exactly, so the version of Home Assistant the tests run against is a decision
+somebody made rather than whatever pip found. CI runs the suite twice, once on
+that pin and once on the oldest release `hacs.json` claims to support.
+
+`ruff check .` is the other half, and CI gates on it. `pyproject.toml` carries
+the configuration and the reason for every rule that is switched off.
 
 ## Rough edges, verified
 
@@ -316,6 +327,14 @@ hard way. Most are inherited from upstream.
 - **`signal` maps to `SIGNAL_STRENGTH` with `UnitOfSoundPressure.DECIBEL`.**
   The unit string is `dB`, which is valid for the device class, but it is
   reached through the sound-pressure enum.
+- **The away-mode timestamp sensor applies the device's timezone offset twice.**
+  `CozytouchAwayModeTimestampSensor.get_value` adds the offset the device
+  reports to the unix timestamp, then formats the sum with a bare
+  `datetime.fromtimestamp()` — which reads it in Home Assistant's local zone,
+  adding the offset again for anyone not on UTC. `tz=UTC` is the fix; it changes
+  what the sensor displays, so it wants a capture of what the Cozytouch app
+  shows before it is made. The line carries a `noqa: DTZ006` so the linter does
+  not have to be argued with twice.
 - **`CozytouchDateTime` is defined and never instantiated.**
   `CozytouchAwayModeDateTime` is the class the platform builds.
 - **A few capabilities are deliberate placeholders.** 101–104 come out as

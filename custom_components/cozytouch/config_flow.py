@@ -23,7 +23,6 @@ async def validate_input(hass: HomeAssistant, data: dict) -> dict[str, Any]:
 
     Data has the keys from DATA_SCHEMA with values provided by the user.
     """
-
     hub = Hub(hass, data["username"], data["password"])
     result = await hub.test_connection()
     if not result:
@@ -54,7 +53,6 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
-
         errors = {}
         if user_input is not None:
             try:
@@ -78,7 +76,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         new_devices.append(device)
 
                 if len(new_devices) == 0:
-                    raise NoNewDevice()
+                    raise NoNewDevice
 
                 return self.async_show_form(
                     step_id="select_device",
@@ -118,7 +116,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
 
-        # If there is no user input or there were errors, show the form again, including any errors that were found with the input.
+        # If there is no user input or there were errors, show the form again,
+        # including any errors that were found with the input.
         user_schema = vol.Schema(
             {vol.Required("username"): str, vol.Required("password"): str}
         )

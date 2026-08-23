@@ -7,17 +7,21 @@ Mandatory :
     * HVACModes : list of available HVAC value/mode pairs
 
 Optional :
-    * currentTemperatureAvailable : enable current temperature availability (default : True)
-    * currentTemperatureAvailableZ1 : enable current temperature availability for Z1 (used for HEAT_PUMP, default : True)
-    * currentTemperatureAvailableZ2 : enable current temperature availability for Z2 (used for HEAT_PUMP, default : True)
-    * exhaustTemperatureAvailable : enable exhaust temperature availability (default : True)
+    * currentTemperatureAvailable : enable current temperature availability
+      (default : True)
+    * currentTemperatureAvailableZ1 : enable current temperature availability
+      for Z1 (used for HEAT_PUMP, default : True)
+    * currentTemperatureAvailableZ2 : enable current temperature availability
+      for Z2 (used for HEAT_PUMP, default : True)
+    * exhaustTemperatureAvailable : enable exhaust temperature availability
+      (default : True)
     * fanModes : list of value/mode pairs
     * swingModes : list of value/mode pairs
     * quietModeAvailable : enable quiet mode availability (default : False)
     * awayModeTemperatureAvailable : enable the absence setpoint (default : True)
     * ecoModeAvailable : enable eco mode availability (default : True)
 
-"""  # noqa: D205
+"""
 
 from enum import StrEnum
 
@@ -57,8 +61,14 @@ class CozytouchDeviceType(StrEnum):
     HUB = "hub"
 
 
-def get_model_infos(modelId: int, zoneName: str | None = None):
-    """Return infos from model ID."""
+def get_model_infos(modelId: int, zoneName: str | None = None):  # noqa: C901
+    """Return infos from model ID.
+
+    One long if/elif over model ids, which is why it is over the complexity
+    ceiling: the shape of the problem is a lookup table, and the table is the
+    function. Splitting it per device type would move the branches without
+    removing one.
+    """
     modelInfos = {"modelId": modelId, "HVACModesCapabilityId": {7, 8}}
 
     if modelId == 56:

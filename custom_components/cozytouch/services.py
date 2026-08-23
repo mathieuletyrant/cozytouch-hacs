@@ -40,7 +40,9 @@ SET_SCHEDULE_SCHEMA = vol.Schema(
     {
         vol.Required("entity_id"): cv.entity_ids,
         vol.Required("program"): vol.In(PROGRAM_FIRST_CAPABILITY),
-        vol.Required("days"): vol.All(cv.ensure_list, [vol.In(DAYS)], vol.Length(min=1)),
+        vol.Required("days"): vol.All(
+            cv.ensure_list, [vol.In(DAYS)], vol.Length(min=1)
+        ),
         vol.Required("slots"): vol.All(
             cv.ensure_list,
             vol.Length(min=1, max=MAX_SLOTS),
@@ -60,7 +62,10 @@ SET_SCHEDULE_SCHEMA = vol.Schema(
 def _build_matrix(slots: list[dict]) -> str:
     """Turn slots into the [[minutes,temperature],...] string the device stores."""
     entries = sorted(
-        ((slot["time"].hour * 60 + slot["time"].minute, slot["temperature"]) for slot in slots),
+        (
+            (slot["time"].hour * 60 + slot["time"].minute, slot["temperature"])
+            for slot in slots
+        ),
         key=lambda entry: entry[0],
     )
 

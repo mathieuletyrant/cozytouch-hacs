@@ -24,14 +24,11 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
-from custom_components.cozytouch.capability import (  # noqa: E402
+from custom_components.cozytouch.capability import (
     SELF_DESCRIBING_CAPABILITIES,
     get_capability_infos,
 )
-from custom_components.cozytouch.model import (  # noqa: E402
-    CozytouchDeviceType,
-    get_model_infos,
-)
+from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 # One model per device type, so a branch that keys off the type is reached.
 # The ids are picked from the table; a type gaining its first model would need
@@ -208,7 +205,7 @@ def main():
         print("| device | entity |")
         print("| --- | --- |")
         grouped = {}
-        for label, sig in zip(labels, sigs):
+        for label, sig in zip(labels, sigs, strict=True):
             grouped.setdefault(repr(sig), (sig, []))[1].append(label)
         for sig, owners in grouped.values():
             print(f"| {', '.join(owners)} | {cell(sig)} |")
