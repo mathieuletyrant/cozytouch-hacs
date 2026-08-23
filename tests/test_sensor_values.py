@@ -1,0 +1,372 @@
+"""What the sensor value builders return, character for character.
+
+`sensor.py` is where a capability value becomes the string somebody reads on a
+dashboard, and it had no tests at all. These pin the formatting as it stands --
+including the two places where what it stands at is wrong on purpose, marked
+below -- so that changing one has to be a decision rather than a side effect.
+
+They exist because a lint pass rewrote six `%`-format expressions in this file
+into f-strings. That is exactly the kind of edit that looks free and silently
+turns 21 into 21.0 on somebody's dashboard, and nothing here would have caught
+it.
+
+Each `get_value` is called unbound against a stand-in exposing only the
+attributes it reads, because building a real entity needs a `hass`. That is the
+same trick `tests/test_diagnostics.py` uses on the `Hub`.
+"""
+
+import datetime
+import time
+
+import pytest
+
+from custom_components.cozytouch.const import CozytouchCapabilityVariableType
+from custom_components.cozytouch.sensor import (
+    CozytouchAwayModeSensor,
+    CozytouchAwayModeTimestampSensor,
+    CozytouchProgSensor,
+    CozytouchProgTimeSensor,
+    CozytouchTimeSensor,
+    CozytouchTimezoneSensor,
+    CozytouchUnitSensor,
+)
+
+CAPABILITY_ID = 42
+
+
+class FakeCoordinator:
+    """A hub stand-in that answers one capability id, and records the rest."""
+
+    def __init__(self, values, away_start=0, away_end=0):
+        self._values = values
+        self.away_start = away_start
+        self.away_end = away_end
+        self.initialised_with = None
+
+    def get_capability_value(self, capabilityId, defaultIfNotExist="0"):
+        return self._values.get(capabilityId)
+
+    def get_away_mode_start(self):
+        return self.away_start
+
+    def get_away_mode_end(self):
+        return self.away_end
+
+    def away_mode_init(self, start, end):
+        self.initialised_with = (start, end)
+
+
+def sensor(cls, value, capability=None, **attrs):
+    """A stand-in for an entity of cls, holding only what get_value reads."""
+    stub = object.__new__(cls)
+    stub._capability = {"capabilityId": CAPABILITY_ID, **(capability or {})}
+    stub.coordinator = FakeCoordinator({CAPABILITY_ID: value})
+    for name, attr in attrs.items():
+        setattr(stub, name, attr)
+    return stub
+
+
+# ---------------------------------------------------------------- durations
+
+
+@pytest.mark.parametrize(
+    ("minutes", "expected"),
+    [
+        ("0", "00:00"),
+        ("5", "00:05"),
+        ("60", "01:00"),
+        ("65", "01:05"),
+        # A day rolls into a "1d " prefix rather than a 24-hour clock.
+        ("1440", "1d 00:00"),
+        ("1505", "1d 01:05"),
+        ("2880", "2d 00:00"),
+        # More than 99 hours still pads to two digits, it does not truncate.
+        ("10085", "7d 00:05"),
+    ],
+)
+def test_a_duration_reads_as_days_and_a_zero_padded_clock(minutes, expected):
+    """The zero padding is the part a format rewrite can lose: "1:5" instead
+    of "01:05" is the same number and a different string.
+    """
+    got = CozytouchTimeSensor.get_value(sensor(CozytouchTimeSensor, minutes))
+    assert got == expected
+
+
+def test_a_duration_that_is_not_reported_is_not_invented():
+    assert CozytouchTimeSensor.get_value(sensor(CozytouchTimeSensor, None)) is None
+
+
+# ----------------------------------------------------------------- timezone
+
+
+@pytest.mark.parametrize(
+    ("seconds", "expected"),
+    [
+        ("0", "GMT"),
+        ("3600", "GMT+1"),
+        ("7200", "GMT+2"),
+        ("-3600", "GMT-1"),
+        ("-18000", "GMT-5"),
+        # A half-hour zone truncates towards zero rather than rounding, on
+        # both signs. India reports GMT+5, not GMT+5:30 and not GMT+6.
+        ("19800", "GMT+5"),
+        ("-19800", "GMT-5"),
+        # Under an hour there is no hour to show.
+        ("1800", "GMT+0"),
+        ("-1800", "GMT-0"),
+    ],
+)
+def test_an_offset_reads_as_whole_hours_truncated(seconds, expected):
+    """`%d` over a true division truncated; the f-string uses floor division,
+    which is the same thing only because both branches are positive. These pin
+    that it stayed the same thing.
+    """
+    got = CozytouchTimezoneSensor.get_value(sensor(CozytouchTimezoneSensor, seconds))
+    assert got == expected
+
+
+# ------------------------------------------------------- heating programmes
+
+
+@pytest.mark.parametrize(
+    ("program", "expected"),
+    [
+        ("[[420,21]]", "07:00  21°C"),
+        ("[[420,21],[1290,17]]", "07:00  21°C / 21:30  17°C"),
+        # A [0,0] slot is an unused one and is left out entirely.
+        ("[[420,21],[0,0]]", "07:00  21°C"),
+        ("[[0,0]]", ""),
+        # Midnight is a real slot: only [0, 0] means "unused".
+        ("[[0,19]]", "00:00  19°C"),
+    ],
+)
+def test_a_programme_reads_as_slots_joined_by_a_slash(program, expected):
+    """The double space before the temperature is not a typo, it is what the
+    two concatenations have always produced. Somebody's dashboard has it.
+    """
+    got = CozytouchProgSensor.get_value(sensor(CozytouchProgSensor, program))
+    assert got == expected
+
+
+@pytest.mark.parametrize(
+    ("program", "expected"),
+    [
+        ("[[420,21.0]]", "07:00  21°C"),
+        ("[[420,21.5]]", "07:00  21°C"),
+        ("[[420,21.9]]", "07:00  21°C"),
+        ("[[420,-3.7]]", "07:00  -3°C"),
+    ],
+)
+def test_a_setpoint_that_arrives_as_a_float_is_still_shown_whole(program, expected):
+    """This is the case the format rewrite could have broken and no other test
+    would have noticed: the value comes out of json.loads, so it can be a
+    float, and `%d` truncated it. 21.5 has to keep reading as 21°C, not 21.5.
+    """
+    got = CozytouchProgSensor.get_value(sensor(CozytouchProgSensor, program))
+    assert got == expected
+
+
+@pytest.mark.parametrize(
+    ("program", "expected"),
+    [
+        ("[[420,1290]]", "07:00-21:30"),
+        ("[[420,1290],[60,120]]", "07:00-21:30 / 01:00-02:00"),
+        ("[[0,0]]", ""),
+    ],
+)
+def test_a_time_programme_reads_as_from_dash_to(program, expected):
+    got = CozytouchProgTimeSensor.get_value(sensor(CozytouchProgTimeSensor, program))
+    assert got == expected
+
+
+# ------------------------------------------------------------ away mode text
+
+
+AWAY_VALUES = {"value_off": "0", "value_pending": "1", "value_on": "2"}
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("0", "Off"),
+        ("1", "Pending"),
+        ("2", "On"),
+        # A value none of the three claim is reported as unknown rather than
+        # guessed at, which is what the initial assignment is for.
+        ("9", "Unknown"),
+    ],
+)
+def test_away_mode_reads_as_one_of_three_states(value, expected):
+    stub = sensor(CozytouchAwayModeSensor, value, capability=AWAY_VALUES)
+    assert CozytouchAwayModeSensor.get_value(stub) == expected
+
+
+def test_away_mode_not_reported_is_none_rather_than_unknown():
+    """The `return None` this now says out loud used to be an implicit fall off
+    the end of the function. Same value, and now it is on purpose.
+    """
+    stub = sensor(CozytouchAwayModeSensor, None, capability=AWAY_VALUES)
+    assert CozytouchAwayModeSensor.get_value(stub) is None
+
+
+# ------------------------------------------------------------- unit scaling
+
+
+def test_a_display_factor_scales_the_reported_value():
+    stub = sensor(
+        CozytouchUnitSensor,
+        "1500",
+        _value_type=CozytouchCapabilityVariableType.FLOAT,
+        _display_factor=0.001,
+    )
+    assert CozytouchUnitSensor.get_value(stub) == 1.5
+
+
+def test_a_display_factor_of_one_hands_the_value_back_untouched():
+    stub = sensor(
+        CozytouchUnitSensor,
+        "1500",
+        _value_type=CozytouchCapabilityVariableType.FLOAT,
+        _display_factor=1.0,
+    )
+    assert CozytouchUnitSensor.get_value(stub) == 1500.0
+
+
+@pytest.mark.parametrize(("last", "expected"), [(None, None), ("", None), (0, None)])
+def test_a_unit_sensor_with_nothing_behind_it_has_no_native_value(last, expected):
+    """The other implicit return that is now explicit."""
+    stub = object.__new__(CozytouchUnitSensor)
+    stub._last_value = last
+    assert CozytouchUnitSensor.native_value.fget(stub) is expected
+
+
+def test_a_unit_sensor_that_cannot_parse_its_value_reads_as_zero():
+    """Not None: an unparseable value is reported as 0.0, which is inherited
+    behaviour and load-bearing for the statistics HA derives from it.
+    """
+    stub = object.__new__(CozytouchUnitSensor)
+    stub._last_value = "not a number"
+    assert CozytouchUnitSensor.native_value.fget(stub) == 0.0
+
+
+# --------------------------------------------------- away mode timestamps
+
+
+def timestamp_sensor(value, index=0, offset="7200", away=(0, 0)):
+    """A timestamp sensor reading `value`, with the device reporting `offset`."""
+    stub = object.__new__(CozytouchAwayModeTimestampSensor)
+    stub._capability = {"capabilityId": CAPABILITY_ID, "timezoneCapabilityId": 99}
+    stub.coordinator = FakeCoordinator(
+        {CAPABILITY_ID: value, 99: offset}, away_start=away[0], away_end=away[1]
+    )
+    stub._separator = ","
+    stub._timestamp_index = index
+    return stub
+
+
+@pytest.fixture
+def in_timezone(monkeypatch):
+    """Run a test under a fixed local zone, since the sensor reads one.
+
+    A test that renders a timestamp is otherwise a test of the machine it runs
+    on. monkeypatch puts TZ back on its own; tzset has to be told about it, or
+    the next test inherits this one's zone.
+    """
+
+    def switch(name):
+        monkeypatch.setenv("TZ", name)
+        time.tzset()
+
+    yield switch
+    time.tzset()
+
+
+def test_an_unset_window_reads_as_undefined(in_timezone):
+    in_timezone("UTC")
+    assert CozytouchAwayModeTimestampSensor.get_value(timestamp_sensor("[0,0]")) == (
+        "Undefined"
+    )
+
+
+def test_a_window_that_is_not_reported_is_none(in_timezone):
+    in_timezone("UTC")
+    assert CozytouchAwayModeTimestampSensor.get_value(timestamp_sensor(None)) is None
+
+
+@pytest.mark.parametrize(
+    ("index", "expected"), [(0, "00:13 15/11/2023"), (1, "01:13 15/11/2023")]
+)
+def test_each_end_of_the_window_reads_from_its_own_index(in_timezone, index, expected):
+    in_timezone("UTC")
+    stub = timestamp_sensor("[1700000000,1700003600]", index=index)
+    assert CozytouchAwayModeTimestampSensor.get_value(stub) == expected
+
+
+def test_the_first_read_seeds_the_hub_with_the_window_it_found(in_timezone):
+    """Whichever entity renders first is what initialises the coordinator, and
+    the datetime entities read it back from there.
+    """
+    in_timezone("UTC")
+    stub = timestamp_sensor("[1700000000,1700003600]", away=(None, None))
+
+    CozytouchAwayModeTimestampSensor.get_value(stub)
+
+    assert stub.coordinator.initialised_with == (1700000000, 1700003600)
+
+
+def test_the_timezone_offset_is_applied_twice_outside_utc(in_timezone):
+    """WRONG ON PURPOSE, pinned so the fix is visible when somebody makes it.
+
+    The device's offset is already added to the timestamp, and then the sum is
+    read with a bare fromtimestamp(), which adds the local zone on top. The
+    same instant therefore renders an hour later in Paris than in UTC, for a
+    window that is the same window. docs/architecture.md carries this as a
+    rough edge; correcting it changes what the sensor displays, so it wants a
+    capture of the Cozytouch app first.
+    """
+    in_timezone("UTC")
+    in_utc = CozytouchAwayModeTimestampSensor.get_value(
+        timestamp_sensor("[1700000000,1700003600]")
+    )
+
+    in_timezone("Europe/Paris")
+    in_paris = CozytouchAwayModeTimestampSensor.get_value(
+        timestamp_sensor("[1700000000,1700003600]")
+    )
+
+    assert in_utc == "00:13 15/11/2023"
+    # One hour later for the same instant: November in Paris is UTC+1, and it
+    # lands on top of the +2 the device already reported.
+    assert in_paris == "01:13 15/11/2023"
+
+
+def test_the_offset_the_device_reports_is_what_moves_the_clock(in_timezone):
+    """Read in UTC, the only shift left is the device's own offset, so this is
+    the one assertion here that says what the sensor is *for*.
+    """
+    in_timezone("UTC")
+    at_utc = CozytouchAwayModeTimestampSensor.get_value(
+        timestamp_sensor("[1700000000,1700003600]", offset="0")
+    )
+    at_plus_two = CozytouchAwayModeTimestampSensor.get_value(
+        timestamp_sensor("[1700000000,1700003600]", offset="7200")
+    )
+
+    assert at_utc == "22:13 14/11/2023"
+    assert at_plus_two == "00:13 15/11/2023"
+
+
+def test_the_offset_shifts_by_exactly_what_it_says(in_timezone):
+    """Derived rather than hand-computed, so the pair above cannot both be
+    wrong in the same direction and still agree.
+    """
+    in_timezone("UTC")
+    base = 1700000000
+    for offset in (0, 3600, 7200, -3600, -18000):
+        got = CozytouchAwayModeTimestampSensor.get_value(
+            timestamp_sensor(f"[{base},{base + 3600}]", offset=str(offset))
+        )
+        want = datetime.datetime.fromtimestamp(
+            base + offset, tz=datetime.UTC
+        ).strftime("%H:%M %d/%m/%Y")
+        assert got == want

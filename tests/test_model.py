@@ -14,13 +14,6 @@ nobody meant to make.
 """
 
 import pytest
-from homeassistant.components.climate import HVACMode
-from homeassistant.components.climate.const import (
-    FAN_AUTO,
-    FAN_HIGH,
-    FAN_LOW,
-    FAN_MEDIUM,
-)
 
 from custom_components.cozytouch.const import (
     AIR_CIRCULATION_SPEED_HIGH,
@@ -35,6 +28,13 @@ from custom_components.cozytouch.const import (
     SWING_MODE_UP,
 )
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
+from homeassistant.components.climate import HVACMode
+from homeassistant.components.climate.const import (
+    FAN_AUTO,
+    FAN_HIGH,
+    FAN_LOW,
+    FAN_MEDIUM,
+)
 
 MODEL_GROUPS = [
     (

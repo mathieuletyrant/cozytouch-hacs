@@ -81,7 +81,11 @@ def _report_url(report: dict[int, list[int]]) -> str:
             + ", ".join(str(modelId) for modelId in models),
             "model_ids": ", ".join(str(modelId) for modelId in models),
             "capability_ids": "\n".join(
-                f"{modelId}: " + (", ".join(str(id) for id in report[modelId]) or "none")
+                f"{modelId}: "
+                + (
+                    ", ".join(str(capabilityId) for capabilityId in report[modelId])
+                    or "none"
+                )
                 for modelId in models
             ),
         }

@@ -453,7 +453,9 @@ def get_capability_infos(  # noqa: C901
         # not a guess -- but nothing reads them yet. Wiring them as the climate
         # entity's min and max while cooling is a separate change.
         capability["name"] = (
-            "cooling_temperature_min" if capabilityId == 162 else "cooling_temperature_max"
+            "cooling_temperature_min"
+            if capabilityId == 162
+            else "cooling_temperature_max"
         )
         capability["type"] = "temperature"
         capability["category"] = "diag"

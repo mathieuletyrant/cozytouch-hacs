@@ -93,7 +93,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             capability=capability,
             config_title=config_title,
             config_uniq_id=config_uniq_id,
-            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_climate_{str(capabilityId)}",
+            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_climate_{capabilityId!s}",
             name=name,
             translation_key=name,
         )
@@ -195,9 +195,14 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 self._attr_preset_mode = PRESET_BASIC
 
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Update the values from the hub."""
+    def _handle_coordinator_update(self) -> None:  # noqa: C901
+        """Update the values from the hub.
 
+        Over the complexity ceiling because a climate entity is the one place
+        every capability the model wired up has to be read back: each block
+        here is one optional feature, guarded by whether the device reported
+        the id behind it.
+        """
         # HVAC Mode
         HVACModes = self._modelInfos["HVACModes"]
         currentMode = int(
@@ -214,7 +219,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             actionRaw = self.coordinator.get_capability_value(actionId)
             if actionRaw is not None:
                 actionMode = HVACModes.get(int(actionRaw), None)
-                self._attr_hvac_action = HVAC_ACTIONS.get(actionMode, None)
+                self._attr_hvac_action = HVAC_ACTIONS.get(actionMode)
 
         # Air circulation reads back as mode 0 on the effective mode capability,
         # which would otherwise be reported as "off" while the unit blows air
@@ -405,7 +410,8 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         """Set new target temperature."""
         temperature = kwargs.get("temperature")
         if temperature is not None:
-            # If we are in "Prog mode", we need to switch to override before changing the temperature
+            # If we are in "Prog mode", we need to switch to override before
+            # changing the temperature
             if (
                 hasattr(self, "_attr_preset_mode")
                 and self._attr_preset_mode == PRESET_PROG

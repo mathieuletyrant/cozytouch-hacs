@@ -31,11 +31,39 @@ them updates the upstream pull request and nothing else. Do not repoint them.
 
 ## Tests
 
-Python 3.14, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
+Python 3.14.2, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
 The system `python3` on this machine is too old — build a venv with
-`uv venv --python 3.14`. The version matters: Home Assistant 2026.8 requires
-Python 3.14.2, so a 3.13 environment silently resolves to an older HA than
-anyone is running.
+`uv venv --python 3.14.2`. The patch version matters: `requirements_test.txt`
+pins Home Assistant exactly, and that release declares Python 3.14.2 as its
+floor, so an older interpreter makes the install fail rather than resolve
+backwards to an HA nobody runs.
+
+The requirements are pinned, not `>=`, for that reason — see the comment at
+the top of the file for what the unpinned version did. There are two of them :
+
+| File | What it is |
+| ---- | ---------- |
+| `requirements_test.txt` | the environment to develop in, and CI's main job |
+| `requirements_test_min.txt` | the oldest HA `hacs.json` claims to support, so the claim is tested |
+
+Raising the floor means editing `requirements_test_min.txt` and `hacs.json`
+together, and the Python it is paired with in `.github/workflows/tests.yaml`.
+
+## Lint
+
+`pip install -r requirements_lint.txt`, then `ruff check .`. CI runs the same
+command and it has to come back clean.
+
+The configuration is `pyproject.toml`, and it is worth reading before arguing
+with a finding : the rules that are off are off for a stated reason, and two of
+them matter here. Naming rules (`N803`/`N806`) are not enabled because the
+camelCase locals mirror the field names the Atlantic API itself uses, and
+`PLR2004` is not enabled because the numeric capability ids *are* the domain.
+Do not "fix" code to satisfy a rule the config deliberately drops.
+
+`ruff format` is **not** run, by CI or otherwise. The tree is not
+formatter-clean; reformatting it is its own change, not something to slip into
+another one.
 
 The suite is **characterisation tests**. They pin the mapping as it stands, not
 as it ought to be : most entries were reverse-engineered from one user's
@@ -51,6 +79,13 @@ capture, so a test going green says "nobody changed this by accident", never
   time entity raise.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
+- `tests/test_sensor_values.py` — what the value builders in `sensor.py`
+  return, character for character : the zero padding on a duration, the double
+  space before a temperature, a setpoint arriving from JSON as a float and
+  still reading as a whole number. This is the file whose strings end up on a
+  dashboard, so **the assertions are the current output, not the nicer output**
+  — including one case pinned as wrong on purpose, the timezone offset applied
+  twice. Changing any of these should mean changing a test in the same commit.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

@@ -18,7 +18,6 @@ The checks walk every id the mapping answers for, so a capability added later is
 covered without anyone remembering to cover it.
 """
 
-import io
 import json
 import pathlib
 import re
@@ -120,7 +119,7 @@ def types_the_platforms_consume():
 
 
 def translated_keys(path):
-    with io.open(path, encoding="utf-8") as handle:
+    with open(path, encoding="utf-8") as handle:
         entity = json.load(handle)["entity"]
     keys = set()
     for platform in entity.values():

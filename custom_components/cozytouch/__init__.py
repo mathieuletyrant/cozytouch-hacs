@@ -55,7 +55,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
         # HA discards this hub and builds a new one on each retry, so release the
         # aiohttp session here or every attempt leaks one
         await theHub.close()
-        # tells HA to retry setup with exponential backoff until the network is available
+        # tells HA to retry setup with exponential backoff until the network
+        # is available
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
     entry.runtime_data = theHub

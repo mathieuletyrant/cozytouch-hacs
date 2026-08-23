@@ -72,7 +72,7 @@ class CozytouchSwitch(SwitchEntity, CozytouchSensor):
             capability=capability,
             config_title=config_title,
             config_uniq_id=config_uniq_id,
-            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_switch_{str(capabilityId)}",
+            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_switch_{capabilityId!s}",
             name=name,
         )
         self._state = False
@@ -130,7 +130,7 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
             capability=capability,
             config_title=config_title,
             config_uniq_id=config_uniq_id,
-            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_switch_{str(capabilityId)}",
+            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_switch_{capabilityId!s}",
             name=name,
         )
         self._state = False

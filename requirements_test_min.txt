@@ -1,0 +1,10 @@
+# The oldest Home Assistant hacs.json claims to support, so that the claim is
+# tested rather than asserted. Nothing else exercises it: a contributor's venv
+# and the main CI job both run the pin in requirements_test.txt, and a release
+# that quietly needed something newer would only surface as a bug report from
+# whoever runs the old version.
+#
+# HA 2024.12.0 needs Python >= 3.12.0, which is what the matrix pairs it with.
+# Raising the floor here means raising it in hacs.json too.
+homeassistant==2024.12.0
+pytest==9.1.1

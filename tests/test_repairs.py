@@ -16,7 +16,6 @@ made to work out which devices are not really products.
 """
 
 import asyncio
-import io
 import json
 import re
 from types import SimpleNamespace
@@ -139,7 +138,8 @@ def run_flow(monkeypatch, entry, others=(), modelId=UNMAPPED_MODEL, user_input=N
 
 def test_the_model_ids_these_cases_rest_on_still_mean_what_they_say():
     """A mapping added for 99999 would turn half of this file green for the
-    wrong reason, and silently."""
+    wrong reason, and silently.
+    """
     assert get_model_infos(MAPPED_MODEL)["type"].name != "UNKNOWN"
     assert get_model_infos(UNMAPPED_MODEL)["type"].name == "UNKNOWN"
     assert get_model_infos(OTHER_UNMAPPED_MODEL)["type"].name == "UNKNOWN"
@@ -160,7 +160,8 @@ def test_an_unmapped_model_asks_the_user_for_a_report(monkeypatch):
 
 def test_the_dialog_has_something_to_click(monkeypatch):
     """Fixable is what puts a button there; without it the dialog is a wall of
-    text about a file the user has to go and find."""
+    text about a file the user has to go and find.
+    """
     kwargs = check(monkeypatch, UNMAPPED_MODEL).created[0][2]
 
     assert kwargs["is_fixable"] is True
@@ -183,7 +184,8 @@ def test_the_issue_names_the_device_and_the_id_a_report_has_to_carry(
 
 def test_a_mapped_model_clears_the_issue_rather_than_raising_one(monkeypatch):
     """A release that adds the mapping is how this issue is meant to end, and
-    the setup after the update is the only place that shows."""
+    the setup after the update is the only place that shows.
+    """
     registry = check(monkeypatch, MAPPED_MODEL)
 
     assert registry.created == []
@@ -192,7 +194,8 @@ def test_a_mapped_model_clears_the_issue_rather_than_raising_one(monkeypatch):
 
 def test_a_model_already_reported_is_not_asked_about_again(monkeypatch):
     """The model stays unmapped until a release maps it, so without this the
-    issue comes back at every restart at someone who already answered."""
+    issue comes back at every restart at someone who already answered.
+    """
     entry = make_entry(options={repairs.REPORTED_MODELS: [UNMAPPED_MODEL]})
 
     registry = check(monkeypatch, UNMAPPED_MODEL, entry)
@@ -205,7 +208,8 @@ def test_a_model_reported_from_another_device_is_not_asked_about_again(
 ):
     """One report speaks for the account, and it is answered from whichever
     dialog the user happened to open. The answer is stored on that one entry,
-    so every entry has to read all of them."""
+    so every entry has to read all of them.
+    """
     answered = make_entry(
         modelId=OTHER_UNMAPPED_MODEL,
         entry_id="other",
@@ -219,7 +223,8 @@ def test_a_model_reported_from_another_device_is_not_asked_about_again(
 
 def test_two_devices_of_one_model_ask_once(monkeypatch):
     """Keyed on the model, not the device : a pair of identical towel racks is
-    one mapping to write, so it is one thing to ask for."""
+    one mapping to write, so it is one thing to ask for.
+    """
     first = check(monkeypatch, UNMAPPED_MODEL, make_entry(title="Salle de bain"))
     second = check(monkeypatch, UNMAPPED_MODEL, make_entry(title="Chambre"))
 
@@ -265,7 +270,8 @@ def test_the_dialog_speaks_for_every_unmapped_device_on_the_account(
 ):
     """A gateway with three unknown zones raises four repairs, and it would be
     four issues from one person about one account if each dialog only knew its
-    own device."""
+    own device.
+    """
     entry = make_entry(account=[UNMAPPED_MODEL, OTHER_UNMAPPED_MODEL])
 
     result, _, _ = run_flow(monkeypatch, entry)
@@ -277,7 +283,8 @@ def test_the_dialog_speaks_for_every_unmapped_device_on_the_account(
 def test_the_capability_ids_come_from_the_devices_that_have_them(monkeypatch):
     """A hub holds capabilities for its own device and no other, so the report
     is assembled from the entries Home Assistant has loaded. A model nobody
-    added still belongs in it -- half a report is what a mapping starts from."""
+    added still belongs in it -- half a report is what a mapping starts from.
+    """
     entry = make_entry(
         unmapped=(101,), account=[UNMAPPED_MODEL, OTHER_UNMAPPED_MODEL, 77777]
     )
@@ -308,7 +315,8 @@ def test_the_link_carries_the_report_already_written():
 
 def test_one_unmapped_model_is_not_announced_in_the_plural():
     """Most accounts have exactly one, and "Unmapped models 1457" reads as a
-    template nobody finished."""
+    template nobody finished.
+    """
     query = parse_qs(urlparse(repairs._report_url({1457: [101]})).query)
 
     assert query["title"] == ["Unmapped model 1457"]
@@ -317,8 +325,9 @@ def test_one_unmapped_model_is_not_announced_in_the_plural():
 def test_the_link_fills_in_fields_the_form_actually_has():
     """GitHub matches these against the form's element ids and drops what it
     does not recognise, so a field renamed on one side arrives empty on the
-    other with nothing said about it."""
-    with io.open(
+    other with nothing said about it.
+    """
+    with open(
         f".github/ISSUE_TEMPLATE/{repairs.ISSUE_FORM}", encoding="utf-8"
     ) as handle:
         form = yaml.safe_load(handle)
@@ -333,8 +342,9 @@ def test_a_field_the_link_cannot_fill_is_required():
     """The dialog fills in two fields. Everything else is a thing only the
     person with the hardware knows -- the commercial name, what the app shows,
     the dump -- and an optional field arrives empty, which costs the round trip
-    the pre-filled link was written to save."""
-    with io.open(
+    the pre-filled link was written to save.
+    """
+    with open(
         f".github/ISSUE_TEMPLATE/{repairs.ISSUE_FORM}", encoding="utf-8"
     ) as handle:
         form = yaml.safe_load(handle)
@@ -353,7 +363,8 @@ def test_the_link_says_nothing_about_the_household(monkeypatch):
     """A URL is clicked without being read. Capability values hold the wifi
     SSID and the gateway serial, and people name a device after a room or a
     child -- none of that goes in one. The dump does, and is attached
-    knowingly."""
+    knowingly.
+    """
     entry = make_entry(title="Chambre de Léa", unmapped=(101,))
 
     result, _, _ = run_flow(monkeypatch, entry)
@@ -376,7 +387,8 @@ def test_a_device_with_nothing_unmapped_still_reads_as_a_sentence():
 
 def test_submitting_stops_the_asking(monkeypatch):
     """What the button is for : the issue is deleted by the flow, and this is
-    what keeps the next setup from raising it again."""
+    what keeps the next setup from raising it again.
+    """
     entry = make_entry()
 
     result, entries, _ = run_flow(monkeypatch, entry, user_input={})
@@ -387,7 +399,8 @@ def test_submitting_stops_the_asking(monkeypatch):
 
 def test_submitting_takes_the_other_repairs_with_it(monkeypatch):
     """One issue was sent for all of them. Leaving the other dialogs standing
-    would ask the same person for the same file again."""
+    would ask the same person for the same file again.
+    """
     entry = make_entry(account=[UNMAPPED_MODEL, OTHER_UNMAPPED_MODEL])
 
     _, entries, registry = run_flow(monkeypatch, entry, user_input={})
@@ -409,7 +422,8 @@ def test_submitting_twice_does_not_list_the_model_twice(monkeypatch):
 
 def test_an_entry_that_went_away_mid_flow_is_not_written_to(monkeypatch):
     """Removing the integration while its repair dialog is open is rare and
-    entirely allowed."""
+    entirely allowed.
+    """
     monkeypatch.setattr(repairs, "ir", FakeRegistry())
     hass = make_hass([make_entry(entry_id="still here")])
 
@@ -427,7 +441,8 @@ def test_an_entry_that_went_away_mid_flow_is_not_written_to(monkeypatch):
 
 def test_the_account_is_read_off_any_one_of_its_devices():
     """Every hub holds the whole setup view, which is what makes one dialog
-    able to speak for devices its own entry knows nothing about."""
+    able to speak for devices its own entry knows nothing about.
+    """
     hub = SimpleNamespace(
         _devices=[
             {"deviceId": 1, "modelId": 235},
@@ -471,7 +486,8 @@ def test_a_device_the_hub_does_not_hold_splits_into_nothing():
 
 def test_the_model_id_comes_back_as_the_api_reported_it():
     """get_model_infos answers what the table made of the id; a bug report
-    needs the id itself, which is what this accessor is for."""
+    needs the id itself, which is what this accessor is for.
+    """
     hub = SimpleNamespace(
         _devices=[
             {"deviceId": 1, "modelId": 1457},
@@ -497,8 +513,9 @@ def test_a_device_the_hub_does_not_hold_has_no_model_id():
 @pytest.mark.parametrize("path", TRANSLATIONS)
 def test_the_dialog_only_asks_for_placeholders_that_are_filled_in(path):
     """A placeholder nothing supplies reaches the user as a literal `{brace}`,
-    and the link is the one thing in there that has to work."""
-    with io.open(path, encoding="utf-8") as handle:
+    and the link is the one thing in there that has to work.
+    """
+    with open(path, encoding="utf-8") as handle:
         issue = json.load(handle)["issues"]["unknown_model"]
 
     step = issue["fix_flow"]["step"]["confirm"]

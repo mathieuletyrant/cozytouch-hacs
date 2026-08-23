@@ -8,7 +8,13 @@ from datetime import UTC, datetime, timedelta
 import json
 import logging
 
-from aiohttp import ClientError, ClientSession, ClientTimeout, ContentTypeError, FormData
+from aiohttp import (
+    ClientError,
+    ClientSession,
+    ClientTimeout,
+    ContentTypeError,
+    FormData,
+)
 
 from homeassistant import exceptions
 from homeassistant.config_entries import ConfigEntry
@@ -209,7 +215,7 @@ class Hub(DataUpdateCoordinator):
 
             except CannotConnect:
                 self.online = False
-            except (ClientError, asyncio.TimeoutError) as err:
+            except (TimeoutError, ClientError) as err:
                 _LOGGER.warning("connect: network error: %s", err)
                 self.online = False
 
@@ -221,7 +227,6 @@ class Hub(DataUpdateCoordinator):
 
     def update_devices_from_json_data(self, json_data) -> None:
         """Update the devices list."""
-
         if self._dump_json:
             with open(
                 self._hass.config.config_dir + "/Cozytouch.json", "w", encoding="utf-8"
@@ -328,7 +333,8 @@ class Hub(DataUpdateCoordinator):
                     if response.status != 200:
                         self.online = False
                         raise UpdateFailed(
-                            f"Unexpected status {response.status} from capabilities endpoint"
+                            f"Unexpected status {response.status} from"
+                            " capabilities endpoint"
                         )
 
                     try:
@@ -363,18 +369,21 @@ class Hub(DataUpdateCoordinator):
                     else:
                         self.online = False
                         raise UpdateFailed(
-                            f"Capabilities response is not a list (got {type(json_data).__name__}), forcing reconnect"
+                            "Capabilities response is not a list (got"
+                            f" {type(json_data).__name__}), forcing reconnect"
                         )
 
-            except asyncio.TimeoutError as err:
+            except TimeoutError as err:
                 self.online = False
                 raise UpdateFailed(
-                    f"Timeout fetching capabilities for device {self._deviceId}, forcing reconnect"
+                    f"Timeout fetching capabilities for device {self._deviceId},"
+                    " forcing reconnect"
                 ) from err
             except ClientError as err:
                 self.online = False
                 raise UpdateFailed(
-                    f"Network error fetching capabilities for device {self._deviceId}: {err}, forcing reconnect"
+                    "Network error fetching capabilities for device"
+                    f" {self._deviceId}: {err}, forcing reconnect"
                 ) from err
 
         else:
@@ -506,7 +515,6 @@ class Hub(DataUpdateCoordinator):
 
     def get_capabilities_for_device(self, deviceId: int | None = None):
         """Get capabilities for a device."""
-
         if not deviceId:
             deviceId = self._deviceId
 
@@ -697,15 +705,21 @@ class Hub(DataUpdateCoordinator):
                                         executionId = await response.json()
                                         completed = False
                                         nbRetry = 0
+                                        # Built once rather than per poll, which
+                                        # also keeps the request inside the
+                                        # line length at this nesting depth.
+                                        execution_headers = {
+                                            "Authorization": (
+                                                f"Bearer {self._access_token}"
+                                            ),
+                                            "Content-Type": "application/json",
+                                        }
                                         while not completed:
                                             async with self._session.get(
                                                 COZYTOUCH_ATLANTIC_API
                                                 + "/magellan/executions/"
                                                 + str(executionId),
-                                                headers={
-                                                    "Authorization": f"Bearer {self._access_token}",
-                                                    "Content-Type": "application/json",
-                                                },
+                                                headers=execution_headers,
                                                 timeout=REQUEST_TIMEOUT,
                                             ) as executionResponse:
                                                 try:
@@ -719,11 +733,13 @@ class Hub(DataUpdateCoordinator):
                                                     )
                                                     if execution_state == 1:
                                                         _LOGGER.info(
-                                                            "Execution_state waiting execution"
+                                                            "Execution_state"
+                                                            " waiting execution"
                                                         )
                                                     elif execution_state == 2:
                                                         _LOGGER.info(
-                                                            "Execution_state in progress"
+                                                            "Execution_state"
+                                                            " in progress"
                                                         )
                                                     elif execution_state == 3:
                                                         _LOGGER.info(
@@ -749,7 +765,7 @@ class Hub(DataUpdateCoordinator):
 
                                         if completed:
                                             capability["value"] = value
-                            except (ClientError, asyncio.TimeoutError) as err:
+                            except (TimeoutError, ClientError) as err:
                                 _LOGGER.warning(
                                     "Network error writing capability %d: %s",
                                     capabilityId,
@@ -803,7 +819,6 @@ class Hub(DataUpdateCoordinator):
         timestampEnd,
     ):
         """Set away mode timestamps."""
-
         if self.online:
             # Update setup
             json_data = {}
@@ -826,8 +841,6 @@ class Hub(DataUpdateCoordinator):
             if timestampStart is not None and timestampEnd is not None:
                 json_data["absence"]["startDate"] = timestampStart
                 json_data["absence"]["endDate"] = timestampEnd
-                _timestamp_away_mode_start = timestampStart
-                _timestamp_away_mode_end = timestampEnd
 
             async with self._session.put(
                 COZYTOUCH_ATLANTIC_API

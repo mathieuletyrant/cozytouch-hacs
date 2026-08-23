@@ -10,14 +10,54 @@ on:
   workflow_dispatch:
 
 jobs:
-  pytest:
+  ruff:
+    name: ruff
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
       - uses: "actions/setup-python@v5"
         with:
           python-version: "3.14"
+      - name: Install lint requirements
+        run: pip install -r requirements_lint.txt
+      # check only, not `ruff format`: the tree is not formatter-clean, and
+      # reformatting it is a separate change that should be reviewed on its own
+      # rather than folded into a lint pass. pyproject.toml says which rules
+      # are off and why.
+      - name: Run ruff
+        run: ruff check --output-format=github .
+
+  pytest:
+    name: pytest (HA ${{ matrix.homeassistant }} on Python ${{ matrix.python }})
+    runs-on: "ubuntu-latest"
+    strategy:
+      # One combination failing should not hide the result of the other: which
+      # of the two broke is the whole diagnostic.
+      fail-fast: false
+      matrix:
+        include:
+          # The pinned environment: what a contributor's venv resolves to and
+          # what CLAUDE.md tells you to build.
+          - python: "3.14.2"
+            homeassistant: "2026.8.3"
+            requirements: "requirements_test.txt"
+          # The floor hacs.json declares. Tested so that the declaration keeps
+          # meaning something.
+          - python: "3.12.3"
+            homeassistant: "2024.12.0"
+            requirements: "requirements_test_min.txt"
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-python@v5"
+        with:
+          # Down to the patch, not "3.14": Home Assistant pins its Python floor
+          # that precisely -- 2026.8.3 needs >= 3.14.2 -- so a floating minor
+          # would let the runner image decide which HA is installable, which is
+          # the drift the pinned requirements exist to remove.
+          python-version: "${{ matrix.python }}"
       - name: Install test requirements
-        run: pip install -r requirements_test.txt
+        run: pip install -r ${{ matrix.requirements }}
+      - name: Show what was installed
+        run: pip show homeassistant pytest | grep -E "^(Name|Version)"
       - name: Run pytest
         run: pytest tests/ -q
