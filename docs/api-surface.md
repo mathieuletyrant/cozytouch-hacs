@@ -94,8 +94,10 @@ unused. No feature needs it yet.
 
 ## Devices: the server names only the gateway
 
-`setupviewv2` returns 19 fields per device and the integration copies 7. The
-interesting ones it drops, with the values from the one account probed:
+`setupviewv2` returns 19 fields per device. Seven drive behaviour; the five
+below are carried to the diagnostics dump under the API's own names, because
+what an unmapped model gets mapped from is what the vendor says about it. The
+values are from the one account probed:
 
 | Field | Gateway (1758) | Room AC (557-559) | Thermal zone (1505-1507) |
 | ----- | -------------- | ----------------- | ------------------------ |
@@ -110,8 +112,11 @@ On the children it is an internal name or a literal `"---"` placeholder, so it
 is **not** a substitute for the model table -- least of all for the devices
 that need one, the unmapped ones.
 
-`masterDeviceId` is the real find: server-declared parent/child topology, which
-nothing in the integration reads.
+`masterDeviceId` is the real find: server-declared parent/child topology, so
+the gateway a device hangs off is reported rather than guessed. `get_via_device`
+reads it to draw the link in the device registry, and returns nothing when the
+gateway has not been added -- naming a device Home Assistant does not have earns
+a warning from the registry.
 
 `/magellan/devices` returns a flat list whose fields are a strict subset of the
 same device block. It adds nothing.
