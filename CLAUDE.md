@@ -153,6 +153,17 @@ does, what a capture showed — and only then what the change does. State the
 evidence and its limits : which model ids a finding covers, which it does not,
 what was left alone for lack of a report. Wrap at 76 columns.
 
+## Pull request descriptions
+
+**Short.** A person reads this one to decide whether to merge, and a wall of
+prose gets skimmed or skipped — which loses exactly the caveat that mattered.
+
+The commit message is where the reasoning belongs, and it can be as long as
+the evidence needs. The description is not a second copy of it. Say what
+changed, name the one or two decisions worth arguing with, say what is not
+verified, stop. A dozen lines is plenty; if a section only restates the commit
+body, cut it. The diff and the commits are one click away.
+
 ## House style
 
 Comments explain why a value is what it is — which capability id the device
