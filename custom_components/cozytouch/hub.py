@@ -52,6 +52,11 @@ API_DECLARED_FIELDS = (
     "isAvailable",
 )
 
+# The capability carrying the firmware version, named `version` by
+# capability.py. Read by id here because the device registry wants a string on
+# the device, not an entity somewhere in the list.
+SOFTWARE_VERSION_CAPABILITY_ID = 121
+
 
 # A config entry that carries its hub, so platforms can read it off the entry
 # instead of looking it up in hass.data by id.
@@ -482,6 +487,16 @@ class Hub(DataUpdateCoordinator):
                 return dev["gatewaySerialNumber"]
 
         return "Unknown"
+
+    def get_software_version(self) -> str | None:
+        """The firmware version the device reports about itself, if it does.
+
+        Only for the device this entry drives: capabilities are kept for that
+        one alone. Devices that do not report 121 -- the gateways among them --
+        get None, which leaves the registry field empty rather than filling it
+        with a guess.
+        """
+        return self.get_capability_value(SOFTWARE_VERSION_CAPABILITY_ID, None)
 
     def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
         """Identifiers of the gateway this device hangs off, when HA has it.

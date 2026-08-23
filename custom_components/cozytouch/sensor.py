@@ -60,6 +60,13 @@ async def async_setup_entry(
                 )
             )
         elif capability["type"] == "temperature":
+            # MEASUREMENT on everything that reads an instant value, here and
+            # on the four branches below. Without a state class the recorder
+            # keeps the state history and no long-term statistics, so a
+            # temperature is gone from the charts after the purge window --
+            # ten days by default -- and min/max/mean over a season is not
+            # available at all. The types that count something instead
+            # (energy, water) declare TOTAL_INCREASING further down.
             sensors.append(
                 CozytouchUnitSensor(
                     capability=capability,
@@ -67,6 +74,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
                     device_class=SensorDeviceClass.TEMPERATURE,
+                    state_class=SensorStateClass.MEASUREMENT,
                     native_unit_of_measurement=UnitOfTemperature.CELSIUS,
                 )
             )
@@ -78,6 +86,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
                     device_class=SensorDeviceClass.PRESSURE,
+                    state_class=SensorStateClass.MEASUREMENT,
                     native_unit_of_measurement=UnitOfPressure.BAR,
                 )
             )
@@ -135,6 +144,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
                     device_class=SensorDeviceClass.SIGNAL_STRENGTH,
+                    state_class=SensorStateClass.MEASUREMENT,
                     native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
                 )
             )
@@ -166,7 +176,14 @@ async def async_setup_entry(
                     config_title=config_entry.title,
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
-                    device_class=SensorDeviceClass.VOLUME,
+                    # VOLUME_STORAGE, not VOLUME: the three capabilities typed
+                    # `volume` are how much water the tank holds or has left
+                    # (258, 268, 270), never how much ran through it. The
+                    # distinction is not cosmetic -- VOLUME accepts only the
+                    # totalling state classes, so MEASUREMENT on it is the
+                    # combination Home Assistant rejects outright.
+                    device_class=SensorDeviceClass.VOLUME_STORAGE,
+                    state_class=SensorStateClass.MEASUREMENT,
                     native_unit_of_measurement=UnitOfVolume.LITERS,
                 )
             )
@@ -194,6 +211,7 @@ async def async_setup_entry(
                     # hot_water_available (271) read as a battery level, icon
                     # and voice assistants included.
                     device_class=None,
+                    state_class=SensorStateClass.MEASUREMENT,
                     native_unit_of_measurement=PERCENTAGE,
                 )
             )
@@ -359,6 +377,11 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
             name=modelInfos["name"],
             model=modelInfos["name"],
             serial_number=self.coordinator.get_serial_number(),
+            # The firmware the device reports (capability 121). It is worth
+            # having on the device rather than only as a diagnostic entity:
+            # "which version is this box on" is the first line of a bug
+            # report, and None here just leaves the field empty.
+            sw_version=self.coordinator.get_software_version(),
         )
         # Hang the device under its gateway when that is set up too, instead
         # of leaving every room unit at the top of the list. via_device is

@@ -283,17 +283,20 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-217 tests, all characterisation tests. They pin the mapping as it stands, not
+240 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
-Almost all of them are table tests. The exception is
-`tests/test_sensor_values.py`, which pins what the value builders in
-`sensor.py` return character for character — the zero padding, the double space
-before a temperature, a float setpoint still reading as a whole number. That
-file renders the strings people actually look at and had no tests at all, which
-is how a formatting change can be both invisible in review and visible on every
-dashboard.
+Almost all of them are table tests. The exceptions are the two that cover
+`sensor.py`. `tests/test_sensor_values.py` pins what the value builders return
+character for character — the zero padding, the double space before a
+temperature, a float setpoint still reading as a whole number. That file
+renders the strings people actually look at and had no tests at all, which is
+how a formatting change can be both invisible in review and visible on every
+dashboard. `tests/test_sensor_metadata.py` covers what the platform says about
+a value rather than the value: it drives `async_setup_entry` with a hub
+stand-in and asserts the state class and device class each capability type
+comes out with, including that the pair is one Home Assistant accepts.
 
 **Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
 write-execution polling — so the invariants this document states about them are
