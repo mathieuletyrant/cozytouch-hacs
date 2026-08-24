@@ -29,8 +29,8 @@ Everything else is plumbing around those two.
 
 One config entry is **one Atlantic account**, and one subentry of it is **one
 device**. An account with a gateway and three room air conditioners is one
-entry with four subentries: one login, one setup view, and one 60-second poll
-per device, because that poll is the only part that is genuinely per device.
+entry with four subentries: one login, and one poll — for the account, not for
+each device, because the setup view answers for all of them at once.
 
 It was one entry per device until the account entry landed, which is why the
 per-account state matters: four entries each held their own copy of a payload
@@ -43,16 +43,19 @@ on the class, and one login when ten hubs reconnect at once.
 config entry (the account) ──> CozytouchAccount
                                 │
                                 │  POST /users/token                      once, then on expiry
-                                │  GET  /magellan/cozytouch/setupviewv2   on every (re)connect
+                                │  GET  /magellan/cozytouch/setupviewv2   every 30s — the beat
                                 │
                                 ├─ setup     address, zones count, rateLimit…
                                 ├─ zones     zone id → name, refreshed on every setup view
                                 └─ devices   every device on the account, each with the
                                              capability list the setup view gave for it
                                 │
-  subentry (a device) ──> Hub (DataUpdateCoordinator)
+                       AccountCoordinator ── the only thing on a clock
+                                │  refresh_setup(), then tells every hub
+                                ▼
+  subentry (a device) ──> Hub (DataUpdateCoordinator, update_interval=None)
                                 │
-                                │  GET /magellan/capabilities/?deviceId=  every 60s
+                                │  GET /magellan/capabilities/?deviceId=  after a write only
                                 │
                     get_capabilities_for_device()
                                   │
@@ -76,18 +79,70 @@ builds exactly one entity per subentry, a connectivity sensor reflecting
 `hub.online` — which is the *account's* connection, the same answer for every
 device on it.
 
+## One poll for the account
+
+The beat is `AccountCoordinator`, and it re-reads the setup view. That payload
+carries a capability list for **every** device on the account — the same three
+fields the per-device route returns — so one request refreshes all of them.
+It used to be one coordinator per device on its own 60-second timer, which
+meant N requests a minute for N devices, all fetching slices of a payload that
+describes the lot.
+
+What that bought:
+
+| | before | now |
+| - | ------ | --- |
+| requests/min, 1 device | 1 | 2 |
+| requests/min, 7 devices | 7 | 2 |
+| interval | 60s | 30s |
+| `absence` freshness | on reconnect, so ~1h | every poll |
+
+The hubs are still coordinators, so every entity is a `CoordinatorEntity` of
+its own device and a device can be unavailable on its own. What they no longer
+have is a clock: `update_interval=None`, and `async_account_updated()` pushes
+to them. Their own `_async_update_data` survives for the one case that should
+not wait for the account's tick — `async_request_refresh()` after a write,
+where re-reading the whole household to confirm one setpoint would be absurd.
+
+**The unverified part.** Nobody has compared the *latency* of the two routes.
+They carry the same fields, and the integration has always built its entities
+from the setup view at startup, but a setup view served from an aggregated
+cache would look identical while being minutes behind.
+`scripts/probe_api.py --cadence` is what settles it: `modificationDate` is in
+both answers and read by neither. If it shows a lag, the per-device poll has to
+come back as the beat, and the 429 handling below is the half of this that
+stands either way.
+
+## Being told to slow down
+
+A 429 is the one status that must not be answered with a reconnect. It used to
+fall into the generic non-200 branch, which clears `online`, so the next poll
+spent a `POST /users/token` and a `GET setupviewv2` — two more requests, one of
+them the failed-login kind that can lock an account out — in answer to a
+complaint about making too many requests.
+
+Now `_note_rate_limited` arms `_backoff_until` from `Retry-After`, leaves
+`online` alone, and logs every `X-RateLimit-*` header it saw at warning level.
+That last part is the point: `rateLimit: 30` has never been decoded, and the
+first person to capture a real 429 is holding the only evidence that would say
+what it counts. Every read checks the backoff before spending a request;
+writes do not, because somebody pressed a button and a throttled *reader* is no
+reason to swallow it.
+
 ## The account and the hub
 
 `account.py` is the HTTP client and everything the account declares.
-`hub.py` is a `DataUpdateCoordinator` per device plus the mapping accessors
-the platforms call. Worth knowing before changing either:
+`hub.py` is the account coordinator, a `DataUpdateCoordinator` per device, and
+the mapping accessors the platforms call. Worth knowing before changing either:
 
 **Reconnect is driven by `account.online`.** Almost every failure path clears
 it and raises `UpdateFailed`; the next poll sees it False and calls
 `connect()`, which re-authenticates and re-fetches the setup view. There is no
-separate retry loop — the coordinators' own schedule is it. Token expiry is
+separate retry loop — the coordinator's own schedule is it. Token expiry is
 handled the same way, pre-emptively: `_token_expiry` is set 60 seconds short of
-what the server said, and crossing it just clears `online`.
+what the server said, and crossing it just clears `online`. A rate limit is the
+exception that proves it: `CozytouchRateLimited` is the one failure that leaves
+`online` set, precisely so none of this happens.
 
 `connect()` is idempotent under an `asyncio.Lock`, and re-checks `online` once
 the lock is held, so a successful reconnect costs one login however many
@@ -317,10 +372,12 @@ nobody has added yet, which is why it is no longer held back to the configured
 device. Credentials and anything that would place the account at an address
 are redacted.
 
-`isConfiguredHere` says which devices have a subentry, and so which capability
-lists a 60-second poll keeps fresh rather than the last setup view. It is read
-off the entry's subentries, so the dump does not depend on which hub produced
-it.
+`isConfiguredHere` says which devices have a subentry, and so which have
+entities. It no longer says anything about freshness: the account poll reads
+the setup view, which carries every device, so a dump describes hardware nobody
+added as of the last tick rather than the last reconnect. That is the half a
+dump is read for. It is read off the entry's subentries, so the dump does not
+depend on which hub produced it.
 
 ## The services
 

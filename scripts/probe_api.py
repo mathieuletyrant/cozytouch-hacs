@@ -14,13 +14,18 @@ Run from the repository root:
     pbpaste > ~/.cozytouch-pass          # keeps the password out of the
     COZYTOUCH_USER=you@example.com \     # shell history
       COZYTOUCH_PASS_FILE=~/.cozytouch-pass \
-      python3 scripts/probe_api.py [--new-routes] [--explore]
+      python3 scripts/probe_api.py [--new-routes] [--explore] [--cadence]
     rm -f ~/.cozytouch-pass
 
-Reads are cheap: the integration itself polls one of these routes every 60
-seconds per device. A *refused login* is the one thing not to repeat -- it is
-what could lock an account -- so a rejected token stops the script instead of
-retrying.
+`--cadence` answers a different question from the rest: not what a route
+returns but how *fresh* it is. It compares `modificationDate` between the setup
+view and the per-device capability route for ten minutes, which is what says
+whether one account-wide poll can stand in for one poll per device. Change a
+setpoint in the app while it runs.
+
+Reads are cheap: the integration itself polls the setup view twice a minute. A
+*refused login* is the one thing not to repeat -- it is what could lock an
+account -- so a rejected token stops the script instead of retrying.
 """
 
 import importlib.util
@@ -28,6 +33,7 @@ import json
 import os
 import pathlib
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -171,6 +177,104 @@ def shape(value, depth: int = 0) -> str:
     return f"{pad}{json.dumps(value)[:80]}"
 
 
+def capability_dates(payload) -> dict:
+    """Map each capabilityId to its modificationDate, from either route.
+
+    The two routes return the same three-field item (docs/api-surface.md), so
+    one reader serves both and any difference in what comes back is a
+    difference in the answer rather than in the parsing.
+    """
+    if isinstance(payload, dict):
+        payload = payload.get("capabilities") or []
+    if not isinstance(payload, list):
+        return {}
+
+    return {
+        item["capabilityId"]: item.get("modificationDate")
+        for item in payload
+        if isinstance(item, dict) and "capabilityId" in item
+    }
+
+
+def cadence(access_token: str, deviceId: int, rounds: int, every: int) -> None:
+    """Ask whether the setup view is as fresh as the per-device route.
+
+    The one thing that decides whether the account poll can replace the
+    per-device one, and the one thing no capture has ever established. The two
+    carry the same fields and the integration has always built its entities
+    from the setup view at startup -- but nobody has compared their *latency*,
+    and a setup view served from an aggregated cache would look identical while
+    being minutes behind.
+
+    `modificationDate` is what settles it: a per-capability epoch of the last
+    change, present in both answers and read by neither. Change something in
+    the Cozytouch app while this runs and watch which route notices first.
+
+    Reads only, and roughly what the integration itself spends: two requests
+    per round against an interval of its own.
+    """
+    print(
+        f"=== cadence: device {deviceId}, {rounds} rounds every {every}s\n"
+        "  Change a setpoint in the app while this runs.\n"
+        "  'lag' is per-device minus setup-view; a column of zeroes means the\n"
+        "  setup view is as fresh as the route it would replace.\n"
+    )
+
+    previous = {}
+    for round_number in range(rounds):
+        if round_number:
+            time.sleep(every)
+
+        _, setup = get(API + "/magellan/cozytouch/setupviewv2", access_token)
+        embedded = {}
+        if isinstance(setup, list) and setup:
+            for dev in setup[0].get("devices", []):
+                if dev.get("deviceId") == deviceId:
+                    embedded = capability_dates(dev.get("capabilities"))
+                    break
+
+        _, direct_payload = get(
+            API + f"/magellan/capabilities/?deviceId={deviceId}", access_token
+        )
+        direct = capability_dates(direct_payload)
+
+        disagree = {
+            capabilityId: (embedded.get(capabilityId), stamp)
+            for capabilityId, stamp in direct.items()
+            if embedded.get(capabilityId) != stamp
+        }
+        moved = sorted(
+            capabilityId
+            for capabilityId, stamp in direct.items()
+            if previous.get(capabilityId, stamp) != stamp
+        )
+        previous = direct
+
+        print(
+            f"  round {round_number + 1:>3}"
+            f"  capabilities: {len(direct):>3} direct / {len(embedded):>3} embedded"
+            f"  disagreeing: {len(disagree):>3}"
+            f"  changed since last round: {moved if moved else '-'}"
+        )
+        for capabilityId, (embedded_at, direct_at) in sorted(disagree.items())[:5]:
+            lag = (
+                direct_at - embedded_at
+                if isinstance(direct_at, int) and isinstance(embedded_at, int)
+                else "?"
+            )
+            print(
+                f"      capability {capabilityId}: setup view {embedded_at},"
+                f" per-device {direct_at}, lag {lag}s"
+            )
+
+    print(
+        "\n  A disagreeing count that stays at 0 says the account poll loses"
+        "\n  nothing. A capability that changes and shows a positive lag every"
+        "\n  round says the setup view is cached, and the per-device poll has"
+        "\n  to stay the beat.\n"
+    )
+
+
 def main() -> None:
     """Probe the setup view, then each route in turn."""
     if not os.environ.get("COZYTOUCH_USER"):
@@ -215,6 +319,10 @@ def main() -> None:
     else:
         print(f"  unexpected payload: {str(setup)[:200]}")
     print()
+
+    if "--cadence" in sys.argv and device_ids:
+        cadence(access_token, device_ids[0], rounds=40, every=15)
+        return
 
     routes = list(ROUTES_KNOWN)
     routes += [f"/magellan/capabilities/?deviceId={d}" for d in device_ids[:1]]

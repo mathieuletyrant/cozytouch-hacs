@@ -35,10 +35,9 @@ error page once a token is attached. A 401 therefore means "the gateway
 accepts this path", not "this endpoint works".
 
 Repeated *failed logins* are the one thing here that could get an account
-locked; reads are not. The integration itself polls `/magellan/capabilities`
-every 60 seconds per device, so a handful of GETs is noise inside a setup's own
-traffic. A refused token is a reason to stop and check the credentials, never
-to retry in a loop.
+locked; reads are not. The integration itself polls `setupviewv2` twice a
+minute, so a handful of GETs is noise inside a setup's own traffic. A refused
+token is a reason to stop and check the credentials, never to retry in a loop.
 
 ## The route map
 
@@ -47,8 +46,8 @@ Base: `https://apis.groupe-atlantic.com`
 | Route | State |
 | ----- | ----- |
 | `POST /users/token` | used. Basic auth with the client id in `const.py`, username prefixed `GA-PRIVATEPERSON/` |
-| `GET /magellan/cozytouch/setupviewv2` | used. Everything the integration knows comes from here |
-| `GET /magellan/capabilities/?deviceId=` | used. Polled every 60s |
+| `GET /magellan/cozytouch/setupviewv2` | used. Everything the integration knows comes from here, and polled every 30s because of it |
+| `GET /magellan/capabilities/?deviceId=` | used, after a write. A subset of the setup view, so no longer the poll |
 | `POST /magellan/executions/writecapability` | used, writes |
 | `GET /magellan/executions/{id}` | used, polls a write |
 | `PUT /magellan/v2/setups/{id}/…` | used, away mode |
@@ -132,9 +131,26 @@ routes above are all subsets of what is here. The functional data plane is
 this one response.
 
 `rateLimit` is new to us: 30 on this account, the server declaring its own
-limit. The units are unknown -- nothing decodes them -- but the integration
-polls every 60s per device and is under it on any reading. It is now carried
-into the dump.
+limit. The units are still unknown -- nothing decodes them, and no capture has
+ever produced a 429 that would. It is carried into the dump, and read as
+requests per minute in one place only: as a *ceiling* on the poll interval
+(`poll_interval` in `hub.py`). Per-minute is the strictest reading that a
+60-second-per-device poll working for years does not already disprove, and a
+ceiling wants the strictest. At 30 it never bites.
+
+The thing that would settle it is a real 429. `_note_rate_limited` logs every
+`X-RateLimit-*` header it sees at warning level for exactly that reason: the
+first person to be throttled is holding the only evidence there is.
+
+Worth recording that the poll now reads this route rather than
+`/magellan/capabilities/`. The device blocks embed a capability list each, so
+one request answers for the whole account where the per-device route answers
+for one -- which is what let the interval halve while the request count fell.
+What is **not** established is that the two are equally *fresh*: this session
+compared their shape, never their latency, and a setup view served from an
+aggregated cache would look identical while lagging.
+`scripts/probe_api.py --cadence` compares `modificationDate` between them,
+which is the measurement nobody has made.
 
 `type`, `mainHeatingEnergy`, `mainDHWEnergy`, `setupBuildingDate` and a zone's
 `zoneType` are all integer enums with no catalogue to decode them: the same
