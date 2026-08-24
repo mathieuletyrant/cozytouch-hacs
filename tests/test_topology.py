@@ -42,7 +42,8 @@ def device(deviceId, masterDeviceId):
 
 def test_a_room_unit_points_at_the_entry_its_gateway_was_set_up_under():
     """The link is to the gateway's config entry, not its Cozytouch id: that
-    is the identifier every device in this integration is registered under."""
+    is the identifier every device in this integration is registered under.
+    """
     hub = make_hub(
         [device(ROOM_ID, GATEWAY_ID), device(GATEWAY_ID, None)],
         deviceId=ROOM_ID,
@@ -54,7 +55,8 @@ def test_a_room_unit_points_at_the_entry_its_gateway_was_set_up_under():
 
 def test_no_link_is_claimed_when_the_gateway_was_never_set_up():
     """Somebody can add one room unit and nothing else. The parent device does
-    not exist then, and naming it anyway makes the registry complain."""
+    not exist then, and naming it anyway makes the registry complain.
+    """
     hub = make_hub(
         [device(ROOM_ID, GATEWAY_ID)],
         deviceId=ROOM_ID,
@@ -76,7 +78,8 @@ def test_a_gateway_has_no_parent_of_its_own():
 
 def test_a_device_from_before_the_field_was_carried_reports_no_parent():
     """A stored device dict predating masterDeviceId has no such key, and a
-    reload must not raise on the way to rebuilding it."""
+    reload must not raise on the way to rebuilding it.
+    """
     hub = make_hub(
         [{"deviceId": ROOM_ID}],
         deviceId=ROOM_ID,

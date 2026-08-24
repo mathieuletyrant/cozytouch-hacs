@@ -14,10 +14,9 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
-    EntityCategory,
     PERCENTAGE,
+    EntityCategory,
     UnitOfEnergy,
-    UnitOfPower,
     UnitOfPressure,
     UnitOfSoundPressure,
     UnitOfTemperature,
@@ -139,30 +138,6 @@ async def async_setup_entry(
                     native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
                 )
             )
-        elif capability["type"] == "power":
-            native_unit_of_measurement = capability.get(
-                "displayed_unit_of_measurement", UnitOfPower.WATT
-            )
-
-            display_factor = 1.0
-            if native_unit_of_measurement == UnitOfPower.KILO_WATT:
-                display_factor = 0.001
-
-            sensors.append(
-                CozytouchUnitSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    coordinator=hub,
-                    device_class=SensorDeviceClass.POWER,
-                    native_unit_of_measurement=capability.get(
-                        "displayed_unit_of_measurement", UnitOfPower.WATT
-                    ),
-                    displayed_unit_of_measurement=capability.get(
-                        "displayed_unit_of_measurement", None
-                    ),
-                )
-            )
         elif capability["type"] == "energy":
             native_unit_of_measurement = capability.get(
                 "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
@@ -214,7 +189,11 @@ async def async_setup_entry(
                     config_title=config_entry.title,
                     config_uniq_id=config_entry.entry_id,
                     coordinator=hub,
-                    device_class=SensorDeviceClass.BATTERY,
+                    # No device class: percentage is the unit, not the meaning.
+                    # SensorDeviceClass.BATTERY was the closest match and made
+                    # hot_water_available (271) read as a battery level, icon
+                    # and voice assistants included.
+                    device_class=None,
                     native_unit_of_measurement=PERCENTAGE,
                 )
             )
@@ -314,7 +293,7 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
             self._attr_unique_id = attr_uniq_id
         else:
             capabilityId = self._capability["capabilityId"]
-            self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{str(capabilityId)}"
+            self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{capabilityId!s}"
 
         self.entity_description = SensorEntityDescription(
             key="capability_" + str(capability["capabilityId"]),
@@ -404,14 +383,14 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
 
         # Handle entity availability
         if value is None:
-            if self._attr_available:
-                if not self.coordinator.online:
-                    _LOGGER.debug(
-                        "%s: marking the %s sensor as unavailable: Cozytouch connection lost",
-                        self._config_title,
-                        self.name,
-                    )
-                    self._attr_available = False
+            if self._attr_available and not self.coordinator.online:
+                _LOGGER.debug(
+                    "%s: marking the %s sensor as unavailable:"
+                    " Cozytouch connection lost",
+                    self._config_title,
+                    self.name,
+                )
+                self._attr_available = False
         elif not self._attr_available:
             _LOGGER.info(
                 "%s: marking the %s sensor as available now !",
@@ -468,7 +447,19 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
                             self._capability["timezoneCapabilityId"]
                         )
                     )
-                    ts = datetime.datetime.fromtimestamp(timestamp + timeOffset)
+                    # The device's own offset is already added to the unix
+                    # timestamp, so what is wanted here is that sum read as
+                    # wall-clock time. fromtimestamp() without a tz reads it
+                    # in Home Assistant's local zone instead, which applies
+                    # the offset a second time for anyone not on UTC. Passing
+                    # tz=UTC is the fix, and it changes what this sensor
+                    # displays -- so it belongs in its own change, with a
+                    # capture of what the Cozytouch app shows, rather than
+                    # riding along in a lint pass. Recorded as a rough edge
+                    # in docs/architecture.md.
+                    ts = datetime.datetime.fromtimestamp(  # noqa: DTZ006
+                        timestamp + timeOffset
+                    )
 
                     # Check if we need to init timestamps in coordinator
                     timestampStart = self.coordinator.get_away_mode_start()
@@ -554,6 +545,8 @@ class CozytouchAwayModeSensor(CozytouchSensor):
 
             return strValue
 
+        return None
+
 
 class CozytouchUnitSensor(CozytouchSensor):
     """Class for unit sensor."""
@@ -613,6 +606,8 @@ class CozytouchUnitSensor(CozytouchSensor):
             except ValueError:
                 return 0.0
 
+        return None
+
 
 class CozytouchTimeSensor(CozytouchSensor):
     """Class for time sensor (in minutes)."""
@@ -658,7 +653,7 @@ class CozytouchTimeSensor(CozytouchSensor):
             if days > 0:
                 strValue = str(days) + "d "
 
-            strValue += "%02d:%02d" % (hours, minutes)
+            strValue += f"{hours:02d}:{minutes:02d}"
             return strValue
 
         return None
@@ -691,10 +686,12 @@ class CozytouchTimezoneSensor(CozytouchSensor):
         """Retrieve value from hub."""
         value = self.coordinator.get_capability_value(self._capability["capabilityId"])
         if value is not None:
+            # Floor division rather than %d over a true division: the operand
+            # is positive in both branches, so it truncates the same way.
             if float(value) > 0:
-                strValue = "GMT+%d" % (int(value) / 3600)
+                strValue = f"GMT+{int(value) // 3600}"
             elif float(value) < 0:
-                strValue = "GMT-%d" % (abs(int(value)) / 3600)
+                strValue = f"GMT-{abs(int(value)) // 3600}"
             else:
                 strValue = "GMT"
 
@@ -739,8 +736,10 @@ class CozytouchProgSensor(CozytouchSensor):
 
                     if strValue != "":
                         strValue += " / "
-                    strValue += "%02d:%02d " % (hours, minutes)
-                    strValue += " %d°C" % (prog[1])
+                    strValue += f"{hours:02d}:{minutes:02d} "
+                    # int() rather than the value itself: the setpoint arrives
+                    # from JSON and can be a float, which %d used to truncate.
+                    strValue += f" {int(prog[1])}°C"
 
             return strValue
 
@@ -786,11 +785,9 @@ class CozytouchProgTimeSensor(CozytouchSensor):
 
                     if strValue != "":
                         strValue += " / "
-                    strValue += "%02d:%02d-%02d:%02d" % (
-                        hoursfrom,
-                        minutesfrom,
-                        hoursto,
-                        minutesto,
+                    strValue += (
+                        f"{hoursfrom:02d}:{minutesfrom:02d}"
+                        f"-{hoursto:02d}:{minutesto:02d}"
                     )
 
             return strValue

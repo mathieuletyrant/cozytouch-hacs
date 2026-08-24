@@ -357,6 +357,19 @@
             "swing_mode":         { "name": "Mode Oscillation" }
         }
     },
+    "issues": {
+        "unknown_model": {
+            "title": "{device_name} est un modèle que cette intégration ne connaît pas",
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Envoyer le signalement",
+                        "description": "L'identifiant de modèle `{model_id}` n'est pas dans la table de correspondance : seules les capacités génériques de cet appareil fonctionnent. Ce qui manque est une correspondance que quelqu'un doit écrire, et l'écrire demande deux choses de votre part.\n\n[Ouvrir un ticket pré-rempli]({report_url}). Il porte tous les modèles inconnus de ce compte (`{model_ids}`), avec pour chacun les identifiants de capacités que rien ne nomme -- et rien d'autre sur votre logement.\n\nJoignez-y ensuite un fichier de diagnostic, depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics*, un par appareil du rapport : un fichier porte les valeurs des capacités de l'appareil dont il vient, et seulement l'identité des autres. Vos identifiants de connexion et votre adresse en sont retirés.\n\nChoisissez **Valider** une fois envoyé. Un seul rapport répond pour tous les appareils qu'il contient, donc les autres signalements d'appareil inconnu de ce compte partent avec celui-ci. Une version qui ajoute une correspondance l'efface de toute façon."
+                    }
+                }
+            }
+        }
+    },
     "selector": {
         "days": {
             "options": {

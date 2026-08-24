@@ -6,12 +6,20 @@ API to itself have to stay off until someone asks for them. And a capability
 whose name has no translation shows up as its raw key -- `available_system_modes`
 in the UI -- which is the mistake anyone adding a capability makes once.
 
-The translation check walks every id the mapping answers for, so a capability
-added later is covered without anyone remembering to cover it.
+A third failure is the wiring itself. A platform picks its entities out of the
+capability list by type, and a type on one side of that match and not the other
+is silent both ways: a mapping nothing consumes produces no entity, and a
+platform waiting for a type nothing produces sets up nothing at all. Two lived
+here -- `time_adjustment` in time.py and `power` in sensor.py -- and the
+categories have the same shape, since sensor.py reads two spellings and gives
+anything else no category.
+
+The checks walk every id the mapping answers for, so a capability added later is
+covered without anyone remembering to cover it.
 """
 
-import io
 import json
+import pathlib
 import re
 
 import pytest
@@ -39,25 +47,79 @@ PLACEHOLDER = re.compile(r"^(Capability_|Temp_|Target )")
 EVERY_ID = frozenset(range(1, 400)) | frozenset(range(100000, 106000))
 
 
-def names_the_mapping_produces():
-    """Every entity name reachable from the capability mapping."""
-    found = set()
-    for modelId in (56, 76, 211, 235, 418, 557, 1457, 1641, 1734):
+# One per device class, so a branch that only a boiler or only an air
+# conditioner reaches is still walked.
+MODEL_IDS = (56, 76, 211, 235, 418, 557, 1457, 1641, 1734)
+
+# The platforms that pick their entities out of the capability list by type.
+# binary_sensor.py is not one of them: it owns the single cloud-connectivity
+# entity and never looks at a capability.
+PLATFORMS = (
+    "climate.py",
+    "datetime.py",
+    "number.py",
+    "select.py",
+    "sensor.py",
+    "switch.py",
+)
+
+# `capability["type"] == "x"` and `capability["type"] in ("x", "y")`, the two
+# ways a platform states which type it was written for.
+TYPE_TEST = re.compile(r'capability\["type"\]\s*(?:== "(\w+)"|in \(([^)]*)\))')
+
+# What sensor.py turns into an EntityCategory, plus the "sensor" that means no
+# category at all. Anything else it silently drops on the floor.
+CATEGORIES = frozenset({"sensor", "diag", "config"})
+
+
+def capabilities_the_mapping_produces():
+    """Every capability dict reachable from the mapping, across device classes."""
+    for modelId in MODEL_IDS:
         infos = get_model_infos(modelId)
         if infos["type"] is CozytouchDeviceType.UNKNOWN:
             continue
         for capabilityId in EVERY_ID:
             result = get_capability_infos(infos, capabilityId, "0", EVERY_ID)
-            if result and result.get("name"):
-                found.add(result["name"])
-                for extra in ("name_0", "name_1"):
-                    if result.get(extra):
-                        found.add(result[extra])
+            if result:
+                yield result
+
+
+def names_the_mapping_produces():
+    """Every entity name reachable from the capability mapping."""
+    found = set()
+    for result in capabilities_the_mapping_produces():
+        if result.get("name"):
+            found.add(result["name"])
+            for extra in ("name_0", "name_1"):
+                if result.get(extra):
+                    found.add(result[extra])
     return found
 
 
+def types_the_mapping_produces():
+    """Each type the mapping puts on a capability for a platform to match."""
+    return {
+        result["type"]
+        for result in capabilities_the_mapping_produces()
+        if "type" in result
+    }
+
+
+def types_the_platforms_consume():
+    """Each type a platform matches on, and which platforms match on it."""
+    consumed: dict[str, set[str]] = {}
+    for platform in PLATFORMS:
+        source = pathlib.Path("custom_components/cozytouch", platform).read_text(
+            encoding="utf-8"
+        )
+        for single, group in TYPE_TEST.findall(source):
+            for name in [single] if single else re.findall(r'"(\w+)"', group):
+                consumed.setdefault(name, set()).add(platform)
+    return consumed
+
+
 def translated_keys(path):
-    with io.open(path, encoding="utf-8") as handle:
+    with open(path, encoding="utf-8") as handle:
         entity = json.load(handle)["entity"]
     keys = set()
     for platform in entity.values():
@@ -125,3 +187,39 @@ def test_the_cooling_bounds_are_temperatures(capabilityId):
 
     assert result["type"] == "temperature"
     assert result["enabled_by_default"] is False
+
+
+def test_the_walk_finds_the_platforms_and_the_types_they_match_on():
+    """A sanity floor: the regex above found the dispatch, not an empty file."""
+    consumed = types_the_platforms_consume()
+
+    assert consumed["climate"] == {"climate.py", "sensor.py"}
+    assert len(consumed) > 15
+
+
+def test_every_type_the_mapping_produces_reaches_a_platform():
+    """A type nothing consumes is a capability mapped into no entity at all."""
+    assert not types_the_mapping_produces() - set(types_the_platforms_consume())
+
+
+def test_no_platform_waits_for_a_type_nothing_produces():
+    """The other direction: a platform that sets up nothing, and says nothing.
+
+    time.py was written around a `time_adjustment` the mapping never produced,
+    so the time platform created no entity on any device and the durations
+    stayed read-only. sensor.py held a `power` branch the same way, and that one
+    would have raised on the first device to reach it: it passed a keyword
+    CozytouchUnitSensor does not take.
+    """
+    assert not set(types_the_platforms_consume()) - types_the_mapping_produces()
+
+
+def test_every_category_the_mapping_produces_is_one_the_entities_read():
+    """sensor.py tests for "diag"; "diagnostic" reads as no category at all."""
+    produced = {
+        result["category"]
+        for result in capabilities_the_mapping_produces()
+        if "category" in result
+    }
+
+    assert not produced - CATEGORIES

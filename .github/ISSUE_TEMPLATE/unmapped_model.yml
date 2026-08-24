@@ -1,0 +1,90 @@
+name: Unmapped device
+description: A device shows up as "Unknown product (…)"
+title: "Unmapped model "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Home Assistant can fill most of this in for you : an unmapped device
+        raises a repair under **Settings → System → Repairs**, and opening it
+        gives you a link to this form with the two id fields already set.
+
+  - type: input
+    id: model_ids
+    attributes:
+      label: Model ids
+      description: >
+        The numbers in `Unknown product (…)`. One report can cover several :
+        a gateway, its room units and its zones are one account and one
+        mapping session.
+      placeholder: "1457, 1505"
+    validations:
+      required: true
+
+  - type: textarea
+    id: capability_ids
+    attributes:
+      label: Capability ids nothing maps
+      description: >
+        One line per model, as the repair dialog fills them in. Also in the
+        `unmapped` block of the diagnostics file. `none` is a real answer.
+      placeholder: |
+        1457: 101, 207, 1044
+        1505: none
+
+  - type: textarea
+    id: device
+    attributes:
+      label: What the device is
+      description: >
+        The brand and commercial name on the box, per model id if the report
+        covers several. This is where the name in the mapping comes from --
+        the API only names the gateway.
+    validations:
+      required: true
+
+  - type: textarea
+    id: app
+    attributes:
+      label: What the Cozytouch app offers for it
+      description: >
+        The modes the app lists for this device (heating, cooling, automatic,
+        eco, boost, …), the fan speeds and swing positions if it has them, and
+        whether it offers a quiet mode and an absence temperature. A
+        screenshot of the mode picker answers most of this at once.
+
+
+        Asked because nothing else can answer it. The mapping has to say which
+        raw value means which mode, and a device reporting a capability does
+        not mean the app exposes it -- the room units behind a Navizone report
+        an eco capability the app never shows.
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: >
+        Drag the file in here.
+        **Settings → Devices & Services → Atlantic Cozytouch → ⋮ → Download
+        diagnostics**. It lists every device on the account with its model id
+        and the capability ids nothing names yet, which is what the mapping is
+        built from. Your credentials and address are stripped out before the
+        file is written.
+
+
+        One file per unmapped device, please : a dump carries the capability
+        values of the device it was downloaded from, and identity only for the
+        rest of the account.
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Home Assistant, and the version of this integration.
+      placeholder: "HA 2026.8.1, cozytouch 2026.8.2"
+    validations:
+      required: true

@@ -108,7 +108,10 @@ GET_SCHEDULE_SCHEMA = vol.Schema(
 def _build_matrix(slots: list[dict]) -> str:
     """Turn slots into the [[minutes,temperature],...] string the device stores."""
     entries = sorted(
-        ((slot["time"].hour * 60 + slot["time"].minute, slot["temperature"]) for slot in slots),
+        (
+            (slot["time"].hour * 60 + slot["time"].minute, slot["temperature"])
+            for slot in slots
+        ),
         key=lambda entry: entry[0],
     )
 

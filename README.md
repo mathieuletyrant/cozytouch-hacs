@@ -115,7 +115,17 @@ known to work end to end :
 ### My device is not listed
 
 It will show up as `Unknown product (…)`, and only its generic capabilities will
-work. To get it mapped, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
+work. Home Assistant says so on its own : an unmapped device raises a repair
+under `Settings -> System -> Repairs`. Opening it hands you a link to an issue
+already carrying every unmapped model on the account, with the capability ids
+nothing names for each and nothing else about your home -- so a gateway with
+three unknown zones is one issue, not four. Attach the dump below to it -- one
+per unmapped device, since a dump carries the capability values of the device
+it came from and identity only for the rest -- and answering that one dialog
+stops the others asking too. A release that adds a mapping clears them either
+way.
+
+To do it by hand instead, open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
 and attach a diagnostics dump :
 
 `Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download diagnostics`
@@ -208,6 +218,13 @@ integers, so a half degree has never been confirmed to survive the write.
 ## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
+
+`main` is protected, so a release is two steps. First a pull request setting
+`version` in `custom_components/cozytouch/manifest.json` to the version being
+released ; then a `Release` workflow dispatch naming that same version. The
+workflow refuses to run while the manifest says something else, and otherwise
+tags the commit and writes the notes from the commit subjects since the
+previous tag.
 
 ## Credits
 

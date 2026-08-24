@@ -12,19 +12,17 @@ if what it hands back can be written again unchanged.
 """
 
 import asyncio
-import io
-import json
 from datetime import time
+import json
 from types import SimpleNamespace
 
 import pytest
-
-from homeassistant.config_entries import ConfigEntryState
-from homeassistant.core import SupportsResponse
-from homeassistant.exceptions import ServiceValidationError
 import voluptuous as vol
 
 from custom_components.cozytouch import services
+from homeassistant.config_entries import ConfigEntryState
+from homeassistant.core import SupportsResponse
+from homeassistant.exceptions import ServiceValidationError
 
 TRANSLATIONS = (
     "custom_components/cozytouch/strings.json",
@@ -218,7 +216,7 @@ def test_a_single_slot_sent_as_a_mapping_is_still_a_list():
 
 
 @pytest.mark.parametrize(
-    "group,expected",
+    ("group", "expected"),
     [
         ("all", services.DAYS),
         ("weekdays", services.DAYS[:5]),
@@ -269,7 +267,8 @@ def test_a_device_that_advertises_fewer_slots_is_believed():
 @pytest.mark.parametrize("value", [None, "", "0", "1", "many", "[5]", "99"])
 def test_an_unreadable_slot_count_leaves_the_ten_that_work(value):
     """306 is self-describing and unverified : it may only tighten the check,
-    never widen it and never break a write that works today."""
+    never widen it and never break a write that works today.
+    """
     assert services._slot_limit(FakeHub({306: value})) == services.MAX_SLOTS
 
 
@@ -288,7 +287,8 @@ def test_the_padding_is_not_read_back_as_a_midnight_slot():
 
 def test_a_real_midnight_slot_survives_being_read_back():
     """It is the pair the padding rule has to be told apart from : a slot at
-    midnight carries a setpoint, padding carries a zero."""
+    midnight carries a setpoint, padding carries a zero.
+    """
     assert services._parse_slots("[[0,17]" + PADDING + ",[0,0]]")[0] == {
         "time": "00:00",
         "temperature": 17,
@@ -325,7 +325,7 @@ def test_an_entity_that_does_not_exist_is_named_in_the_error(monkeypatch):
     """Renaming an entity does not change its id, which is the usual cause."""
     hass = make_hass(monkeypatch, FakeHub(), registry_entry=None)
 
-    with pytest.raises(ServiceValidationError, match="climate.nope"):
+    with pytest.raises(ServiceValidationError, match=r"climate\.nope"):
         services._resolve_hub(hass, "climate.nope")
 
 
@@ -476,7 +476,7 @@ def test_the_services_are_registered_once_for_every_config_entry(monkeypatch):
 
 def service_keys(path):
     """Every key the UI looks up for the two services."""
-    with io.open(path, encoding="utf-8") as handle:
+    with open(path, encoding="utf-8") as handle:
         content = json.load(handle)
 
     keys = set()
@@ -491,6 +491,7 @@ def service_keys(path):
 
 @pytest.mark.parametrize("path", TRANSLATIONS[1:])
 def test_the_service_strings_cover_the_same_keys(path):
-    """hassfest does not read fr.json, and skips these checks entirely for a
-    custom integration : a missing key here shows the raw id to the user."""
+    """Hassfest does not read fr.json, and skips these checks entirely for a
+    custom integration : a missing key here shows the raw id to the user.
+    """
     assert service_keys(path) == service_keys(TRANSLATIONS[0])

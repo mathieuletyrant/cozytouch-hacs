@@ -1,19 +1,17 @@
-"""Guards for two bugs that were live and silent.
+"""Guards for bugs that were live and silent.
 
-Neither showed up in a test run, because neither is reachable from the model or
-capability tables that the rest of the suite walks. One needed two config
-entries to be visible at all, the other needed a device that reports a
-duration. Both are cheap to pin now that they are known.
+None of them showed up in a test run, because none is reachable from the model
+or capability tables that the rest of the suite walks: one needed two config
+entries to be visible at all, another needed a zone renamed in the Cozytouch
+app. All of them are cheap to pin now that they are known.
 """
 
-from datetime import time as time_cls
 import inspect
 from types import SimpleNamespace
 
 import pytest
 
 from custom_components.cozytouch.hub import Hub
-from custom_components.cozytouch.time import CozytouchTime
 
 
 def setup_payload(zones, devices=()):
@@ -41,32 +39,6 @@ def test_per_account_state_is_not_shared_by_every_hub(attribute):
     another device's setup.
     """
     assert not hasattr(Hub, attribute)
-
-
-@pytest.mark.parametrize(
-    ("stored_minutes", "expected"),
-    [
-        (0, time_cls(0, 0)),
-        (45, time_cls(0, 45)),
-        (60, time_cls(1, 0)),
-        (135, time_cls(2, 15)),
-        (1439, time_cls(23, 59)),
-    ],
-)
-def test_a_duration_capability_becomes_a_time(stored_minutes, expected):
-    """The module imported both datetime.time and the time module.
-
-    The second shadowed the first, so the name `time` pointed at the stdlib
-    module and this property reached for `datetime.time(h, m, 0)` instead --
-    an unbound method, which raises TypeError when called with three ints.
-    Every time entity was therefore broken, and nothing said so.
-    """
-    entity = SimpleNamespace(
-        coordinator=SimpleNamespace(get_capability_value=lambda _: str(stored_minutes)),
-        _capability={"capabilityId": 232},
-    )
-
-    assert CozytouchTime.native_value.fget(entity) == expected
 
 
 def test_zones_are_refreshed_and_not_only_read_once():
