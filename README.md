@@ -215,6 +215,37 @@ something those frontends can draw. Everything else works the same.
 Temperatures are whole degrees. Every program captured from a real device holds
 integers, so a half degree has never been confirmed to survive the write.
 
+### Triggering on the program
+
+Five device triggers, offered per device and only when the device reports what
+they read. Pick them in the automation editor under *Add trigger > Device*, or
+write them out :
+
+| Trigger | Fires when |
+| ------- | ---------- |
+| `The heating program changed` | any of the seven heating days was rewritten, whether from here, from the Cozytouch app or from the panel |
+| `The cooling program changed` | the same, for the cooling block |
+| `… went back to its program` | the device resumed following its weekly program |
+| `… program was overridden` | a temporary setpoint took over -- which is what setting a temperature while in `prog` does |
+| `… stopped following its program` | the program was switched off for a manual setpoint |
+
+The three preset triggers take an optional `for`, so *overridden for two hours*
+is a trigger rather than an automation with a timer in it.
+
+```yaml
+triggers:
+  - trigger: device
+    domain: cozytouch
+    device_id: 8dd8b7f4c3a24b1e9e0e4a6d5c7b2f10
+    type: heating_schedule_changed
+```
+
+Everything else worth automating on is already a device trigger Home Assistant
+builds itself : *connected* and *disconnected* from the Cozytouch connectivity
+sensor, *turned on* from the away-mode switch, *HVAC mode changed* from the
+climate entity. Conditions and actions about presets come from the `climate`
+domain the same way.
+
 ## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).

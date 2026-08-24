@@ -96,6 +96,11 @@ capture, so a test going green says "nobody changed this by accident", never
 - `tests/test_services.py` — the schedule services : the matrix `set_schedule`
   builds, and the round trip that is the promise of `get_schedule`, since what
   it returns has to be writable again unchanged.
+- `tests/test_device_trigger.py` — the device triggers : which ones a device
+  is offered, given what it reports, and what each one then watches — the right
+  entities for a program, the preset *attribute* rather than the state for a
+  preset. Both halves fail silently in production, since a trigger that never
+  fires logs nothing.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a

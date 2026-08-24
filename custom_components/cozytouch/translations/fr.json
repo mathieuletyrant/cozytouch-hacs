@@ -357,6 +357,15 @@
             "swing_mode":         { "name": "Mode Oscillation" }
         }
     },
+    "device_automation": {
+        "trigger_type": {
+            "heating_schedule_changed": "Le programme de chauffage a changé",
+            "cooling_schedule_changed": "Le programme de refroidissement a changé",
+            "schedule_resumed":         "{entity_name} suit de nouveau son programme",
+            "schedule_overridden":      "{entity_name} : le programme est forcé",
+            "schedule_stopped":         "{entity_name} ne suit plus son programme"
+        }
+    },
     "issues": {
         "unknown_model": {
             "title": "{device_name} est un modèle que cette intégration ne connaît pas",

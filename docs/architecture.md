@@ -292,9 +292,39 @@ different device family, and the services do not reach them: `set_schedule`
 and `get_schedule` know 196 and 203 only. Widening them wants a capture from
 one of those devices first.
 
+## The device triggers
+
+`device_trigger.py` adds five, and the interesting part is what it leaves out.
+Home Assistant builds device triggers from the entity domains a device happens
+to have — the connectivity binary sensor gives connected/disconnected, the
+away-mode switch gives turned on, the climate entity gives HVAC mode changed —
+so the only ones worth writing are the ones no domain covers:
+
+| trigger | what it watches |
+| --- | --- |
+| `heating_schedule_changed` | the seven day sensors of 196–202, as a state trigger |
+| `cooling_schedule_changed` | the same for 203–209 |
+| `schedule_resumed` | the climate `preset_mode` attribute reaching `prog` |
+| `schedule_overridden` | … reaching `override` |
+| `schedule_stopped` | … reaching `basic` |
+
+The program pair carries no `entity_id`: a program is seven sensors and no
+entity stands for it, so the trigger is keyed by device and resolves the seven
+at attach time, by registry id so a rename does not break it. The preset three
+do carry one, since a device can hold more than one climate entity.
+
+Both are offered only when the device has what they read — the program block
+in the entity registry, the preset in the climate entity's `preset_modes` —
+which is the same rule the capability table follows: declare nothing the
+device has not shown you.
+
+`climate` already ships preset conditions and actions, so there is no
+`device_condition.py` and no `device_action.py` here. Adding them would put
+two entries meaning the same thing in the same picker.
+
 ## Testing
 
-262 tests, all characterisation tests. They pin the mapping as it stands, not
+285 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
