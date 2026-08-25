@@ -5,8 +5,14 @@ on:
     branches:
       - "main"
   pull_request:
+    # Not only `main`: this list filters on the *base* branch, so a pull
+    # request stacked on another one -- the shape every dependent change here
+    # takes -- got no checks at all rather than failing ones. Two open pull
+    # requests had never been tested anywhere because of it. `claude/**` covers
+    # the branch names this repository actually uses.
     branches:
       - "main"
+      - "claude/**"
   workflow_dispatch:
 
 jobs:
