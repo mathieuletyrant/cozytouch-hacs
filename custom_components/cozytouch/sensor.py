@@ -33,6 +33,37 @@ from .hub import CozytouchConfigEntry, Hub
 _LOGGER = logging.getLogger(__name__)
 
 
+def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
+    """The device every entity of one config entry belongs to.
+
+    A function rather than a copy per entity class : the freshness sensor below
+    is not built from a capability, so it cannot inherit CozytouchSensor, and a
+    second hand-written copy of this would be the third in the integration.
+    """
+    model_name = coordinator.get_model_infos()["name"]
+    info = DeviceInfo(
+        identifiers={(DOMAIN, device_uniq_id)},
+        manufacturer="Atlantic",
+        name=model_name,
+        model=model_name,
+        serial_number=coordinator.get_serial_number(),
+        # The firmware the device reports (capability 121). It is worth
+        # having on the device rather than only as a diagnostic entity:
+        # "which version is this box on" is the first line of a bug
+        # report, and None here just leaves the field empty.
+        sw_version=coordinator.get_software_version(),
+    )
+    # Hang the device under its gateway when that is set up too, instead
+    # of leaving every room unit at the top of the list. via_device is
+    # deprecated for via_device_id, which needs a registry lookup and a
+    # newer HA than this integration asks for.
+    via_device = coordinator.get_via_device()
+    if via_device is not None:
+        info["via_device"] = via_device
+
+    return info
+
+
 # config flow setup
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -262,6 +293,19 @@ async def async_setup_entry(
                 )
             )
 
+    # Not built from a capability, so it is not in the loop above: the date
+    # comes with every capability the device reports rather than being one of
+    # them. Only created when the device actually reports one, which is the
+    # same rule the capability flags follow -- an entity nobody's hardware
+    # backs is worse than no entity.
+    if hub.get_last_modification_date() is not None:
+        sensors.append(
+            CozytouchLastUpdateSensor(
+                config_uniq_id=config_entry.entry_id,
+                coordinator=hub,
+            )
+        )
+
     # Add the entities to HA
     if len(sensors) > 0:
         async_add_entities(sensors, True)
@@ -370,27 +414,7 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Return the device info."""
-        modelInfos = self.coordinator.get_model_infos()
-        info = DeviceInfo(
-            identifiers={(DOMAIN, self._device_uniq_id)},
-            manufacturer="Atlantic",
-            name=modelInfos["name"],
-            model=modelInfos["name"],
-            serial_number=self.coordinator.get_serial_number(),
-            # The firmware the device reports (capability 121). It is worth
-            # having on the device rather than only as a diagnostic entity:
-            # "which version is this box on" is the first line of a bug
-            # report, and None here just leaves the field empty.
-            sw_version=self.coordinator.get_software_version(),
-        )
-        # Hang the device under its gateway when that is set up too, instead
-        # of leaving every room unit at the top of the list. via_device is
-        # deprecated for via_device_id, which needs a registry lookup and a
-        # newer HA than this integration asks for.
-        via_device = self.coordinator.get_via_device()
-        if via_device is not None:
-            info["via_device"] = via_device
-        return info
+        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @property
     def native_value(self):
@@ -816,3 +840,61 @@ class CozytouchProgTimeSensor(CozytouchSensor):
             return strValue
 
         return None
+
+
+class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):
+    """When the device last changed any of the values it reports.
+
+    Every capability item carries a `modificationDate` alongside its value, and
+    until now nothing read it. What it answers is the question a frozen reading
+    raises and no other entity here can settle : the value has not moved, but is
+    the hardware still reporting, or has it fallen off Atlantic's cloud with the
+    integration cheerfully serving the last thing it heard ?
+
+    Deliberately only that. The obvious next step -- calling the device
+    unavailable once this is old enough -- needs a threshold nobody can defend
+    yet : a stable water heater can leave every capability untouched for hours,
+    so a guessed one would mark working hardware as broken. This is the
+    measurement that makes the threshold decidable later.
+    """
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_translation_key = "last_device_update"
+
+    def __init__(self, coordinator: Hub, config_uniq_id: str) -> None:
+        """Initialize the last-update sensor."""
+        super().__init__(coordinator)
+
+        self._device_uniq_id = config_uniq_id
+        # Not keyed on a capability id like every other entity here, because it
+        # answers for all of them. `last_device_update` is a name no capability
+        # can take: capability.py only ever produces ids.
+        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_device_update"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return device_info_for(self.coordinator, self._device_uniq_id)
+
+    @property
+    def native_value(self) -> datetime.datetime | None:
+        """The newest date the device reports, as an aware datetime.
+
+        Read on demand rather than cached : there is nothing to convert and no
+        formatting to pin, and `tz=datetime.UTC` is what keeps this out of the
+        double-offset trap the away-mode timestamp sensor is in -- an epoch is
+        absolute, so the only correct reading of it is UTC.
+        """
+        epoch = self.coordinator.get_last_modification_date()
+        if epoch is None:
+            return None
+
+        return datetime.datetime.fromtimestamp(epoch, tz=datetime.UTC)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Publish whatever the poll just brought back."""
+        self.async_write_ha_state()
