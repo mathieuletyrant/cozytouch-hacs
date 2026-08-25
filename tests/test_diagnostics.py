@@ -16,6 +16,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.hub import Hub
 
 
@@ -45,6 +46,41 @@ def make_hub(devices, deviceId, zones=None):
         hub, deviceId
     )
     return hub
+
+
+def test_a_zone_is_not_in_the_dump_at_all():
+    """A dump is read to find hardware that has to be mapped, and a zone is not
+    hardware: it reports two ids that resolve to nothing, one of them declined
+    on purpose, which reads exactly like work to do. It is ignored outright --
+    not offered at setup, not listed here.
+    """
+    hub = make_hub(
+        [
+            device(1, 557, name="ROOM_0"),
+            device(2, 1505, name="THZONE_0"),
+        ],
+        deviceId=1,
+    )
+
+    reported = Hub.get_diagnostics(hub)
+
+    assert [dev["name"] for dev in reported["devices"]] == ["ROOM_0"]
+
+
+def test_a_zone_is_not_offered_when_adding_the_integration():
+    """Adding it would create a device with an empty page behind it. The list
+    the config flow reads is the account's, which is where the filter lives.
+    """
+    account = SimpleNamespace(
+        devices=[
+            device(1, 557, name="ROOM_0"),
+            device(2, 1505, name="THZONE_0"),
+        ]
+    )
+
+    summaries = CozytouchAccount.device_summaries(account)
+
+    assert [dev["name"] for dev in summaries] == ["ROOM_0"]
 
 
 def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):

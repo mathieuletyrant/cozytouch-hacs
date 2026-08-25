@@ -74,10 +74,15 @@ Each platform's `async_setup_entry` loops over `entry.subentries` and adds its
 entities with `config_subentry_id=`, which is what puts them under the right
 device.
 
-`binary_sensor` is the odd one out: it is not capability-driven at all. It
-builds exactly one entity per subentry, a connectivity sensor reflecting
-`hub.online` — which is the *account's* connection, the same answer for every
-device on it.
+Two entities are not capability-driven, and so are not in that fan-out.
+`binary_sensor` builds exactly one per subentry, a connectivity sensor
+reflecting `hub.online` — which is the *account's* connection, the same answer
+for every device on it. The sensor platform builds one more beside its
+capability entities: a `timestamp` diagnostic carrying the newest
+`modificationDate` the device reports, which is what says whether the hardware
+is still talking to Atlantic's cloud when a reading has stopped moving. It is
+created only when the device actually reports a date, the same rule the model
+flags follow.
 
 ## One poll for the account
 
@@ -223,11 +228,54 @@ called from anywhere; it is gone.
 
 ## The model table
 
-`get_model_infos(modelId, zoneName=None)` is one long `if/elif` returning a
-dict. 63 model ids are mapped today: 26 water heaters, 9 towel racks, 9 AC
-user interfaces, 6 air conditioners, 5 gateways, 4 boilers, 2 heat pumps,
-2 thermostats. Anything else falls through to `Unknown product (…)` with a
-minimal off/heat mapping.
+`get_model_infos(modelId, zoneName=None, deviceName=None)` is one long
+`if/elif` returning a dict. 63 model ids are mapped today: 26 water heaters,
+9 towel racks, 9 AC user interfaces, 6 air conditioners, 5 gateways, 4 boilers,
+2 heat pumps, 2 thermostats. Anything else falls through to
+`Unknown product (…)` with a minimal off/heat mapping.
+
+**One device is recognised by its name instead of its id**, and it is the only
+one: a THZONE, which is a zone of a ducted heat pump rather than a product. The
+check runs before the id chain, so `deviceName` starting with `THZONE` wins over
+any id — including an id that also belongs to a real product.
+
+Keying on the name is not a shortcut, it is what the payload supports. A capture
+pairs model id 1505 with the device the API calls `THZONE_0`, 1506 with
+`THZONE_1`, and so on: the ids count the zones rather than name a product, so a
+household with more zones than the captured one walks off the end of any range
+guessed from it. The API's `name` is read rather than `customName`, since
+renaming a zone in the Cozytouch app is a thing people do.
+
+A zone reports two capabilities, neither of which resolves to anything, and no
+climate capability. So it is **ignored, not surfaced**:
+`CozytouchAccount.device_summaries` leaves it out of what the config flow
+offers, and `get_diagnostics` leaves it out of the dump. Adding one would create a device with an empty page behind it, and a
+dump is read to find hardware that has to be mapped — listing a zone put two
+ids that resolve to nothing, one of them declined on purpose, in front of
+whoever reads it, which reads exactly like work to do. The raw setup view still
+holds them and the `dump_json` option writes it out, which is the way back if
+anybody needs to see what a zone reports.
+
+Recognising the model is still what makes that possible, and it is what stopped
+the noise it used to make: unmapped, a zone read as `Unknown product (1505)`
+*and* raised an unmapped-model repair per zone, asking six times for a dump
+about hardware working as designed. `HVACModes` is empty on purpose — the
+fall-through's off/heat pair is what made a zone look like a thermostat that
+could heat. Capability 218 is declined too: a zone reads "0" for it while the
+API calls the zone available, so the sensor would contradict its own device.
+
+The consequence to know: every lookup passes `dev["name"]`, because one without
+it answers `Unknown product` for a zone — which would put the repair back. That
+is `hub.py` for the capability walks and the dump, and `account.py` for the
+unmapped-model scan, which is where the account-wide question lives now.
+
+`get_zone_name` answers **None** when the account does not name a zone, where it
+used to answer the id as a string. Every caller puts the result in front of
+somebody — a device name, a line in a dump — and `Zone (1030104)` is a worse
+name than no name: the id is ours to join on, not a room anybody recognises. A
+zone with no room falls back to the name the app shows (`THZONE_0`), and an air
+conditioner to its position (`Air Conditioner (#1)`), which is what that branch
+already did for a device with no zone at all.
 
 Three kinds of key come back:
 
@@ -423,18 +471,21 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-330 tests, most of them characterisation tests. They pin the mapping as it
+392 tests, most of them characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
 correct".
 
-Almost all of them are table tests. The exception is
-`tests/test_sensor_values.py`, which pins what the value builders in
-`sensor.py` return character for character — the zero padding, the double space
-before a temperature, a float setpoint still reading as a whole number. That
-file renders the strings people actually look at and had no tests at all, which
-is how a formatting change can be both invisible in review and visible on every
-dashboard.
+Almost all of them are table tests. The exceptions are the two that cover
+`sensor.py`. `tests/test_sensor_values.py` pins what the value builders return
+character for character — the zero padding, the double space before a
+temperature, a float setpoint still reading as a whole number. That file
+renders the strings people actually look at and had no tests at all, which is
+how a formatting change can be both invisible in review and visible on every
+dashboard. `tests/test_sensor_metadata.py` covers what the platform says about
+a value rather than the value: it drives `async_setup_entry` with a hub
+stand-in and asserts the state class and device class each capability type
+comes out with, including that the pair is one Home Assistant accepts.
 
 **Almost nothing tests the API client.** `tests/test_reauth.py` reaches the
 HTTP layer -- a `FakeSession` answering from a script -- and covers one path

@@ -693,23 +693,51 @@ class CozytouchAccount:
         return False
 
     def device_summaries(self) -> list[dict]:
-        """The devices as a config flow needs to list them."""
-        return [
-            {
-                "deviceId": dev["deviceId"],
-                "name": dev["name"],
-                "model": dev["modelInfos"]["name"],
-            }
-            for dev in self.devices
-        ]
+        """The devices worth offering to somebody adding this integration.
 
-    def get_zone_name(self, zoneId: int | None) -> str:
-        """Get zone infos."""
+        Zones are left out. A THZONE is one zone of a ducted heat pump, not
+        hardware: it reports no climate capability, no setpoint, and two ids
+        that resolve to nothing, so adding it would create a device with an
+        empty page behind it. Ignoring it outright is the honest answer --
+        there is nothing to drive and nothing to read.
+
+        The model comes from the table rather than from the `modelInfos` filled
+        in when a device first appeared: the same lookup every other caller
+        makes, and the name a zone is recognised *by* can change under a cached
+        one. The raw setup view still holds the zones, and the `dump_json`
+        option writes it out, which is the way back if anybody needs to see
+        what one reports.
+        """
+        summaries = []
+        for dev in self.devices:
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+                continue
+
+            summaries.append(
+                {
+                    "deviceId": dev["deviceId"],
+                    "name": dev["name"],
+                    "model": modelInfos["name"],
+                }
+            )
+
+        return summaries
+
+    def get_zone_name(self, zoneId: int | None) -> str | None:
+        """What the account calls a zone, or None when it does not name it.
+
+        None rather than the id as a string, which is what this used to answer.
+        Every caller puts the result in front of somebody -- a device name, a
+        line in a diagnostics dump -- and "Zone (1030104)" is a worse name than
+        no name at all: the id is ours to join on, not a room anybody
+        recognises. The callers decide what to show instead.
+        """
         for zone in self.zones:
             if "id" in zone and zone["id"] == zoneId:
                 return zone["name"]
 
-        return str(zoneId)
+        return None
 
     def get_unmapped_models(self) -> list[int]:
         """Every model id on the account the table has no branch for.
@@ -721,7 +749,11 @@ class CozytouchAccount:
         unmapped = {
             dev["modelId"]
             for dev in self.devices
-            if get_model_infos(dev["modelId"])["type"] is CozytouchDeviceType.UNKNOWN
+            # The name, because a zone is recognised by it rather than by an
+            # id: without it a THZONE reads as an unknown product and the
+            # repair asks for a dump about it, once per zone.
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+            is CozytouchDeviceType.UNKNOWN
         }
 
         return sorted(unmapped)

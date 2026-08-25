@@ -59,19 +59,56 @@ class CozytouchDeviceType(StrEnum):
     AC = "ac"
     AC_CONTROLLER = "ac_controller"
     HUB = "hub"
+    ZONE = "zone"
 
 
-def get_model_infos(modelId: int, zoneName: str | None = None):  # noqa: C901
+# What the API calls a zone of a ducted heat pump. The name is the signal
+# rather than the model id, because the ids look like they encode the zone's
+# index and not a product: a capture pairs 1505 with THZONE_0, 1506 with
+# THZONE_1, and so on, which means a bigger installation walks off the end of
+# any range guessed from one household. The API's own `name` field is checked,
+# not `customName` -- renaming the zone in the Cozytouch app is a thing people
+# do, and this has to survive it.
+ZONE_NAME_PREFIX = "THZONE"
+
+
+def get_model_infos(  # noqa: C901
+    modelId: int,
+    zoneName: str | None = None,
+    deviceName: str | None = None,
+):
     """Return infos from model ID.
 
     One long if/elif over model ids, which is why it is over the complexity
     ceiling: the shape of the problem is a lookup table, and the table is the
     function. Splitting it per device type would move the branches without
     removing one.
+
+    `deviceName` is the exception to that: a zone is recognised by the name the
+    API gives it, before any id is looked at, because the ids are per zone
+    rather than per product.
     """
     modelInfos = {"modelId": modelId, "HVACModesCapabilityId": {7, 8}}
 
-    if modelId == 56:
+    if (deviceName or "").startswith(ZONE_NAME_PREFIX):
+        # A THZONE is one zone of a ducted heat pump, not a product. What it
+        # reports, in the one capture there is, is two capabilities -- 218
+        # reading "0" and 100014 reading "255" -- and no climate capability:
+        # no setpoint, nothing to drive.
+        #
+        # Mapping it buys a name and silence rather than entities. Unmapped it
+        # arrived as "Unknown product (1505)" *and* raised an unmapped-model
+        # repair per zone, six dialogs asking for a diagnostics dump about
+        # hardware working as designed. Reported upstream as
+        # gduteil/cozytouch#167.
+        modelInfos["name"] = f"Zone ({zoneName})" if zoneName else deviceName
+        modelInfos["type"] = CozytouchDeviceType.ZONE
+        # Claims nothing. The fall-through at the end hands every unmapped
+        # model an off/heat pair, and that is what made a zone read as a
+        # thermostat that could heat.
+        modelInfos["HVACModes"] = {}
+
+    elif modelId == 56:
         modelInfos["name"] = "Naema 2 Micro 25"
         modelInfos["type"] = CozytouchDeviceType.GAZ_BOILER
         modelInfos["HVACModes"] = {
