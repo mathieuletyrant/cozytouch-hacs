@@ -543,6 +543,15 @@ def get_capability_infos(  # noqa: C901
         capability["category"] = "diag"
 
     elif capabilityId == 218:
+        # A zone reports this and it does not mean anything there: a capture of
+        # a THZONE has `isAvailable: true` alongside 218 reading "0", so the
+        # sensor would sit at "disconnected" for good and contradict the device
+        # it belongs to. A zone has no radio of its own -- the gateway it hangs
+        # off does -- and a diagnostic that is permanently wrong is worse than
+        # one that is absent.
+        if modelInfos["type"] is CozytouchDeviceType.ZONE:
+            return {}
+
         capability["name"] = "wifi_connected"
         capability["type"] = "binary"
         capability["category"] = "diag"
