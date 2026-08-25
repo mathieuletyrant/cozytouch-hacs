@@ -101,6 +101,13 @@ capture, so a test going green says "nobody changed this by accident", never
   when the device reports a date at all, and that the dump carries them per
   capability. It pins the reading, never a staleness threshold — nothing yet
   says what a normal silence looks like.
+- `tests/test_calendar.py` — the weekly program expanded into dated events :
+  which capability a weekday reads, that a slot runs until the next one rather
+  than for a fixed length and that the last of the day runs to midnight, that
+  the week repeats over a range, that a slot which began before the window is
+  still the one in charge at its start, and that a calendar exists only for a
+  block the device reports in full. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
+  test process, which is what makes the expected datetimes readable.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

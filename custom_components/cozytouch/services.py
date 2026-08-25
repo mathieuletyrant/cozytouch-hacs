@@ -139,8 +139,12 @@ def _build_matrix(slots: list[dict]) -> str:
     return json.dumps(matrix, separators=(",", ":"))
 
 
-def _parse_slots(value: str | None) -> list[dict]:
+def parse_slots(value: str | None) -> list[dict]:
     """Read a stored program back into the slots set_schedule takes.
+
+    Public because calendar.py reads programs through it too: one reading of
+    the stored matrix, so a calendar and `get_schedule` cannot disagree about
+    what a day holds.
 
     The device pads the unused slots with [0,0], and padding runs to the end of
     the matrix, so a pair of zeroes ends the day. A real slot at midnight
@@ -269,7 +273,7 @@ def async_register_services(hass: HomeAssistant) -> None:
                 # not have this program tellable from one whose day is empty.
                 value = hub.get_capability_value(first + index, None)
                 if value is not None:
-                    days[day] = _parse_slots(value)
+                    days[day] = parse_slots(value)
 
             if not days:
                 raise ServiceValidationError(

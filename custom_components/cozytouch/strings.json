@@ -35,6 +35,10 @@
         }
     },
     "entity": {
+        "calendar": {
+            "heating_program":         { "name": "Heating Program" },
+            "cooling_program":         { "name": "Cooling Program" }
+        },
         "climate": {
             "air_conditioner":
             {

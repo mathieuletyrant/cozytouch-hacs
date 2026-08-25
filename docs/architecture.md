@@ -61,13 +61,22 @@ config entry ──> Hub (DataUpdateCoordinator + API client)
  climate  sensor   switch  number   select  datetime   binary_sensor
 ```
 
-Two entities are not capability-driven, and so are not in that fan-out.
+Three entities are not capability-driven, and so are not in that fan-out.
 `binary_sensor` builds exactly one per entry, a connectivity sensor reflecting
 `hub.online`. The sensor platform builds one more beside its capability
 entities: a `timestamp` diagnostic carrying the newest `modificationDate` the
 device reports, which is what says whether the hardware is still talking to
-Atlantic's cloud when a reading has stopped moving. It is created only when the
-device actually reports a date, the same rule the model flags follow.
+Atlantic's cloud when a reading has stopped moving. And `calendar` builds one
+per program block — heating (196-202) and cooling (203-209) — expanding the
+seven stored days over real dates. All three follow the same rule: they exist
+only when the device reports what they read, which for the calendar means all
+seven days of a block rather than any of them, since a missing day would read
+as an unscheduled one.
+
+The calendar is read-only. An event has a start and an end; a program slot has
+only a start, and the next slot is what ends it, so writing one back would mean
+deciding what happens to the slots after it. That decision belongs to
+`set_schedule`, which is where somebody said it out loud.
 
 ## The Hub is two things at once
 
@@ -285,7 +294,10 @@ since otherwise the start of the day would have no target.
 
 The padding is the one thing to get right in both directions: `[0, 0]` ends
 the day, but a genuine midnight slot carries a setpoint, so a pair of zeroes
-is padding and `[0, 17]` is not. The prog sensors already read it that way.
+is padding and `[0, 17]` is not. The prog sensors already read it that way,
+and `parse_slots` is the one place that reads it now — `get_schedule` and
+`calendar.py` both go through it, so a calendar and a service response cannot
+disagree about what a day holds.
 
 It resolves the hub through the entity registry rather than `hass.data`, which
 lets it tell apart "that entity belongs to another integration" from "that is
@@ -294,7 +306,9 @@ ours but its entry isn't loaded".
 Capabilities 100320–100333 are a second heating/cooling weekly program, on a
 different device family, and the services do not reach them: `set_schedule`
 and `get_schedule` know 196 and 203 only. Widening them wants a capture from
-one of those devices first.
+one of those devices first. `calendar.py` reads the same two blocks, from the
+same table, so it stops in the same place — and so does the hot-water program
+(237–243), which nothing has confirmed uses the same matrix shape.
 
 ## The device triggers
 
@@ -328,7 +342,7 @@ two entries meaning the same thing in the same picker.
 
 ## Testing
 
-332 tests, all characterisation tests. They pin the mapping as it stands, not
+358 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 

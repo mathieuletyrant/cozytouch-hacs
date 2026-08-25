@@ -277,7 +277,7 @@ def test_an_unreadable_slot_count_leaves_the_ten_that_work(value):
 
 def test_the_padding_is_not_read_back_as_a_midnight_slot():
     """Eight [0,0] pairs are an empty tail, not eight programmed midnights."""
-    slots = services._parse_slots("[[0,17],[390,21]" + PADDING + "]")
+    slots = services.parse_slots("[[0,17],[390,21]" + PADDING + "]")
 
     assert slots == [
         {"time": "00:00", "temperature": 17},
@@ -289,7 +289,7 @@ def test_a_real_midnight_slot_survives_being_read_back():
     """It is the pair the padding rule has to be told apart from : a slot at
     midnight carries a setpoint, padding carries a zero.
     """
-    assert services._parse_slots("[[0,17]" + PADDING + ",[0,0]]")[0] == {
+    assert services.parse_slots("[[0,17]" + PADDING + ",[0,0]]")[0] == {
         "time": "00:00",
         "temperature": 17,
     }
@@ -298,14 +298,14 @@ def test_a_real_midnight_slot_survives_being_read_back():
 @pytest.mark.parametrize("value", [None, "", "0", "not json", "{}"])
 def test_a_device_that_stores_nothing_reads_as_no_slots(value):
     """A missing program is an empty day, not a failed service call."""
-    assert services._parse_slots(value) == []
+    assert services.parse_slots(value) == []
 
 
 def test_a_week_that_is_read_back_can_be_written_again_unchanged():
     """The whole promise of get_schedule : its answer is set_schedule's input."""
     stored = "[[0,17],[390,21],[1320,17]" + ",[0,0]" * 7 + "]"
 
-    slots = services._parse_slots(stored)
+    slots = services.parse_slots(stored)
     data = services.SET_SCHEDULE_SCHEMA(
         {
             "entity_id": ["climate.salon"],

@@ -246,6 +246,33 @@ sensor, *turned on* from the away-mode switch, *HVAC mode changed* from the
 climate entity. Conditions and actions about presets come from the `climate`
 domain the same way.
 
+### Seeing the program
+
+A device that holds a heating or a cooling program also gets a calendar entity
+for it, named *Heating Program* and *Cooling Program* under the device, so the
+week can be looked at on a dashboard instead of read off seven sensors. Each
+slot is an event running until the next one takes over, and its title is the
+target temperature.
+
+They are read-only : a calendar event has a start and an end, a program slot
+has only a start, so writing one back would mean deciding what happens to the
+slots after it. `Cozytouch: Set a day program` is where that decision is
+spelled out.
+
+What they are good for besides looking at them is the `calendar` triggers,
+since an event starting *is* the program moving to its next setpoint :
+
+```yaml
+triggers:
+  - trigger: calendar
+    entity_id: calendar.salon_heating_program
+    event: start
+```
+
+The times are read in Home Assistant's own timezone. The device stores minutes
+past midnight and nothing in the API says which clock those belong to, so a hub
+in a different timezone from the house it heats would show the program shifted.
+
 ## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
