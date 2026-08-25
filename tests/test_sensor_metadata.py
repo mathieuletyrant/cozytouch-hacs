@@ -44,6 +44,11 @@ def build(capabilities):
     """Run the sensor platform over these capabilities and return the entities."""
     hub = SimpleNamespace(
         get_capabilities_for_device=lambda deviceId: capabilities,
+        # The platform also builds one entity that is not capability-driven,
+        # from the modificationDate the device reports. None here keeps these
+        # cases to the capability table they are about; tests/test_freshness.py
+        # covers the other entity.
+        get_last_modification_date=lambda: None,
     )
     entry = SimpleNamespace(
         runtime_data=hub,

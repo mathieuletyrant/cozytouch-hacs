@@ -61,9 +61,13 @@ config entry ──> Hub (DataUpdateCoordinator + API client)
  climate  sensor   switch  number   select  datetime   binary_sensor
 ```
 
-`binary_sensor` is the odd one out: it is not capability-driven at all. It
-builds exactly one entity per entry, a connectivity sensor reflecting
-`hub.online`.
+Two entities are not capability-driven, and so are not in that fan-out.
+`binary_sensor` builds exactly one per entry, a connectivity sensor reflecting
+`hub.online`. The sensor platform builds one more beside its capability
+entities: a `timestamp` diagnostic carrying the newest `modificationDate` the
+device reports, which is what says whether the hardware is still talking to
+Atlantic's cloud when a reading has stopped moving. It is created only when the
+device actually reports a date, the same rule the model flags follow.
 
 ## The Hub is two things at once
 
@@ -283,7 +287,7 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-240 tests, all characterisation tests. They pin the mapping as it stands, not
+264 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
