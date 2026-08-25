@@ -60,6 +60,11 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
             name=self._title,
             model=modelInfos["name"],
             serial_number=self.coordinator.get_serial_number(),
+            # The firmware the device reports (capability 121). It is worth
+            # having on the device rather than only as a diagnostic entity:
+            # "which version is this box on" is the first line of a bug
+            # report, and None here just leaves the field empty.
+            sw_version=self.coordinator.get_software_version(),
         )
         # Hang the device under its gateway when that is set up too, instead
         # of leaving every room unit at the top of the list. via_device is

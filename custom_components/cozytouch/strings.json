@@ -218,6 +218,7 @@
             "hot_water_showers_expected": { "name": "Hot Water Showers Expected" },
             "hot_water_showers_remaining": { "name": "Hot Water Showers Remaining" },
             "interface_fw":             { "name": "Interface FW" },
+            "last_device_update":       { "name": "Last Device Update" },
             "max_schedule_slots_per_day": { "name": "Max Schedule Slots Per Day" },
             "max_schedule_slots_per_week": { "name": "Max Schedule Slots Per Week" },
             "max_target_temperature_derogation": { "name": "Max Target Temperature Derogation" },

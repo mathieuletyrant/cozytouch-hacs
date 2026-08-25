@@ -61,9 +61,13 @@ config entry ──> Hub (DataUpdateCoordinator + API client)
  climate  sensor   switch  number   select  datetime   binary_sensor
 ```
 
-`binary_sensor` is the odd one out: it is not capability-driven at all. It
-builds exactly one entity per entry, a connectivity sensor reflecting
-`hub.online`.
+Two entities are not capability-driven, and so are not in that fan-out.
+`binary_sensor` builds exactly one per entry, a connectivity sensor reflecting
+`hub.online`. The sensor platform builds one more beside its capability
+entities: a `timestamp` diagnostic carrying the newest `modificationDate` the
+device reports, which is what says whether the hardware is still talking to
+Atlantic's cloud when a reading has stopped moving. It is created only when the
+device actually reports a date, the same rule the model flags follow.
 
 ## The Hub is two things at once
 
@@ -324,17 +328,20 @@ two entries meaning the same thing in the same picker.
 
 ## Testing
 
-285 tests, all characterisation tests. They pin the mapping as it stands, not
+332 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
-Almost all of them are table tests. The exception is
-`tests/test_sensor_values.py`, which pins what the value builders in
-`sensor.py` return character for character — the zero padding, the double space
-before a temperature, a float setpoint still reading as a whole number. That
-file renders the strings people actually look at and had no tests at all, which
-is how a formatting change can be both invisible in review and visible on every
-dashboard.
+Almost all of them are table tests. The exceptions are the two that cover
+`sensor.py`. `tests/test_sensor_values.py` pins what the value builders return
+character for character — the zero padding, the double space before a
+temperature, a float setpoint still reading as a whole number. That file
+renders the strings people actually look at and had no tests at all, which is
+how a formatting change can be both invisible in review and visible on every
+dashboard. `tests/test_sensor_metadata.py` covers what the platform says about
+a value rather than the value: it drives `async_setup_entry` with a hub
+stand-in and asserts the state class and device class each capability type
+comes out with, including that the pair is one Home Assistant accepts.
 
 **Nothing tests `hub.py`** — not the reconnect path, not token expiry, not the
 write-execution polling — so the invariants this document states about them are
