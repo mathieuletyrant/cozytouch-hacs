@@ -81,14 +81,20 @@ def make_entry(
     unmapped=(101, 102),
     account=None,
     entry_id="entry",
+    deviceName=None,
 ):
-    """An entry whose hub reports one model and sees the given account."""
+    """An entry whose hub reports one model and sees the given account.
+
+    `deviceName` matters for one kind of device: a zone is recognised by the
+    name the API gives it rather than by its model id, so a hub that does not
+    hand the name over reports it as unmapped.
+    """
     if account is None:
         account = [modelId] if modelId is not None else []
 
     hub = SimpleNamespace(
         get_model_id=lambda: modelId,
-        get_model_infos=lambda: get_model_infos(modelId),
+        get_model_infos=lambda: get_model_infos(modelId, None, deviceName),
         get_unmapped_models=lambda: sorted(account),
         get_capability_names=lambda: ({}, list(unmapped)),
     )
@@ -143,6 +149,9 @@ def test_the_model_ids_these_cases_rest_on_still_mean_what_they_say():
     assert get_model_infos(MAPPED_MODEL)["type"].name != "UNKNOWN"
     assert get_model_infos(UNMAPPED_MODEL)["type"].name == "UNKNOWN"
     assert get_model_infos(OTHER_UNMAPPED_MODEL)["type"].name == "UNKNOWN"
+    # And the zone the case below rests on is mapped through its *name*, which
+    # is the whole reason it stops asking.
+    assert get_model_infos(1505, None, "THZONE_0")["type"].name == "ZONE"
 
 
 def test_an_unmapped_model_asks_the_user_for_a_report(monkeypatch):
@@ -190,6 +199,19 @@ def test_a_mapped_model_clears_the_issue_rather_than_raising_one(monkeypatch):
 
     assert registry.created == []
     assert registry.deleted == [("cozytouch", f"unknown_model_{MAPPED_MODEL}")]
+
+
+def test_a_zone_is_not_a_device_to_report(monkeypatch):
+    """A THZONE is a zone of a ducted heat pump, and a six-zone installation
+    used to raise this dialog six times over hardware working as designed --
+    asking for a dump about something nobody needs to map.
+    """
+    entry = make_entry(modelId=1505, deviceName="THZONE_0")
+
+    registry = check(monkeypatch, 1505, entry)
+
+    assert registry.created == []
+    assert registry.deleted == [("cozytouch", "unknown_model_1505")]
 
 
 def test_a_model_already_reported_is_not_asked_about_again(monkeypatch):

@@ -803,6 +803,61 @@ def test_a_zone_name_replaces_the_numbered_name(modelId):
     )
 
 
+# --------------------------------------------------------------- the zones
+
+
+@pytest.mark.parametrize(
+    ("modelId", "deviceName"),
+    [
+        (1505, "THZONE_0"),
+        (1510, "THZONE_5"),
+        # A zone the captured range would have missed. The ids look like they
+        # count the zones rather than name a product -- 1505 is THZONE_0, 1506
+        # is THZONE_1 -- so an installation with more zones than the one that
+        # was captured walks off the end of any range guessed from it.
+        (1512, "THZONE_7"),
+        (999999, "THZONE_2"),
+    ],
+)
+def test_a_zone_is_recognised_by_the_name_the_api_gives_it(modelId, deviceName):
+    assert get_model_infos(modelId, None, deviceName)["type"] is (
+        CozytouchDeviceType.ZONE
+    )
+
+
+def test_the_name_outranks_a_mapped_product_id():
+    """Checked before the id chain on purpose: an id that also belongs to a
+    real product would otherwise turn a zone into a heat pump.
+    """
+    assert get_model_infos(76, None, "THZONE_2")["type"] is CozytouchDeviceType.ZONE
+    assert get_model_infos(76)["type"] is CozytouchDeviceType.HEAT_PUMP
+
+
+def test_a_named_room_replaces_the_api_name():
+    """A household that named the zone gets the room; one that did not keeps
+    what the app shows, which is better than a number of our own invention.
+    """
+    assert get_model_infos(1505, "Chambre", "THZONE_0")["name"] == "Zone (Chambre)"
+    assert get_model_infos(1505, None, "THZONE_0")["name"] == "THZONE_0"
+
+
+def test_a_zone_claims_no_hvac_mode():
+    """It reports no climate capability, so there is nothing to claim -- and the
+    unknown fall-through's {OFF, HEAT} is what made a zone read as a thermostat
+    that could heat.
+    """
+    assert get_model_infos(1505, None, "THZONE_0")["HVACModes"] == {}
+    assert get_model_infos(424242)["HVACModes"] != {}
+
+
+def test_an_id_on_its_own_is_not_a_zone():
+    """The limit of keying on the name: a caller that does not pass one gets
+    the fall-through, which is why hub.py hands the device name to every
+    lookup it makes.
+    """
+    assert get_model_infos(1505)["type"] is CozytouchDeviceType.UNKNOWN
+
+
 def test_an_unmapped_model_falls_through_to_unknown():
     """A device nobody has mapped still yields a usable, clearly labelled entry."""
     infos = get_model_infos(424242)
