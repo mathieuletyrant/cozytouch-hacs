@@ -2,7 +2,8 @@
     "entity": {
         "calendar": {
             "heating_program": { "default": "mdi:calendar-clock" },
-            "cooling_program": { "default": "mdi:calendar-clock" }
+            "cooling_program": { "default": "mdi:calendar-clock" },
+            "hot_water_program": { "default": "mdi:calendar-clock" }
         },
         "climate": {
             "air_conditioner": {

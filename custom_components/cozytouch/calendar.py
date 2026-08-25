@@ -15,9 +15,25 @@ from homeassistant.util import dt as dt_util
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
 from .sensor import device_info_for
-from .services import DAYS, PROGRAM_FIRST_CAPABILITY, parse_slots
+from .services import DAYS, parse_slots
 
 _LOGGER = logging.getLogger(__name__)
+
+# The three weekly programs these devices hold, by the first capability of each
+# seven-day run: heating and cooling on a boiler or an air conditioner, hot
+# water on a water heater. A device gets a calendar per block it reports, which
+# in practice means one or two of them.
+#
+# Deliberately its own table rather than `services.PROGRAM_FIRST_CAPABILITY`,
+# which knows 196 and 203 only. Reading a program and writing one are not the
+# same risk: what the second member of a hot-water slot means has never been
+# confirmed against a capture, and writing a block on that basis could leave a
+# water heater running a program it never had. Reading it costs nothing, and
+# the prog sensors have rendered 237-243 as a time and a setpoint for as long
+# as they have existed -- this shows the same reading, in a form you can look
+# at. `set_schedule` still refuses the block, and should until a capture says
+# otherwise.
+PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
 
 # How far either side of now to look when answering "what is running". A day
 # each way rather than from midnight: the last slot of a day runs into the next
@@ -42,7 +58,7 @@ async def async_setup_entry(
             config_uniq_id=config_entry.entry_id,
             program=program,
         )
-        for program, first in PROGRAM_FIRST_CAPABILITY.items()
+        for program, first in PROGRAM_BLOCKS.items()
         if _reports_the_whole_block(hub, first)
     ]
 
@@ -95,13 +111,13 @@ class CozytouchProgramCalendar(CoordinatorEntity, CalendarEntity):
         super().__init__(coordinator)
 
         self._program = program
-        self._first_capability = PROGRAM_FIRST_CAPABILITY[program]
+        self._first_capability = PROGRAM_BLOCKS[program]
         self._device_uniq_id = config_uniq_id
-        # `heating` and `cooling` are the service's words for the two blocks,
-        # kept here so one vocabulary covers both. capability.py calls 203-209
-        # the zone 2 program outside air conditioners, which is the same
-        # unresolved naming set_schedule carries; the program exists in both
-        # cool and heat, so nothing here decides it either.
+        # `heating` and `cooling` are the service's words for those two
+        # blocks, kept so one vocabulary covers all three. capability.py calls
+        # 203-209 the zone 2 program outside air conditioners, which is the
+        # same unresolved naming set_schedule carries; the program exists in
+        # both cool and heat, so nothing here decides it either.
         self._attr_translation_key = f"{program}_program"
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{program}_program"
 

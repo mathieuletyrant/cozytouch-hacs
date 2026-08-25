@@ -37,7 +37,8 @@
     "entity": {
         "calendar": {
             "heating_program":         { "name": "Programme Chauffage" },
-            "cooling_program":         { "name": "Programme Refroidissement" }
+            "cooling_program":         { "name": "Programme Refroidissement" },
+            "hot_water_program":       { "name": "Programme Eau Chaude" }
         },
         "climate": {
             "air_conditioner":

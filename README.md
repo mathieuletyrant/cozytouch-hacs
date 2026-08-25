@@ -248,11 +248,11 @@ domain the same way.
 
 ### Seeing the program
 
-A device that holds a heating or a cooling program also gets a calendar entity
-for it, named *Heating Program* and *Cooling Program* under the device, so the
-week can be looked at on a dashboard instead of read off seven sensors. Each
-slot is an event running until the next one takes over, and its title is the
-target temperature.
+A device that holds a program also gets a calendar entity for it -- *Heating
+Program*, *Cooling Program*, *Hot Water Program*, whichever of the three it
+reports -- so the week can be looked at on a dashboard instead of read off
+seven sensors. Each slot is an event running until the next one takes over, and
+its title is the target temperature.
 
 They are read-only : a calendar event has a start and an end, a program slot
 has only a start, so writing one back would mean deciding what happens to the
@@ -268,6 +268,11 @@ triggers:
     entity_id: calendar.salon_heating_program
     event: start
 ```
+
+The hot-water program is shown but cannot be written : `Cozytouch: Set a day
+program` covers heating and cooling only, because what the second value of a
+hot-water slot means has never been confirmed on a real device. Reading it back
+is what the hot-water prog sensors have always done.
 
 The times are read in Home Assistant's own timezone. The device stores minutes
 past midnight and nothing in the API says which clock those belong to, so a hub

@@ -27,7 +27,10 @@ from types import SimpleNamespace
 import pytest
 
 from custom_components.cozytouch import calendar as calendar_platform
-from custom_components.cozytouch.calendar import CozytouchProgramCalendar
+from custom_components.cozytouch.calendar import (
+    PROGRAM_BLOCKS,
+    CozytouchProgramCalendar,
+)
 from custom_components.cozytouch.const import DOMAIN
 from homeassistant.util import dt as dt_util
 
@@ -39,6 +42,7 @@ NEXT_MONDAY = datetime.date(2026, 8, 31)
 
 HEATING_MONDAY = 196
 COOLING_MONDAY = 203
+HOT_WATER_MONDAY = 237
 
 PADDING = ",[0,0]" * 8
 
@@ -100,7 +104,7 @@ def build(values):
 
 def calendar_over(day_programs, program="heating"):
     """One calendar, over a block whose days are given by weekday index."""
-    first = HEATING_MONDAY if program == "heating" else COOLING_MONDAY
+    first = PROGRAM_BLOCKS[program]
     values = {first + day: value for day, value in day_programs.items()}
 
     return CozytouchProgramCalendar(
@@ -115,7 +119,7 @@ def events(calendar, start, end):
 # ------------------------------------------------------------ which entities
 
 
-def test_a_device_reporting_both_blocks_gets_both():
+def test_a_device_reporting_two_blocks_gets_two():
     built = build(
         week(HEATING_MONDAY, stored((0, 17))) | week(COOLING_MONDAY, stored((0, 26)))
     )
@@ -130,6 +134,29 @@ def test_a_device_reporting_one_block_gets_one():
     built = build(week(HEATING_MONDAY, stored((0, 17))))
 
     assert [entity.translation_key for entity in built] == ["heating_program"]
+
+
+def test_a_water_heater_gets_its_hot_water_program():
+    """237-243, which the prog sensors already render and the services refuse
+    to write: reading a block is not the same risk as writing one.
+    """
+    built = build(week(HOT_WATER_MONDAY, stored((0, 55))))
+
+    assert [entity.translation_key for entity in built] == ["hot_water_program"]
+
+
+def test_a_device_holding_all_three_programs_gets_three():
+    built = build(
+        week(HEATING_MONDAY, stored((0, 17)))
+        | week(COOLING_MONDAY, stored((0, 26)))
+        | week(HOT_WATER_MONDAY, stored((0, 55)))
+    )
+
+    assert sorted(entity.translation_key for entity in built) == [
+        "cooling_program",
+        "heating_program",
+        "hot_water_program",
+    ]
 
 
 def test_a_device_reporting_no_program_gets_no_calendar():
@@ -309,14 +336,30 @@ def test_no_program_means_nothing_running(monkeypatch):
 # --------------------------------------------------------------- the identity
 
 
-def test_the_calendars_are_keyed_on_the_entry_and_the_block():
-    heating, cooling = (
-        calendar_over({0: stored((0, 17))}, program=program)
-        for program in ("heating", "cooling")
+@pytest.mark.parametrize("program", list(PROGRAM_BLOCKS))
+def test_the_calendars_are_keyed_on_the_entry_and_the_block(program):
+    calendar = calendar_over({0: stored((0, 17))}, program=program)
+
+    assert calendar.unique_id == f"{DOMAIN}_entry123_{program}_program"
+
+
+@pytest.mark.parametrize(("program", "first"), list(PROGRAM_BLOCKS.items()))
+def test_monday_is_the_first_capability_of_every_block(program, first):
+    """The three runs are seven consecutive ids each, monday first."""
+    entry = SimpleNamespace(
+        runtime_data=make_hub({first + day: stored((0, 17)) for day in range(7)}),
+        data={"deviceId": 27906641},
+        title="Salon",
+        entry_id="entry123",
+    )
+    entities = []
+    asyncio.run(
+        calendar_platform.async_setup_entry(
+            None, entry, lambda new, update_before_add: entities.extend(new)
+        )
     )
 
-    assert heating.unique_id == f"{DOMAIN}_entry123_heating_program"
-    assert cooling.unique_id == f"{DOMAIN}_entry123_cooling_program"
+    assert [entity.translation_key for entity in entities] == [f"{program}_program"]
 
 
 def test_a_calendar_lands_on_the_same_device_as_the_entities():

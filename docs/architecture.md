@@ -67,16 +67,24 @@ Three entities are not capability-driven, and so are not in that fan-out.
 entities: a `timestamp` diagnostic carrying the newest `modificationDate` the
 device reports, which is what says whether the hardware is still talking to
 Atlantic's cloud when a reading has stopped moving. And `calendar` builds one
-per program block — heating (196-202) and cooling (203-209) — expanding the
-seven stored days over real dates. All three follow the same rule: they exist
-only when the device reports what they read, which for the calendar means all
-seven days of a block rather than any of them, since a missing day would read
-as an unscheduled one.
+per program block the device reports — heating (196-202), cooling (203-209),
+hot water (237-243) — expanding the seven stored days over real dates. All
+three follow the same rule: they exist only when the device reports what they
+read, which for the calendar means all seven days of a block rather than any of
+them, since a missing day would read as an unscheduled one.
 
-The calendar is read-only. An event has a start and an end; a program slot has
-only a start, and the next slot is what ends it, so writing one back would mean
-deciding what happens to the slots after it. That decision belongs to
-`set_schedule`, which is where somebody said it out loud.
+The calendar's block table is its own, and wider than the services': while
+`set_schedule` and `get_schedule` know 196 and 203, it knows 237 as well. The
+asymmetry is deliberate — reading a program and writing one are not the same
+risk. What the second member of a hot-water slot means has never been confirmed
+against a capture, and writing the block on that basis could leave a water
+heater running a program it never had; showing what the prog sensors have
+rendered all along costs nothing.
+
+It is read-only for a second reason too. An event has a start and an end; a
+program slot has only a start, and the next slot is what ends it, so writing
+one back would mean deciding what happens to the slots after it. That decision
+belongs to `set_schedule`, which is where somebody said it out loud.
 
 ## The Hub is two things at once
 
@@ -342,7 +350,7 @@ two entries meaning the same thing in the same picker.
 
 ## Testing
 
-358 tests, all characterisation tests. They pin the mapping as it stands, not
+365 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 

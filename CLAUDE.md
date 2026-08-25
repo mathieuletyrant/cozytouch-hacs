@@ -106,7 +106,8 @@ capture, so a test going green says "nobody changed this by accident", never
   than for a fixed length and that the last of the day runs to midnight, that
   the week repeats over a range, that a slot which began before the window is
   still the one in charge at its start, and that a calendar exists only for a
-  block the device reports in full. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
+  block the device reports in full -- one case per block, since the three runs
+  (196, 203, 237) are the whole of what it reads. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
   test process, which is what makes the expected datetimes readable.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
