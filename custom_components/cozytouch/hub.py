@@ -62,6 +62,11 @@ class CozytouchRuntimeData:
     hubs: dict[str, Hub]
     coordinator: AccountCoordinator
 
+# The capability carrying the firmware version, named `version` by
+# capability.py. Read by id here because the device registry wants a string on
+# the device, not an entity somewhere in the list.
+SOFTWARE_VERSION_CAPABILITY_ID = 121
+
 
 # A config entry that carries its account and hubs, so platforms can read them
 # off the entry instead of looking them up in hass.data by id.
@@ -196,6 +201,23 @@ class AccountCoordinator(DataUpdateCoordinator):
         """
         for hub in self._hubs.values():
             hub.async_set_update_error(err)
+
+def as_epoch(value) -> int | None:
+    """A modificationDate as an int, or None when it says nothing.
+
+    Anything missing, unparsable or at or below zero comes back None rather
+    than as a date in 1970. The field is undocumented -- there is no catalogue
+    to check it against, docs/api-surface.md says so -- so what it holds on
+    hardware nobody has captured is a guess, and a wrong timestamp on a
+    dashboard is worse than an empty one. A string is tolerated because `value`
+    arrives from this API as one, which makes a stringified date unsurprising.
+    """
+    try:
+        epoch = int(float(value))
+    except (TypeError, ValueError):
+        return None
+
+    return epoch if epoch > 0 else None
 
 
 class Hub(DataUpdateCoordinator):
@@ -385,7 +407,9 @@ class Hub(DataUpdateCoordinator):
                                 zoneId = masterDev["zoneId"]
                                 break
 
-                return get_model_infos(dev["modelId"], self.get_zone_name(zoneId))
+                return get_model_infos(
+                    dev["modelId"], self.get_zone_name(zoneId), dev.get("name")
+                )
 
         return get_model_infos(-1)
 
@@ -414,6 +438,16 @@ class Hub(DataUpdateCoordinator):
                 return dev["gatewaySerialNumber"]
 
         return "Unknown"
+
+    def get_software_version(self) -> str | None:
+        """The firmware version the device reports about itself, if it does.
+
+        Only for the device this entry drives: capabilities are kept for that
+        one alone. Devices that do not report 121 -- the gateways among them --
+        get None, which leaves the registry field empty rather than filling it
+        with a guess.
+        """
+        return self.get_capability_value(SOFTWARE_VERSION_CAPABILITY_ID, None)
 
     def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
         """Identifiers of the gateway this device hangs off, when HA has it.
@@ -453,7 +487,9 @@ class Hub(DataUpdateCoordinator):
         capabilities = []
         for dev in self._account.devices:
             if dev["deviceId"] == deviceId:
-                modelInfos = get_model_infos(dev["modelId"])
+                modelInfos = get_model_infos(
+                    dev["modelId"], deviceName=dev.get("name")
+                )
                 availableCapabilityIds = {
                     cap["capabilityId"] for cap in dev["capabilities"]
                 }
@@ -508,7 +544,7 @@ class Hub(DataUpdateCoordinator):
             if dev["deviceId"] != deviceId:
                 continue
 
-            modelInfos = get_model_infos(dev["modelId"])
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             availableCapabilityIds = {
                 cap["capabilityId"] for cap in dev["capabilities"]
             }
@@ -557,7 +593,7 @@ class Hub(DataUpdateCoordinator):
 
         devices = []
         for dev in self._account.devices:
-            modelInfos = get_model_infos(dev["modelId"])
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             mapped, unmapped = self.get_capability_names(dev["deviceId"])
 
             devices.append(
@@ -592,6 +628,18 @@ class Hub(DataUpdateCoordinator):
                             cap["capabilityId"]: cap["value"]
                             for cap in dev["capabilities"]
                         },
+                        # The API's own third field, under the API's own name.
+                        # The values say what a capability holds; these say
+                        # when the device last changed it, which is what tells
+                        # a value that is wrong from an id the hardware never
+                        # feeds at all -- the question every
+                        # unmapped-capability report runs into.
+                        "modificationDates": {
+                            cap["capabilityId"]: as_epoch(
+                                cap.get("modificationDate")
+                            )
+                            for cap in dev["capabilities"]
+                        },
                     },
                 }
             )
@@ -615,6 +663,43 @@ class Hub(DataUpdateCoordinator):
                 return defaultIfNotExist
 
         return None
+
+    def get_capability_modification_date(self, capabilityId: int) -> int | None:
+        """When the device last changed one capability, as the API says.
+
+        `modificationDate` is the third field of every capability item and the
+        one nothing has ever read -- docs/api-surface.md records it as
+        available and unused. It is already here: the poll copies each item
+        whole, so this costs no request.
+        """
+        for dev in self._account.devices:
+            if dev["deviceId"] == self._deviceId:
+                for capability in dev["capabilities"]:
+                    if capabilityId == capability["capabilityId"]:
+                        return as_epoch(capability.get("modificationDate"))
+
+        return None
+
+    def get_last_modification_date(self) -> int | None:
+        """The newest modification date this device reports, if it reports one.
+
+        The whole device rather than one capability, because the question this
+        answers is whether the hardware is still talking to Atlantic's cloud --
+        and one capability can legitimately sit unchanged for hours, so the
+        newest of all of them is the only honest reading of "still reporting".
+
+        None means nothing on the device carries a usable date, which is why
+        the sensor built from this is not created at all in that case rather
+        than sitting there empty.
+        """
+        dates = [
+            as_epoch(capability.get("modificationDate"))
+            for dev in self._account.devices
+            if dev["deviceId"] == self._deviceId
+            for capability in dev["capabilities"]
+        ]
+
+        return max([date for date in dates if date is not None], default=None)
 
     async def set_capability_value(self, capabilityId: int, value: str):
         """Set value for a device capability."""

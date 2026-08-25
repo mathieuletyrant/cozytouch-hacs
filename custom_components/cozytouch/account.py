@@ -703,13 +703,20 @@ class CozytouchAccount:
             for dev in self.devices
         ]
 
-    def get_zone_name(self, zoneId: int | None) -> str:
-        """Get zone infos."""
+    def get_zone_name(self, zoneId: int | None) -> str | None:
+        """What the account calls a zone, or None when it does not name it.
+
+        None rather than the id as a string, which is what this used to answer.
+        Every caller puts the result in front of somebody -- a device name, a
+        line in a diagnostics dump -- and "Zone (1030104)" is a worse name than
+        no name at all: the id is ours to join on, not a room anybody
+        recognises. The callers decide what to show instead.
+        """
         for zone in self.zones:
             if "id" in zone and zone["id"] == zoneId:
                 return zone["name"]
 
-        return str(zoneId)
+        return None
 
     def get_unmapped_models(self) -> list[int]:
         """Every model id on the account the table has no branch for.
@@ -721,7 +728,11 @@ class CozytouchAccount:
         unmapped = {
             dev["modelId"]
             for dev in self.devices
-            if get_model_infos(dev["modelId"])["type"] is CozytouchDeviceType.UNKNOWN
+            # The name, because a zone is recognised by it rather than by an
+            # id: without it a THZONE reads as an unknown product and the
+            # repair asks for a dump about it, once per zone.
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+            is CozytouchDeviceType.UNKNOWN
         }
 
         return sorted(unmapped)

@@ -30,6 +30,38 @@ MAPPED_MODEL_IDS = frozenset(
 )
 
 
+# The two capabilities a THZONE was captured reporting, and nothing else.
+THZONE_CAPABILITIES = {218, 100014}
+
+
+def test_a_zone_gets_no_wifi_sensor():
+    """218 reads "0" on a zone whose `isAvailable` is true, so the sensor would
+    sit at disconnected for good and contradict the device it belongs to. The
+    radio belongs to the gateway the zone hangs off.
+    """
+    zone = get_capability_infos(
+        get_model_infos(1505, None, "THZONE_0"), 218, "0", THZONE_CAPABILITIES
+    )
+    thermostat = get_capability_infos(get_model_infos(418), 218, "0", {218})
+
+    assert zone == {}
+    assert thermostat["name"] == "wifi_connected"
+
+
+def test_a_zone_maps_to_nothing_at_all():
+    """Which is the honest answer for it: a zone is a name and a place in the
+    device tree, not a thing with readings. Naming the model is what stops it
+    reading as an unknown product and asking for a report about itself.
+    """
+    zone = get_model_infos(1505, None, "THZONE_0")
+    resolved = [
+        get_capability_infos(zone, capabilityId, "0", THZONE_CAPABILITIES)
+        for capabilityId in sorted(THZONE_CAPABILITIES)
+    ]
+
+    assert all(not infos for infos in resolved)
+
+
 def test_the_table_maps_the_models_these_tests_walk():
     """A sanity floor: the walk above found the table, not an empty range."""
     assert len(MAPPED_MODEL_IDS) == 63

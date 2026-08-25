@@ -87,9 +87,18 @@ both places capabilities appear -- embedded in `setupviewv2` and from
 `/magellan/capabilities/`. `capability.py` stays reverse-engineered from
 captures; there is nothing to fetch that would replace it.
 
-`modificationDate` is a per-capability epoch of the last change. The
-integration reads only `capabilityId` and `value`, so this one is available and
-unused. No feature needs it yet.
+`modificationDate` is a per-capability epoch of the last change, and it is now
+read: `Hub.get_capability_modification_date` answers for one capability,
+`get_last_modification_date` for the newest on a device, and the diagnostics
+dump carries all of them beside the values. It costs no request -- the poll
+already copies each item whole -- and it is the only thing in the payload that
+distinguishes a value that is wrong from an id the hardware never feeds.
+
+What it does *not* establish is what a normal silence looks like. Nothing says
+how often a device that is working reports, so nothing here decides when one
+has gone quiet; the dates are surfaced and the judgement is left to whoever
+reads them. Answering that needs dumps from hardware sitting idle, which is
+what putting the dates in the dump is for.
 
 ## Devices: the server names only the gateway
 
