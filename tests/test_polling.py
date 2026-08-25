@@ -479,6 +479,9 @@ def hub_over(account, deviceId=1):
     hub._timestamps_away_mode_capability_id = None
     hub._timestamp_away_mode_start = None
     hub._timestamp_away_mode_end = None
+    # The commit path now also seeds the staged window from the device, which
+    # reads the away capability through this cache.
+    hub._away_mode_capabilities = False
 
     return hub
 

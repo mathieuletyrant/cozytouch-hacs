@@ -1,13 +1,11 @@
 """Switches for Atlantic Cozytouch integration."""
 from __future__ import annotations
 
-from datetime import datetime
 import logging
 
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
@@ -159,29 +157,19 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         return self._state
 
     async def async_turn_on(self):
-        """Turn On method."""
-        timestampStart = self.coordinator.get_away_mode_start()
-        timestampEnd = self.coordinator.get_away_mode_end()
+        """Turn On method.
 
-        # If timestamps range is invalid, start it next minute for 2 days
-        if (
-            timestampStart is None
-            or timestampEnd is None
-            or timestampStart == 0
-            or timestampEnd == 0
-            or timestampStart > timestampEnd
-        ):
-            timestampStart = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp() + 60
-            timestampEnd = timestampStart + (2 * 24 * 60 * 60)
-
+        The window and the fallback for an unset one both live on the hub now,
+        which is what the two services and the climate preset go through as
+        well -- this used to hold the only copy of "a minute out, for two
+        days", and a switch is a poor place for the household's idea of how
+        long an absence lasts.
+        """
         self._nb_ignore = 5
         self._state = True
-        await self.coordinator.set_away_mode_timestamps(
-            self._capability["capabilityId"],
-            self._value_on,
-            self._capability["timestampsCapabilityId"],
-            int(timestampStart),
-            int(timestampEnd),
+        await self.coordinator.start_away_mode(
+            self.coordinator.get_away_mode_start(),
+            self.coordinator.get_away_mode_end(),
         )
         self._nb_ignore = 1
         await self.coordinator.async_request_refresh()
@@ -190,13 +178,7 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         """Turn Off method."""
         self._nb_ignore = 5
         self._state = False
-        await self.coordinator.set_away_mode_timestamps(
-            self._capability["capabilityId"],
-            self._value_off,
-            self._capability["timestampsCapabilityId"],
-            None,
-            None,
-        )
+        await self.coordinator.stop_away_mode()
         self._nb_ignore = 1
         await self.coordinator.async_request_refresh()
 

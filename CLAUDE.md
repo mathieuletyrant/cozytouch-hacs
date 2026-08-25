@@ -104,6 +104,14 @@ capture, so a test going green says "nobody changed this by accident", never
   dashboard, so **the assertions are the current output, not the nicer output**
   — including one case pinned as wrong on purpose, the timezone offset applied
   twice. Changing any of these should mean changing a test in the same commit.
+- `tests/test_away_mode.py` — the door in front of away mode : that a window
+  named as a duration, as an end or not at all becomes the same three writes,
+  that an unusable pair falls back to the switch's own default rather than
+  writing it, that a setpoint is written before the window opens and refused
+  rather than clamped, that the window the device holds is read back into the
+  staged pair without undoing an edit in progress, and that the climate `away`
+  preset is offered on what the device reports rather than on what the climate
+  capability carries. It is the only cover `services.py` has on this branch.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

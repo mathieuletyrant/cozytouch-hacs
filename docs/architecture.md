@@ -202,6 +202,25 @@ set both ends before either is sent. The switch entity compensates for the
 API lagging behind by ignoring the reported value for a few reads
 (`_nb_ignore`).
 
+That staging is a *user interface* concern, and for a while it was the only
+way in, which made away mode unreachable from an automation: two datetime
+entities, a 20-second wait and a switch, in that order. `Hub.start_away_mode`
+and `stop_away_mode` are the door in front of the same three writes — the PUT,
+the mirror into the timestamps capability, the mode flag — and everything goes
+through them now: the switch, `cozytouch.set_away_mode` /
+`cozytouch.clear_away_mode`, and the climate `away` preset. The default window
+for a call that names none (a minute out, for two days) lives there too; the
+switch used to hold the only copy.
+
+The reverse direction was missing outright. The datetime entities report the
+*staged* pair, and nothing but an edit ever wrote it, so after a restart they
+read unknown even on a device in the middle of an absence — and a window set
+by the app or by the service never appeared at all. `_seed_away_mode_from_device`
+fills the pair from the timestamps capability, on the same paths that commit a
+staged window and only when nothing is staged, which is what keeps a poll from
+undoing an edit in progress. `away_mode_init` was written for this and never
+called from anywhere; it is gone.
+
 ## The model table
 
 `get_model_infos(modelId, zoneName=None)` is one long `if/elif` returning a
@@ -381,11 +400,21 @@ depend on which hub produced it.
 
 ## The services
 
-One service, `cozytouch.set_schedule`, writes a weekly program. A day is a
+`cozytouch.set_schedule` writes a weekly program. A day is a
 `[[minutes, temperature], …]` matrix of ten slots, unused ones `[0, 0]`, and
 the days are seven consecutive capability ids — 196 for heating Monday, 203
 for cooling Monday. The service validates that the first slot starts at 00:00,
 since otherwise the start of the day would have no target.
+
+`cozytouch.set_away_mode` and `cozytouch.clear_away_mode` open and close an
+absence window. The window can be said as an end or as a duration — never
+both, which the schema enforces rather than picking a winner — and a call that
+says neither takes the hub's default. `temperature` writes the absence setpoint
+*before* the window opens, so the absence does not start on the setpoint it was
+about to replace; it is refused rather than clamped when it falls outside what
+the device accepts, and refused outright on hardware the table knows ignores it
+(capability 172 on air conditioners). Both services go through the hub door
+above, so what they write is what the switch writes.
 
 It resolves the hub through the entity registry rather than `hass.data`, which
 lets it tell apart "that entity belongs to another integration" from "that is
@@ -394,7 +423,7 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-265 tests, most of them characterisation tests. They pin the mapping as it
+330 tests, most of them characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
 correct".
@@ -449,6 +478,7 @@ from it when a change makes an entry untrue.
   The unit string is `dB`, which is valid for the device class, but it is
   reached through the sound-pressure enum.
 - **The away-mode timestamp sensor applies the device's timezone offset twice.**
+  (The services do not: they turn a datetime into an epoch, which is absolute.)
   `CozytouchAwayModeTimestampSensor.get_value` adds the offset the device
   reports to the unix timestamp, then formats the sum with a bare
   `datetime.fromtimestamp()` — which reads it in Home Assistant's local zone,

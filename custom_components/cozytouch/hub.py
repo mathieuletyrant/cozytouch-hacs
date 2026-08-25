@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timedelta
+import json
 import logging
 
 from homeassistant.config_entries import ConfigEntry
@@ -22,6 +23,16 @@ from .const import DOMAIN
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
+
+# What an away window defaults to when nobody said: it opens a minute out,
+# because a window that opens at the instant of the write opens before the
+# device has heard about it, and it runs two days, which is the fallback the
+# away-mode switch has always used.
+AWAY_START_DELAY = 60
+DEFAULT_AWAY_DURATION = 2 * 24 * 60 * 60
+# The same two, for the callers that work in datetimes rather than epochs.
+AWAY_START_DELAY_DELTA = timedelta(seconds=AWAY_START_DELAY)
+DEFAULT_AWAY_DURATION_DELTA = timedelta(seconds=DEFAULT_AWAY_DURATION)
 
 # How often the account asks Atlantic for the setup view.
 #
@@ -247,6 +258,10 @@ class Hub(DataUpdateCoordinator):
         self._timestamp_away_mode_start = None
         self._timestamp_away_mode_end = None
         self._timestamps_away_mode_capability_id = None
+        # Looked up once through the capability table, not at every poll : a
+        # device does not change model while it runs. `False` is "not looked
+        # up yet", None is "this device has no away mode".
+        self._away_mode_capabilities = False
 
     @property
     def account(self) -> CozytouchAccount:
@@ -337,9 +352,15 @@ class Hub(DataUpdateCoordinator):
         which, and hanging it off neither would have made a staged window sit
         there for good.
         """
+        if self._timestamp_away_mode_last_change is None:
+            # Nothing staged, so nothing to commit -- and the moment where the
+            # window the device holds can be read into the pair the datetime
+            # entities show, without any risk of undoing an edit in progress.
+            self._seed_away_mode_from_device()
+            return
+
         if (
-            self._timestamp_away_mode_last_change is None
-            or self._timestamps_away_mode_capability_id is None
+            self._timestamps_away_mode_capability_id is None
             or self._timestamp_away_mode_start is None
             or self._timestamp_away_mode_end is None
         ):
@@ -642,10 +663,154 @@ class Hub(DataUpdateCoordinator):
 
                 return
 
-    def away_mode_init(self, timestampStart, timestampEnd):
-        """Init away mode timestamps."""
-        self._timestamp_away_mode_start = timestampStart
-        self._timestamp_away_mode_end = timestampEnd
+    def get_away_mode_capabilities(self) -> dict | None:
+        """The away mode of this device, as the capability table describes it.
+
+        Three things have to line up to write a window -- the mode capability
+        (152 or 227), the timestamps capability it points at (222 or 226), and
+        the values that mean on and off -- and only `capability.py` knows how
+        they pair per model. So this asks the table rather than hard-coding the
+        pairing a second time, and returns None for a device that has no away
+        mode at all. Looked up once: a device does not change model while it
+        runs.
+        """
+        if self._away_mode_capabilities is False:
+            self._away_mode_capabilities = None
+            for capability in self.get_capabilities_for_device():
+                if capability.get("type") != "away_mode_switch":
+                    continue
+
+                self._away_mode_capabilities = {
+                    "modeCapabilityId": capability["capabilityId"],
+                    "timestampsCapabilityId": capability["timestampsCapabilityId"],
+                    "value_on": capability.get("value_on", "1"),
+                    "value_off": capability.get("value_off", "0"),
+                }
+                break
+
+        return self._away_mode_capabilities
+
+    def get_away_mode_temperature_capability(self) -> dict | None:
+        """The absence setpoint, when this model honours one.
+
+        Capability 172 exists on hardware that ignores it -- an air
+        conditioner stores what is written and never reads it back -- so the
+        table drops it there behind `awayModeTemperatureAvailable`. Asking the
+        table means a caller cannot write a setpoint the device will not act
+        on. The whole capability rather than its id, because what it is allowed
+        to hold lives on it: the bounds are two more capabilities (160 and 161)
+        and only the table knows which.
+        """
+        for capability in self.get_capabilities_for_device():
+            if capability.get("name") == "away_mode_temperature":
+                return capability
+
+        return None
+
+    async def start_away_mode(self, start=None, end=None) -> bool:
+        """Put the device on away mode over a window, and answer whether it went.
+
+        The one door. Three callers want the same three writes -- the switch,
+        the two services and the climate preset -- and before this each carried
+        its own idea of what an unset window means. The fallback is the
+        switch's, kept rather than reinvented: a minute out, for two days,
+        which is what makes "away, from now, until I say otherwise" a single
+        call with no arguments.
+        """
+        away = self.get_away_mode_capabilities()
+        if away is None:
+            return False
+
+        now = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp()
+        # Unusable covers one case more than the switch used to test for: a
+        # window that is already over. Before the staged pair was seeded from
+        # the device it was empty after every restart, so this could not come
+        # up; now the switch offers back whatever the device holds, and last
+        # month's absence would otherwise be re-applied and end immediately.
+        if (
+            start is None
+            or end is None
+            or start <= 0
+            or end <= 0
+            or start > end
+            or end <= now
+        ):
+            start = int(now + AWAY_START_DELAY)
+            end = start + DEFAULT_AWAY_DURATION
+
+        await self.set_away_mode_timestamps(
+            away["modeCapabilityId"],
+            away["value_on"],
+            away["timestampsCapabilityId"],
+            int(start),
+            int(end),
+        )
+
+        return True
+
+    async def stop_away_mode(self) -> bool:
+        """Close the window and take the device off away mode.
+
+        The pair of Nones is how the write path says "no window": `[0,0]` into
+        the timestamps capability and the absence cleared on the setup.
+        """
+        away = self.get_away_mode_capabilities()
+        if away is None:
+            return False
+
+        await self.set_away_mode_timestamps(
+            away["modeCapabilityId"],
+            away["value_off"],
+            away["timestampsCapabilityId"],
+            None,
+            None,
+        )
+
+        return True
+
+    def is_away_mode_on(self) -> bool:
+        """Whether the device says it is on away mode right now."""
+        away = self.get_away_mode_capabilities()
+        if away is None:
+            return False
+
+        value = self.get_capability_value(away["modeCapabilityId"], None)
+
+        return value is not None and value != away["value_off"]
+
+    def _seed_away_mode_from_device(self) -> None:
+        """Read the window the device holds into the staged pair.
+
+        The two datetime entities report the staged values, and nothing but an
+        edit ever wrote them : after a restart they read unknown even on a
+        device sitting in the middle of an absence, and a window set by the
+        service or by the Cozytouch app never showed up at all. `away_mode_init`
+        was written for this and was never called from anywhere.
+
+        Only reached when nothing is staged, which is what makes it safe: a
+        poll landing between the two edits must not undo the first one.
+        """
+        away = self.get_away_mode_capabilities()
+        if away is None:
+            return
+
+        value = self.get_capability_value(away["timestampsCapabilityId"], None)
+        if value is None:
+            return
+
+        try:
+            start, end = json.loads(value)
+            start, end = int(start), int(end)
+        except (TypeError, ValueError):
+            # "[0,0]" parses and means no window; anything else that does not
+            # is a shape nobody has captured, and guessing at it would put a
+            # date on a dashboard that the device never held.
+            return
+
+        # Zero is how the device says "no window", and 1970 is not a date to
+        # show for it.
+        self._timestamp_away_mode_start = start or None
+        self._timestamp_away_mode_end = end or None
 
     async def set_away_mode_start(
         self,

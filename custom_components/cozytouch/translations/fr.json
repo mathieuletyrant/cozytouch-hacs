@@ -409,6 +409,20 @@
         }
     },
     "services": {
+        "clear_away_mode": {
+            "name": "Désactiver le mode absence",
+            "description": "Referme la période d'absence et sort l'appareil du mode absence."
+        },
+        "set_away_mode": {
+            "name": "Activer le mode absence",
+            "description": "Ouvre une période d'absence et met l'appareil en mode absence en un seul appel : la configuration, les horodatages et l'indicateur de mode.",
+            "fields": {
+                "start":       { "name": "Début", "description": "Début de l'absence. Dans une minute par défaut." },
+                "end":         { "name": "Fin", "description": "Fin de l'absence. Celle-ci ou une durée, pas les deux." },
+                "duration":    { "name": "Durée", "description": "Durée de l'absence. Deux jours par défaut." },
+                "temperature": { "name": "Température", "description": "Consigne d'absence, écrite avant l'ouverture de la période. Uniquement sur le matériel qui en tient compte." }
+            }
+        },
         "set_schedule": {
             "name": "Programmer une journée",
             "description": "Écrit le même programme horaire sur un ou plusieurs jours, pour le chauffage ou le refroidissement.",

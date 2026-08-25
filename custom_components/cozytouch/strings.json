@@ -409,6 +409,20 @@
         }
     },
     "services": {
+        "clear_away_mode": {
+            "name": "Stop away mode",
+            "description": "Closes the absence window and takes the device off away mode."
+        },
+        "set_away_mode": {
+            "name": "Start away mode",
+            "description": "Opens an absence window and puts the device on away mode in one call: the setup, the timestamps and the mode flag together.",
+            "fields": {
+                "start":       { "name": "Start", "description": "When the absence begins. Defaults to a minute from now." },
+                "end":         { "name": "End", "description": "When the absence ends. This or a duration, not both." },
+                "duration":    { "name": "Duration", "description": "How long the absence lasts. Defaults to two days." },
+                "temperature": { "name": "Temperature", "description": "Absence setpoint, written before the window opens. Only on hardware that acts on it." }
+            }
+        },
         "set_schedule": {
             "name": "Set a day program",
             "description": "Writes the same time program to one or more days, for heating or cooling.",

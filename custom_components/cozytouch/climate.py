@@ -12,6 +12,7 @@ from homeassistant.components.climate import (
 )
 from homeassistant.components.climate.const import (
     PRESET_ACTIVITY,
+    PRESET_AWAY,
     PRESET_BOOST,
     PRESET_ECO,
     PRESET_NONE,
@@ -186,6 +187,15 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
         if "boostCapabilityId" in self._capability:
             self._attr_preset_modes.append(PRESET_BOOST)
+
+        # Away is not a capability on the climate entity, it is a window on the
+        # setup -- so it is offered on what the device reports rather than on
+        # what this capability carries. Home Assistant's own vocabulary for an
+        # absence is a preset, which is what makes it reachable from a
+        # thermostat card and from `climate.set_preset_mode`.
+        if self.coordinator.get_away_mode_capabilities() is not None:
+            self._attr_supported_features |= ClimateEntityFeature.PRESET_MODE
+            self._attr_preset_modes.append(PRESET_AWAY)
 
         if "progCapabilityId" in self._capability:
             self._attr_preset_modes.append(PRESET_BASIC)
@@ -388,6 +398,17 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             else:
                 self._attr_preset_mode = PRESET_PROG
 
+        # Last, and deliberately on top of whatever the chain above decided: a
+        # device on away mode is also still in prog or in basic underneath, and
+        # of the two that is the one worth showing. Home Assistant has one slot
+        # for a preset, so this is the honest place to spend it -- the mode the
+        # device is really in stays readable on the away-mode switch.
+        if (
+            PRESET_AWAY in self._attr_preset_modes
+            and self.coordinator.is_away_mode_on()
+        ):
+            self._attr_preset_mode = PRESET_AWAY
+
         self.async_write_ha_state()
 
     @property
@@ -503,6 +524,20 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     async def async_set_preset_mode(self, preset_mode):
         """Set new target preset mode."""
+        if PRESET_AWAY in self._attr_preset_modes:
+            if preset_mode == PRESET_AWAY:
+                # No window said, so the hub's default one: a minute out, for
+                # two days. `cozytouch.set_away_mode` is the way to say when.
+                await self.coordinator.start_away_mode()
+                self._attr_preset_mode = PRESET_AWAY
+                await self.coordinator.async_request_refresh()
+                return
+
+            # Any other preset while away means coming back, and then the
+            # chain below applies what was actually asked for.
+            if self.coordinator.is_away_mode_on():
+                await self.coordinator.stop_away_mode()
+
         activityCapabilityId = self._capability.get("activityCapabilityId", None)
         ecoCapabilityId = self._capability.get("ecoCapabilityId", None)
         boostCapabilityId = self._capability.get("boostCapabilityId", None)

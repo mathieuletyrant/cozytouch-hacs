@@ -35,3 +35,35 @@ set_schedule:
           temperature: 24
       selector:
         object:
+set_away_mode:
+  target:
+    entity:
+      integration: cozytouch
+      domain: climate
+  fields:
+    start:
+      example: "2026-12-24 08:00:00"
+      selector:
+        datetime:
+    end:
+      example: "2027-01-02 18:00:00"
+      selector:
+        datetime:
+    duration:
+      example: "10 00:00:00"
+      selector:
+        duration:
+          enable_day: true
+    temperature:
+      example: 12
+      selector:
+        number:
+          min: 5
+          max: 30
+          step: 0.5
+          unit_of_measurement: "°C"
+clear_away_mode:
+  target:
+    entity:
+      integration: cozytouch
+      domain: climate

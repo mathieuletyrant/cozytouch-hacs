@@ -195,6 +195,50 @@ Only some values are mapped for now, you can select `Create entities for unknown
 > under the account, which means new entity ids, so a dashboard or an
 > automation naming them has to be pointed at the new ones.
 
+## Leaving the house
+
+Away mode is a window : it starts, it ends, and the device holds it itself --
+it keeps running when Home Assistant is off. Setting one used to mean filling
+two datetime entities, waiting twenty seconds for them to be sent together,
+then ticking the away switch. That works with a mouse and not from an
+automation, which is what these two actions are for.
+
+`Cozytouch: Start away mode` opens the window in one call :
+
+```yaml
+- action: cozytouch.set_away_mode
+  target:
+    entity_id: climate.salon
+  data:
+    duration:
+      days: 10
+    temperature: 12
+```
+
+Say the end as a `duration` or as an `end` datetime, not both. Say neither and
+it opens a minute from now for two days, which is what the switch has always
+done. `start` defaults to a minute out for the same reason : a window opening
+at the instant of the write opens before the device has heard about it.
+
+`temperature` is the absence setpoint, written just before the window opens.
+It is refused, rather than quietly moved, if it falls outside what the device
+accepts -- and refused on air conditioners, which report the setpoint and never
+act on it : absence there stops the units until the return date instead.
+
+`Cozytouch: Stop away mode` closes it :
+
+```yaml
+- action: cozytouch.clear_away_mode
+  target:
+    entity_id: climate.salon
+```
+
+The climate entity also carries an `away` preset now, so a thermostat card and
+`climate.set_preset_mode` can do the same thing -- with the default window,
+since a preset has nowhere to say a date. Picking any other preset while away
+comes back first. While the window is in force the preset reads `away` rather
+than the mode underneath it, which stays visible on the away-mode switch.
+
 ## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
