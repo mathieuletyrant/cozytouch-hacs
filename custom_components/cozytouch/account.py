@@ -515,15 +515,36 @@ class CozytouchAccount:
         return False
 
     def device_summaries(self) -> list[dict]:
-        """The devices as a config flow needs to list them."""
-        return [
-            {
-                "deviceId": dev["deviceId"],
-                "name": dev["name"],
-                "model": dev["modelInfos"]["name"],
-            }
-            for dev in self.devices
-        ]
+        """The devices worth offering to somebody adding this integration.
+
+        Zones are left out. A THZONE is one zone of a ducted heat pump, not
+        hardware: it reports no climate capability, no setpoint, and two ids
+        that resolve to nothing, so adding it would create a device with an
+        empty page behind it. Ignoring it outright is the honest answer --
+        there is nothing to drive and nothing to read.
+
+        The model comes from the table rather than from the `modelInfos` filled
+        in when a device first appeared: the same lookup every other caller
+        makes, and the name a zone is recognised *by* can change under a cached
+        one. The raw setup view still holds the zones, and the `dump_json`
+        option writes it out, which is the way back if anybody needs to see
+        what one reports.
+        """
+        summaries = []
+        for dev in self.devices:
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+                continue
+
+            summaries.append(
+                {
+                    "deviceId": dev["deviceId"],
+                    "name": dev["name"],
+                    "model": modelInfos["name"],
+                }
+            )
+
+        return summaries
 
     def get_zone_name(self, zoneId: int | None) -> str | None:
         """What the account calls a zone, or None when it does not name it.
