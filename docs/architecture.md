@@ -140,6 +140,14 @@ The consequence to know when reading `hub.py`: every lookup it makes passes
 `dev["name"]`, because a lookup without one answers `Unknown product` for a
 zone — which would put the repair back.
 
+`get_zone_name` answers **None** when the account does not name a zone, where it
+used to answer the id as a string. Every caller puts the result in front of
+somebody — a device name, a line in a dump — and `Zone (1030104)` is a worse
+name than no name: the id is ours to join on, not a room anybody recognises. A
+zone with no room falls back to the name the app shows (`THZONE_0`), and an air
+conditioner to its position (`Air Conditioner (#1)`), which is what that branch
+already did for a device with no zone at all.
+
 Three kinds of key come back:
 
 - **Identity** — `name`, `type`, `modelId`.
@@ -312,7 +320,7 @@ ours but its entry isn't loaded".
 
 ## Testing
 
-275 tests, all characterisation tests. They pin the mapping as it stands, not
+277 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 
