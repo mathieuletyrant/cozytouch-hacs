@@ -16,6 +16,7 @@ from types import SimpleNamespace
 
 from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.hub import Hub
+from custom_components.cozytouch.model import CozytouchDeviceType
 
 GATEWAY_ID = 27906640
 ROOM_ID = 27906641
@@ -92,3 +93,69 @@ def test_an_unknown_device_id_is_not_linked_to_anything():
     hub = make_hub([device(ROOM_ID, GATEWAY_ID)], deviceId=999999)
 
     assert Hub.get_via_device(hub) is None
+
+
+# --- the zone half of the same payload -------------------------------------
+
+
+def zone_hub():
+    """A hub over the two halves of one capture.
+
+    The device is the THZONE the API reports at deviceId 27906644 with
+    `zoneId: 1030104`; the setup view's `zones` array is what turns that id into
+    a room. Both come from the same install, ids and names included, so this is
+    the wiring as it really arrives rather than a shape invented for a test.
+    """
+    zones = [
+        {"id": 1030103, "name": "Zone 1", "zoneType": 29, "numberOfDevices": 1},
+        {
+            "id": 1030104,
+            "name": "Chambre parentale",
+            "zoneType": 1,
+            "numberOfDevices": 2,
+        },
+    ]
+    account = SimpleNamespace(
+        devices=[
+            {
+                "deviceId": 27906644,
+                "modelId": 1505,
+                "name": "THZONE_0",
+                "zoneId": 1030104,
+                "masterDeviceId": GATEWAY_ID,
+            }
+        ],
+        zones=zones,
+    )
+    # The zone lookup lives on the account, which is what the hub delegates to.
+    account.get_zone_name = lambda zoneId=None: next(
+        (z["name"] for z in account.zones if z.get("id") == zoneId), None
+    )
+
+    hub = object.__new__(Hub)
+    hub._account = account
+    hub._deviceId = 27906644
+    hub._zoneId = 1030104
+
+    return hub
+
+
+def test_a_zone_is_named_after_the_room_the_account_calls_it():
+    """`zoneId` is the join between the device and the room, and it is the
+    difference between a device called THZONE_0 and one called after the
+    bedroom it heats.
+    """
+    infos = Hub.get_model_infos(zone_hub())
+
+    assert infos["name"] == "Zone (Chambre parentale)"
+    assert infos["type"] is CozytouchDeviceType.ZONE
+
+
+def test_a_zone_the_account_has_not_named_keeps_the_name_the_app_shows():
+    """`get_zone_name` answers the id as a string when the zones array has no
+    entry for it, and "Zone (1030104)" is worse than what the app displays.
+    """
+    hub = zone_hub()
+    hub._account.zones = []
+
+    assert Hub.get_model_infos(hub)["name"] == "THZONE_0"

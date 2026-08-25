@@ -104,6 +104,21 @@ capture, so a test going green says "nobody changed this by accident", never
   dashboard, so **the assertions are the current output, not the nicer output**
   — including one case pinned as wrong on purpose, the timezone offset applied
   twice. Changing any of these should mean changing a test in the same commit.
+- `tests/test_sensor_metadata.py` — what the platform declares *about* a value :
+  the state class that decides whether the recorder keeps long-term statistics,
+  and the firmware version that reaches the device registry. It drives
+  `async_setup_entry` rather than restating its table, and checks each
+  device-class/state-class pair against Home Assistant's own compatibility
+  table — the check that catches a combination HA rejects at runtime, which is
+  how the tank volumes ended up as `volume_storage`.
+- `tests/test_freshness.py` — the `modificationDate` every capability carries
+  and nothing used to read : that a date the API sends survives arriving as a
+  string, that nothing useful reads as None rather than as 1970, that a
+  device's date is the *newest* of its capabilities (any one of them can sit
+  unchanged while the hardware keeps reporting), that the sensor exists only
+  when the device reports a date at all, and that the dump carries them per
+  capability. It pins the reading, never a staleness threshold — nothing yet
+  says what a normal silence looks like.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

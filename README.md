@@ -34,6 +34,16 @@ exercised on every variant.
 | 235 | Thermostat Navilink Connect |
 | 418 | Atlantic Loria Duo 6006 |
 
+### Zones / Zones
+
+A zone of a ducted heat pump, recognised by the name the API gives it
+(`THZONE_0`, `THZONE_1`, …) rather than by a model id -- the ids count the zones
+of an installation, so they differ from one house to the next. A zone has no
+readings of its own : it is named, placed under its heat pump in the device
+tree, and that is all it is for. Before this it arrived as
+`Unknown product (1505)` and asked you for a diagnostics dump about it, once
+per zone.
+
 ### Water heaters / Chauffe-eau
 
 | modelId | Model |
