@@ -56,6 +56,11 @@ a candidate floor can run this at all.
 `pip install -r requirements_lint.txt`, then `ruff check .`. CI runs the same
 command and it has to come back clean.
 
+CI runs on pull requests based on `main` **or** on a `claude/**` branch. That
+second one is not decoration: the trigger filters on the *base* branch, so
+before it was added a pull request stacked on another one got no checks at all
+-- which is not the same as passing, and reads exactly like it.
+
 The configuration is `pyproject.toml`, and it is worth reading before arguing
 with a finding : the rules that are off are off for a stated reason, and two of
 them matter here. Naming rules (`N803`/`N806`) are not enabled because the
