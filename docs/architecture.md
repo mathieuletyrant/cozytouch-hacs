@@ -145,13 +145,22 @@ guessed from it. The API's `name` is read rather than `customName`, since
 renaming a zone in the Cozytouch app is a thing people do.
 
 A zone reports two capabilities, neither of which resolves to anything, and no
-climate capability. Mapping it buys a name and silence rather than entities:
-unmapped it read as `Unknown product (1505)` *and* raised an unmapped-model
-repair per zone, asking six times for a diagnostics dump about hardware working
-as designed. `HVACModes` is empty on purpose — the fall-through's off/heat pair
-is what made a zone look like a thermostat that could heat. Capability 218 is
-declined there too: a zone reads "0" for it while the API calls the zone
-available, so the sensor would contradict its own device.
+climate capability. So it is **ignored, not surfaced**: `Hub.devices()` leaves
+it out of what the config flow offers, and `get_diagnostics` leaves it out of
+the dump. Adding one would create a device with an empty page behind it, and a
+dump is read to find hardware that has to be mapped — listing a zone put two
+ids that resolve to nothing, one of them declined on purpose, in front of
+whoever reads it, which reads exactly like work to do. The raw setup view still
+holds them and the `dump_json` option writes it out, which is the way back if
+anybody needs to see what a zone reports.
+
+Recognising the model is still what makes that possible, and it is what stopped
+the noise it used to make: unmapped, a zone read as `Unknown product (1505)`
+*and* raised an unmapped-model repair per zone, asking six times for a dump
+about hardware working as designed. `HVACModes` is empty on purpose — the
+fall-through's off/heat pair is what made a zone look like a thermostat that
+could heat. Capability 218 is declined too: a zone reads "0" for it while the
+API calls the zone available, so the sensor would contradict its own device.
 
 The consequence to know when reading `hub.py`: every lookup it makes passes
 `dev["name"]`, because a lookup without one answers `Unknown product` for a
@@ -383,7 +392,7 @@ two entries meaning the same thing in the same picker.
 
 ## Testing
 
-378 tests, all characterisation tests. They pin the mapping as it stands, not
+380 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 

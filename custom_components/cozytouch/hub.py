@@ -417,14 +417,34 @@ class Hub(DataUpdateCoordinator):
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
 
     def devices(self):
-        """Get devices list."""
+        """The devices worth offering to somebody adding this integration.
+
+        Zones are left out. A THZONE is one zone of a ducted heat pump, not
+        hardware: it reports no climate capability, no setpoint, and two ids
+        that resolve to nothing, so adding it would create a device with an
+        empty page and a repair dialog's worth of noise behind it. Ignoring it
+        outright is the honest answer -- there is nothing to drive and nothing
+        to read.
+
+        The raw setup view still has them, and the `dump_json` option writes it
+        out, which is the way back if anybody ever needs to look at what a zone
+        holds.
+        """
         devs = []
         for dev in self._devices:
+            # Asked of the table rather than read off `dev["modelInfos"]`, which
+            # is filled in when a device first appears : the same lookup every
+            # other caller makes, and the name a zone is recognised by can
+            # change under a cached one.
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+                continue
+
             devs.append(
                 {
                     "deviceId": dev["deviceId"],
                     "name": dev["name"],
-                    "model": dev["modelInfos"]["name"],
+                    "model": modelInfos["name"],
                 }
             )
 
@@ -657,6 +677,15 @@ class Hub(DataUpdateCoordinator):
         """
         devices = []
         for dev in self._devices:
+            # Zones are not hardware anybody has to map, and a dump is read to
+            # find hardware that is. Listing them put two capability ids that
+            # resolve to nothing -- one of them declined on purpose -- in front
+            # of whoever reads it, which reads exactly like work to do.
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))[
+                "type"
+            ] is CozytouchDeviceType.ZONE:
+                continue
+
             modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             entry_owns_it = dev["deviceId"] == self._deviceId
 

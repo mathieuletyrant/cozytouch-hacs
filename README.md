@@ -36,13 +36,16 @@ exercised on every variant.
 
 ### Zones / Zones
 
-A zone of a ducted heat pump, recognised by the name the API gives it
-(`THZONE_0`, `THZONE_1`, …) rather than by a model id -- the ids count the zones
-of an installation, so they differ from one house to the next. A zone has no
-readings of its own : it is named, placed under its heat pump in the device
-tree, and that is all it is for. Before this it arrived as
-`Unknown product (1505)` and asked you for a diagnostics dump about it, once
-per zone.
+A zone of a ducted heat pump is recognised and then **ignored** : it is not
+offered when you add the integration, and it is not in the diagnostics dump. A
+zone has no readings of its own -- no setpoint, no mode, two values that mean
+nothing to anybody -- so there is nothing to drive and nothing to show.
+
+They are recognised by the name the API gives them (`THZONE_0`, `THZONE_1`, …)
+rather than by a model id : the ids count the zones of an installation, so they
+differ from one house to the next. Before this each one arrived as
+`Unknown product (1505)` and asked you for a diagnostics dump about it, once per
+zone.
 
 ### Water heaters / Chauffe-eau
 
