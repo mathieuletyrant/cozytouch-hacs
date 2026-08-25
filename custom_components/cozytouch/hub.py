@@ -593,6 +593,16 @@ class Hub(DataUpdateCoordinator):
 
         devices = []
         for dev in self._account.devices:
+            # Zones are not hardware anybody has to map, and a dump is read to
+            # find hardware that is. Listing them put two capability ids that
+            # resolve to nothing -- one of them declined on purpose -- in front
+            # of whoever reads it, which reads exactly like work to do.
+            if (
+                get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+                is CozytouchDeviceType.ZONE
+            ):
+                continue
+
             modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             mapped, unmapped = self.get_capability_names(dev["deviceId"])
 
