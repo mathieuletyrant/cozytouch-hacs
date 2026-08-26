@@ -1,3 +1,5 @@
+# Why any of the below is what it is -- the installer, the pins, the shape of
+# the matrix -- is in docs/decisions.md.
 name: Tests
 
 on:
@@ -18,16 +20,8 @@ jobs:
       - uses: "actions/setup-python@v5"
         with:
           python-version: "3.14"
-      # pip, not uv, and measured rather than assumed : ruff is one small
-      # wheel, so pip fetches it in about four seconds and installing uv first
-      # to save half of that costs three. The pytest job below is where the
-      # installer is worth changing.
       - name: Install lint requirements
         run: pip install -r requirements_lint.txt
-      # check only, not `ruff format`: the tree is not formatter-clean, and
-      # reformatting it is a separate change that should be reviewed on its own
-      # rather than folded into a lint pass. pyproject.toml says which rules
-      # are off and why.
       - name: Run ruff
         run: ruff check --output-format=github .
 
@@ -35,18 +29,12 @@ jobs:
     name: pytest (HA ${{ matrix.homeassistant }} on Python ${{ matrix.python }})
     runs-on: "ubuntu-latest"
     strategy:
-      # One combination failing should not hide the result of the other: which
-      # of the two broke is the whole diagnostic.
       fail-fast: false
       matrix:
         include:
-          # The pinned environment: what a contributor's venv resolves to and
-          # what CLAUDE.md tells you to build.
           - python: "3.14.2"
             homeassistant: "2026.8.3"
             requirements: "requirements_test.txt"
-          # The floor hacs.json declares. Tested so that the declaration keeps
-          # meaning something.
           - python: "3.12.3"
             homeassistant: "2024.12.0"
             requirements: "requirements_test_min.txt"
@@ -54,34 +42,9 @@ jobs:
       - uses: "actions/checkout@v4"
       - uses: "actions/setup-python@v5"
         with:
-          # Down to the patch, not "3.14": Home Assistant pins its Python floor
-          # that precisely -- 2026.8.3 needs >= 3.14.2 -- so a floating minor
-          # would let the runner image decide which HA is installable, which is
-          # the drift the pinned requirements exist to remove.
           python-version: "${{ matrix.python }}"
-      # Nine tenths of this workflow was the installer. On the run that
-      # measured it, pip took 47 s on the pinned environment and 96 s on the
-      # floor, against 4 s of pytest and under a second of ruff. uv does the
-      # same install in about nine seconds because it fetches and unpacks in
-      # parallel : 96 s -> 9 s on requirements_test_min.txt, same Home
-      # Assistant, same 279 tests passing.
-      #
-      # Pinned, for the reason requirements_lint.txt gives for pinning ruff :
-      # a tool that arrives on its own can turn a green branch red without a
-      # commit. Bump it deliberately.
       - name: Install uv
         run: pip install uv==0.12.6
-      # A venv rather than `uv pip install --system`, which is the shorter
-      # spelling : --system resolves whatever `python` PATH happens to hold,
-      # and refuses outright on an interpreter its distribution marks as
-      # externally managed. The runner's is not, so --system would work here
-      # -- but the venv is the form that can be rehearsed anywhere, and it
-      # names the interpreter instead of inheriting it.
-      #
-      # No cache on top of this. A warm uv cache does the install in 0.7 s,
-      # but the cache is 444 MB for one leg alone : restoring that costs about
-      # what the cold install costs, and there would be two of them living
-      # under the repository's cache quota for it.
       - name: Install test requirements
         run: |
           uv venv --python "$(which python)" .venv
