@@ -711,14 +711,14 @@ class CozytouchAccount:
         summaries = []
         for dev in self.devices:
             modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
-            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+            if modelInfos.type is CozytouchDeviceType.ZONE:
                 continue
 
             summaries.append(
                 {
                     "deviceId": dev["deviceId"],
                     "name": dev["name"],
-                    "model": modelInfos["name"],
+                    "model": modelInfos.name,
                 }
             )
 
@@ -752,7 +752,7 @@ class CozytouchAccount:
             # The name, because a zone is recognised by it rather than by an
             # id: without it a THZONE reads as an unknown product and the
             # repair asks for a dump about it, once per zone.
-            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name")).type
             is CozytouchDeviceType.UNKNOWN
         }
 

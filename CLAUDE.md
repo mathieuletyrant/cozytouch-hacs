@@ -136,6 +136,12 @@ capture, so a test going green says "nobody changed this by accident", never
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a
   missing gateway yields no link rather than a dangling one.
+- `tests/test_snapshot.py` — the whole of both tables against JSON files in
+  `tests/snapshots/` : every mapped model id, and every capability id the
+  chain claims on one model per device type. This is what makes a pure
+  refactor provable — if the files do not change, no answer did. Regenerate
+  deliberately, in the same commit as the change the diff shows, with
+  `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
   the flag they were written for. It carries a hard count of mapped ids;

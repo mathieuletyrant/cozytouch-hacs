@@ -31,6 +31,7 @@ import pytest
 from custom_components.cozytouch import sensor as sensor_platform
 from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.hub import Hub, as_epoch
+from custom_components.cozytouch.infos import ModelInfos
 from custom_components.cozytouch.sensor import CozytouchLastUpdateSensor
 from homeassistant.components.sensor.const import SensorDeviceClass
 
@@ -155,7 +156,7 @@ def build(last_modification_date, capabilities=()):
     hub = SimpleNamespace(
         get_capabilities_for_device=lambda deviceId=None: list(capabilities),
         get_last_modification_date=lambda: last_modification_date,
-        get_model_infos=lambda: {"name": "Air Conditioner (Salon)"},
+        get_model_infos=lambda: ModelInfos(name="Air Conditioner (Salon)"),
         get_serial_number=lambda: "3022-6760-8541",
         get_software_version=lambda: "1.2.3",
         get_via_device=lambda: None,
