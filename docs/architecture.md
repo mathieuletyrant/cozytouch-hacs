@@ -396,7 +396,7 @@ two entries meaning the same thing in the same picker.
 
 ## Testing
 
-380 tests, all characterisation tests. They pin the mapping as it stands, not
+422 tests, all characterisation tests. They pin the mapping as it stands, not
 as it ought to be: most entries came from one user's capture of one device, so
 green means "nobody changed this by accident", never "this is correct".
 

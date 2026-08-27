@@ -32,6 +32,7 @@ from custom_components.cozytouch.calendar import (
     CozytouchProgramCalendar,
 )
 from custom_components.cozytouch.const import DOMAIN
+from custom_components.cozytouch.infos import ModelInfos
 from homeassistant.util import dt as dt_util
 
 # Monday, so that a range starting here lines up with the first capability of
@@ -72,7 +73,7 @@ def make_hub(values):
         get_capability_value=lambda capabilityId, default="0": values.get(
             capabilityId, default
         ),
-        get_model_infos=lambda: {"name": "Air Conditioner (Salon)"},
+        get_model_infos=lambda: ModelInfos(name="Air Conditioner (Salon)"),
         get_serial_number=lambda: "3022-6760-8541",
         get_software_version=lambda: "1.2.3",
         get_via_device=lambda: None,
