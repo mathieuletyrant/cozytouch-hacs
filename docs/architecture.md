@@ -449,7 +449,7 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-404 tests, most of them characterisation tests. They pin the mapping as it
+406 tests, most of them characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
 correct".

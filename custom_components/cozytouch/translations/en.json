@@ -28,7 +28,7 @@
                     "dump_json": "Dump a JSON file with received data"
                 },
                 "data_description": {
-                    "device": "Devices already set up are left out of the list.",
+                    "devices": "Everything the account reports is preselected. A device left out here can be added later without setting the account up again.",
                     "create_unknown": "Turns every capability the integration cannot name into a diagnostic entity, to work out what its values mean. To report an unknown device, download the diagnostics instead.",
                     "dump_json": "Writes the raw API answer to Cozytouch.json in the configuration directory, on every refresh."
                 }

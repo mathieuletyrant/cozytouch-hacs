@@ -28,7 +28,7 @@
                     "dump_json": "Générer un fichier JSON avec les données reçues"
                 },
                 "data_description": {
-                    "device": "Les appareils déjà configurés ne sont pas listés.",
+                    "devices": "Tout ce que le compte signale est présélectionné. Un appareil laissé de côté ici pourra être ajouté plus tard sans reconfigurer le compte.",
                     "create_unknown": "Transforme chaque capacité que l'intégration ne sait pas nommer en entité de diagnostic, pour découvrir ce que valent ses valeurs. Pour signaler un appareil inconnu, téléchargez plutôt les diagnostics.",
                     "dump_json": "Écrit la réponse brute de l'API dans Cozytouch.json, dans le répertoire de configuration, à chaque rafraîchissement."
                 }

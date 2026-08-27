@@ -15,7 +15,9 @@ the form has no entry for and so printed verbatim, in English, to everyone.
 
 A field with no `data` entry falls back to its own name : the device picker was
 labelled `device`. It is asked for by a subentry flow now, whose labels live one
-level deeper, under `config_subentries`.
+level deeper, under `config_subentries`. The mirror image of that -- a
+`data_description` for a field no step asks for, left behind by a rename --
+Home Assistant refuses the whole file over.
 
 A `select` option in `services.yaml` is translated through the selector's
 `translation_key`. Without one the action's form offers `heating` and `monday`
@@ -122,6 +124,32 @@ def test_every_config_flow_field_has_a_label(path):
     )
 
     assert not set(FIELD.findall(source)) - labelled
+
+
+@pytest.mark.parametrize("path", TRANSLATIONS)
+def test_every_field_description_belongs_to_a_field(path):
+    """A `data_description` for a field a step does not ask for.
+
+    Home Assistant refuses the file outright over this -- hassfest fails the
+    whole integration -- rather than dropping the stray line, and the way it
+    happens is a field being renamed with its helper text left behind: the
+    device picker became a multi-select called `devices` and its description
+    stayed under `device`.
+    """
+    translations = loaded(path)
+    stray = {}
+    for flow in ("config", "options"):
+        for name, step in translations.get(flow, {}).get("step", {}).items():
+            extra = set(step.get("data_description", {})) - set(step.get("data", {}))
+            if extra:
+                stray[f"{flow}.{name}"] = extra
+    for subentry, section in translations.get("config_subentries", {}).items():
+        for name, step in section.get("step", {}).items():
+            extra = set(step.get("data_description", {})) - set(step.get("data", {}))
+            if extra:
+                stray[f"config_subentries.{subentry}.{name}"] = extra
+
+    assert not stray
 
 
 @pytest.mark.parametrize("path", TRANSLATIONS)
