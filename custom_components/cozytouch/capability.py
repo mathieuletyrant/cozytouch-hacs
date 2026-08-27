@@ -17,9 +17,10 @@ PROG_DAYS = (
 
 
 # Capabilities the device uses to describe itself: what it supports, what its
-# scheduler allows, which controls exist. Named from the capability list shared
-# in gduteil/cozytouch#86, which gives Atlantic's own identifier for each id --
-# but not the unit, nor the encoding, nor how to read a bitmask.
+# scheduler allows, which controls exist. The name below is everything that is
+# known about each one, it was not read off this hardware, and any of them can
+# turn out to be wrong: none says what the unit is, how the value is encoded, or
+# how to read a bitmask.
 #
 # So they are surfaced as raw strings under a real name and switched off by
 # default: there for anyone investigating their own hardware, invisible to
@@ -32,27 +33,27 @@ PROG_DAYS = (
 SELF_DESCRIBING_CAPABILITIES = {
     73: "available_thermostat_modes",
     157: "override_setpoint_activation",
-    166: "available_operating_services",
-    217: "available_system_modes",
-    294: "temperature_update_step",
+    166: "system_operating_mode",
+    217: "system_setpoint_mode",
+    294: "target_temperature_step",
     295: "schedule_time_step",
     296: "schedule_minimum_interval",
     236: "max_dhw_schedule_slots_per_day",
     306: "max_schedule_slots_per_day",
-    350: "supported_air_mixing_speeds",
-    100002: "supported_ventilation_options",
-    100004: "available_ventilation_controls",
+    350: "air_circulation_supported_speeds",
+    100002: "supported_estimation_modes",
+    100004: "available_control_modes",
     100013: "available_schedule_types",
-    100021: "supported_ventilation_controls",
-    100022: "supported_operating_services",
+    100021: "supported_control_modes",
+    100022: "supported_system_operating_modes",
     100023: "supported_system_modes",
-    100024: "available_ventilation_options",
+    100024: "available_estimation_modes",
     100102: "ventilation_adaptive_planning",
     100103: "ventilation_unexpected_events",
     100300: "schedule_start_day",
     100301: "max_schedule_slots_per_week",
-    100450: "ventilation_heating_anticipation",
-    100800: "ventilation_fan_speed_mode",
+    100450: "schedule_anticipation",
+    100800: "available_fan_speeds",
     104050: "open_window_detection",
 }
 
@@ -994,6 +995,11 @@ def get_capability_infos(  # noqa: C901
 
     # For test
     elif capabilityId == 312:
+        # Atlantic calls this one currentControlTarget, which matches the
+        # setpoint shape read below -- but it gives 306 the same name, and 306 is
+        # already mapped as a schedule bound. One of the two is wrong and nothing
+        # here says which, so the placeholder name stays until a capture settles
+        # it.
         capability["name"] = "Temp_" + str(capabilityId)
         capability["type"] = "temperature_adjustment_number"
         capability["category"] = "sensor"
