@@ -122,33 +122,20 @@ async def async_setup_entry(
                 )
             )
         elif capability["type"] == "away_mode_timestamps":
-            sensors.append(
-                CozytouchAwayModeTimestampSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_0",
-                    coordinator=hub,
-                    name=capability["name_0"],
-                    icon=capability.get("icon_0", None),
-                    separator=",",
-                    timestamp_index=0,
+            for index, timestamp in enumerate(capability["timestamps"]):
+                sensors.append(
+                    CozytouchAwayModeTimestampSensor(
+                        capability=capability,
+                        config_title=config_entry.title,
+                        config_uniq_id=config_entry.entry_id,
+                        attr_uniq_id=f"{config_entry.entry_id}_{index}",
+                        coordinator=hub,
+                        name=timestamp.name,
+                        icon=timestamp.icon,
+                        separator=",",
+                        timestamp_index=index,
+                    )
                 )
-            )
-
-            sensors.append(
-                CozytouchAwayModeTimestampSensor(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_1",
-                    coordinator=hub,
-                    name=capability["name_1"],
-                    icon=capability.get("icon_1", None),
-                    separator=",",
-                    timestamp_index=1,
-                )
-            )
         elif capability["type"] in ("switch", "binary"):
             sensors.append(
                 CozytouchBinarySensor(

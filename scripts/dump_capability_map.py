@@ -126,7 +126,12 @@ def signature(result):
     if result in (None, DECLINED):
         return result
     names = tuple(
-        result[key] for key in ("name", "name_0", "name_1") if result.get(key)
+        name
+        for name in (
+            result.get("name"),
+            *(entity.name for entity in result.get("timestamps", ())),
+        )
+        if name
     )
     return (
         names,
