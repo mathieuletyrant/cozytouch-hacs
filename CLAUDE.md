@@ -32,9 +32,11 @@ them updates the upstream pull request and nothing else. Do not repoint them.
 
 ## Tests
 
-Python 3.14.2, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
-The system `python3` on this machine is too old — build a venv with
-`uv venv --python 3.14.2`. The patch version matters: `requirements_test.txt`
+Python 3.14.2 — the system `python3` on this machine is too old. Build the
+venv with `uv venv --python 3.14.2`, install with
+`uv pip install -r requirements_test.txt`, run `.venv/bin/pytest tests/ -q`.
+`uv pip` and not `pip`, because a uv venv ships no pip of its own.
+The patch version matters: `requirements_test.txt`
 pins Home Assistant exactly, and that release declares Python 3.14.2 as its
 floor, so an older interpreter makes the install fail rather than resolve
 backwards to an HA nobody runs.
@@ -54,8 +56,8 @@ a candidate floor can run this at all.
 
 ## Lint
 
-`pip install -r requirements_lint.txt`, then `ruff check .`. CI runs the same
-command and it has to come back clean.
+`uv pip install -r requirements_lint.txt`, then `.venv/bin/ruff check .`. CI
+runs the same check and it has to come back clean.
 
 CI runs on pull requests based on `main` **or** on a `claude/**` branch. That
 second one is not decoration: the trigger filters on the *base* branch, so
@@ -106,6 +108,12 @@ capture, so a test going green says "nobody changed this by accident", never
   found by running this, not by reading a changelog**: it is what established
   that 2025.2 has no subentries and that the whole 2025.3 line cannot be
   installed (a yanked `aiohttp` pin).
+- `tests/test_polling.py` — the account-level beat : one setup-view request
+  for the whole account where it used to be one per device per minute, and
+  what a 429 does — back off and keep the last values, rather than answering
+  a rate-limit complaint with a login. Its `FakeSession` is a deliberate copy
+  of `test_reauth.py`'s, kept separate so a change there cannot quietly
+  rewrite what these say.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
 - `tests/test_sensor_values.py` — what the value builders in `sensor.py`
@@ -152,6 +160,12 @@ capture, so a test going green says "nobody changed this by accident", never
   the flag they were written for. It carries a hard count of mapped ids;
   adding models means updating that number, and widening the walk's range if
   the new id falls outside it.
+- `tests/test_capability_coverage.py` — the seams around the mapping : that a
+  self-describing capability arrives switched off, that every name the mapping
+  can produce has an entry in all three translation files, and that the
+  `CapabilityType` members the mapping writes and the ones the platforms match
+  on are the same set — a type on one side only is silent both ways, and two
+  lived exactly there.
 
 ## Entries, subentries, identity
 
@@ -179,7 +193,10 @@ coordinator per device on top of it.
 3. Translations — a new capability name needs an entry in **all three** of
    `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
    the alphabetical order and column alignment already in the file.
-4. Tests — a case in `MODEL_GROUPS`, and the count in `test_capability.py`.
+4. Tests — a case in `MODEL_GROUPS`, the count in `test_capability.py`, and
+   the snapshots regenerated in the same commit
+   (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff shows the
+   new model and nothing else.
 5. `README.md` — the table for that device class.
 
 `scripts/dump_capability_map.py` prints what the two tables now resolve to, per
