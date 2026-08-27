@@ -31,7 +31,7 @@ async def async_setup_entry(
     switches = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == CapabilityType.SWITCH:
+        if capability.type == CapabilityType.SWITCH:
             switches.append(
                 CozytouchSwitch(
                     coordinator=hub,
@@ -40,7 +40,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                 )
             )
-        elif capability["type"] == CapabilityType.AWAY_MODE_SWITCH:
+        elif capability.type == CapabilityType.AWAY_MODE_SWITCH:
             switches.append(
                 CozytouchAwayModeSwitch(
                     coordinator=hub,
@@ -67,7 +67,7 @@ class CozytouchSwitch(SwitchEntity, CozytouchSensor):
         name: str | None = None,
     ) -> None:
         """Initialize a Switch entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             coordinator=coordinator,
             capability=capability,
@@ -85,14 +85,14 @@ class CozytouchSwitch(SwitchEntity, CozytouchSensor):
     @property
     def is_on(self) -> bool:
         """Return the state."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         self._state = value is not None and value == self._value_on
         return self._state
 
     async def async_turn_on(self):
         """Turn On method."""
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             self._value_on,
         )
         await self.coordinator.async_request_refresh()
@@ -100,7 +100,7 @@ class CozytouchSwitch(SwitchEntity, CozytouchSensor):
     async def async_turn_off(self):
         """Turn Off method."""
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             self._value_off,
         )
         await self.coordinator.async_request_refresh()
@@ -125,7 +125,7 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         name: str | None = None,
     ) -> None:
         """Initialize a Switch entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             coordinator=coordinator,
             capability=capability,
@@ -150,7 +150,7 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
             self._nb_ignore = self._nb_ignore - 1
         else:
             value = self.coordinator.get_capability_value(
-                self._capability["capabilityId"]
+                self._capability.capabilityId
             )
             self._state = value is not None and value != self._value_off
 
@@ -175,9 +175,9 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         self._nb_ignore = 5
         self._state = True
         await self.coordinator.set_away_mode_timestamps(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             self._value_on,
-            self._capability["timestampsCapabilityId"],
+            self._capability.timestampsCapabilityId,
             int(timestampStart),
             int(timestampEnd),
         )
@@ -189,9 +189,9 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         self._nb_ignore = 5
         self._state = False
         await self.coordinator.set_away_mode_timestamps(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             self._value_off,
-            self._capability["timestampsCapabilityId"],
+            self._capability.timestampsCapabilityId,
             None,
             None,
         )

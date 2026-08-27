@@ -31,8 +31,8 @@ async def async_setup_entry(
     datetimes = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == CapabilityType.AWAY_MODE_TIMESTAMPS:
-            for index, timestamp in enumerate(capability["timestamps"]):
+        if capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
+            for index, timestamp in enumerate(capability.timestamps):
                 datetimes.append(
                     CozytouchAwayModeDateTime(
                         capability=capability,
@@ -87,11 +87,11 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
         if timestamp is not None:
             if self._timestamp_index == 0:
                 await self.coordinator.set_away_mode_start(
-                    self._capability["capabilityId"], int(timestamp)
+                    self._capability.capabilityId, int(timestamp)
                 )
             elif self._timestamp_index == 1:
                 await self.coordinator.set_away_mode_end(
-                    self._capability["capabilityId"], int(timestamp)
+                    self._capability.capabilityId, int(timestamp)
                 )
 
     @property
