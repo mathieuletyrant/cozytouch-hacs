@@ -7,13 +7,14 @@ the Cozytouch API rather than Overkiz.
 
 ## Where to read first
 
-This file says what to do and where. Two documents say how the thing works,
+This file says what to do and where. Three documents say how the thing works,
 and are worth reading before a change rather than after :
 
 | Document | What it answers |
 | -------- | --------------- |
 | `docs/architecture.md` | How a capability id becomes an entity, what the Hub owns, which invariants hold, and the rough edges that are real and inherited. |
 | `docs/api-surface.md` | What the API does and does not expose. Read it before probing anything : ~90 paths are already ruled out, and there is no capability catalogue to fetch. |
+| `docs/decisions.md` | Why a setting is the value it is — which run was measured, what was tried and dropped. This is where the reasoning lives that used to sit in comment blocks above the setting. |
 
 ## Repository topology
 
@@ -86,6 +87,21 @@ capture, so a test going green says "nobody changed this by accident", never
   dashboard, so **the assertions are the current output, not the nicer output**
   — including one case pinned as wrong on purpose, the timezone offset applied
   twice. Changing any of these should mean changing a test in the same commit.
+- `tests/test_sensor_metadata.py` — what the platform declares *about* a value :
+  the state class that decides whether the recorder keeps long-term statistics,
+  and the firmware version that reaches the device registry. It drives
+  `async_setup_entry` rather than restating its table, and checks each
+  device-class/state-class pair against Home Assistant's own compatibility
+  table — the check that catches a combination HA rejects at runtime, which is
+  how the tank volumes ended up as `volume_storage`.
+- `tests/test_freshness.py` — the `modificationDate` every capability carries
+  and nothing used to read : that a date the API sends survives arriving as a
+  string, that nothing useful reads as None rather than as 1970, that a
+  device's date is the *newest* of its capabilities (any one of them can sit
+  unchanged while the hardware keeps reporting), that the sensor exists only
+  when the device reports a date at all, and that the dump carries them per
+  capability. It pins the reading, never a staleness threshold — nothing yet
+  says what a normal silence looks like.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering
@@ -168,6 +184,20 @@ what was left alone for lack of a report. Wrap at 76 columns.
 
 ## House style
 
-Comments explain why a value is what it is — which capability id the device
-reports, what the app shows, what a capture proved. They do not restate the
-code. Match the density already in the file.
+Reasoning goes in `docs/decisions.md`, not in a comment block above the thing
+it explains. Which run was measured, what the app shows, what a capture
+proved, what was tried and dropped : all of it belongs in a named entry that
+can be read end to end, rather than scattered across the files it happens to
+touch.
+
+What stays in the code is a pointer, where the line would otherwise read as a
+mistake — `# see docs/decisions.md` on the setting that looks wrong, one line,
+no argument restated. A `noqa` still says which rule and why on the spot,
+because that one is about the line and nothing else.
+
+Comments never restate the code.
+
+The older files predate this and still carry their reasoning inline :
+`pyproject.toml`, the requirements files, and the modules under
+`custom_components/`. Do not migrate them wholesale. A file moves to
+`docs/decisions.md` when it is being edited for some other reason anyway.

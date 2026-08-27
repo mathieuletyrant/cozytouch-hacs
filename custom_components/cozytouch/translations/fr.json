@@ -254,6 +254,7 @@
             "hot_water_showers_expected": { "name": "Douches attendues" },
             "hot_water_showers_remaining": { "name": "Douches restantes" },
             "interface_fw":             { "name": "Firmware de l'interface" },
+            "last_device_update":       { "name": "Dernière mise à jour de l'appareil" },
             "max_schedule_slots_per_day": { "name": "Créneaux max par jour" },
             "max_schedule_slots_per_week": { "name": "Créneaux max par semaine" },
             "max_target_temperature_derogation": { "name": "Dérogation de consigne max" },

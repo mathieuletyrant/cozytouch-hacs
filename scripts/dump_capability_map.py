@@ -42,6 +42,10 @@ PROBES = {
     CozytouchDeviceType.AC: 557,
     CozytouchDeviceType.AC_CONTROLLER: 562,
     CozytouchDeviceType.HUB: 1457,
+    # A zone reports almost nothing, which is the point of probing it: what a
+    # THZONE resolves to should stay a short list. Keyed on the device name
+    # rather than the id, so the probe carries one -- see ZONE_PROBE_NAME.
+    CozytouchDeviceType.ZONE: 1505,
     CozytouchDeviceType.UNKNOWN: 999999,
 }
 
@@ -93,10 +97,17 @@ VALUES = {119: "12.0", 172: "20.0"}
 DECLINED = "declined"
 
 
+# A zone is the one device the table recognises by name instead of by id, so a
+# probe of it has to hand one over or it resolves as an unknown product.
+ZONE_PROBE_NAME = "THZONE_0"
+ZONE_PROBE_MODEL = PROBES[CozytouchDeviceType.ZONE]
+
+
 def probe(modelId, capabilityId):
     """What the mapping answers for one id on one model."""
+    deviceName = ZONE_PROBE_NAME if modelId == ZONE_PROBE_MODEL else None
     result = get_capability_infos(
-        get_model_infos(modelId),
+        get_model_infos(modelId, None, deviceName),
         capabilityId,
         VALUES.get(capabilityId, "0"),
         set(EVERY_ID),

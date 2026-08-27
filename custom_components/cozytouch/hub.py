@@ -52,10 +52,33 @@ API_DECLARED_FIELDS = (
     "isAvailable",
 )
 
+# The capability carrying the firmware version, named `version` by
+# capability.py. Read by id here because the device registry wants a string on
+# the device, not an entity somewhere in the list.
+SOFTWARE_VERSION_CAPABILITY_ID = 121
+
 
 # A config entry that carries its hub, so platforms can read it off the entry
 # instead of looking it up in hass.data by id.
 type CozytouchConfigEntry = ConfigEntry[Hub]
+
+
+def as_epoch(value) -> int | None:
+    """A modificationDate as an int, or None when it says nothing.
+
+    Anything missing, unparsable or at or below zero comes back None rather
+    than as a date in 1970. The field is undocumented -- there is no catalogue
+    to check it against, docs/api-surface.md says so -- so what it holds on
+    hardware nobody has captured is a guess, and a wrong timestamp on a
+    dashboard is worse than an empty one. A string is tolerated because `value`
+    arrives from this API as one, which makes a stringified date unsurprising.
+    """
+    try:
+        epoch = int(float(value))
+    except (TypeError, ValueError):
+        return None
+
+    return epoch if epoch > 0 else None
 
 
 class Hub(DataUpdateCoordinator):
@@ -268,7 +291,9 @@ class Hub(DataUpdateCoordinator):
                     "modelId": remote_device["modelId"],
                     "productId": remote_device["productId"],
                     "zoneId": remote_device["zoneId"],
-                    "modelInfos": get_model_infos(remote_device["modelId"]),
+                    "modelInfos": get_model_infos(
+                        remote_device["modelId"], deviceName=remote_device["name"]
+                    ),
                     "capabilities": [],
                     "tags": [],
                 }
@@ -392,21 +417,48 @@ class Hub(DataUpdateCoordinator):
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
 
     def devices(self):
-        """Get devices list."""
+        """The devices worth offering to somebody adding this integration.
+
+        Zones are left out. A THZONE is one zone of a ducted heat pump, not
+        hardware: it reports no climate capability, no setpoint, and two ids
+        that resolve to nothing, so adding it would create a device with an
+        empty page and a repair dialog's worth of noise behind it. Ignoring it
+        outright is the honest answer -- there is nothing to drive and nothing
+        to read.
+
+        The raw setup view still has them, and the `dump_json` option writes it
+        out, which is the way back if anybody ever needs to look at what a zone
+        holds.
+        """
         devs = []
         for dev in self._devices:
+            # Asked of the table rather than read off `dev["modelInfos"]`, which
+            # is filled in when a device first appears : the same lookup every
+            # other caller makes, and the name a zone is recognised by can
+            # change under a cached one.
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+                continue
+
             devs.append(
                 {
                     "deviceId": dev["deviceId"],
                     "name": dev["name"],
-                    "model": dev["modelInfos"]["name"],
+                    "model": modelInfos["name"],
                 }
             )
 
         return devs
 
-    def get_zone_name(self, zoneId: int | None = None) -> str:
-        """Get zone infos."""
+    def get_zone_name(self, zoneId: int | None = None) -> str | None:
+        """What the account calls a zone, or None when it does not name it.
+
+        None rather than the id as a string, which is what this used to answer.
+        Every caller here puts the result in front of somebody -- a device name,
+        a line in a diagnostics dump -- and "Zone (1030104)" is a worse name
+        than no name at all: the id is ours to join on, not a room anybody
+        recognises. The callers decide what to show instead.
+        """
         if not zoneId:
             zoneId = self._zoneId
 
@@ -414,7 +466,7 @@ class Hub(DataUpdateCoordinator):
             if "id" in zone and zone["id"] == zoneId:
                 return zone["name"]
 
-        return str(zoneId)
+        return None
 
     def get_model_infos(self, deviceId: int | None = None) -> str:
         """Get model infos."""
@@ -438,7 +490,9 @@ class Hub(DataUpdateCoordinator):
                                 zoneId = masterDev["zoneId"]
                                 break
 
-                return get_model_infos(dev["modelId"], self.get_zone_name(zoneId))
+                return get_model_infos(
+                    dev["modelId"], self.get_zone_name(zoneId), dev.get("name")
+                )
 
         return get_model_infos(-1)
 
@@ -452,7 +506,8 @@ class Hub(DataUpdateCoordinator):
         unmapped = {
             dev["modelId"]
             for dev in self._devices
-            if get_model_infos(dev["modelId"])["type"] is CozytouchDeviceType.UNKNOWN
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+            is CozytouchDeviceType.UNKNOWN
         }
 
         return sorted(unmapped)
@@ -482,6 +537,16 @@ class Hub(DataUpdateCoordinator):
                 return dev["gatewaySerialNumber"]
 
         return "Unknown"
+
+    def get_software_version(self) -> str | None:
+        """The firmware version the device reports about itself, if it does.
+
+        Only for the device this entry drives: capabilities are kept for that
+        one alone. Devices that do not report 121 -- the gateways among them --
+        get None, which leaves the registry field empty rather than filling it
+        with a guess.
+        """
+        return self.get_capability_value(SOFTWARE_VERSION_CAPABILITY_ID, None)
 
     def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
         """Identifiers of the gateway this device hangs off, when HA has it.
@@ -521,7 +586,9 @@ class Hub(DataUpdateCoordinator):
         capabilities = []
         for dev in self._devices:
             if dev["deviceId"] == deviceId:
-                modelInfos = get_model_infos(dev["modelId"])
+                modelInfos = get_model_infos(
+                    dev["modelId"], deviceName=dev.get("name")
+                )
                 availableCapabilityIds = {
                     cap["capabilityId"] for cap in dev["capabilities"]
                 }
@@ -576,7 +643,7 @@ class Hub(DataUpdateCoordinator):
             if dev["deviceId"] != deviceId:
                 continue
 
-            modelInfos = get_model_infos(dev["modelId"])
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             availableCapabilityIds = {
                 cap["capabilityId"] for cap in dev["capabilities"]
             }
@@ -610,7 +677,16 @@ class Hub(DataUpdateCoordinator):
         """
         devices = []
         for dev in self._devices:
-            modelInfos = get_model_infos(dev["modelId"])
+            # Zones are not hardware anybody has to map, and a dump is read to
+            # find hardware that is. Listing them put two capability ids that
+            # resolve to nothing -- one of them declined on purpose -- in front
+            # of whoever reads it, which reads exactly like work to do.
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))[
+                "type"
+            ] is CozytouchDeviceType.ZONE:
+                continue
+
+            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             entry_owns_it = dev["deviceId"] == self._deviceId
 
             capabilities = None
@@ -622,6 +698,15 @@ class Hub(DataUpdateCoordinator):
                     "unmapped": unmapped,
                     "values": {
                         cap["capabilityId"]: cap["value"] for cap in dev["capabilities"]
+                    },
+                    # The API's own third field, under the API's own name. The
+                    # values say what a capability holds; these say when the
+                    # device last changed it, which is what tells a value that
+                    # is wrong from an id the hardware never feeds at all --
+                    # the question every unmapped-capability report runs into.
+                    "modificationDates": {
+                        cap["capabilityId"]: as_epoch(cap.get("modificationDate"))
+                        for cap in dev["capabilities"]
                     },
                 }
 
@@ -673,6 +758,43 @@ class Hub(DataUpdateCoordinator):
                 return defaultIfNotExist
 
         return None
+
+    def get_capability_modification_date(self, capabilityId: int) -> int | None:
+        """When the device last changed one capability, as the API says.
+
+        `modificationDate` is the third field of every capability item and the
+        one nothing has ever read -- docs/api-surface.md records it as
+        available and unused. It is already here: the poll copies each item
+        whole, so this costs no request.
+        """
+        for dev in self._devices:
+            if dev["deviceId"] == self._deviceId:
+                for capability in dev["capabilities"]:
+                    if capabilityId == capability["capabilityId"]:
+                        return as_epoch(capability.get("modificationDate"))
+
+        return None
+
+    def get_last_modification_date(self) -> int | None:
+        """The newest modification date this device reports, if it reports one.
+
+        The whole device rather than one capability, because the question this
+        answers is whether the hardware is still talking to Atlantic's cloud --
+        and one capability can legitimately sit unchanged for hours, so the
+        newest of all of them is the only honest reading of "still reporting".
+
+        None means nothing on the device carries a usable date, which is why
+        the sensor built from this is not created at all in that case rather
+        than sitting there empty.
+        """
+        dates = [
+            as_epoch(capability.get("modificationDate"))
+            for dev in self._devices
+            if dev["deviceId"] == self._deviceId
+            for capability in dev["capabilities"]
+        ]
+
+        return max([date for date in dates if date is not None], default=None)
 
     async def set_capability_value(self, capabilityId: int, value: str):
         """Set value for a device capability."""
