@@ -446,12 +446,14 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-355 tests, most of them characterisation tests. They pin the mapping as it
+Most of the suite is characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
-correct".
+correct". `tests/test_snapshot.py` is that idea taken whole: both tables
+pinned into JSON files, so a pure refactor is provable — if the snapshots do
+not change, no answer did.
 
-Almost all of them are table tests. The exceptions are the two that cover
+Almost all of them are table tests. Two of the exceptions cover
 `sensor.py`. `tests/test_sensor_values.py` pins what the value builders return
 character for character — the zero padding, the double space before a
 temperature, a float setpoint still reading as a whole number. That file
