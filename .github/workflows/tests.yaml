@@ -31,6 +31,25 @@ jobs:
       - name: Run ruff
         run: ruff check --output-format=github .
 
+  pyright:
+    name: pyright
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - uses: "actions/setup-python@v5"
+        with:
+          python-version: "3.14.2"
+      - name: Install uv
+        run: pip install uv==0.12.6
+      # The full pinned test environment, not the lint one: pyright resolves
+      # the homeassistant imports, so it needs the package ruff never looks at.
+      - name: Install test requirements and pyright
+        run: |
+          uv venv --python "$(which python)" .venv
+          uv pip install --python .venv/bin/python -r requirements_test.txt pyright==1.1.411
+      - name: Run pyright
+        run: .venv/bin/pyright
+
   pytest-matrix:
     name: pytest (HA ${{ matrix.homeassistant }} on Python ${{ matrix.python }})
     runs-on: "ubuntu-latest"

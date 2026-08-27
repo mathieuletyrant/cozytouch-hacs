@@ -120,5 +120,20 @@ known-first-party = ["homeassistant", "custom_components", "tests"]
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
+[tool.pyright]
+# Three files, not the tree -- the scope and its reasons are in
+# docs/decisions.md.
+include = [
+    "custom_components/cozytouch/capability.py",
+    "custom_components/cozytouch/infos.py",
+    "custom_components/cozytouch/model.py",
+]
+typeCheckingMode = "basic"
+# The floor's Python, not the pinned one: syntax the floor cannot parse has to
+# fail here, and anything 3.13 accepts the pinned 3.14 accepts too.
+pythonVersion = "3.13"
+venvPath = "."
+venv = ".venv"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

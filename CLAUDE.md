@@ -69,6 +69,11 @@ camelCase locals mirror the field names the Atlantic API itself uses, and
 `PLR2004` is not enabled because the numeric capability ids *are* the domain.
 Do not "fix" code to satisfy a rule the config deliberately drops.
 
+Types are checked by pyright, but only on the typed core — `infos.py`,
+`model.py`, `capability.py` — as `pyproject.toml` scopes it ; CI runs it in
+the pinned test venv (`.venv/bin/pyright`), and the scope's reasons are in
+`docs/decisions.md`.
+
 `ruff format` is **not** run, by CI or otherwise. The tree is not
 formatter-clean; reformatting it is its own change, not something to slip into
 another one.
