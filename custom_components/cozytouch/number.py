@@ -1,4 +1,5 @@
 """Number entities Atlantic Cozytouch integration."""
+
 from __future__ import annotations
 
 import logging
@@ -23,53 +24,58 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    # Retrieve the hub object
-    hub = config_entry.runtime_data
+    # One device per subentry, and its entities are registered under it :
+    # the subentry id is the identity that used to be the entry's own, back
+    # when an entry meant a device.
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    # Init number entities
-    numbers = []
-    capabilities = hub.get_capabilities_for_device()
-    for capability in capabilities:
-        if capability.type == CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER:
-            numbers.append(
-                TemperatureAdjustmentNumber(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+        # Init number entities
+        numbers = []
+        capabilities = hub.get_capabilities_for_device()
+        for capability in capabilities:
+            if capability.type == CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER:
+                numbers.append(
+                    TemperatureAdjustmentNumber(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
-        elif capability.type == CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER:
-            numbers.append(
-                TemperaturePercentAdjustmentNumber(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+            elif (
+                capability.type == CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
+            ):
+                numbers.append(
+                    TemperaturePercentAdjustmentNumber(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
-        elif capability.type == CapabilityType.HOURS_ADJUSTMENT_NUMBER:
-            numbers.append(
-                HoursAdjustmentNumber(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+            elif capability.type == CapabilityType.HOURS_ADJUSTMENT_NUMBER:
+                numbers.append(
+                    HoursAdjustmentNumber(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
-        elif capability.type == CapabilityType.MINUTES_ADJUSTMENT_NUMBER:
-            numbers.append(
-                MinutesAdjustmentNumber(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+            elif capability.type == CapabilityType.MINUTES_ADJUSTMENT_NUMBER:
+                numbers.append(
+                    MinutesAdjustmentNumber(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
 
-    # Add the entities to HA
-    if len(numbers) > 0:
-        async_add_entities(numbers, True)
+        # Add the entities to HA
+        if len(numbers) > 0:
+            async_add_entities(numbers, True, config_subentry_id=subentry_id)
 
 
 class TemperatureAdjustmentNumber(NumberEntity, CozytouchSensor):
@@ -273,9 +279,7 @@ class HoursAdjustmentNumber(NumberEntity, CozytouchSensor):
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
         value = (
-            float(
-                self.coordinator.get_capability_value(self._capability.capabilityId)
-            )
+            float(self.coordinator.get_capability_value(self._capability.capabilityId))
             / 60.0
         )
 
@@ -300,6 +304,7 @@ class HoursAdjustmentNumber(NumberEntity, CozytouchSensor):
         )
 
         await self.coordinator.async_request_refresh()
+
 
 class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
     """Minutes adjustment number class."""
@@ -341,10 +346,8 @@ class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
     def _handle_coordinator_update(self) -> None:
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
-        value = (
-            float(
-                self.coordinator.get_capability_value(self._capability.capabilityId)
-            )
+        value = float(
+            self.coordinator.get_capability_value(self._capability.capabilityId)
         )
 
         if value < self._attr_native_min_value:

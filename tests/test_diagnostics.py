@@ -7,7 +7,8 @@ capability ids nothing names have to be listed rather than silently dropped.
 Those are what a maintainer reads first, and they are what these tests pin.
 
 Hub.get_diagnostics is called unbound, against a stand-in carrying only the
-attributes it touches. Building a real Hub means a DataUpdateCoordinator and a
+attributes it touches -- an account holding the devices, and the id of the one
+this entry drives. Building a real Hub means a DataUpdateCoordinator and a
 running HomeAssistant, none of which the method uses.
 """
 
@@ -15,19 +16,29 @@ from types import SimpleNamespace
 
 import pytest
 
+from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.hub import Hub
 
 
 def make_hub(devices, deviceId, zones=None):
     """A stand-in exposing only what get_diagnostics reads."""
+    account = SimpleNamespace(
+        devices=devices,
+        setup={"id": 1532156, "name": "setup1"},
+        zones=zones if zones is not None else [],
+    )
     hub = SimpleNamespace(
-        _devices=devices,
+        _account=account,
         _deviceId=deviceId,
-        _setup={"id": 1532156, "name": "setup1"},
-        _zones=zones if zones is not None else [],
+        # the devices somebody added, which is what isConfiguredHere reports
+        _entry=SimpleNamespace(
+            subentries={
+                f"sub-{deviceId}": SimpleNamespace(data={"deviceId": deviceId})
+            }
+        ),
     )
     hub.get_zone_name = lambda zoneId=None: next(
-        (z["name"] for z in hub._zones if z.get("id") == zoneId), str(zoneId)
+        (z["name"] for z in account.zones if z.get("id") == zoneId), str(zoneId)
     )
     # get_diagnostics reads the named/unnamed split off the hub rather than
     # working it out again, so the stand-in has to carry the real one.
@@ -57,16 +68,19 @@ def test_a_zone_is_not_in_the_dump_at_all():
 
 
 def test_a_zone_is_not_offered_when_adding_the_integration():
-    """Adding it would create a device with an empty page behind it."""
-    hub = make_hub(
-        [
+    """Adding it would create a device with an empty page behind it. The list
+    the config flow reads is the account's, which is where the filter lives.
+    """
+    account = SimpleNamespace(
+        devices=[
             device(1, 557, name="ROOM_0"),
             device(2, 1505, name="THZONE_0"),
-        ],
-        deviceId=1,
+        ]
     )
 
-    assert [dev["name"] for dev in Hub.devices(hub)] == ["ROOM_0"]
+    summaries = CozytouchAccount.device_summaries(account)
+
+    assert [dev["name"] for dev in summaries] == ["ROOM_0"]
 
 
 def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):
@@ -126,21 +140,33 @@ def test_capabilities_split_into_what_is_named_and_what_is_not():
     assert caps["values"][100044] == "[72,88]"
 
 
-def test_devices_this_entry_does_not_drive_carry_no_capability_block():
-    """The hub only keeps capabilities for its own device.
+def test_devices_this_entry_does_not_drive_are_still_described():
+    """The account holds every device the setup view returned, capabilities
+    included, so a dump covers hardware nobody has added yet.
 
-    A device the entry does not drive genuinely has none stored, which is not
-    the same as a device that reports none. Null says the first; an empty list
-    would be read as the second.
+    That is the point of the dump: the capability ids of an unmapped model are
+    what a mapping gets written from, and asking somebody to add the device as
+    an entry first only to read them was a step that lost reports. What
+    `isConfiguredHere` still says is which one this entry drives, and so which
+    list came from a live poll rather than from the last setup view.
     """
-    hub = make_hub([device(1, 557), device(2, 1457, name="HUB")], deviceId=1)
+    hub = make_hub(
+        [
+            device(1, 557, capabilities=[{"capabilityId": 303, "value": "0"}]),
+            device(
+                2, 1457, name="HUB",
+                capabilities=[{"capabilityId": 100, "value": "1"}],
+            ),
+        ],
+        deviceId=1,
+    )
 
     driven, other = Hub.get_diagnostics(hub)["devices"]
 
     assert driven["isConfiguredHere"] is True
-    assert driven["capabilities"] is not None
+    assert driven["capabilities"]["values"] == {303: "0"}
     assert other["isConfiguredHere"] is False
-    assert other["capabilities"] is None
+    assert other["capabilities"]["values"] == {100: "1"}
 
 
 def test_the_zone_name_is_resolved_rather_than_left_as_an_id():

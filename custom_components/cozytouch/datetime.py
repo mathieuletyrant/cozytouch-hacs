@@ -24,32 +24,35 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    # Retrieve the hub object
-    hub = config_entry.runtime_data
+    # One device per subentry, and its entities are registered under it :
+    # the subentry id is the identity that used to be the entry's own, back
+    # when an entry meant a device.
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    # Init datetimes
-    datetimes = []
-    capabilities = hub.get_capabilities_for_device()
-    for capability in capabilities:
-        if capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
-            for index, timestamp in enumerate(capability.timestamps):
-                datetimes.append(
-                    CozytouchAwayModeDateTime(
-                        capability=capability,
-                        config_title=config_entry.title,
-                        config_uniq_id=config_entry.entry_id,
-                        attr_uniq_id=f"{config_entry.entry_id}_{index}",
-                        coordinator=hub,
-                        name=timestamp.name,
-                        icon=timestamp.icon,
-                        separator=",",
-                        timestamp_index=index,
+        # Init datetimes
+        datetimes = []
+        capabilities = hub.get_capabilities_for_device()
+        for capability in capabilities:
+            if capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
+                for index, timestamp in enumerate(capability.timestamps):
+                    datetimes.append(
+                        CozytouchAwayModeDateTime(
+                            capability=capability,
+                            config_title=subentry.title,
+                            config_uniq_id=subentry_id,
+                            attr_uniq_id=f"{subentry_id}_{index}",
+                            coordinator=hub,
+                            name=timestamp.name,
+                            icon=timestamp.icon,
+                            separator=",",
+                            timestamp_index=index,
+                        )
                     )
-                )
 
-    # Add the entities to HA
-    if len(datetimes) > 0:
-        async_add_entities(datetimes, True)
+        # Add the entities to HA
+        if len(datetimes) > 0:
+            async_add_entities(datetimes, True, config_subentry_id=subentry_id)
 
 
 class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):

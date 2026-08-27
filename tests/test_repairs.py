@@ -25,6 +25,7 @@ import pytest
 import yaml
 
 from custom_components.cozytouch import repairs
+from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.model import get_model_infos
 
@@ -80,29 +81,97 @@ def make_entry(
     unmapped=(101, 102),
     account=None,
     entry_id="entry",
+    added=None,
     deviceName=None,
 ):
-    """An entry whose hub reports one model and sees the given account.
+    """One account entry, with the devices somebody added as its subentries.
 
     `deviceName` matters for one kind of device: a zone is recognised by the
     name the API gives it rather than by its model id, so a hub that does not
-    hand the name over reports it as unmapped.
-    """
-    if account is None:
-        account = [modelId] if modelId is not None else []
+    hand the name over reports it as unmapped. One name for the fixture, which
+    is all the zone case needs -- it has a single device.
 
-    hub = SimpleNamespace(
-        get_model_id=lambda: modelId,
-        get_model_infos=lambda: get_model_infos(modelId, None, deviceName),
-        get_unmapped_models=lambda: sorted(account),
-        get_capability_names=lambda: ({}, list(unmapped)),
+    `added` is the devices that have a subentry, as (modelId, title, unmapped
+    ids); it defaults to the single device the modelId/title/unmapped
+    arguments describe. `account` is every model the setup view returned,
+    added or not -- a list of model ids, or a dict mapping each to the
+    capability ids nothing names for it.
+    """
+    if added is None:
+        added = [(modelId, title, tuple(unmapped))]
+
+    if account is None:
+        account = [model for model, _, _ in added if model is not None]
+    if not isinstance(account, dict):
+        account = {model: [] for model in account}
+
+    devices, unnamed, models = [], {}, {}
+    for deviceId, (model, _, unmapped_ids) in enumerate(added, start=1):
+        devices.append(
+            {"deviceId": deviceId, "modelId": model, "name": deviceName}
+        )
+        unnamed[deviceId] = list(unmapped_ids)
+        models[deviceId] = model
+
+    # The rest of the account: returned by the setup view, never added. Their
+    # capability ids are readable now, which is the point of the account
+    # holding every device's list rather than only its own.
+    nextId = len(added) + 1
+    for model, unmapped_ids in account.items():
+        if model in models.values():
+            continue
+        devices.append({"deviceId": nextId, "modelId": model})
+        unnamed[nextId] = list(unmapped_ids)
+        models[nextId] = model
+        nextId += 1
+
+    def hub_for(ownId):
+        return SimpleNamespace(
+            get_model_id=lambda: models[ownId],
+            get_model_infos=lambda: get_model_infos(
+                models[ownId], None, deviceName
+            ),
+            get_capability_names=lambda deviceId=None: (
+                {},
+                list(unnamed.get(ownId if deviceId is None else deviceId, [])),
+            ),
+        )
+
+    subentries, hubs = {}, {}
+    for deviceId, (_, device_title, _) in enumerate(added, start=1):
+        subentry_id = f"sub-{deviceId}"
+        subentries[subentry_id] = SimpleNamespace(
+            data={"deviceId": deviceId}, title=device_title
+        )
+        hubs[subentry_id] = hub_for(deviceId)
+
+    unmapped_models = sorted(
+        model
+        for model in account
+        if model is not None
+        and get_model_infos(model, None, deviceName)["type"].name == "UNKNOWN"
     )
 
     return SimpleNamespace(
         entry_id=entry_id,
-        title=title,
+        title="cozytouch@example.com",
         options=options or {},
-        runtime_data=hub,
+        subentries=subentries,
+        runtime_data=SimpleNamespace(
+            account=SimpleNamespace(
+                devices=devices,
+                online=True,
+                get_unmapped_models=lambda: unmapped_models,
+            ),
+            hubs=hubs,
+        ),
+    )
+
+
+def hub_holding(devices, deviceId=None):
+    """A hub stand-in over an account holding the given devices."""
+    return SimpleNamespace(
+        _account=SimpleNamespace(devices=devices), _deviceId=deviceId
     )
 
 
@@ -118,7 +187,7 @@ def check(monkeypatch, modelId, entry=None, others=()):
 
     entry = entry if entry is not None else make_entry(modelId)
     hass = make_hass([entry, *others])
-    repairs.async_check_model_mapping(hass, entry, entry.runtime_data)
+    repairs.async_check_model_mapping(hass, entry)
 
     return registry
 
@@ -224,12 +293,14 @@ def test_a_model_already_reported_is_not_asked_about_again(monkeypatch):
     assert registry.created == []
 
 
-def test_a_model_reported_from_another_device_is_not_asked_about_again(
+def test_a_model_reported_from_another_account_is_not_asked_about_again(
     monkeypatch,
 ):
-    """One report speaks for the account, and it is answered from whichever
-    dialog the user happened to open. The answer is stored on that one entry,
-    so every entry has to read all of them.
+    """An unmapped model is a gap in the table, not a fact about one account.
+
+    The answer is stored on the entry whose dialog was answered, so every
+    entry reads all of them -- somebody with two Cozytouch accounts sending
+    the same report twice would learn nothing new.
     """
     answered = make_entry(
         modelId=OTHER_UNMAPPED_MODEL,
@@ -244,12 +315,20 @@ def test_a_model_reported_from_another_device_is_not_asked_about_again(
 
 def test_two_devices_of_one_model_ask_once(monkeypatch):
     """Keyed on the model, not the device : a pair of identical towel racks is
-    one mapping to write, so it is one thing to ask for.
+    one mapping to write, so it is one thing to ask for -- and now that both
+    hang off one entry, the loop over them is what could ask twice.
     """
-    first = check(monkeypatch, UNMAPPED_MODEL, make_entry(title="Salle de bain"))
-    second = check(monkeypatch, UNMAPPED_MODEL, make_entry(title="Chambre"))
+    entry = make_entry(
+        added=[
+            (UNMAPPED_MODEL, "Salle de bain", (101,)),
+            (UNMAPPED_MODEL, "Chambre", (101,)),
+        ]
+    )
 
-    assert first.created[0][1] == second.created[0][1]
+    registry = check(monkeypatch, UNMAPPED_MODEL, entry)
+
+    assert len(registry.created) == 1
+    assert registry.created[0][1] == f"unknown_model_{UNMAPPED_MODEL}"
 
 
 def test_a_hub_that_cannot_name_its_own_device_says_nothing(monkeypatch):
@@ -269,8 +348,7 @@ def test_an_unmapped_model_is_asked_about_whatever_it_is_called(
 ):
     """The API returns its thermal zones as if they were devices, and nothing
     tells one apart from a real device nobody has mapped yet : the gateway's
-    id is in masterDeviceId on both, modelFamily is null on both, and
-    capabilities are only fetched for the configured device.
+    id is in masterDeviceId on both, and modelFamily is null on both.
 
     A filter was tried on those names and taken back out. The two ways of
     being wrong do not cost the same -- a zone reported is an issue closed in
@@ -301,19 +379,25 @@ def test_the_dialog_speaks_for_every_unmapped_device_on_the_account(
     assert result["description_placeholders"]["model_ids"] == "88888, 99999"
 
 
-def test_the_capability_ids_come_from_the_devices_that_have_them(monkeypatch):
-    """A hub holds capabilities for its own device and no other, so the report
-    is assembled from the entries Home Assistant has loaded. A model nobody
-    added still belongs in it -- half a report is what a mapping starts from.
+def test_the_capability_ids_come_from_every_device_the_account_has(monkeypatch):
+    """Not only from the ones somebody added.
+
+    The setup view carries a capability list per device and the account keeps
+    all of them, so a model with no subentry contributes its ids too. It used
+    to contribute its model id and an empty list, which is the half a mapping
+    cannot be written from -- and unmapped hardware is exactly the hardware
+    nobody has added yet.
     """
     entry = make_entry(
-        unmapped=(101,), account=[UNMAPPED_MODEL, OTHER_UNMAPPED_MODEL, 77777]
-    )
-    other = make_entry(
-        modelId=OTHER_UNMAPPED_MODEL, entry_id="other", unmapped=(207, 208)
+        unmapped=(101,),
+        account={
+            UNMAPPED_MODEL: [101],
+            OTHER_UNMAPPED_MODEL: [207, 208],
+            77777: [],
+        },
     )
 
-    report = repairs._account_report(make_hass([entry, other]), entry)
+    report = repairs._account_report(entry)
 
     assert report == {
         77777: [],
@@ -464,8 +548,8 @@ def test_the_account_is_read_off_any_one_of_its_devices():
     """Every hub holds the whole setup view, which is what makes one dialog
     able to speak for devices its own entry knows nothing about.
     """
-    hub = SimpleNamespace(
-        _devices=[
+    account = SimpleNamespace(
+        devices=[
             {"deviceId": 1, "modelId": 235},
             {"deviceId": 2, "modelId": 99999},
             {"deviceId": 3, "modelId": 88888},
@@ -473,13 +557,13 @@ def test_the_account_is_read_off_any_one_of_its_devices():
         ]
     )
 
-    assert Hub.get_unmapped_models(hub) == [88888, 99999]
+    assert CozytouchAccount.get_unmapped_models(account) == [88888, 99999]
 
 
 def test_the_mapping_splits_what_it_names_from_what_it_does_not():
     """One rule, read by the diagnostics dump and by the repair alike."""
-    hub = SimpleNamespace(
-        _devices=[
+    hub = hub_holding(
+        [
             {
                 "deviceId": 1,
                 "modelId": 235,
@@ -489,7 +573,7 @@ def test_the_mapping_splits_what_it_names_from_what_it_does_not():
                 ],
             }
         ],
-        _deviceId=1,
+        deviceId=1,
     )
 
     mapped, unmapped = Hub.get_capability_names(hub)
@@ -500,7 +584,7 @@ def test_the_mapping_splits_what_it_names_from_what_it_does_not():
 
 def test_a_device_the_hub_does_not_hold_splits_into_nothing():
     """The caller has to be able to tell "names nothing" from "not there"."""
-    hub = SimpleNamespace(_devices=[], _deviceId=7)
+    hub = hub_holding([], deviceId=7)
 
     assert Hub.get_capability_names(hub) == ({}, [])
 
@@ -509,12 +593,12 @@ def test_the_model_id_comes_back_as_the_api_reported_it():
     """get_model_infos answers what the table made of the id; a bug report
     needs the id itself, which is what this accessor is for.
     """
-    hub = SimpleNamespace(
-        _devices=[
+    hub = hub_holding(
+        [
             {"deviceId": 1, "modelId": 1457},
             {"deviceId": 2, "modelId": 99999},
         ],
-        _deviceId=2,
+        deviceId=2,
     )
 
     assert Hub.get_model_id(hub) == 99999
@@ -523,7 +607,7 @@ def test_the_model_id_comes_back_as_the_api_reported_it():
 
 def test_a_device_the_hub_does_not_hold_has_no_model_id():
     """The caller has to be able to tell "not mapped" from "not there"."""
-    hub = SimpleNamespace(_devices=[], _deviceId=7)
+    hub = hub_holding([], deviceId=7)
 
     assert Hub.get_model_id(hub) is None
 

@@ -112,7 +112,17 @@ def _resolve_hub(hass: HomeAssistant, entity_id: str):
             f"The Cozytouch entry behind {entity_id} is not loaded ({entry.state})"
         )
 
-    return entry.runtime_data
+    # A device is a subentry of its account, and the hub that drives it is
+    # keyed on that subentry. An entity with no subentry is one this
+    # integration did not build under the shape it builds them today.
+    hub = entry.runtime_data.hubs.get(registry_entry.config_subentry_id or "")
+    if hub is None:
+        raise ServiceValidationError(
+            f"{entity_id} is not attached to a Cozytouch device this entry "
+            "drives; remove it and add the device again"
+        )
+
+    return hub
 
 
 @callback

@@ -109,7 +109,10 @@ known-first-party = ["homeassistant", "custom_components", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 # Asserts are what a test is, and a test function's name is its docstring.
-"tests/*" = ["S101", "D1"]
+# S105/S106/S107 flag string literals that look like passwords: a test that
+# covers what happens to a wrong password has to contain one, and the whole
+# point is that it is not real.
+"tests/*" = ["S101", "S105", "S106", "S107", "D1"]
 # These are operator tools run by hand, not shipped code: printing is their
 # output, and probe_api.py opens URLs because probing the API is its job.
 "scripts/*" = ["T20", "S310", "D1"]

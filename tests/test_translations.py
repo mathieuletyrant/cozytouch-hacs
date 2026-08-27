@@ -5,14 +5,17 @@ the ways they break are quiet ones. Four have been live in this repo:
 
 A `[%key:…%]` reference is resolved by the build that ships Home Assistant
 core, and by nothing that ships a custom integration : the abort message for an
-already-configured device read as its own placeholder, in both languages.
+already-configured account read as its own placeholder, in both languages --
+twice, the second time after the flow was rewritten around one entry per
+account.
 
 `errors["base"]` is a translation key, not a sentence. The one set when the
 account has no device left to add was the sentence `No new device found`, which
 the form has no entry for and so printed verbatim, in English, to everyone.
 
 A field with no `data` entry falls back to its own name : the device picker was
-labelled `device`.
+labelled `device`. It is asked for by a subentry flow now, whose labels live one
+level deeper, under `config_subentries`.
 
 A `select` option in `services.yaml` is translated through the selector's
 `translation_key`. Without one the action's form offers `heating` and `monday`
@@ -77,6 +80,19 @@ def form_fields(translations, flow):
     return fields
 
 
+def subentry_fields(translations):
+    """The same, for the subentry flows -- a device is a subentry of an account.
+
+    One level deeper than `config`: the sections are keyed by subentry type,
+    and each holds a flow of its own.
+    """
+    fields = set()
+    for subentry in translations.get("config_subentries", {}).values():
+        for step in subentry.get("step", {}).values():
+            fields |= set(step.get("data", {}))
+    return fields
+
+
 @pytest.mark.parametrize("path", TRANSLATIONS)
 def test_no_translation_file_ships_an_unresolved_reference(path):
     """Nothing outside core resolves `[%key:…%]`; the user reads the brackets."""
@@ -99,8 +115,10 @@ def test_every_config_flow_field_has_a_label(path):
     """A field with no `data` entry is labelled with its own variable name."""
     source = pathlib.Path(CONFIG_FLOW).read_text(encoding="utf-8")
     translations = loaded(path)
-    labelled = form_fields(translations, "config") | form_fields(
-        translations, "options"
+    labelled = (
+        form_fields(translations, "config")
+        | form_fields(translations, "options")
+        | subentry_fields(translations)
     )
 
     assert not set(FIELD.findall(source)) - labelled
