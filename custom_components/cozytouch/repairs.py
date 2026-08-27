@@ -36,25 +36,37 @@ UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
 REPORTED_MODELS = "reported_models"
 
 
-def _account_report(hass: HomeAssistant, entry: ConfigEntry) -> dict[int, list[int]]:
+def _account_report(entry: ConfigEntry) -> dict[int, list[int]]:
     """Every unmapped model on the account, with the ids nothing names for it.
 
-    The setup view lists the whole account, so any one entry can see every
-    model the table does not know. The capability ids can only come from the
-    entries Home Assistant has actually loaded -- a hub holds capabilities for
-    its own device and no other -- so a device nobody added contributes its
-    model id and an empty list, which is still the half a mapping starts from.
+    One entry per account, so this reads one account rather than scanning the
+    entry store. It also no longer depends on which devices somebody added :
+    the setup view carries a capability list for every device on the account
+    and the account keeps all of them, so an unmapped model contributes its
+    capability ids whether it has a subentry or not. That used to be the half
+    of a report that was missing exactly when it mattered -- hardware nobody
+    has mapped is hardware nobody has added yet.
     """
-    report = {modelId: [] for modelId in entry.runtime_data.get_unmapped_models()}
+    runtime = entry.runtime_data
+    report: dict[int, list[int]] = {
+        modelId: [] for modelId in runtime.account.get_unmapped_models()
+    }
 
-    for other in hass.config_entries.async_entries(DOMAIN):
-        hub = getattr(other, "runtime_data", None)
-        if hub is None:
+    # Any hub answers for any device on its account : the mapping is keyed on
+    # the model, and the capabilities it reads are the account's.
+    hub = next(iter(runtime.hubs.values()), None)
+    if hub is None:
+        return report
+
+    for device in runtime.account.devices:
+        modelId = device["modelId"]
+        if modelId not in report:
             continue
 
-        modelId = hub.get_model_id()
-        if modelId in report:
-            _, unnamed = hub.get_capability_names()
+        _, unnamed = hub.get_capability_names(device["deviceId"])
+        # Several devices can share one unmapped model; a silent one must not
+        # overwrite what a talkative sibling reported.
+        if unnamed:
             report[modelId] = unnamed
 
     return report
@@ -108,57 +120,62 @@ def _already_reported(hass: HomeAssistant) -> set[int]:
 
 
 @callback
-def async_check_model_mapping(
-    hass: HomeAssistant, entry: ConfigEntry, hub
-) -> None:
-    """Raise, or clear, the "this model is not mapped" issue for an entry.
+def async_check_model_mapping(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Raise, or clear, the "this model is not mapped" issue for an account.
 
     Keyed on the model id rather than on the device, so a pair of identical
     towel racks asks once. Cleared on the way through as well as raised: a
     release that adds the mapping is the expected end of this issue, and the
     setup that follows the update is where that shows.
 
-    Only the device this entry drives is considered. The account may hold
-    others, but a diagnostics dump only carries capability values for the
-    configured one -- which is what a mapping gets built from -- so asking
-    about the rest would ask for a file that cannot answer.
+    Every device the entry has a subentry for is considered, which is what the
+    account holds a hub for.
 
     Everything the table does not know is asked about, including the thermal
     zones the API returns as if they were devices. Nothing separates one of
     those from a real device that nobody has mapped yet : the gateway's id
-    sits in masterDeviceId on both, modelFamily is null on both, and
-    capabilities are only fetched for the configured device. Any rule would be
-    a guess, and the two ways of being wrong do not cost the same -- a zone
-    reported is an issue closed in seconds, a real device silenced is someone
-    never finding out why their hardware is half-supported.
+    sits in masterDeviceId on both, and modelFamily is null on both. Any rule
+    would be a guess, and the two ways of being wrong do not cost the same --
+    a zone reported is an issue closed in seconds, a real device silenced is
+    someone never finding out why their hardware is half-supported.
     """
-    modelId = hub.get_model_id()
-    if modelId is None:
-        return
+    reported = _already_reported(hass)
+    # One ask per model, and every device of the account is walked, so a pair
+    # of identical towel racks has to be recognised here rather than left to
+    # the issue registry to overwrite -- the second one would replace the
+    # first one's device name and ask about the same mapping twice.
+    asked: set[int] = set()
 
-    issue_id = UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
+    for subentry_id, hub in entry.runtime_data.hubs.items():
+        modelId = hub.get_model_id()
+        if modelId is None:
+            continue
 
-    if hub.get_model_infos().type is not CozytouchDeviceType.UNKNOWN:
-        ir.async_delete_issue(hass, DOMAIN, issue_id)
-        return
+        issue_id = UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
 
-    if modelId in _already_reported(hass):
-        return
+        if hub.get_model_infos().type is not CozytouchDeviceType.UNKNOWN:
+            ir.async_delete_issue(hass, DOMAIN, issue_id)
+            continue
 
-    ir.async_create_issue(
-        hass,
-        DOMAIN,
-        issue_id,
-        is_fixable=True,
-        severity=ir.IssueSeverity.WARNING,
-        learn_more_url=ISSUE_TRACKER,
-        translation_key="unknown_model",
-        translation_placeholders={
-            "device_name": entry.title,
-            "model_id": str(modelId),
-        },
-        data={"entry_id": entry.entry_id, "model_id": modelId},
-    )
+        if modelId in reported or modelId in asked:
+            continue
+
+        asked.add(modelId)
+        subentry = entry.subentries[subentry_id]
+        ir.async_create_issue(
+            hass,
+            DOMAIN,
+            issue_id,
+            is_fixable=True,
+            severity=ir.IssueSeverity.WARNING,
+            learn_more_url=ISSUE_TRACKER,
+            translation_key="unknown_model",
+            translation_placeholders={
+                "device_name": subentry.title,
+                "model_id": str(modelId),
+            },
+            data={"entry_id": entry.entry_id, "model_id": modelId},
+        )
 
 
 class UnknownModelRepairFlow(RepairsFlow):
@@ -204,15 +221,15 @@ class UnknownModelRepairFlow(RepairsFlow):
         if entry is None or getattr(entry, "runtime_data", None) is None:
             return {}
 
-        return _account_report(self.hass, entry)
+        return _account_report(entry)
 
     @callback
     def _async_remember_it_was_reported(self, report: dict[int, list[int]]) -> None:
         """Take everything the report covered off the list of things to ask.
 
-        Written to the one entry the dialog was opened from, and read back
-        across all of them, so this costs a single reload -- the same reload
-        changing an option causes -- rather than one per device.
+        Written to the entry the dialog was opened from, and read back across
+        every entry : an unmapped model is a gap in the table, so a report for
+        it answers for whoever else owns the same hardware.
         """
         entry = self.hass.config_entries.async_get_entry(self._entry_id)
         if entry is None:

@@ -28,8 +28,8 @@ if TYPE_CHECKING:
 class CapabilityType(StrEnum):
     """What a capability becomes, which decides the platform that builds it.
 
-    The members equal the strings the platforms match on -- a platform reading
-    `capability["type"] == "switch"` matches SWITCH -- so adding one here only
+    The members equal the strings they replaced, so stored state and raw
+    values keep comparing equal. Adding one here only
     means something once a platform picks it up; test_capability_coverage.py
     checks the two sides against each other.
     """

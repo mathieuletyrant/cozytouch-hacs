@@ -99,10 +99,11 @@ TRIGGER_SCHEMA = vol.Any(_SCHEDULE_TRIGGER_SCHEMA, _PRESET_TRIGGER_SCHEMA)
 def _capability_id(unique_id: str | None) -> int | None:
     """The capability id a sensor's unique id ends with.
 
-    Sensors are keyed `cozytouch_{entry_id}_{capabilityId}`, and a config entry
-    id carries no underscore, so the tail is the capability. The two away-mode
-    timestamps are the exception -- `{entry_id}_0` and `{entry_id}_1` -- and 0
-    and 1 fall outside every program block, so they rule themselves out.
+    Sensors are keyed `cozytouch_{subentry_id}_{capabilityId}` -- a device is
+    a subentry of its account -- and a subentry id carries no underscore, so
+    the tail is the capability. The two away-mode timestamps are the exception,
+    `{subentry_id}_0` and `{subentry_id}_1`, and 0 and 1 fall outside every
+    program block, so they rule themselves out.
     """
     if not unique_id:
         return None

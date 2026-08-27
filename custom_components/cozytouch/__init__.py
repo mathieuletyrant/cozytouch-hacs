@@ -7,9 +7,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 import homeassistant.helpers.config_validation as cv
 
-from . import hub
+from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry
+from .hub import AccountCoordinator, CozytouchConfigEntry, CozytouchRuntimeData, Hub
 from .repairs import async_check_model_mapping
 from .services import async_register_services
 
@@ -32,60 +32,66 @@ def _setting(entry: ConfigEntry, key: str) -> bool:
     return entry.options.get(key, entry.data.get(key, False))
 
 
-async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Reload so the new options are picked up."""
+async def _async_entry_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload so new options -- or a device added or removed -- are picked up.
+
+    Home Assistant fires the update listeners for a subentry change as well as
+    for an options change, which is what builds the hub for a device somebody
+    just added without asking them to reload by hand.
+    """
     await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) -> bool:
     """Set up Atlantic Cozytouch from a config entry."""
-    theHub = hub.Hub(
-        hass,
-        entry.data["username"],
-        entry.data["password"],
-        entry.data["deviceId"],
-        config_entry=entry,
-    )
+    account = CozytouchAccount(hass, entry.data["username"], entry.data["password"])
+    account.set_dump_json(_setting(entry, "dump_json"))
 
-    theHub.set_dump_json(_setting(entry, "dump_json"))
-    entry.async_on_unload(entry.add_update_listener(_async_options_updated))
+    entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
     async_register_services(hass)
 
-    await theHub.connect()
-    if not theHub.online:
-        # HA discards this hub and builds a new one on each retry, so release the
-        # aiohttp session here or every attempt leaks one
-        await theHub.close()
-        # tells HA to retry setup with exponential backoff until the network
-        # is available
+    # ConfigEntryNotReady tells HA to retry with exponential backoff until the
+    # network is back; a refused password comes out of here as
+    # ConfigEntryAuthFailed instead, which asks for a new one rather than
+    # retrying the old one until somebody goes looking.
+    if not await account.connect_or_auth_failed():
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
-    entry.runtime_data = theHub
+    create_unknown = _setting(entry, "create_unknown")
+    hubs: dict[str, Hub] = {}
+    for subentry_id, subentry in entry.subentries.items():
+        hub = Hub(
+            hass,
+            account,
+            subentry.data["deviceId"],
+            config_entry=entry,
+            subentry_id=subentry_id,
+        )
+        hub.set_create_entities_for_unknown_entities(create_unknown)
+        hubs[subentry_id] = hub
 
-    theHub.set_create_entities_for_unknown_entities(_setting(entry, "create_unknown"))
-    try:
-        # raises ConfigEntryNotReady if the first poll fails, which also gets us
-        # a retry -- but only if we hand the session back first
-        await theHub.async_config_entry_first_refresh()
-        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    except Exception:
-        # HA does not call async_unload_entry when setup fails, so the session
-        # has to be released here or the retry leaks it
-        await theHub.close()
-        raise
+    coordinator = AccountCoordinator(hass, account, entry, hubs)
+    entry.runtime_data = CozytouchRuntimeData(account, hubs, coordinator)
+
+    # One refresh for the account where there used to be one per device, and
+    # the setup view `connect()` just read has already filled in a capability
+    # list for every one of them -- so this publishes what is there rather than
+    # fetching it again.
+    #
+    # async_refresh, not async_config_entry_first_refresh : the entities are
+    # built from those capabilities, so a poll that fails leaves values stale
+    # instead of failing a setup that already has what it needs.
+    await coordinator.async_refresh()
+
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Once the devices are loaded, and only for a setup that got this far:
     # an unmapped model is worth a word to the user, a failed setup is not.
-    async_check_model_mapping(hass, entry, theHub)
+    async_check_model_mapping(hass, entry)
 
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) -> bool:
     """Unload a config entry."""
-    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unload_ok:
-        # a reload builds a brand new hub, so the old session has to go with it
-        await entry.runtime_data.close()
-
-    return unload_ok
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

@@ -41,10 +41,17 @@ from homeassistant.components.sensor.const import (
 DEVICE_ID = 27906641
 
 
+SUBENTRY_ID = "sub-1"
+
+
 def build(capabilities):
-    """Run the sensor platform over these capabilities and return the entities."""
+    """Run the sensor platform over these capabilities and return the entities.
+
+    One account entry with one device under it, which is the shape the platform
+    loops over: `entry.subentries` and a hub per subentry.
+    """
     hub = SimpleNamespace(
-        get_capabilities_for_device=lambda deviceId: capabilities,
+        get_capabilities_for_device=lambda deviceId=None: capabilities,
         # The platform also builds one entity that is not capability-driven,
         # from the modificationDate the device reports. None here keeps these
         # cases to the capability table they are about; tests/test_freshness.py
@@ -52,15 +59,21 @@ def build(capabilities):
         get_last_modification_date=lambda: None,
     )
     entry = SimpleNamespace(
-        runtime_data=hub,
-        data={"deviceId": DEVICE_ID},
-        title="Salon",
+        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
+        subentries={
+            SUBENTRY_ID: SimpleNamespace(data={"deviceId": DEVICE_ID}, title="Salon")
+        },
+        title="cozytouch@example.com",
         entry_id="entry123",
     )
     entities = []
     asyncio.run(
         sensor_platform.async_setup_entry(
-            None, entry, lambda new, update_before_add: entities.extend(new)
+            None,
+            entry,
+            lambda new, update_before_add, config_subentry_id=None: entities.extend(
+                new
+            ),
         )
     )
     return entities
@@ -154,7 +167,9 @@ def hub_reporting(capabilities):
     """
     hub = SimpleNamespace(
         _deviceId=DEVICE_ID,
-        _devices=[{"deviceId": DEVICE_ID, "capabilities": capabilities}],
+        _account=SimpleNamespace(
+            devices=[{"deviceId": DEVICE_ID, "capabilities": capabilities}]
+        ),
     )
     hub.get_capability_value = lambda capabilityId, defaultIfNotExist="0": (
         Hub.get_capability_value(hub, capabilityId, defaultIfNotExist)

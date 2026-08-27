@@ -54,26 +54,29 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    # Retrieve the hub object
-    hub = config_entry.runtime_data
+    # One device per subentry, and its entities are registered under it :
+    # the subentry id is the identity that used to be the entry's own, back
+    # when an entry meant a device.
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    # Init climate entities
-    climates = []
-    capabilities = hub.get_capabilities_for_device()
-    for capability in capabilities:
-        if capability.type == CapabilityType.CLIMATE:
-            climates.append(
-                CozytouchClimate(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+        # Init climate entities
+        climates = []
+        capabilities = hub.get_capabilities_for_device()
+        for capability in capabilities:
+            if capability.type == CapabilityType.CLIMATE:
+                climates.append(
+                    CozytouchClimate(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
 
-    # Add the entities to HA
-    if len(climates) > 0:
-        async_add_entities(climates, True)
+        # Add the entities to HA
+        if len(climates) > 0:
+            async_add_entities(climates, True, config_subentry_id=subentry_id)
 
 
 class CozytouchClimate(ClimateEntity, CozytouchSensor):

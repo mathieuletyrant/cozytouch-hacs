@@ -24,6 +24,8 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import SupportsResponse
 from homeassistant.exceptions import ServiceValidationError
 
+SUBENTRY_ID = "sub-1"
+
 TRANSLATIONS = (
     "custom_components/cozytouch/strings.json",
     "custom_components/cozytouch/translations/en.json",
@@ -75,7 +77,9 @@ def make_hass(monkeypatch, hub, platform="cozytouch", domain="cozytouch",
     """
     if registry_entry is ...:
         registry_entry = SimpleNamespace(
-            config_entry_id="entry", platform=platform
+            config_entry_id="entry",
+            config_subentry_id=SUBENTRY_ID,
+            platform=platform,
         )
 
     monkeypatch.setattr(
@@ -88,7 +92,13 @@ def make_hass(monkeypatch, hub, platform="cozytouch", domain="cozytouch",
         ),
     )
 
-    entry = SimpleNamespace(domain=domain, state=state, runtime_data=hub)
+    # A device is a subentry of its account, and the hub driving it is keyed
+    # on that subentry -- which is what `_resolve_hub` looks up.
+    entry = SimpleNamespace(
+        domain=domain,
+        state=state,
+        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
+    )
     return SimpleNamespace(
         services=FakeServices(),
         config_entries=SimpleNamespace(async_get_entry=lambda entry_id: entry),

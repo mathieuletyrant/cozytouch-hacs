@@ -35,6 +35,8 @@ from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.infos import ModelInfos
 from homeassistant.util import dt as dt_util
 
+SUBENTRY_ID = "sub-1"
+
 # Monday, so that a range starting here lines up with the first capability of
 # a block; the fixtures below rely on it.
 MONDAY = datetime.date(2026, 8, 24)
@@ -85,18 +87,29 @@ def week(first_capability, day_program):
     return {first_capability + day: day_program for day in range(7)}
 
 
-def build(values):
-    """Run the calendar platform and return the entities it built."""
-    entry = SimpleNamespace(
-        runtime_data=make_hub(values),
-        data={"deviceId": 27906641},
-        title="Salon",
+def entry_over(hub):
+    """An account entry holding one device, which is what a subentry is."""
+    return SimpleNamespace(
+        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
+        subentries={
+            SUBENTRY_ID: SimpleNamespace(data={"deviceId": 27906641}, title="Salon")
+        },
+        title="cozytouch@example.com",
         entry_id="entry123",
     )
+
+
+def build(values):
+    """Run the calendar platform and return the entities it built."""
+    entry = entry_over(make_hub(values))
     entities = []
     asyncio.run(
         calendar_platform.async_setup_entry(
-            None, entry, lambda new, update_before_add: entities.extend(new)
+            None,
+            entry,
+            lambda new, update_before_add, config_subentry_id=None: entities.extend(
+                new
+            ),
         )
     )
 
@@ -109,7 +122,7 @@ def calendar_over(day_programs, program="heating"):
     values = {first + day: value for day, value in day_programs.items()}
 
     return CozytouchProgramCalendar(
-        coordinator=make_hub(values), config_uniq_id="entry123", program=program
+        coordinator=make_hub(values), config_uniq_id=SUBENTRY_ID, program=program
     )
 
 
@@ -341,22 +354,21 @@ def test_no_program_means_nothing_running(monkeypatch):
 def test_the_calendars_are_keyed_on_the_entry_and_the_block(program):
     calendar = calendar_over({0: stored((0, 17))}, program=program)
 
-    assert calendar.unique_id == f"{DOMAIN}_entry123_{program}_program"
+    assert calendar.unique_id == f"{DOMAIN}_{SUBENTRY_ID}_{program}_program"
 
 
 @pytest.mark.parametrize(("program", "first"), list(PROGRAM_BLOCKS.items()))
 def test_monday_is_the_first_capability_of_every_block(program, first):
     """The three runs are seven consecutive ids each, monday first."""
-    entry = SimpleNamespace(
-        runtime_data=make_hub({first + day: stored((0, 17)) for day in range(7)}),
-        data={"deviceId": 27906641},
-        title="Salon",
-        entry_id="entry123",
-    )
+    entry = entry_over(make_hub({first + day: stored((0, 17)) for day in range(7)}))
     entities = []
     asyncio.run(
         calendar_platform.async_setup_entry(
-            None, entry, lambda new, update_before_add: entities.extend(new)
+            None,
+            entry,
+            lambda new, update_before_add, config_subentry_id=None: entities.extend(
+                new
+            ),
         )
     )
 
@@ -366,4 +378,4 @@ def test_monday_is_the_first_capability_of_every_block(program, first):
 def test_a_calendar_lands_on_the_same_device_as_the_entities():
     calendar = calendar_over({0: stored((0, 17))})
 
-    assert calendar.device_info["identifiers"] == {(DOMAIN, "entry123")}
+    assert calendar.device_info["identifiers"] == {(DOMAIN, SUBENTRY_ID)}

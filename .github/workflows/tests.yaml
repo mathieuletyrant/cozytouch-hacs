@@ -31,7 +31,7 @@ jobs:
       - name: Run ruff
         run: ruff check --output-format=github .
 
-  pytest:
+  pytest-matrix:
     name: pytest (HA ${{ matrix.homeassistant }} on Python ${{ matrix.python }})
     runs-on: "ubuntu-latest"
     strategy:
@@ -41,8 +41,8 @@ jobs:
           - python: "3.14.2"
             homeassistant: "2026.8.3"
             requirements: "requirements_test.txt"
-          - python: "3.12.3"
-            homeassistant: "2024.12.0"
+          - python: "3.13.7"
+            homeassistant: "2025.4.0"
             requirements: "requirements_test_min.txt"
     steps:
       - uses: "actions/checkout@v4"
@@ -61,3 +61,15 @@ jobs:
             | grep -E "^(Name|Version)"
       - name: Run pytest
         run: .venv/bin/pytest tests/ -q
+
+  # A job that only agrees with the matrix, so that the name `pytest` keeps
+  # reporting -- see docs/decisions.md.
+  pytest:
+    runs-on: "ubuntu-latest"
+    needs: pytest-matrix
+    if: always()
+    steps:
+      - name: Fail unless every combination passed
+        run: |
+          echo "pytest-matrix: ${{ needs.pytest-matrix.result }}"
+          test "${{ needs.pytest-matrix.result }}" = "success"

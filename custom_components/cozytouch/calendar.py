@@ -50,20 +50,23 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    hub = config_entry.runtime_data
+    # One device per subentry, and its calendars are registered under it, the
+    # way every other platform here does it.
+    for subentry_id in config_entry.subentries:
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    calendars = [
-        CozytouchProgramCalendar(
-            coordinator=hub,
-            config_uniq_id=config_entry.entry_id,
-            program=program,
-        )
-        for program, first in PROGRAM_BLOCKS.items()
-        if _reports_the_whole_block(hub, first)
-    ]
+        calendars = [
+            CozytouchProgramCalendar(
+                coordinator=hub,
+                config_uniq_id=subentry_id,
+                program=program,
+            )
+            for program, first in PROGRAM_BLOCKS.items()
+            if _reports_the_whole_block(hub, first)
+        ]
 
-    if calendars:
-        async_add_entities(calendars, True)
+        if calendars:
+            async_add_entities(calendars, True, config_subentry_id=subentry_id)
 
 
 def _reports_the_whole_block(hub: Hub, first: int) -> bool:
