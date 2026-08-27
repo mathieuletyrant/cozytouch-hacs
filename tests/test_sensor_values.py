@@ -21,6 +21,7 @@ import time
 import pytest
 
 from custom_components.cozytouch.const import CozytouchCapabilityVariableType
+from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.sensor import (
     CozytouchAwayModeSensor,
     CozytouchAwayModeTimestampSensor,
@@ -59,7 +60,7 @@ class FakeCoordinator:
 def sensor(cls, value, capability=None, **attrs):
     """A stand-in for an entity of cls, holding only what get_value reads."""
     stub = object.__new__(cls)
-    stub._capability = {"capabilityId": CAPABILITY_ID, **(capability or {})}
+    stub._capability = CapabilityInfos(capabilityId=CAPABILITY_ID, **(capability or {}))
     stub.coordinator = FakeCoordinator({CAPABILITY_ID: value})
     for name, attr in attrs.items():
         setattr(stub, name, attr)
@@ -255,7 +256,9 @@ def test_a_unit_sensor_that_cannot_parse_its_value_reads_as_zero():
 def timestamp_sensor(value, index=0, offset="7200", away=(0, 0)):
     """A timestamp sensor reading `value`, with the device reporting `offset`."""
     stub = object.__new__(CozytouchAwayModeTimestampSensor)
-    stub._capability = {"capabilityId": CAPABILITY_ID, "timezoneCapabilityId": 99}
+    stub._capability = CapabilityInfos(
+        capabilityId=CAPABILITY_ID, timezoneCapabilityId=99
+    )
     stub.coordinator = FakeCoordinator(
         {CAPABILITY_ID: value, 99: offset}, away_start=away[0], away_end=away[1]
     )

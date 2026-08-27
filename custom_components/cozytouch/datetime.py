@@ -11,6 +11,7 @@ from homeassistant.util import dt as dt_util
 
 from .const import CozytouchCapabilityVariableType
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,33 +31,21 @@ async def async_setup_entry(
     datetimes = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "away_mode_timestamps":
-            datetimes.append(
-                CozytouchAwayModeDateTime(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_0",
-                    coordinator=hub,
-                    name=capability["name_0"],
-                    icon=capability.get("icon_0", None),
-                    separator=",",
-                    timestamp_index=0,
+        if capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
+            for index, timestamp in enumerate(capability.timestamps):
+                datetimes.append(
+                    CozytouchAwayModeDateTime(
+                        capability=capability,
+                        config_title=config_entry.title,
+                        config_uniq_id=config_entry.entry_id,
+                        attr_uniq_id=f"{config_entry.entry_id}_{index}",
+                        coordinator=hub,
+                        name=timestamp.name,
+                        icon=timestamp.icon,
+                        separator=",",
+                        timestamp_index=index,
+                    )
                 )
-            )
-            datetimes.append(
-                CozytouchAwayModeDateTime(
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
-                    attr_uniq_id=config_entry.entry_id + "_1",
-                    coordinator=hub,
-                    name=capability["name_1"],
-                    icon=capability.get("icon_1", None),
-                    separator=",",
-                    timestamp_index=1,
-                )
-            )
 
     # Add the entities to HA
     if len(datetimes) > 0:
@@ -98,11 +87,11 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
         if timestamp is not None:
             if self._timestamp_index == 0:
                 await self.coordinator.set_away_mode_start(
-                    self._capability["capabilityId"], int(timestamp)
+                    self._capability.capabilityId, int(timestamp)
                 )
             elif self._timestamp_index == 1:
                 await self.coordinator.set_away_mode_end(
-                    self._capability["capabilityId"], int(timestamp)
+                    self._capability.capabilityId, int(timestamp)
                 )
 
     @property

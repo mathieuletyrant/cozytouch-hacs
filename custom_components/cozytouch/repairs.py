@@ -138,7 +138,7 @@ def async_check_model_mapping(
 
     issue_id = UNKNOWN_MODEL_ISSUE.format(modelId=modelId)
 
-    if hub.get_model_infos()["type"] is not CozytouchDeviceType.UNKNOWN:
+    if hub.get_model_infos().type is not CozytouchDeviceType.UNKNOWN:
         ir.async_delete_issue(hass, DOMAIN, issue_id)
         return
 

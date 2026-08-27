@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ async def async_setup_entry(
     selects = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "select":
+        if capability.type == CapabilityType.SELECT:
             selects.append(
                 CozytouchSelect(
                     coordinator=hub,
@@ -65,8 +66,8 @@ class CozytouchSelect(SelectEntity, CozytouchSensor):
             icon=icon,
         )
         modelInfos = self.coordinator.get_model_infos()
-        if "modelList" in capability and capability["modelList"] in modelInfos:
-            self._list = modelInfos.get(capability["modelList"], None)
+        if "modelList" in capability and capability.modelList in modelInfos:
+            self._list = modelInfos.get(capability.modelList, None)
         else:
             self._list = {-1: "Undefined"}
 
@@ -78,7 +79,7 @@ class CozytouchSelect(SelectEntity, CozytouchSensor):
         for value in self._list:
             if self._list[value] == option:
                 await self.coordinator.set_capability_value(
-                    self._capability["capabilityId"],
+                    self._capability.capabilityId,
                     str(value),
                 )
                 await self.coordinator.async_request_refresh()
@@ -88,7 +89,7 @@ class CozytouchSelect(SelectEntity, CozytouchSensor):
         """Retrieve value from hub."""
         try:
             value = int(
-                self.coordinator.get_capability_value(self._capability["capabilityId"])
+                self.coordinator.get_capability_value(self._capability.capabilityId)
             )
             if value in self._list:
                 self.current_option = self._list[value]
