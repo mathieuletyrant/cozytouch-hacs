@@ -28,6 +28,7 @@ from custom_components.cozytouch.capability import (
     SELF_DESCRIBING_CAPABILITIES,
     get_capability_infos,
 )
+from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 TRANSLATIONS = (
@@ -63,9 +64,13 @@ PLATFORMS = (
     "switch.py",
 )
 
-# `capability["type"] == "x"` and `capability["type"] in ("x", "y")`, the two
-# ways a platform states which type it was written for.
-TYPE_TEST = re.compile(r'capability\["type"\]\s*(?:== "(\w+)"|in \(([^)]*)\))')
+# `capability["type"] == CapabilityType.X` and `capability["type"] in
+# (CapabilityType.X, CapabilityType.Y)`, the two ways a platform states which
+# type it was written for. The member is resolved to its value, so a name the
+# enum does not declare fails here rather than matching nothing at runtime.
+TYPE_TEST = re.compile(
+    r'capability\["type"\]\s*(?:== CapabilityType\.(\w+)|in \(([^)]*)\))'
+)
 
 # What sensor.py turns into an EntityCategory, plus the "sensor" that means no
 # category at all. Anything else it silently drops on the floor.
@@ -112,8 +117,11 @@ def types_the_platforms_consume():
             encoding="utf-8"
         )
         for single, group in TYPE_TEST.findall(source):
-            for name in [single] if single else re.findall(r'"(\w+)"', group):
-                consumed.setdefault(name, set()).add(platform)
+            members = (
+                [single] if single else re.findall(r"CapabilityType\.(\w+)", group)
+            )
+            for member in members:
+                consumed.setdefault(CapabilityType[member].value, set()).add(platform)
     return consumed
 
 

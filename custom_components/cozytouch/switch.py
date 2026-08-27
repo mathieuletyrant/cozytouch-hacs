@@ -11,6 +11,7 @@ from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ async def async_setup_entry(
     switches = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "switch":
+        if capability["type"] == CapabilityType.SWITCH:
             switches.append(
                 CozytouchSwitch(
                     coordinator=hub,
@@ -39,7 +40,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                 )
             )
-        elif capability["type"] == "away_mode_switch":
+        elif capability["type"] == CapabilityType.AWAY_MODE_SWITCH:
             switches.append(
                 CozytouchAwayModeSwitch(
                     coordinator=hub,

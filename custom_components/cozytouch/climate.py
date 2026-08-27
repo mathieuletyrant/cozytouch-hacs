@@ -23,6 +23,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,7 +61,7 @@ async def async_setup_entry(
     climates = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "climate":
+        if capability["type"] == CapabilityType.CLIMATE:
             climates.append(
                 CozytouchClimate(
                     coordinator=hub,

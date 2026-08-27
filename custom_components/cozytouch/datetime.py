@@ -11,6 +11,7 @@ from homeassistant.util import dt as dt_util
 
 from .const import CozytouchCapabilityVariableType
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ async def async_setup_entry(
     datetimes = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "away_mode_timestamps":
+        if capability["type"] == CapabilityType.AWAY_MODE_TIMESTAMPS:
             for index, timestamp in enumerate(capability["timestamps"]):
                 datetimes.append(
                     CozytouchAwayModeDateTime(

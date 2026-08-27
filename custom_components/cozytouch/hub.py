@@ -25,6 +25,7 @@ from homeassistant.util import dt as dt_util
 
 from .capability import get_capability_infos
 from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID, DOMAIN
+from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
@@ -601,12 +602,12 @@ class Hub(DataUpdateCoordinator):
                     )
 
                     if capability_infos is None and self._create_unknown:
-                        capability_infos = {
-                            "capabilityId": capability["capabilityId"],
-                            "name": "Capability_" + str(capability["capabilityId"]),
-                            "type": "string",
-                            "category": "diag",
-                        }
+                        capability_infos = CapabilityInfos(
+                            capabilityId=capability["capabilityId"],
+                            name="Capability_" + str(capability["capabilityId"]),
+                            type=CapabilityType.STRING,
+                            category=CapabilityCategory.DIAG,
+                        )
 
                     if capability_infos is not None and len(capability_infos) > 0:
                         capability_infos["deviceId"] = deviceId
