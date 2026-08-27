@@ -25,12 +25,12 @@ Optional :
 
 from enum import StrEnum
 
-from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     FAN_AUTO,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
+    HVACMode,
 )
 
 from .const import (
@@ -91,7 +91,7 @@ def get_model_infos(  # noqa: C901
     """
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
-    if (deviceName or "").startswith(ZONE_NAME_PREFIX):
+    if deviceName is not None and deviceName.startswith(ZONE_NAME_PREFIX):
         # A THZONE is one zone of a ducted heat pump, not a product. What it
         # reports, in the one capture there is, is two capabilities -- 218
         # reading "0" and 100014 reading "255" -- and no climate capability:

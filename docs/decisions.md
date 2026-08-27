@@ -113,6 +113,29 @@ needs >= 3.14.2 — so a floating minor would let the runner image decide which
 Home Assistant is installable, which is the drift the pinned requirements
 exist to remove.
 
+### pyright, on three files
+
+The declared fields on `ModelInfos`/`CapabilityInfos` are only worth what
+checks them, and until this job nothing did. `pyproject.toml` scopes pyright
+to `infos.py`, `model.py` and `capability.py` — the typed core, where the
+declarations live — rather than the tree : the platforms and the hub read
+Home Assistant's heavily-typed API, and making them pyright-clean is its own
+project, not a line in this one. Basic mode for the same reason.
+
+`pythonVersion` is `"3.13"`, the floor's Python, not the pinned 3.14 : syntax
+the floor cannot parse has to fail here, and anything 3.13 accepts 3.14
+accepts too.
+
+The pin is inline in the workflow, next to uv's, because pyright needs the
+full test environment to resolve the `homeassistant` imports — it cannot live
+in `requirements_lint.txt` without dragging Home Assistant into the ruff job.
+
+Measured before wiring it up : 11 errors on the scope, of which 10 were the
+missing venv configuration and one was real — `get_model_infos` could assign
+a `str | None` device name into the zone's `name` field, which the
+`(deviceName or "")` guard hid from the checker. The run that stays green is
+the run that found one.
+
 ## `.github/workflows/release.yaml`
 
 ### It installs with pip, where tests.yaml uses uv

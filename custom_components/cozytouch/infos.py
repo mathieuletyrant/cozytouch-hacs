@@ -17,7 +17,7 @@ flag is itself pinned behaviour; see tests/test_capability.py.
 from enum import StrEnum
 from typing import TYPE_CHECKING, NamedTuple
 
-from homeassistant.components.climate import HVACMode
+from homeassistant.components.climate.const import HVACMode
 
 from .const import CozytouchCapabilityVariableType
 
