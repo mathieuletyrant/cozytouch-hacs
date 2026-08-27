@@ -8,15 +8,27 @@
                     "password": "Mot de passe"
                 }
             },
-            "select_device": {
+            "reauth_confirm": {
+                "title": "Saisissez à nouveau votre mot de passe Cozytouch",
+                "description": "Atlantic refuse désormais le mot de passe enregistré pour {username}. Saisissez le mot de passe actuel pour reconnecter tous les appareils de ce compte.",
                 "data": {
+                    "password": "Mot de passe"
+                }
+            },
+            "devices": {
+                "title": "Appareils à ajouter",
+                "description": "Tout ce que ce compte déclare, passerelles et zones thermiques comprises. Laissez de côté ce dont vous ne voulez pas d'entités ; vous pourrez l'ajouter plus tard depuis la page de l'intégration.",
+                "data": {
+                    "devices": "Appareils",
                     "create_unknown": "Créer des entités pour les capabilities inconnues",
                     "dump_json": "Générer un fichier JSON avec les données reçues"
                 }
             }
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+            "reauth_successful": "La ré-authentification a réussi",
+            "no_devices": "Ce compte Cozytouch ne déclare aucun appareil"
         },
         "error": {
             "cannot_connect": "Connexion aux serveurs Atlantic Cozytouch impossible",
@@ -24,12 +36,38 @@
             "unknown": "Erreur inconnue"
         }
     },
+    "config_subentries": {
+        "device": {
+            "entry_type": "Appareil",
+            "initiate_flow": {
+                "user": "Ajouter un appareil"
+            },
+            "step": {
+                "user": {
+                    "title": "Ajouter un appareil",
+                    "description": "Les appareils déclarés par ce compte qui ne sont pas encore configurés ici.",
+                    "data": {
+                        "device": "Appareil"
+                    }
+                }
+            },
+            "abort": {
+                "invalid_auth": "Atlantic refuse le mot de passe enregistré pour ce compte ; reconnectez-le au préalable",
+                "cannot_connect": "Connexion aux serveurs Atlantic Cozytouch impossible",
+                "no_new_devices": "Tous les appareils déclarés par ce compte sont déjà configurés"
+            }
+        }
+    },
     "options": {
         "step": {
             "init": {
                 "data": {
                     "create_unknown": "Créer des entités pour les capabilities inconnues",
-                    "dump_json": "Générer un fichier JSON avec les données reçues"
+                    "dump_json": "Générer un fichier JSON avec les données reçues",
+                    "poll_interval": "Secondes entre deux rafraîchissements"
+                },
+                "data_description": {
+                    "poll_interval": "Une requête rafraîchit tous les appareils du compte : ajouter un appareil ne coûte donc rien de plus."
                 }
             }
         }
@@ -405,7 +443,7 @@
                 "step": {
                     "confirm": {
                         "title": "Envoyer le signalement",
-                        "description": "L'identifiant de modèle `{model_id}` n'est pas dans la table de correspondance : seules les capacités génériques de cet appareil fonctionnent. Ce qui manque est une correspondance que quelqu'un doit écrire, et l'écrire demande deux choses de votre part.\n\n[Ouvrir un ticket pré-rempli]({report_url}). Il porte tous les modèles inconnus de ce compte (`{model_ids}`), avec pour chacun les identifiants de capacités que rien ne nomme -- et rien d'autre sur votre logement.\n\nJoignez-y ensuite un fichier de diagnostic, depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics*, un par appareil du rapport : un fichier porte les valeurs des capacités de l'appareil dont il vient, et seulement l'identité des autres. Vos identifiants de connexion et votre adresse en sont retirés.\n\nChoisissez **Valider** une fois envoyé. Un seul rapport répond pour tous les appareils qu'il contient, donc les autres signalements d'appareil inconnu de ce compte partent avec celui-ci. Une version qui ajoute une correspondance l'efface de toute façon."
+                        "description": "L'identifiant de modèle `{model_id}` n'est pas dans la table de correspondance : seules les capacités génériques de cet appareil fonctionnent. Ce qui manque est une correspondance que quelqu'un doit écrire, et l'écrire demande deux choses de votre part.\n\n[Ouvrir un ticket pré-rempli]({report_url}). Il porte tous les modèles inconnus de ce compte (`{model_ids}`), avec pour chacun les identifiants de capacités que rien ne nomme -- et rien d'autre sur votre logement.\n\nJoignez-y ensuite un fichier de diagnostic, depuis *Paramètres > Appareils et services > Atlantic Cozytouch > ⋮ > Télécharger les diagnostics*. Un seul fichier couvre tout le compte, avec les valeurs des capacités de chaque appareil qu'il déclare -- y compris ceux qui ne sont pas configurés ici, où se trouve le plus souvent un modèle inconnu. Vos identifiants de connexion et votre adresse en sont retirés.\n\nChoisissez **Valider** une fois envoyé. Un seul rapport répond pour tous les appareils qu'il contient, donc les autres signalements d'appareil inconnu de ce compte partent avec celui-ci. Une version qui ajoute une correspondance l'efface de toute façon."
                     }
                 }
             }

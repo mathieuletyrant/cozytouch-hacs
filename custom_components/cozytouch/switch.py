@@ -24,35 +24,38 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up entry."""
-    # Retrieve the hub object
-    hub = config_entry.runtime_data
+    # One device per subentry, and its entities are registered under it :
+    # the subentry id is the identity that used to be the entry's own, back
+    # when an entry meant a device.
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
 
-    # Init switches
-    switches = []
-    capabilities = hub.get_capabilities_for_device()
-    for capability in capabilities:
-        if capability.type == CapabilityType.SWITCH:
-            switches.append(
-                CozytouchSwitch(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+        # Init switches
+        switches = []
+        capabilities = hub.get_capabilities_for_device()
+        for capability in capabilities:
+            if capability.type == CapabilityType.SWITCH:
+                switches.append(
+                    CozytouchSwitch(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
-        elif capability.type == CapabilityType.AWAY_MODE_SWITCH:
-            switches.append(
-                CozytouchAwayModeSwitch(
-                    coordinator=hub,
-                    capability=capability,
-                    config_title=config_entry.title,
-                    config_uniq_id=config_entry.entry_id,
+            elif capability.type == CapabilityType.AWAY_MODE_SWITCH:
+                switches.append(
+                    CozytouchAwayModeSwitch(
+                        coordinator=hub,
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                    )
                 )
-            )
 
-    # Add the entities to HA
-    if len(switches) > 0:
-        async_add_entities(switches, True)
+        # Add the entities to HA
+        if len(switches) > 0:
+            async_add_entities(switches, True, config_subentry_id=subentry_id)
 
 
 class CozytouchSwitch(SwitchEntity, CozytouchSensor):

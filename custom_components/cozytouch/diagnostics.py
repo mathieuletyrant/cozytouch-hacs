@@ -36,8 +36,19 @@ TO_REDACT = {
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: CozytouchConfigEntry
 ) -> dict[str, Any]:
-    """Return what the API reports for this account, minus the account itself."""
-    hub = entry.runtime_data
+    """Return what the API reports for this account, minus the account itself.
+
+    One dump per account now, and it covers every device the setup view
+    returned -- the ones added as subentries and the ones nobody added. That
+    used to take one dump per device, which is a file per device to find,
+    download and attach for a report that needed all of them.
+    """
+    runtime = entry.runtime_data
+
+    # Any hub describes the whole account, and the dump does not depend on
+    # which one is asked : what it flags as set up here comes from the entry's
+    # subentries, not from the hub's own device.
+    hub = next(iter(runtime.hubs.values()), None)
 
     return async_redact_data(
         {
@@ -49,9 +60,13 @@ async def async_get_config_entry_diagnostics(
                     for key, value in entry.data.items()
                     if key not in ("username", "password")
                 },
+                "devices": {
+                    subentry_id: subentry.data.get("deviceId")
+                    for subentry_id, subentry in entry.subentries.items()
+                },
             },
-            "online": hub.online,
-            **hub.get_diagnostics(),
+            "online": runtime.account.online,
+            **(hub.get_diagnostics() if hub is not None else {}),
         },
         TO_REDACT,
     )

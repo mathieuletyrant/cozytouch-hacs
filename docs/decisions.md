@@ -81,8 +81,30 @@ two broke is the whole diagnostic.
 
 `requirements_test.txt` on Python 3.14.2 is the pinned environment : what a
 contributor's venv resolves to, and what CLAUDE.md tells you to build.
-`requirements_test_min.txt` on Python 3.12.3 is the floor `hacs.json`
-declares, tested so that the declaration keeps meaning something.
+`requirements_test_min.txt` on Python 3.13.7 is the floor `hacs.json`
+declares, tested so that the declaration keeps meaning something ;
+`tests/test_floor.py` is the part of the suite that leg exists for.
+
+The floor is 2025.4.0, and it was found by running that suite rather than by
+reading a changelog. Config subentries — one entry per account, one subentry
+per device — are absent from 2025.2.0, and the whole 2025.3.x line cannot be
+installed at all : it pins an `aiohttp` release PyPI has since yanked.
+`requirements_test_min.txt` carries the same reasoning inline, at more
+length.
+
+### A job named `pytest`, on top of the matrix
+
+Everything outside the workflow refers to a check by its name, and a matrix
+renames every job it touches : `pytest` became `pytest (HA … on Python …)`,
+twice. Anything that required the old name — the branch protection rule
+requiring `ruff`, `pytest` and `validate-hacs` above all — then waits forever
+for a check that no longer reports, which looks exactly like the tests never
+starting.
+
+So the name stays, on a job that does nothing but agree with the matrix.
+`needs` on a matrix job is the aggregate : success only if every leg
+succeeded. `if: always()` because a skipped job reports neither pass nor fail,
+and the point of this one is to always report something.
 
 ### Python is pinned down to the patch
 

@@ -8,15 +8,27 @@
                     "password": "Password"
                 }
             },
-            "select_device": {
+            "reauth_confirm": {
+                "title": "Re-enter your Cozytouch password",
+                "description": "Atlantic no longer accepts the stored password for {username}. Enter the current one to reconnect every device on this account.",
                 "data": {
+                    "password": "Password"
+                }
+            },
+            "devices": {
+                "title": "Devices to add",
+                "description": "Everything this account reports, gateways and thermal zones included. Leave out what you do not want entities for; you can add it later from the integration page.",
+                "data": {
+                    "devices": "Devices",
                     "create_unknown": "Create entities for unknown capabilities",
                     "dump_json": "Dump a JSON file with received data"
                 }
             }
         },
         "abort": {
-            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+            "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+            "reauth_successful": "Re-authentication was successful",
+            "no_devices": "This Cozytouch account reports no device"
         },
         "error": {
             "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",
@@ -24,12 +36,38 @@
             "unknown": "Unknown error"
         }
     },
+    "config_subentries": {
+        "device": {
+            "entry_type": "Device",
+            "initiate_flow": {
+                "user": "Add device"
+            },
+            "step": {
+                "user": {
+                    "title": "Add a device",
+                    "description": "The devices this account reports that are not set up here yet.",
+                    "data": {
+                        "device": "Device"
+                    }
+                }
+            },
+            "abort": {
+                "invalid_auth": "Atlantic no longer accepts the stored password for this account; reconnect it first",
+                "cannot_connect": "Cannot connect to Atlantic Cozytouch servers",
+                "no_new_devices": "Every device this account reports is already set up"
+            }
+        }
+    },
     "options": {
         "step": {
             "init": {
                 "data": {
                     "create_unknown": "Create entities for unknown capabilities",
-                    "dump_json": "Dump a JSON file with received data"
+                    "dump_json": "Dump a JSON file with received data",
+                    "poll_interval": "Seconds between refreshes"
+                },
+                "data_description": {
+                    "poll_interval": "One request refreshes every device on the account, so this does not cost more when more devices are added."
                 }
             }
         }
@@ -405,7 +443,7 @@
                 "step": {
                     "confirm": {
                         "title": "Send the report",
-                        "description": "Model id `{model_id}` is not in the mapping table, so only this device's generic capabilities work. What is missing is a mapping someone has to write, and writing it needs two things from you.\n\n[Open a pre-filled issue]({report_url}). It carries every unmapped model on this account (`{model_ids}`) with the capability ids nothing names for each -- and nothing else about your home.\n\nThen attach a diagnostics dump to it, from *Settings > Devices & Services > Atlantic Cozytouch > ⋮ > Download diagnostics*, one per device in the report : a dump carries the capability values of the device it came from, and identity only for the rest. Your credentials and address are stripped out.\n\nSelect **Submit** once it is sent. One report answers for every device in it, so the other unmapped-device repairs on this account go with this one. A release that adds a mapping clears it either way."
+                        "description": "Model id `{model_id}` is not in the mapping table, so only this device's generic capabilities work. What is missing is a mapping someone has to write, and writing it needs two things from you.\n\n[Open a pre-filled issue]({report_url}). It carries every unmapped model on this account (`{model_ids}`) with the capability ids nothing names for each -- and nothing else about your home.\n\nThen attach a diagnostics dump to it, from *Settings > Devices & Services > Atlantic Cozytouch > ⋮ > Download diagnostics*. One dump covers the whole account, with the capability values of every device it reports -- including the ones that are not set up here, which is usually where an unmapped model is. Your credentials and address are stripped out.\n\nSelect **Submit** once it is sent. One report answers for every device in it, so the other unmapped-device repairs on this account go with this one. A release that adds a mapping clears it either way."
                     }
                 }
             }

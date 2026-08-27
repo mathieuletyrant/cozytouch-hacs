@@ -12,7 +12,7 @@ and are worth reading before a change rather than after :
 
 | Document | What it answers |
 | -------- | --------------- |
-| `docs/architecture.md` | How a capability id becomes an entity, what the Hub owns, which invariants hold, and the rough edges that are real and inherited. |
+| `docs/architecture.md` | How a capability id becomes an entity, what the account owns and what the Hub owns, which invariants hold, and the rough edges that are real and inherited. |
 | `docs/api-surface.md` | What the API does and does not expose. Read it before probing anything : ~90 paths are already ruled out, and there is no capability catalogue to fetch. |
 | `docs/decisions.md` | Why a setting is the value it is — which run was measured, what was tried and dropped. This is where the reasoning lives that used to sit in comment blocks above the setting. |
 
@@ -49,11 +49,18 @@ the top of the file for what the unpinned version did. There are two of them :
 
 Raising the floor means editing `requirements_test_min.txt` and `hacs.json`
 together, and the Python it is paired with in `.github/workflows/tests.yaml`.
+`tests/test_floor.py` fails if the first two disagree, and is what says whether
+a candidate floor can run this at all.
 
 ## Lint
 
 `pip install -r requirements_lint.txt`, then `ruff check .`. CI runs the same
 command and it has to come back clean.
+
+CI runs on pull requests based on `main` **or** on a `claude/**` branch. That
+second one is not decoration: the trigger filters on the *base* branch, so
+before it was added a pull request stacked on another one got no checks at all
+-- which is not the same as passing, and reads exactly like it.
 
 The configuration is `pyproject.toml`, and it is worth reading before arguing
 with a finding : the rules that are off are off for a stated reason, and two of
@@ -76,8 +83,24 @@ capture, so a test going green says "nobody changed this by accident", never
   get their own case.
 - `tests/test_regressions.py` — bugs that were live and that no table walk
   would have reached: state that used to sit on the `Hub` class and so was
-  shared by every config entry, and a shadowed `time` import that made every
-  time entity raise.
+  shared by every config entry, a shadowed `time` import that made every time
+  entity raise, and the connect lock without which every device on an account
+  logs in separately.
+- `tests/test_reauth.py` — the split between a refused password and a server
+  that is not answering, end to end : what the token endpoint said, what
+  `connect()` raises, what setup and the poll turn it into, and what the reauth
+  dialog does with the password somebody types. Its `FakeSession` is the only
+  stand-in in the suite that reaches the HTTP layer, so it is where the rest of
+  `account.py` gets tested when somebody gets to it. One case pins a
+  *limitation* on purpose : a refused login is retried once per waiting hub,
+  and if that number ever drops the case should say why.
+- `tests/test_floor.py` — what the Home Assistant version `hacs.json` declares
+  has to provide. It imports every module, which the rest of the suite does not
+  — four of them, and none touching the config flow or the platforms — and
+  names the config-subentry APIs the current shape rests on. **The floor is
+  found by running this, not by reading a changelog**: it is what established
+  that 2025.2 has no subentries and that the whole 2025.3 line cannot be
+  installed (a yanked `aiohttp` pin).
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
 - `tests/test_sensor_values.py` — what the value builders in `sensor.py`
@@ -124,6 +147,15 @@ capture, so a test going green says "nobody changed this by accident", never
   the flag they were written for. It carries a hard count of mapped ids;
   adding models means updating that number, and widening the walk's range if
   the new id falls outside it.
+
+## Entries, subentries, identity
+
+An account is one config entry; each of its devices is a subentry of it. The
+subentry id is the identity a device is registered under and the prefix of
+every unique id built from it, so a device added twice or a subentry recreated
+is a new set of entities. `account.py` owns everything the account declares —
+the session, the token, the setup view, the device list — and `hub.py` is one
+coordinator per device on top of it.
 
 ## Adding a device
 

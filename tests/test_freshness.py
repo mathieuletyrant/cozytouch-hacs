@@ -54,7 +54,7 @@ def make_hub(capabilities, deviceId=DEVICE_ID):
     """A stand-in exposing only what the two readers touch."""
     return SimpleNamespace(
         _deviceId=deviceId,
-        _devices=[
+        _account=SimpleNamespace(devices=[
             {"deviceId": DEVICE_ID, "capabilities": capabilities},
             # A sibling on the same account, whose dates must not leak into
             # this device's answer: one hub drives one device.
@@ -62,7 +62,7 @@ def make_hub(capabilities, deviceId=DEVICE_ID):
                 "deviceId": OTHER_DEVICE_ID,
                 "capabilities": [capability(1, modificationDate=CAPTURED + 9999)],
             },
-        ],
+        ]),
     )
 
 
@@ -148,10 +148,13 @@ def test_a_siblings_dates_do_not_answer_for_this_device():
 # ------------------------------------------------------------------ the sensor
 
 
+SUBENTRY_ID = "sub-1"
+
+
 def build(last_modification_date, capabilities=()):
     """Run the sensor platform and return the entities it built."""
     hub = SimpleNamespace(
-        get_capabilities_for_device=lambda deviceId: list(capabilities),
+        get_capabilities_for_device=lambda deviceId=None: list(capabilities),
         get_last_modification_date=lambda: last_modification_date,
         get_model_infos=lambda: ModelInfos(name="Air Conditioner (Salon)"),
         get_serial_number=lambda: "3022-6760-8541",
@@ -159,15 +162,21 @@ def build(last_modification_date, capabilities=()):
         get_via_device=lambda: None,
     )
     entry = SimpleNamespace(
-        runtime_data=hub,
-        data={"deviceId": DEVICE_ID},
-        title="Salon",
+        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
+        subentries={
+            SUBENTRY_ID: SimpleNamespace(data={"deviceId": DEVICE_ID}, title="Salon")
+        },
+        title="cozytouch@example.com",
         entry_id="entry123",
     )
     entities = []
     asyncio.run(
         sensor_platform.async_setup_entry(
-            None, entry, lambda new, update_before_add: entities.extend(new)
+            None,
+            entry,
+            lambda new, update_before_add, config_subentry_id=None: entities.extend(
+                new
+            ),
         )
     )
 
@@ -227,7 +236,7 @@ def test_the_sensor_is_a_diagnostic_and_keyed_on_the_entry():
     """Not on a capability id, since it answers for all of them."""
     sensor = build(CAPTURED)[0]
 
-    assert sensor.unique_id == f"{DOMAIN}_entry123_last_device_update"
+    assert sensor.unique_id == f"{DOMAIN}_{SUBENTRY_ID}_last_device_update"
     assert sensor.entity_category == "diagnostic"
     assert sensor.translation_key == "last_device_update"
 
@@ -238,7 +247,7 @@ def test_the_sensor_lands_on_the_same_device_as_the_others():
 
     info = sensor.device_info
 
-    assert info["identifiers"] == {(DOMAIN, "entry123")}
+    assert info["identifiers"] == {(DOMAIN, SUBENTRY_ID)}
     assert info["serial_number"] == "3022-6760-8541"
     assert info["sw_version"] == "1.2.3"
 
@@ -248,9 +257,8 @@ def test_the_sensor_lands_on_the_same_device_as_the_others():
 
 def diagnostics(capabilities):
     """The dump for an account whose second device is not this entry's."""
-    hub = SimpleNamespace(
-        _deviceId=DEVICE_ID,
-        _devices=[
+    account = SimpleNamespace(
+        devices=[
             {
                 "deviceId": DEVICE_ID,
                 "name": "ROOM_0",
@@ -270,10 +278,17 @@ def diagnostics(capabilities):
                 "capabilities": [],
             },
         ],
-        _setup={"id": 1532156, "name": "setup1"},
-        _zones=[],
+        setup={"id": 1532156, "name": "setup1"},
+        zones=[],
     )
-    hub.get_zone_name = lambda zoneId=None: str(zoneId)
+    hub = SimpleNamespace(
+        _account=account,
+        _deviceId=DEVICE_ID,
+        _entry=SimpleNamespace(
+            subentries={"sub-1": SimpleNamespace(data={"deviceId": DEVICE_ID})}
+        ),
+    )
+    hub.get_zone_name = lambda zoneId=None: None
     hub.get_capability_names = lambda deviceId=None: Hub.get_capability_names(
         hub, deviceId
     )
@@ -291,8 +306,11 @@ def test_the_dump_carries_a_date_per_capability():
     }
 
 
-def test_the_dump_says_nothing_about_a_device_this_entry_does_not_drive():
-    """Unchanged: the hub holds no capabilities for its siblings."""
+def test_the_dump_carries_the_dates_of_a_device_nobody_added():
+    """The dump covers the whole account, so a device nobody added is reported
+    with its capability list -- which is where unmapped hardware actually is.
+    Its dates come along, empty here because the fixture gives it none.
+    """
     reported = diagnostics([capability(93)])
 
-    assert reported["devices"][1]["capabilities"] is None
+    assert reported["devices"][1]["capabilities"]["modificationDates"] == {}
