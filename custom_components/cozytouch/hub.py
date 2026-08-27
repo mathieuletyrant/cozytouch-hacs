@@ -136,7 +136,7 @@ class Hub(DataUpdateCoordinator):
                 entry_type=DeviceEntryType.SERVICE,
                 identifiers={("cozytouch", "cozytouch" + str(deviceId))},
                 manufacturer="Atlantic",
-                name=modelInfos["name"],
+                name=modelInfos.name,
             )
 
         self._timestamps_away_mode_capability_id = None
@@ -438,14 +438,14 @@ class Hub(DataUpdateCoordinator):
             # other caller makes, and the name a zone is recognised by can
             # change under a cached one.
             modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
-            if modelInfos["type"] is CozytouchDeviceType.ZONE:
+            if modelInfos.type is CozytouchDeviceType.ZONE:
                 continue
 
             devs.append(
                 {
                     "deviceId": dev["deviceId"],
                     "name": dev["name"],
-                    "model": modelInfos["name"],
+                    "model": modelInfos.name,
                 }
             )
 
@@ -507,7 +507,7 @@ class Hub(DataUpdateCoordinator):
         unmapped = {
             dev["modelId"]
             for dev in self._devices
-            if get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+            if get_model_infos(dev["modelId"], deviceName=dev.get("name")).type
             is CozytouchDeviceType.UNKNOWN
         }
 
@@ -610,7 +610,7 @@ class Hub(DataUpdateCoordinator):
                         )
 
                     if capability_infos is not None and len(capability_infos) > 0:
-                        capability_infos["deviceId"] = deviceId
+                        capability_infos.deviceId = deviceId
 
                         isDuplicate = False
                         if "capabilityDuplicate" in capability_infos:
@@ -726,9 +726,9 @@ class Hub(DataUpdateCoordinator):
                     # without a translation step.
                     **{field: dev.get(field) for field in API_DECLARED_FIELDS},
                     "model": {
-                        "name": modelInfos["name"],
-                        "type": str(modelInfos["type"]),
-                        "isMapped": modelInfos["type"]
+                        "name": modelInfos.name,
+                        "type": str(modelInfos.type),
+                        "isMapped": modelInfos.type
                         is not CozytouchDeviceType.UNKNOWN,
                         "infos": {
                             key: str(value)

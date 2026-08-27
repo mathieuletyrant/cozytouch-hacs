@@ -60,10 +60,15 @@ class CapabilityType(StrEnum):
 
 
 class CapabilityCategory(StrEnum):
-    """Where the entity lands on the device page."""
+    """Where the entity lands on the device page.
+
+    CONFIG is consumer-side vocabulary: sensor.py honours it, the mapping has
+    never produced it.
+    """
 
     SENSOR = "sensor"
     DIAG = "diag"
+    CONFIG = "config"
 
 
 class TimestampInfos(NamedTuple):
@@ -145,6 +150,8 @@ class CapabilityInfos(AttributeDict):
 
     modelId: int
     capabilityId: int
+    # Set by the hub on every capability it hands to a platform.
+    deviceId: int
 
     # What the entity is: its translation key, the platform that builds it,
     # and how it lands in the registry.

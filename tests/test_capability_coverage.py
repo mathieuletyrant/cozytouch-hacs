@@ -64,12 +64,12 @@ PLATFORMS = (
     "switch.py",
 )
 
-# `capability["type"] == CapabilityType.X` and `capability["type"] in
+# `capability.type == CapabilityType.X` and `capability.type in
 # (CapabilityType.X, CapabilityType.Y)`, the two ways a platform states which
 # type it was written for. The member is resolved to its value, so a name the
 # enum does not declare fails here rather than matching nothing at runtime.
 TYPE_TEST = re.compile(
-    r'capability\["type"\]\s*(?:== CapabilityType\.(\w+)|in \(([^)]*)\))'
+    r"capability\.type\s*(?:== CapabilityType\.(\w+)|in \(([^)]*)\))"
 )
 
 # What sensor.py turns into an EntityCategory, plus the "sensor" that means no
