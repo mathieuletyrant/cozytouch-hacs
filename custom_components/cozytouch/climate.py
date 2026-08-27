@@ -24,6 +24,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -64,7 +65,7 @@ async def async_setup_entry(
         climates = []
         capabilities = hub.get_capabilities_for_device()
         for capability in capabilities:
-            if capability["type"] == "climate":
+            if capability.type == CapabilityType.CLIMATE:
                 climates.append(
                     CozytouchClimate(
                         coordinator=hub,
@@ -91,7 +92,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         name: str | None = None,
     ) -> None:
         """Initialize a climate entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             coordinator=coordinator,
             capability=capability,
@@ -124,7 +125,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             | ClimateEntityFeature.TURN_ON
         )
 
-        self._attr_hvac_modes = list(self._modelInfos["HVACModes"].values())
+        self._attr_hvac_modes = list(self._modelInfos.HVACModes.values())
         self._attr_hvac_mode = HVACMode.OFF
 
         # Fan modes
@@ -143,7 +144,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     def _configure_fan_modes(self):
         self._attr_supported_features |= ClimateEntityFeature.FAN_MODE
-        self._attr_fan_modes = list(self._modelInfos["fanModes"].values())
+        self._attr_fan_modes = list(self._modelInfos.fanModes.values())
 
         if "quietModeCapabilityId" in self._capability:
             self._attr_fan_modes.append(FAN_QUIET)
@@ -153,7 +154,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     def _configure_swing_modes(self):
         self._attr_supported_features |= ClimateEntityFeature.SWING_MODE
-        self._attr_swing_modes = list(self._modelInfos["swingModes"].values())
+        self._attr_swing_modes = list(self._modelInfos.swingModes.values())
 
         if "swingOnCapabilityId" in self._capability:
             self._attr_swing_modes.append(SWING_ON)
@@ -217,9 +218,9 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         the id behind it.
         """
         # HVAC Mode
-        HVACModes = self._modelInfos["HVACModes"]
+        HVACModes = self._modelInfos.HVACModes
         currentMode = int(
-            self.coordinator.get_capability_value(self._capability["capabilityId"])
+            self.coordinator.get_capability_value(self._capability.capabilityId)
         )
         if currentMode in HVACModes:
             self._attr_hvac_mode = HVACModes[currentMode]
@@ -253,13 +254,13 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         ):
             self._native_value = float(
                 self.coordinator.get_capability_value(
-                    self._capability["targetCoolCapabilityId"]
+                    self._capability.targetCoolCapabilityId
                 )
             )
         else:
             self._native_value = float(
                 self.coordinator.get_capability_value(
-                    self._capability["targetCapabilityId"]
+                    self._capability.targetCapabilityId
                 )
             )
 
@@ -296,12 +297,12 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 HVACMode.AUTO )
             and "highestCoolValueCapabilityId" in self._capability
         ):
-            highestValueId = self._capability["highestCoolValueCapabilityId"]
+            highestValueId = self._capability.highestCoolValueCapabilityId
             self._attr_max_temp = float(
                 self.coordinator.get_capability_value(highestValueId)
             )
         elif "highestValueCapabilityId" in self._capability:
-            highestValueId = self._capability["highestValueCapabilityId"]
+            highestValueId = self._capability.highestValueCapabilityId
             self._attr_max_temp = float(
                 self.coordinator.get_capability_value(highestValueId)
             )
@@ -309,15 +310,15 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         # FAN mode
         if "quietModeCapabilityId" in self._capability and int(
             self.coordinator.get_capability_value(
-                self._capability["quietModeCapabilityId"]
+                self._capability.quietModeCapabilityId
             )
         ):
             self._attr_fan_mode = FAN_QUIET
         elif "fanModeCapabilityId" in self._capability:
-            fanModes = self._modelInfos["fanModes"]
+            fanModes = self._modelInfos.fanModes
             fanModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["fanModeCapabilityId"]
+                    self._capability.fanModeCapabilityId
                 )
             )
             if fanModeValue in fanModes:
@@ -326,15 +327,15 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         # Swing mode
         if "swingOnCapabilityId" in self._capability and int(
             self.coordinator.get_capability_value(
-                self._capability["swingOnCapabilityId"]
+                self._capability.swingOnCapabilityId
             )
         ):
             self._attr_swing_mode = SWING_ON
         elif "swingModeCapabilityId" in self._capability:
-            swingModes = self._modelInfos["swingModes"]
+            swingModes = self._modelInfos.swingModes
             swingModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["swingModeCapabilityId"]
+                    self._capability.swingModeCapabilityId
                 )
             )
             if swingModeValue in swingModes:
@@ -345,7 +346,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         if "activityCapabilityId" in self._capability:
             activityModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["activityCapabilityId"]
+                    self._capability.activityCapabilityId
                 )
             )
             if activityModeValue == 1:
@@ -356,7 +357,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         if "ecoCapabilityId" in self._capability:
             ecoModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["ecoCapabilityId"]
+                    self._capability.ecoCapabilityId
                 )
             )
             if ecoModeValue == 1:
@@ -367,7 +368,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         if "boostCapabilityId" in self._capability:
             boostModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["boostCapabilityId"]
+                    self._capability.boostCapabilityId
                 )
             )
             if boostModeValue == 1:
@@ -378,7 +379,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         if "progCapabilityId" in self._capability:
             progModeValue = int(
                 self.coordinator.get_capability_value(
-                    self._capability["progCapabilityId"]
+                    self._capability.progCapabilityId
                 )
             )
             if progModeValue == 0:
@@ -388,7 +389,7 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 # In prog mode we can also be in override mode
                 progOverrideValue = int(
                     self.coordinator.get_capability_value(
-                        self._capability["progOverrideCapabilityId"]
+                        self._capability.progOverrideCapabilityId
                     )
                 )
                 if progOverrideValue == 1:
@@ -449,12 +450,12 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 and "targetCoolCapabilityId" in self._capability
             ):
                 await self.coordinator.set_capability_value(
-                    self._capability["targetCoolCapabilityId"],
+                    self._capability.targetCoolCapabilityId,
                     str(temperature),
                 )
             else:
                 await self.coordinator.set_capability_value(
-                    self._capability["targetCapabilityId"],
+                    self._capability.targetCapabilityId,
                     str(temperature),
                 )
 
@@ -462,11 +463,11 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
         """Set hvac mode."""
-        HVACModes = self._modelInfos["HVACModes"]
+        HVACModes = self._modelInfos.HVACModes
         for mode in HVACModes:
             if HVACModes[mode] == hvac_mode:
                 await self.coordinator.set_capability_value(
-                    self._capability["capabilityId"],
+                    self._capability.capabilityId,
                     str(mode),
                 )
                 await self.coordinator.async_request_refresh()
@@ -476,21 +477,21 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         """Set new target fan mode."""
         if fan_mode == FAN_QUIET and "quietModeCapabilityId" in self._capability:
             await self.coordinator.set_capability_value(
-                self._capability["quietModeCapabilityId"],
+                self._capability.quietModeCapabilityId,
                 "1",
             )
         elif "fanModeCapabilityId" in self._capability:
             if "quietModeCapabilityId" in self._capability:
                 await self.coordinator.set_capability_value(
-                    self._capability["quietModeCapabilityId"],
+                    self._capability.quietModeCapabilityId,
                     "0",
                 )
 
-            FANModes = self._modelInfos["fanModes"]
+            FANModes = self._modelInfos.fanModes
             for mode in FANModes:
                 if FANModes[mode] == fan_mode:
                     await self.coordinator.set_capability_value(
-                        self._capability["fanModeCapabilityId"],
+                        self._capability.fanModeCapabilityId,
                         str(mode),
                     )
                     break
@@ -501,21 +502,21 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         """Set new target swing operation."""
         if swing_mode == SWING_ON and "swingOnCapabilityId" in self._capability:
             await self.coordinator.set_capability_value(
-                self._capability["swingOnCapabilityId"],
+                self._capability.swingOnCapabilityId,
                 "1",
             )
         elif "swingModeCapabilityId" in self._capability:
             if "swingOnCapabilityId" in self._capability:
                 await self.coordinator.set_capability_value(
-                    self._capability["swingOnCapabilityId"],
+                    self._capability.swingOnCapabilityId,
                     "0",
                 )
 
-            SwingModes = self._modelInfos["swingModes"]
+            SwingModes = self._modelInfos.swingModes
             for mode in SwingModes:
                 if SwingModes[mode] == swing_mode:
                     await self.coordinator.set_capability_value(
-                        self._capability["swingModeCapabilityId"],
+                        self._capability.swingModeCapabilityId,
                         str(mode),
                     )
                     break

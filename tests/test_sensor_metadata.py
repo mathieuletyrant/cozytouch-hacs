@@ -30,6 +30,7 @@ from custom_components.cozytouch import sensor as sensor_platform
 from custom_components.cozytouch.binary_sensor import CloudConnectivity
 from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.hub import SOFTWARE_VERSION_CAPABILITY_ID, Hub
+from custom_components.cozytouch.infos import CapabilityInfos, ModelInfos
 from custom_components.cozytouch.sensor import CozytouchSensor
 from homeassistant.components.sensor.const import (
     DEVICE_CLASS_STATE_CLASSES,
@@ -81,8 +82,12 @@ def build(capabilities):
 def one(capability_type, **capability):
     """The single entity the sensor platform builds for one capability."""
     built = build(
-        [{"capabilityId": 42, "name": "a_capability", "type": capability_type}
-         | capability]
+        [
+            CapabilityInfos(
+                **{"capabilityId": 42, "name": "a_capability", "type": capability_type}
+                | capability
+            )
+        ]
     )
     assert len(built) == 1, [type(entity).__name__ for entity in built]
     return built[0]
@@ -193,7 +198,7 @@ def test_a_device_that_reports_no_version_gets_none_rather_than_a_default():
 def coordinator(version):
     """A hub stand-in exposing what the two device_info properties read."""
     return SimpleNamespace(
-        get_model_infos=lambda: {"name": "Naema 2 Micro 25"},
+        get_model_infos=lambda: ModelInfos(name="Naema 2 Micro 25"),
         get_serial_number=lambda: "1234567890",
         get_software_version=lambda: version,
         get_via_device=lambda: None,

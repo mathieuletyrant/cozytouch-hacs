@@ -159,7 +159,7 @@ def _away_temperature(hub, temperature: float) -> tuple[int, str]:
                 f"({bound} °C)"
             )
 
-    return capability["capabilityId"], str(temperature)
+    return capability.capabilityId, str(temperature)
 
 
 def _build_matrix(slots: list[dict]) -> str:

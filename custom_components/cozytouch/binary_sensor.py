@@ -66,7 +66,7 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
             identifiers={(DOMAIN, self._device_uniq_id)},
             manufacturer="Atlantic",
             name=self._title,
-            model=modelInfos["name"],
+            model=modelInfos.name,
             serial_number=self.coordinator.get_serial_number(),
             # The firmware the device reports (capability 121). It is worth
             # having on the device rather than only as a diagnostic entity:

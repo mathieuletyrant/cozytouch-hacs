@@ -229,7 +229,10 @@ called from anywhere; it is gone.
 ## The model table
 
 `get_model_infos(modelId, zoneName=None, deviceName=None)` is one long
-`if/elif` returning a dict. 63 model ids are mapped today: 26 water heaters,
+`if/elif` returning a `ModelInfos` — a dict whose fields are declared and
+typed in `infos.py`, so the branches write `modelInfos.name = …` and a typo'd
+field raises instead of landing as a silent new key. Consumers keep reading it
+as the dict it still is. 63 model ids are mapped today: 26 water heaters,
 9 towel racks, 9 AC user interfaces, 6 air conditioners, 5 gateways, 4 boilers,
 2 heat pumps, 2 thermostats. Anything else falls through to
 `Unknown product (…)` with a minimal off/heat mapping.
@@ -318,7 +321,8 @@ nothing, so there is no table anywhere to fall out of date.
 
 Three return values, and they are not the same:
 
-- **a dict** — build this entity
+- **a dict** (`CapabilityInfos`, declared field by field in `infos.py` like
+  the model table's) — build this entity
 - **`{}`** — this id is claimed, and refused for this device. Capability 172
   (the absence setpoint) returns `{}` on air conditioners because they report
   it and never honour it.
@@ -471,7 +475,7 @@ the last hop: it names which device, and so which hub.
 
 ## Testing
 
-392 tests, most of them characterisation tests. They pin the mapping as it
+434 tests, most of them characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
 correct".

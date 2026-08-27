@@ -29,6 +29,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, CozytouchCapabilityVariableType
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityCategory, CapabilityType
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -40,7 +41,7 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
     is not built from a capability, so it cannot inherit CozytouchSensor, and a
     second hand-written copy of this would be the third in the integration.
     """
-    model_name = coordinator.get_model_infos()["name"]
+    model_name = coordinator.get_model_infos().name
     info = DeviceInfo(
         identifiers={(DOMAIN, device_uniq_id)},
         manufacturer="Atlantic",
@@ -82,7 +83,7 @@ async def async_setup_entry(
         sensors = []
         capabilities = hub.get_capabilities_for_device()
         for capability in capabilities:
-            if capability["type"] in ("string", "int"):
+            if capability.type in (CapabilityType.STRING, CapabilityType.INT):
                 # Use a CozytouchSensor for integers
                 sensors.append(
                     CozytouchSensor(
@@ -92,7 +93,15 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "temperature":
+            elif capability.type == CapabilityType.TEMPERATURE:
+                # MEASUREMENT on everything that reads an instant value, here
+                # and on the four branches below. Without a state class the
+                # recorder keeps the state history and no long-term
+                # statistics, so a temperature is gone from the charts after
+                # the purge window -- ten days by default -- and min/max/mean
+                # over a season is not available at all. The types that count
+                # something instead (energy, water) declare TOTAL_INCREASING
+                # further down.
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -104,7 +113,7 @@ async def async_setup_entry(
                         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
                     )
                 )
-            elif capability["type"] == "pressure":
+            elif capability.type == CapabilityType.PRESSURE:
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -116,35 +125,22 @@ async def async_setup_entry(
                         native_unit_of_measurement=UnitOfPressure.BAR,
                     )
                 )
-            elif capability["type"] == "away_mode_timestamps":
-                sensors.append(
-                    CozytouchAwayModeTimestampSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        attr_uniq_id=subentry_id + "_0",
-                        coordinator=hub,
-                        name=capability["name_0"],
-                        icon=capability.get("icon_0", None),
-                        separator=",",
-                        timestamp_index=0,
+            elif capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
+                for index, timestamp in enumerate(capability.timestamps):
+                    sensors.append(
+                        CozytouchAwayModeTimestampSensor(
+                            capability=capability,
+                            config_title=subentry.title,
+                            config_uniq_id=subentry_id,
+                            attr_uniq_id=f"{subentry_id}_{index}",
+                            coordinator=hub,
+                            name=timestamp.name,
+                            icon=timestamp.icon,
+                            separator=",",
+                            timestamp_index=index,
+                        )
                     )
-                )
-
-                sensors.append(
-                    CozytouchAwayModeTimestampSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        attr_uniq_id=subentry_id + "_1",
-                        coordinator=hub,
-                        name=capability["name_1"],
-                        icon=capability.get("icon_1", None),
-                        separator=",",
-                        timestamp_index=1,
-                    )
-                )
-            elif capability["type"] in ("switch", "binary"):
+            elif capability.type in (CapabilityType.SWITCH, CapabilityType.BINARY):
                 sensors.append(
                     CozytouchBinarySensor(
                         capability=capability,
@@ -153,7 +149,7 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "away_mode_switch":
+            elif capability.type == CapabilityType.AWAY_MODE_SWITCH:
                 sensors.append(
                     CozytouchAwayModeSensor(
                         capability=capability,
@@ -162,7 +158,7 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "signal":
+            elif capability.type == CapabilityType.SIGNAL:
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -174,7 +170,7 @@ async def async_setup_entry(
                         native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
                     )
                 )
-            elif capability["type"] == "energy":
+            elif capability.type == CapabilityType.ENERGY:
                 native_unit_of_measurement = capability.get(
                     "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
                 )
@@ -195,7 +191,7 @@ async def async_setup_entry(
                         display_factor=display_factor,
                     )
                 )
-            elif capability["type"] == "volume":
+            elif capability.type == CapabilityType.VOLUME:
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -213,7 +209,7 @@ async def async_setup_entry(
                         native_unit_of_measurement=UnitOfVolume.LITERS,
                     )
                 )
-            elif capability["type"] == "water_consumption":
+            elif capability.type == CapabilityType.WATER_CONSUMPTION:
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -225,7 +221,7 @@ async def async_setup_entry(
                         state_class=SensorStateClass.TOTAL_INCREASING,
                     )
                 )
-            elif capability["type"] == "percentage":
+            elif capability.type == CapabilityType.PERCENTAGE:
                 sensors.append(
                     CozytouchUnitSensor(
                         capability=capability,
@@ -241,7 +237,7 @@ async def async_setup_entry(
                         native_unit_of_measurement=PERCENTAGE,
                     )
                 )
-            elif capability["type"] == "time":
+            elif capability.type == CapabilityType.TIME:
                 sensors.append(
                     CozytouchTimeSensor(
                         capability=capability,
@@ -251,7 +247,7 @@ async def async_setup_entry(
                     )
                 )
 
-            elif capability["type"] == "timezone":
+            elif capability.type == CapabilityType.TIMEZONE:
                 sensors.append(
                     CozytouchTimezoneSensor(
                         capability=capability,
@@ -260,7 +256,7 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "prog":
+            elif capability.type == CapabilityType.PROG:
                 sensors.append(
                     CozytouchProgSensor(
                         capability=capability,
@@ -269,7 +265,7 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "progtime":
+            elif capability.type == CapabilityType.PROGTIME:
                 sensors.append(
                     CozytouchProgTimeSensor(
                         capability=capability,
@@ -278,7 +274,7 @@ async def async_setup_entry(
                         coordinator=hub,
                     )
                 )
-            elif capability["type"] == "climate":
+            elif capability.type == CapabilityType.CLIMATE:
                 sensors.append(
                     CozytouchSensor(
                         capability=capability,
@@ -342,19 +338,19 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
         if value_type:
             self._value_type = value_type
         elif "value_type" in self._capability:
-            self._value_type = self._capability["value_type"]
+            self._value_type = self._capability.value_type
         else:
             self._value_type = None
 
         if attr_uniq_id:
             self._attr_unique_id = attr_uniq_id
         else:
-            capabilityId = self._capability["capabilityId"]
+            capabilityId = self._capability.capabilityId
             self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{capabilityId!s}"
 
         self.entity_description = SensorEntityDescription(
-            key="capability_" + str(capability["capabilityId"]),
-            name=name if name else self._capability["name"],
+            key="capability_" + str(capability.capabilityId),
+            name=name if name else self._capability.name,
         )
 
         self._attr_translation_key = (
@@ -372,9 +368,9 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
         )
 
         if "category" in self._capability:
-            if self._capability["category"] == "diag":
+            if self._capability.category == CapabilityCategory.DIAG:
                 self._attr_entity_category = EntityCategory.DIAGNOSTIC
-            elif self._capability["category"] == "config":
+            elif self._capability.category == CapabilityCategory.CONFIG:
                 self._attr_entity_category = EntityCategory.CONFIG
             else:
                 self._attr_entity_category = None
@@ -382,7 +378,7 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
         if icon:
             self._attr_icon = icon
         elif "icon" in self._capability:
-            self._attr_icon = self._capability["icon"]
+            self._attr_icon = self._capability.icon
 
     def get_value(self):
         """Retrieve value from hub."""
@@ -391,7 +387,7 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
 
         try:
             value = self.coordinator.get_capability_value(
-                self._capability["capabilityId"]
+                self._capability.capabilityId
             )
             if value is None:
                 return None
@@ -477,7 +473,7 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             value = value.translate(str.maketrans("", "", "[]"))
             timestamps = value.split(self._separator, 2)
@@ -486,7 +482,7 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
                     timestamp = int(timestamps[self._timestamp_index])
                     timeOffset = int(
                         self.coordinator.get_capability_value(
-                            self._capability["timezoneCapabilityId"]
+                            self._capability.timezoneCapabilityId
                         )
                     )
                     # The device's own offset is already added to the unix
@@ -546,7 +542,7 @@ class CozytouchBinarySensor(BinarySensorEntity, CozytouchSensor):
         """Return last state value."""
         value_on = "1"
         if "value_on" in self._capability:
-            value_on = self._capability["value_on"]
+            value_on = self._capability.value_on
 
         return self._last_value == value_on
 
@@ -575,14 +571,14 @@ class CozytouchAwayModeSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             strValue = "Unknown"
-            if value == self._capability["value_off"]:
+            if value == self._capability.value_off:
                 strValue = "Off"
-            elif value == self._capability["value_pending"]:
+            elif value == self._capability.value_pending:
                 strValue = "Pending"
-            elif value == self._capability["value_on"]:
+            elif value == self._capability.value_on:
                 strValue = "On"
 
             return strValue
@@ -676,7 +672,7 @@ class CozytouchTimeSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             strValue = ""
             days = 0
@@ -726,7 +722,7 @@ class CozytouchTimezoneSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             # Floor division rather than %d over a true division: the operand
             # is positive in both branches, so it truncates the same way.
@@ -766,7 +762,7 @@ class CozytouchProgSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             progList = json.loads(value)
 
@@ -812,7 +808,7 @@ class CozytouchProgTimeSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability["capabilityId"])
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
         if value is not None:
             progList = json.loads(value)
 

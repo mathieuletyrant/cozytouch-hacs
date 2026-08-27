@@ -20,6 +20,7 @@ from .account import (
 )
 from .capability import get_capability_infos
 from .const import DOMAIN
+from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
@@ -523,22 +524,22 @@ class Hub(DataUpdateCoordinator):
                     )
 
                     if capability_infos is None and self._create_unknown:
-                        capability_infos = {
-                            "capabilityId": capability["capabilityId"],
-                            "name": "Capability_" + str(capability["capabilityId"]),
-                            "type": "string",
-                            "category": "diag",
-                        }
+                        capability_infos = CapabilityInfos(
+                            capabilityId=capability["capabilityId"],
+                            name="Capability_" + str(capability["capabilityId"]),
+                            type=CapabilityType.STRING,
+                            category=CapabilityCategory.DIAG,
+                        )
 
                     if capability_infos is not None and len(capability_infos) > 0:
-                        capability_infos["deviceId"] = deviceId
+                        capability_infos.deviceId = deviceId
 
                         isDuplicate = False
                         if "capabilityDuplicate" in capability_infos:
                             for cap in capabilities:
                                 if (
                                     cap["capabilityId"]
-                                    == capability_infos["capabilityDuplicate"]
+                                    == capability_infos.capabilityDuplicate
                                 ):
                                     isDuplicate = True
                                     break
@@ -619,7 +620,7 @@ class Hub(DataUpdateCoordinator):
             # resolve to nothing -- one of them declined on purpose -- in front
             # of whoever reads it, which reads exactly like work to do.
             if (
-                get_model_infos(dev["modelId"], deviceName=dev.get("name"))["type"]
+                get_model_infos(dev["modelId"], deviceName=dev.get("name")).type
                 is CozytouchDeviceType.ZONE
             ):
                 continue
@@ -642,9 +643,9 @@ class Hub(DataUpdateCoordinator):
                     # without a translation step.
                     **{field: dev.get(field) for field in API_DECLARED_FIELDS},
                     "model": {
-                        "name": modelInfos["name"],
-                        "type": str(modelInfos["type"]),
-                        "isMapped": modelInfos["type"]
+                        "name": modelInfos.name,
+                        "type": str(modelInfos.type),
+                        "isMapped": modelInfos.type
                         is not CozytouchDeviceType.UNKNOWN,
                         "infos": {
                             key: str(value)
@@ -772,12 +773,12 @@ class Hub(DataUpdateCoordinator):
         if self._away_mode_capabilities is False:
             self._away_mode_capabilities = None
             for capability in self.get_capabilities_for_device():
-                if capability.get("type") != "away_mode_switch":
+                if capability.type is not CapabilityType.AWAY_MODE_SWITCH:
                     continue
 
                 self._away_mode_capabilities = {
-                    "modeCapabilityId": capability["capabilityId"],
-                    "timestampsCapabilityId": capability["timestampsCapabilityId"],
+                    "modeCapabilityId": capability.capabilityId,
+                    "timestampsCapabilityId": capability.timestampsCapabilityId,
                     "value_on": capability.get("value_on", "1"),
                     "value_off": capability.get("value_off", "0"),
                 }
@@ -797,7 +798,7 @@ class Hub(DataUpdateCoordinator):
         and only the table knows which.
         """
         for capability in self.get_capabilities_for_device():
-            if capability.get("name") == "away_mode_temperature":
+            if capability.name == "away_mode_temperature":
                 return capability
 
         return None

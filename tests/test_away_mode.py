@@ -27,6 +27,7 @@ import voluptuous as vol
 from custom_components.cozytouch import services as services_module
 from custom_components.cozytouch.climate import CozytouchClimate
 from custom_components.cozytouch.hub import AWAY_START_DELAY, DEFAULT_AWAY_DURATION, Hub
+from custom_components.cozytouch.infos import CapabilityInfos, CapabilityType
 from homeassistant.components.climate import (
     PRESET_AWAY,
     PRESET_ECO,
@@ -244,14 +245,14 @@ def test_the_pairing_comes_from_the_capability_table():
     """Not from a second copy of "152 goes with 222" living in the hub."""
     hub = hub_with(away=False)
     hub.get_capabilities_for_device = lambda: [
-        {"capabilityId": 100, "type": "temperature"},
-        {
-            "capabilityId": 227,
-            "type": "away_mode_switch",
-            "timestampsCapabilityId": 226,
-            "value_on": "1",
-            "value_off": "0",
-        },
+        CapabilityInfos(capabilityId=100, type=CapabilityType.TEMPERATURE),
+        CapabilityInfos(
+            capabilityId=227,
+            type=CapabilityType.AWAY_MODE_SWITCH,
+            timestampsCapabilityId=226,
+            value_on="1",
+            value_off="0",
+        ),
     ]
 
     assert hub.get_away_mode_capabilities() == {
@@ -264,7 +265,9 @@ def test_the_pairing_comes_from_the_capability_table():
 
 def test_a_device_whose_table_has_no_away_switch_gets_none():
     hub = hub_with(away=False)
-    hub.get_capabilities_for_device = lambda: [{"capabilityId": 100, "type": "string"}]
+    hub.get_capabilities_for_device = lambda: [
+        CapabilityInfos(capabilityId=100, type=CapabilityType.STRING)
+    ]
 
     assert hub.get_away_mode_capabilities() is None
 
@@ -418,7 +421,7 @@ def test_an_end_and_a_duration_together_are_refused_by_the_schema():
 
 def test_a_setpoint_is_written_before_the_window_opens():
     """Or the absence starts on the setpoint it was going to replace."""
-    hub = FakeHub(temperature={"capabilityId": 172})
+    hub = FakeHub(temperature=CapabilityInfos(capabilityId=172))
     registered = services_over(hub)
 
     call(
@@ -436,11 +439,11 @@ def test_a_setpoint_outside_what_the_device_accepts_is_refused_not_clamped():
     is worse than saying it does not fit.
     """
     hub = FakeHub(
-        temperature={
-            "capabilityId": 172,
-            "lowestValueCapabilityId": 160,
-            "highestValueCapabilityId": 161,
-        },
+        temperature=CapabilityInfos(
+            capabilityId=172,
+            lowestValueCapabilityId=160,
+            highestValueCapabilityId=161,
+        ),
         values={160: "7", 161: "19"},
     )
     registered = services_over(hub)

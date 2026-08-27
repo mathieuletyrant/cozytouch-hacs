@@ -1,4 +1,5 @@
 """Number entities Atlantic Cozytouch integration."""
+
 from __future__ import annotations
 
 import logging
@@ -10,6 +11,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,7 +34,7 @@ async def async_setup_entry(
         numbers = []
         capabilities = hub.get_capabilities_for_device()
         for capability in capabilities:
-            if capability["type"] == "temperature_adjustment_number":
+            if capability.type == CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER:
                 numbers.append(
                     TemperatureAdjustmentNumber(
                         coordinator=hub,
@@ -41,7 +43,9 @@ async def async_setup_entry(
                         config_uniq_id=subentry_id,
                     )
                 )
-            elif capability["type"] == "temperature_percent_adjustment_number":
+            elif (
+                capability.type == CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
+            ):
                 numbers.append(
                     TemperaturePercentAdjustmentNumber(
                         coordinator=hub,
@@ -50,7 +54,7 @@ async def async_setup_entry(
                         config_uniq_id=subentry_id,
                     )
                 )
-            elif capability["type"] == "hours_adjustment_number":
+            elif capability.type == CapabilityType.HOURS_ADJUSTMENT_NUMBER:
                 numbers.append(
                     HoursAdjustmentNumber(
                         coordinator=hub,
@@ -59,7 +63,7 @@ async def async_setup_entry(
                         config_uniq_id=subentry_id,
                     )
                 )
-            elif capability["type"] == "minutes_adjustment_number":
+            elif capability.type == CapabilityType.MINUTES_ADJUSTMENT_NUMBER:
                 numbers.append(
                     MinutesAdjustmentNumber(
                         coordinator=hub,
@@ -87,7 +91,7 @@ class TemperatureAdjustmentNumber(NumberEntity, CozytouchSensor):
         icon: str | None = None,
     ) -> None:
         """Initialize a Number entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             coordinator=coordinator,
             capability=capability,
@@ -115,19 +119,19 @@ class TemperatureAdjustmentNumber(NumberEntity, CozytouchSensor):
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
         value = float(
-            self.coordinator.get_capability_value(self._capability["capabilityId"])
+            self.coordinator.get_capability_value(self._capability.capabilityId)
         )
 
         if "lowestValueCapabilityId" in self._capability:
             lowestValue = self.coordinator.get_capability_value(
-                self._capability["lowestValueCapabilityId"], None
+                self._capability.lowestValueCapabilityId, None
             )
             if lowestValue:
                 self._attr_native_min_value = float(lowestValue)
 
         if "highestValueCapabilityId" in self._capability:
             highestValue = self.coordinator.get_capability_value(
-                self._capability["highestValueCapabilityId"], None
+                self._capability.highestValueCapabilityId, None
             )
             if highestValue:
                 self._attr_native_max_value = float(highestValue)
@@ -150,7 +154,7 @@ class TemperatureAdjustmentNumber(NumberEntity, CozytouchSensor):
             new_value = self._attr_native_max_value
 
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             str(new_value),
         )
 
@@ -168,7 +172,7 @@ class TemperaturePercentAdjustmentNumber(NumberEntity, CozytouchSensor):
         icon: str | None = None,
     ) -> None:
         """Initialize a Number entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             coordinator=coordinator,
             capability=capability,
@@ -186,11 +190,11 @@ class TemperaturePercentAdjustmentNumber(NumberEntity, CozytouchSensor):
 
         self._attr_native_min_value = 0.0
         if "temperatureMin" in capability:
-            self._attr_native_min_value = capability["temperatureMin"]
+            self._attr_native_min_value = capability.temperatureMin
 
         self._attr_native_max_value = 60.0
         if "temperatureMax" in capability:
-            self._attr_native_max_value = capability["temperatureMax"]
+            self._attr_native_max_value = capability.temperatureMax
 
         self._range = self._attr_native_max_value - self._attr_native_min_value
 
@@ -204,7 +208,7 @@ class TemperaturePercentAdjustmentNumber(NumberEntity, CozytouchSensor):
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
         valuePercent = float(
-            self.coordinator.get_capability_value(self._capability["capabilityId"])
+            self.coordinator.get_capability_value(self._capability.capabilityId)
         )
 
         value = self._attr_native_min_value + (valuePercent * self._range / 100.0)
@@ -229,7 +233,7 @@ class TemperaturePercentAdjustmentNumber(NumberEntity, CozytouchSensor):
         valuePercent = (new_value - self._attr_native_min_value) * 100 / self._range
 
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"],
+            self._capability.capabilityId,
             str(valuePercent),
         )
 
@@ -247,7 +251,7 @@ class HoursAdjustmentNumber(NumberEntity, CozytouchSensor):
         icon: str | None = None,
     ) -> None:
         """Initialize a Number entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             capability=capability,
             config_title=config_title,
@@ -275,9 +279,7 @@ class HoursAdjustmentNumber(NumberEntity, CozytouchSensor):
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
         value = (
-            float(
-                self.coordinator.get_capability_value(self._capability["capabilityId"])
-            )
+            float(self.coordinator.get_capability_value(self._capability.capabilityId))
             / 60.0
         )
 
@@ -298,10 +300,11 @@ class HoursAdjustmentNumber(NumberEntity, CozytouchSensor):
             new_value = self._attr_native_max_value
 
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"], str(int(new_value * 60))
+            self._capability.capabilityId, str(int(new_value * 60))
         )
 
         await self.coordinator.async_request_refresh()
+
 
 class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
     """Minutes adjustment number class."""
@@ -316,7 +319,7 @@ class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
         icon: str | None = None,
     ) -> None:
         """Initialize a Number entity."""
-        capabilityId = capability["capabilityId"]
+        capabilityId = capability.capabilityId
         super().__init__(
             capability=capability,
             config_title=config_title,
@@ -343,10 +346,8 @@ class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
     def _handle_coordinator_update(self) -> None:
         """Update the value of the sensor from the hub."""
         # Get last seen value from controller
-        value = (
-            float(
-                self.coordinator.get_capability_value(self._capability["capabilityId"])
-            )
+        value = float(
+            self.coordinator.get_capability_value(self._capability.capabilityId)
         )
 
         if value < self._attr_native_min_value:
@@ -366,7 +367,7 @@ class MinutesAdjustmentNumber(NumberEntity, CozytouchSensor):
             new_value = self._attr_native_max_value
 
         await self.coordinator.set_capability_value(
-            self._capability["capabilityId"], str(int(new_value))
+            self._capability.capabilityId, str(int(new_value))
         )
 
         await self.coordinator.async_request_refresh()

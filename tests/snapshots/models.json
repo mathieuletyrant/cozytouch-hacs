@@ -1,0 +1,1216 @@
+{
+ "1353": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1353,
+  "name": "Calypso Split Interface",
+  "type": "hub"
+ },
+ "1369": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1369,
+  "name": "Calypso Split",
+  "type": "water_heater"
+ },
+ "1371": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1371,
+  "name": "Aeromax SPLIT 3",
+  "type": "water_heater"
+ },
+ "1372": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1372,
+  "name": "Aeromax SPLIT 3",
+  "type": "water_heater"
+ },
+ "1376": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1376,
+  "name": "Calypso Split",
+  "type": "water_heater"
+ },
+ "1381": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1381,
+  "name": "KELUD 1750W BLC",
+  "type": "towel_rack"
+ },
+ "1382": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1382,
+  "name": "KELUD 1750W Anthracite Standard",
+  "type": "towel_rack"
+ },
+ "1388": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1388,
+  "name": "Doris \u00e9troit 1500W BLC",
+  "type": "towel_rack"
+ },
+ "1444": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1444,
+  "name": "Naema 3 Micro 25",
+  "type": "gaz_boiler"
+ },
+ "1457": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1457,
+  "name": "HUB Cozytouch",
+  "type": "hub"
+ },
+ "1505 zoneName=None deviceName=THZONE_0": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1505,
+  "name": "THZONE_0",
+  "type": "zone"
+ },
+ "1505 zoneName=Salon deviceName=THZONE_0": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1505,
+  "name": "Zone (Salon)",
+  "type": "zone"
+ },
+ "1543": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1543,
+  "name": "Asama Connect\u00e9 II Ventilo 1750W Blanc",
+  "type": "towel_rack"
+ },
+ "1546": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1546,
+  "name": "Asama Connect\u00e9 II Ventilo 1500W ANTH",
+  "type": "towel_rack"
+ },
+ "1547": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1547,
+  "name": "Asama Connect\u00e9 II Ventilo 1750W ANTH",
+  "type": "towel_rack"
+ },
+ "1551": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1551,
+  "name": "Asama Connect\u00e9 II Ventilo 1750W Noir",
+  "type": "towel_rack"
+ },
+ "1595": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1595,
+  "name": "Doris \u00e9troit 1300W CARAT",
+  "type": "towel_rack"
+ },
+ "1622": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1622,
+  "name": "Thermor Riva 5",
+  "type": "towel_rack"
+ },
+ "1641": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1641,
+  "name": "Atlantic Explorer V5 (200L)",
+  "type": "water_heater"
+ },
+ "1642": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1642,
+  "name": "Atlantic Explorer V5 (270L)",
+  "type": "water_heater"
+ },
+ "1644": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1644,
+  "name": "Atlantic Explorer V5 (240L)",
+  "type": "water_heater"
+ },
+ "1645": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1645,
+  "name": "Atlantic Explorer V5 (270L with coil)",
+  "type": "water_heater"
+ },
+ "1656": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1656,
+  "name": "Aeromax 6",
+  "type": "water_heater"
+ },
+ "1657": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1657,
+  "name": "Calypso 200L",
+  "type": "water_heater"
+ },
+ "1658": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1658,
+  "name": "Calypso connect\u00e9",
+  "type": "water_heater"
+ },
+ "1734": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 1734,
+  "name": "Air Conditioner (#1)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "1734 zoneName=Salon deviceName=None": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 1734,
+  "name": "Air Conditioner (Salon)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "1758": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 1758,
+  "name": "HUB Navizone",
+  "type": "hub"
+ },
+ "1763": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1763,
+  "name": "FLAT/S4 IOTHUB",
+  "type": "hub"
+ },
+ "1957": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus"
+  },
+  "modelId": 1957,
+  "name": "LINEO CONNECTE MP 100L 2250W",
+  "type": "water_heater"
+ },
+ "1962": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1962,
+  "name": "Thermor Malicio 3 65L",
+  "type": "water_heater"
+ },
+ "1966": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1966,
+  "name": "Thermor Malicio 3 120L",
+  "type": "water_heater"
+ },
+ "211": {
+  "HVACModes": {
+   "0": "off",
+   "1": "heat",
+   "2": "auto"
+  },
+  "HVACModesCapabilityId": [
+   1,
+   2
+  ],
+  "HeatingModes": {
+   "0": "manual"
+  },
+  "currentTemperatureAvailableZ1": true,
+  "currentTemperatureAvailableZ2": true,
+  "exhaustTemperatureAvailable": false,
+  "modelId": 211,
+  "name": "Alfea Extensa Duo A.I. 3 R32",
+  "type": "heat_pump"
+ },
+ "2346": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2346,
+  "name": "Egeo VS 250L",
+  "type": "water_heater"
+ },
+ "235": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 235,
+  "name": "Thermostat Navilink Connect",
+  "type": "thermostat"
+ },
+ "236": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 236,
+  "name": "Sauter Phazy",
+  "type": "water_heater"
+ },
+ "2374": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2374,
+  "name": "Explorer EVO 3 (260L)",
+  "type": "water_heater"
+ },
+ "386": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 386,
+  "name": "PHAZY VS 300L 3000M",
+  "type": "water_heater"
+ },
+ "387": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 387,
+  "name": "PHAZY VM 150L 2200M",
+  "type": "water_heater"
+ },
+ "388": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 388,
+  "name": "PHAZY VM 200L 2200M",
+  "type": "water_heater"
+ },
+ "389": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 389,
+  "name": "AQUEO ACI HYB VS 300L 3000M",
+  "type": "water_heater"
+ },
+ "390": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 390,
+  "name": "AQUEO ACI HYB VM 150L 2200M",
+  "type": "water_heater"
+ },
+ "391": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 391,
+  "name": "AQUEO ACI HYB VM 200L 2200M",
+  "type": "water_heater"
+ },
+ "392": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 392,
+  "name": "DURALIS CONNECT ACI HYB VS 300L 3000M",
+  "type": "water_heater"
+ },
+ "393": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 393,
+  "name": "DURALIS CONNECT ACI HYB VM 150L 2200M",
+  "type": "water_heater"
+ },
+ "394": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 394,
+  "name": "DURALIS CONNECT ACI HYB VM 200L 2200M",
+  "type": "water_heater"
+ },
+ "418": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "currentTemperatureAvailableZ1": true,
+  "currentTemperatureAvailableZ2": false,
+  "exhaustTemperatureAvailable": true,
+  "modelId": 418,
+  "name": "Atlantic Loria Duo 6006",
+  "overrideModeAvailable": true,
+  "type": "thermostat"
+ },
+ "556": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 556,
+  "name": "Naviclim Hub",
+  "type": "hub"
+ },
+ "557": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 557,
+  "name": "Air Conditioner (#1)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "557 zoneName=Salon deviceName=None": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 557,
+  "name": "Air Conditioner (Salon)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "558": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 558,
+  "name": "Air Conditioner (#2)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "559": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 559,
+  "name": "Air Conditioner (#3)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "56": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 56,
+  "name": "Naema 2 Micro 25",
+  "type": "gaz_boiler"
+ },
+ "560": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 560,
+  "name": "Air Conditioner (#4)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "561": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 561,
+  "name": "Air Conditioner (#5)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "562": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 562,
+  "name": "Air Conditioner User Interface (#1)",
+  "type": "ac_controller"
+ },
+ "562 zoneName=Salon deviceName=None": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 562,
+  "name": "Air Conditioner User Interface (Salon)",
+  "type": "ac_controller"
+ },
+ "563": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 563,
+  "name": "Air Conditioner User Interface (#2)",
+  "type": "ac_controller"
+ },
+ "564": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 564,
+  "name": "Air Conditioner User Interface (#3)",
+  "type": "ac_controller"
+ },
+ "565": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 565,
+  "name": "Air Conditioner User Interface (#4)",
+  "type": "ac_controller"
+ },
+ "566": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 566,
+  "name": "Air Conditioner User Interface (#5)",
+  "type": "ac_controller"
+ },
+ "567": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 567,
+  "name": "Air Conditioner User Interface (#6)",
+  "type": "ac_controller"
+ },
+ "568": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 568,
+  "name": "Air Conditioner User Interface (#7)",
+  "type": "ac_controller"
+ },
+ "569": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 569,
+  "name": "Air Conditioner User Interface (#8)",
+  "type": "ac_controller"
+ },
+ "570": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 570,
+  "name": "Air Conditioner User Interface (#9)",
+  "type": "ac_controller"
+ },
+ "61": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 61,
+  "name": "Naia 2 Micro 25",
+  "type": "gaz_boiler"
+ },
+ "65": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 65,
+  "name": "Naema 2 Duo 25",
+  "type": "gaz_boiler"
+ },
+ "76": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual"
+  },
+  "currentTemperatureAvailableZ1": false,
+  "currentTemperatureAvailableZ2": true,
+  "exhaustTemperatureAvailable": false,
+  "modelId": 76,
+  "name": "Alfea Extensa Duo AI UE",
+  "type": "heat_pump"
+ },
+ "999999 zoneName=None deviceName=None": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 999999,
+  "name": "Unknown product (999999)",
+  "type": "unknown"
+ }
+}
