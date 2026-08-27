@@ -210,8 +210,14 @@ def test_setup_still_reports_an_outage_as_an_outage(monkeypatch):
     assert asyncio.run(account.connect_or_auth_failed()) is False
 
 
-def test_a_poll_that_finds_the_password_refused_raises_for_reauth(monkeypatch):
-    """The path a password changed while Home Assistant was running takes."""
+def test_a_refresh_that_finds_the_password_refused_raises_for_reauth(monkeypatch):
+    """The path a password changed while Home Assistant was running takes.
+
+    This is the hub's own fetch, which is the post-write refresh now that the
+    account owns the beat -- the same case on the beat is in
+    tests/test_polling.py. Both have to raise it: whichever call is the first
+    to meet the refused password is the one that has to ask for a new one.
+    """
     account, _ = refused(monkeypatch)
     hub = hub_over(account)
 
@@ -219,7 +225,7 @@ def test_a_poll_that_finds_the_password_refused_raises_for_reauth(monkeypatch):
         asyncio.run(hub._async_update_data())
 
 
-def test_a_poll_that_cannot_reach_the_servers_only_fails_the_update(monkeypatch):
+def test_a_refresh_that_cannot_reach_the_servers_only_fails_the_update(monkeypatch):
     """UpdateFailed keeps its meaning: try the same credentials again later."""
     account, _ = make_account(monkeypatch, raises=TimeoutError())
     hub = hub_over(account)

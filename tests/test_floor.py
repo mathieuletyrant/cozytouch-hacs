@@ -117,6 +117,32 @@ def test_the_reauth_helpers_exist():
     assert "data_updates" in parameters
 
 
+def test_the_coordinator_can_be_pushed_to():
+    """The hubs no longer have a clock; the account tells them.
+
+    `async_set_updated_data` and `async_set_update_error` are what a coordinator
+    driven from outside is made of, and the account poll calls both -- one on
+    every tick, the other whenever the account fails and every device has to
+    say so.
+    """
+    from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+    assert hasattr(DataUpdateCoordinator, "async_set_updated_data")
+    assert hasattr(DataUpdateCoordinator, "async_set_update_error")
+
+
+def test_the_number_selector_takes_a_unit():
+    """The poll interval is seconds, and the box says so.
+
+    `unit_of_measurement` on a NumberSelector is the difference between asking
+    for a number and asking for a duration; a floor that does not have it would
+    reject the options schema at import time.
+    """
+    from homeassistant.helpers import selector
+
+    assert "unit_of_measurement" in selector.NumberSelectorConfig.__annotations__
+
+
 def test_the_declared_floor_is_the_one_the_tests_run_against():
     """hacs.json and requirements_test_min.txt have to say the same thing, or
     the job proving the floor is proving a different one.

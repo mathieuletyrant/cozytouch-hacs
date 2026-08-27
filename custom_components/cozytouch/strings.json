@@ -63,7 +63,11 @@
             "init": {
                 "data": {
                     "create_unknown": "Create entities for unknown capabilities",
-                    "dump_json": "Dump a JSON file with received data"
+                    "dump_json": "Dump a JSON file with received data",
+                    "poll_interval": "Seconds between refreshes"
+                },
+                "data_description": {
+                    "poll_interval": "One request refreshes every device on the account, so this does not cost more when more devices are added."
                 }
             }
         }

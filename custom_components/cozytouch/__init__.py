@@ -9,7 +9,7 @@ import homeassistant.helpers.config_validation as cv
 
 from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, CozytouchRuntimeData, Hub
+from .hub import AccountCoordinator, CozytouchConfigEntry, CozytouchRuntimeData, Hub
 from .repairs import async_check_model_mapping
 from .services import async_register_services
 
@@ -69,19 +69,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
         hub.set_create_entities_for_unknown_entities(create_unknown)
         hubs[subentry_id] = hub
 
-    entry.runtime_data = CozytouchRuntimeData(account, hubs)
+    coordinator = AccountCoordinator(hass, account, entry, hubs)
+    entry.runtime_data = CozytouchRuntimeData(account, hubs, coordinator)
 
-    # The setup view has already filled in a capability list for every device,
-    # so the entities can be built from what it said. Each hub's first poll
-    # only refreshes values -- one device failing it leaves that device's
-    # entities stale rather than taking the whole account down, which is what
-    # a first refresh that raises would do to its four siblings.
+    # One refresh for the account where there used to be one per device, and
+    # the setup view `connect()` just read has already filled in a capability
+    # list for every one of them -- so this publishes what is there rather than
+    # fetching it again.
     #
-    # One at a time on purpose: the account declares a rateLimit nothing
-    # decodes, and firing one request per device at once is the shape most
-    # likely to meet it.
-    for hub in hubs.values():
-        await hub.async_refresh()
+    # async_refresh, not async_config_entry_first_refresh : the entities are
+    # built from those capabilities, so a poll that fails leaves values stale
+    # instead of failing a setup that already has what it needs.
+    await coordinator.async_refresh()
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 

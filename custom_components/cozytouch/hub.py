@@ -11,29 +11,56 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
-from .account import API_DECLARED_FIELDS, CozytouchAccount, CozytouchApiError
+from .account import (
+    API_DECLARED_FIELDS,
+    CozytouchAccount,
+    CozytouchApiError,
+    CozytouchRateLimited,
+)
 from .capability import get_capability_infos
 from .const import DOMAIN
 from .model import CozytouchDeviceType, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
 
-# How often the coordinator asks Atlantic for a device's capabilities.
-POLL_INTERVAL = timedelta(seconds=60)
+# How often the account asks Atlantic for the setup view.
+#
+# 30 seconds where every version of this integration has said 60, and it costs
+# *less* : the setup view carries every device, so this is two requests a
+# minute whatever the account holds, where the per-device poll it replaces was
+# one per device per minute -- five for the gateway-plus-four-units account in
+# docs/api-surface.md. Anything from three devices up is now both cheaper and
+# twice as fresh.
+#
+# 30 is also what the account's own `rateLimit` says, which is the one reading
+# of that field nothing contradicts. That is a coincidence worth naming and
+# not evidence: `rate_limit` is used as a ceiling below, never as the source
+# of this number.
+DEFAULT_POLL_INTERVAL = 30
+
+# Below this, the requests stop buying anything : Atlantic's cloud learns from
+# the hardware on its own schedule, and no amount of asking makes a radiator
+# report sooner. Kept as a floor on the option rather than as advice in a
+# docstring nobody reads while typing 5.
+MIN_POLL_INTERVAL = 15
+MAX_POLL_INTERVAL = 600
+
+POLL_INTERVAL_OPTION = "poll_interval"
 
 
 @dataclass
 class CozytouchRuntimeData:
     """What a loaded config entry carries.
 
-    One account -- one login, one setup view -- and one hub per device, keyed
-    by the subentry that device was added as. The subentry id is also the
-    identity every entity of that device is registered under, so this mapping
-    is what turns "which entity" into "which device" everywhere else.
+    One account -- one login, one setup view, one poll -- and one hub per
+    device, keyed by the subentry that device was added as. The subentry id is
+    also the identity every entity of that device is registered under, so this
+    mapping is what turns "which entity" into "which device" everywhere else.
     """
 
     account: CozytouchAccount
     hubs: dict[str, Hub]
+    coordinator: AccountCoordinator
 
 # The capability carrying the firmware version, named `version` by
 # capability.py. Read by id here because the device registry wants a string on
@@ -45,6 +72,135 @@ SOFTWARE_VERSION_CAPABILITY_ID = 121
 # off the entry instead of looking them up in hass.data by id.
 type CozytouchConfigEntry = ConfigEntry[CozytouchRuntimeData]
 
+
+def poll_interval(entry: ConfigEntry, rate_limit: int | None) -> timedelta:
+    """How often to poll, from the option and what the account will allow.
+
+    The ceiling is `rateLimit` read as requests per minute. Nobody knows that
+    is what it counts -- docs/api-surface.md says so plainly -- but of the
+    readings that a working 60-second-per-device poll does not already
+    disprove, it is the strictest, and a ceiling wants the strictest. On the
+    one account ever captured it is 30, which permits everything down to the
+    floor and so never bites; on an account that declares 1, it does.
+    """
+    seconds = entry.options.get(
+        POLL_INTERVAL_OPTION,
+        entry.data.get(POLL_INTERVAL_OPTION, DEFAULT_POLL_INTERVAL),
+    )
+
+    try:
+        seconds = int(seconds)
+    except (TypeError, ValueError):
+        seconds = DEFAULT_POLL_INTERVAL
+
+    seconds = max(MIN_POLL_INTERVAL, min(MAX_POLL_INTERVAL, seconds))
+
+    if rate_limit and rate_limit > 0:
+        # One request per interval is the whole steady-state cost, so the
+        # budget is spent when the interval drops below 60 / rateLimit.
+        allowed = 60 / rate_limit
+        if seconds < allowed:
+            _LOGGER.warning(
+                "Poll interval of %ds exceeds the account's declared rateLimit"
+                " of %s; using %ds",
+                seconds,
+                rate_limit,
+                int(allowed) + 1,
+            )
+            seconds = int(allowed) + 1
+
+    return timedelta(seconds=seconds)
+
+
+class AccountCoordinator(DataUpdateCoordinator):
+    """The one thing on a beat : re-read the setup view, tell every hub.
+
+    This used to be a coordinator per device, each fetching
+    `/magellan/capabilities/?deviceId=` for its own -- N requests a minute for
+    N devices. But the setup view answers for the whole account in one request
+    (`account.refresh_setup`), which is why that shape was worth changing : the
+    same budget buys N times the frequency, and the cost stops growing with the
+    number of devices somebody ticked at setup.
+
+    The hubs stay coordinators, with no schedule of their own. They are pushed
+    to from here, which keeps every entity a `CoordinatorEntity` of its own
+    device -- one device failing still shows as that device failing -- and
+    leaves `async_request_refresh()` after a write working as it did.
+    """
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        account: CozytouchAccount,
+        config_entry: ConfigEntry,
+        hubs: dict[str, Hub],
+    ) -> None:
+        """Init the account coordinator.
+
+        The hubs are a constructor argument rather than something attached
+        afterwards : a coordinator that polls before it knows who to tell would
+        spend a request and drop the answer, and there is no moment in setup
+        where that state is useful.
+        """
+        super().__init__(
+            hass,
+            _LOGGER,
+            # Not the username, which is the obvious id and an email address :
+            # this name reaches every debug line the coordinator writes.
+            config_entry=config_entry,
+            name="Cozytouch_" + config_entry.entry_id,
+            update_interval=poll_interval(config_entry, account.rate_limit),
+        )
+        self._account = account
+        self._hubs = hubs
+
+    async def _async_update_data(self) -> None:
+        """Read the setup view once, and hand it to every device."""
+        self._account.check_token()
+
+        if not self._account.online:
+            # ConfigEntryAuthFailed passes straight through the coordinator,
+            # which answers it by opening a reauth dialog and by not
+            # rescheduling itself. UpdateFailed would only book another attempt
+            # with the same rejected password.
+            if not await self._account.connect_or_auth_failed():
+                self._publish_error(UpdateFailed("Cannot connect to Atlantic"))
+                raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
+
+            # connect() reads the setup view itself, so this round is done.
+            await self._publish()
+            return
+
+        try:
+            await self._account.refresh_setup()
+        except CozytouchRateLimited as err:
+            # Not an UpdateFailed : being asked to slow down is not the same as
+            # having failed, and marking every entity unavailable because the
+            # account is a few seconds ahead of its budget would be a worse lie
+            # than a value that is one poll old. The values stand, and the next
+            # tick will find the backoff still holding and skip in turn.
+            _LOGGER.debug("Poll skipped, backing off : %s", err)
+            return
+        except CozytouchApiError as err:
+            self._publish_error(UpdateFailed(str(err)))
+            raise UpdateFailed(str(err)) from err
+
+        await self._publish()
+
+    async def _publish(self) -> None:
+        """Tell every hub its device has a fresh capability list."""
+        for hub in self._hubs.values():
+            await hub.async_account_updated()
+
+    def _publish_error(self, err: Exception) -> None:
+        """Mark every device unavailable, since the account they share failed.
+
+        The failure belongs to the account, so it reaches the entities through
+        the hub each of them listens to rather than through a coordinator none
+        of them has.
+        """
+        for hub in self._hubs.values():
+            hub.async_set_update_error(err)
 
 def as_epoch(value) -> int | None:
     """A modificationDate as an int, or None when it says nothing.
@@ -67,11 +223,18 @@ def as_epoch(value) -> int | None:
 class Hub(DataUpdateCoordinator):
     """One device of an Atlantic Cozytouch account.
 
-    The account -- the session, the token, the setup view, the list of devices
-    -- lives in `account.py` and is shared. What is left here is per device:
-    which capability ids this one reports, what its model makes of them, the
-    60-second poll that refreshes them, and the away-mode window staged before
-    it is committed.
+    The account -- the session, the token, the setup view, the list of devices,
+    and now the poll -- lives in `account.py` and is shared. What is left here
+    is per device: which capability ids this one reports, what its model makes
+    of them, and the away-mode window staged before it is committed.
+
+    Still a coordinator, and deliberately so : every entity is a
+    `CoordinatorEntity` of the device it belongs to, so a device can be
+    unavailable on its own. What it no longer has is a schedule.
+    `update_interval=None` means it never fires by itself; it is pushed to by
+    `AccountCoordinator`, and it fetches on its own only when something asks --
+    `async_request_refresh()` after a write, which is what makes a setpoint
+    appear without waiting for the account's next tick.
     """
 
     manufacturer = "Atlantic Group"
@@ -90,7 +253,7 @@ class Hub(DataUpdateCoordinator):
             _LOGGER,
             config_entry=config_entry,
             name="Cozytouch_" + str(deviceId),
-            update_interval=POLL_INTERVAL,
+            update_interval=None,
         )
         self._account = account
         self._hass = hass
@@ -134,7 +297,25 @@ class Hub(DataUpdateCoordinator):
         """Get option from config flow to create entities for unknown capabilities."""
         return self._create_unknown
 
+    async def async_account_updated(self) -> None:
+        """The account has a fresh setup view; publish it as this device's data.
+
+        Called by `AccountCoordinator` rather than by a clock. The setup view
+        it just read carries this device's capability list along with every
+        other one, so there is nothing left to fetch -- the values are already
+        on `account.devices` and what remains is to tell the entities.
+        """
+        await self._commit_staged_away_mode()
+        self.async_set_updated_data(None)
+
     async def _async_update_data(self):
+        """Fetch this one device, for a refresh that could not wait.
+
+        No longer the beat -- `AccountCoordinator` is -- so this runs when
+        `async_request_refresh()` asks, which is after a write. Re-reading the
+        whole account to confirm one setpoint would be the wrong trade at this
+        one moment, which is why the per-device route survives its demotion.
+        """
         _LOGGER.debug("_async_update_data %d", self._deviceId)
 
         # Proactively re-authenticate if the token is about to expire
@@ -150,30 +331,51 @@ class Hub(DataUpdateCoordinator):
 
             # A reconnect re-reads the setup view, which carries the capability
             # list of every device, so this round has nothing left to fetch.
+            await self._commit_staged_away_mode()
             return
 
         try:
             capabilities = await self._account.fetch_capabilities(self._deviceId)
+        except CozytouchRateLimited:
+            # Keep the values and stay available : the account is throttled,
+            # not broken, and the next account poll will bring this device
+            # along with the others once the backoff lifts.
+            return
         except CozytouchApiError as err:
             raise UpdateFailed(str(err)) from err
 
         self._account.store_capabilities(self._deviceId, capabilities)
+        await self._commit_staged_away_mode()
 
+    async def _commit_staged_away_mode(self) -> None:
+        """Send the away window once both ends have stopped moving.
+
+        Editing the start or the end stages the value and stamps it; this
+        commits it when that stamp is more than 20 seconds old, so somebody can
+        set both ends before either is sent. It used to hang off this hub's own
+        60-second poll, which no longer exists -- so it runs on every path that
+        now stands in for it, the account's tick and a post-write refresh
+        alike. Hanging it off one of them would have made the delay depend on
+        which, and hanging it off neither would have made a staged window sit
+        there for good.
+        """
         if (
-            self._timestamp_away_mode_last_change is not None
-            and self._timestamps_away_mode_capability_id is not None
-            and self._timestamp_away_mode_start is not None
-            and self._timestamp_away_mode_end is not None
+            self._timestamp_away_mode_last_change is None
+            or self._timestamps_away_mode_capability_id is None
+            or self._timestamp_away_mode_start is None
+            or self._timestamp_away_mode_end is None
         ):
-            now = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp()
-            if now - self._timestamp_away_mode_last_change > 20:
-                await self.set_away_mode_timestamps(
-                    None,
-                    None,
-                    self._timestamps_away_mode_capability_id,
-                    self._timestamp_away_mode_start,
-                    self._timestamp_away_mode_end,
-                )
+            return
+
+        now = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp()
+        if now - self._timestamp_away_mode_last_change > 20:
+            await self.set_away_mode_timestamps(
+                None,
+                None,
+                self._timestamps_away_mode_capability_id,
+                self._timestamp_away_mode_start,
+                self._timestamp_away_mode_end,
+            )
 
     def get_zone_name(self, zoneId: int | None = None) -> str:
         """Get zone infos."""
@@ -369,16 +571,20 @@ class Hub(DataUpdateCoordinator):
 
         Every device the setup returns is listed, whether or not somebody
         added it, because what a mapping needs first is the model ids a user
-        actually owns -- and now with the capability ids to go with them, since
-        the setup view carries a capability list for every device on the
-        account and the account keeps all of them. For a device nobody added,
-        that list is whatever the last setup view said rather than a fresh
-        poll, which is still what a mapping is written from.
+        actually owns -- and with the capability ids to go with them, since the
+        setup view carries a capability list for every device on the account
+        and the account keeps all of them.
 
-        `isConfiguredHere` says which devices have a subentry, and so which
-        lists a 60-second poll keeps fresh. It is a property of the account and
-        not of the hub that happened to be asked : any of them describes the
-        whole thing, and one dump per account is the point.
+        Those lists are all as fresh as each other now that the setup view is
+        the poll : a device nobody added is refreshed on the same tick as one
+        somebody did, where it used to hold whatever the last reconnect said.
+        Unmapped hardware is exactly what a dump is read for, so it is the half
+        that gained the most.
+
+        `isConfiguredHere` therefore says which devices have entities, and no
+        longer implies anything about freshness. It is a property of the
+        account and not of the hub that happened to be asked : any of them
+        describes the whole thing, and one dump per account is the point.
         """
         configured = {
             subentry.data.get("deviceId")

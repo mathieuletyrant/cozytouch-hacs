@@ -63,7 +63,11 @@
             "init": {
                 "data": {
                     "create_unknown": "Créer des entités pour les capabilities inconnues",
-                    "dump_json": "Générer un fichier JSON avec les données reçues"
+                    "dump_json": "Générer un fichier JSON avec les données reçues",
+                    "poll_interval": "Secondes entre deux rafraîchissements"
+                },
+                "data_description": {
+                    "poll_interval": "Une requête rafraîchit tous les appareils du compte : ajouter un appareil ne coûte donc rien de plus."
                 }
             }
         }

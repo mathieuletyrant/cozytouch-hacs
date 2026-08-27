@@ -14,7 +14,7 @@ hubs overwrote each other and the last one to connect won --
 owning it in one object says so, and lets the shape be checked.
 
 The per-device half stays on `Hub` : which capability ids that device reports,
-what they mean for its model, and the 60-second poll that refreshes them.
+what they mean for its model, and the targeted fetch that confirms a write.
 """
 
 from __future__ import annotations
@@ -40,6 +40,26 @@ _LOGGER = logging.getLogger(__name__)
 # Timeout for all HTTP requests. Without this, a hung Atlantic API server
 # will stall a poll forever, blocking every subsequent one.
 REQUEST_TIMEOUT = ClientTimeout(total=30)
+
+# How long to stop asking after a 429 that does not say. Atlantic has never
+# been observed sending one -- nothing in the integration used to recognise it
+# -- so this is a guess, deliberately long: the cost of waiting five minutes
+# too long is stale values, the cost of waiting too little is being throttled
+# for good.
+RATE_LIMIT_BACKOFF = 300.0
+
+# What a throttling proxy puts in front of its answer. WSO2 API Manager, which
+# docs/api-surface.md identifies as the gateway, is the likely source of a 429
+# here, and these are the headers that would say what the limit actually is --
+# which is the one thing no capture has ever established about `rateLimit`.
+# Logged rather than parsed: a reading that comes from a real 429 beats one
+# guessed from a number in the setup view.
+RATE_LIMIT_HEADERS = (
+    "Retry-After",
+    "X-RateLimit-Limit",
+    "X-RateLimit-Remaining",
+    "X-RateLimit-Reset",
+)
 
 # What the API declares about a device on top of the fields that drive
 # behaviour. Nothing reads these to decide anything: they are carried because a
@@ -108,10 +128,13 @@ class CozytouchAccount:
 
         self._access_token = ""
         self._token_expiry: float = 0  # Unix timestamp; 0 = unknown/expired
-        # Every hub of this account calls connect() the moment it sees the
-        # account offline, and they all poll on the same 60-second beat. The
-        # lock is what turns five simultaneous reconnects into one login.
+        # A reconnect is asked for by whoever sees the account offline -- the
+        # account poll, or a hub confirming a write -- and the lock is what
+        # turns several of them arriving at once into one login.
         self._connect_lock = asyncio.Lock()
+        # Set by a 429, and honoured by every caller before it spends a
+        # request. 0 = not throttled.
+        self._backoff_until: float = 0
 
         self.online = False
         self.setup: dict = {}
@@ -136,6 +159,62 @@ class CozytouchAccount:
             "Content-Type": "application/json",
         }
 
+    @property
+    def rate_limit(self) -> int | None:
+        """What the account declares its own limit to be, if it said.
+
+        The units are still unknown -- docs/api-surface.md has the detail --
+        so this is read as requests per minute and only ever as a ceiling,
+        which is the most conservative reading the evidence does not contradict.
+        """
+        rateLimit = self.setup.get("rateLimit")
+        return rateLimit if isinstance(rateLimit, int) else None
+
+    @property
+    def backoff_remaining(self) -> float:
+        """Seconds left before this account may ask Atlantic for anything."""
+        return max(0.0, self._backoff_until - datetime.now(UTC).timestamp())
+
+    def _note_rate_limited(self, response, what: str) -> float:
+        """Stop asking for a while, and write down everything the 429 said.
+
+        Deliberately does **not** touch `online`. Every other failure here
+        drops the connection so the next poll re-authenticates, which for a 429
+        is exactly backwards : the token is fine, and reconnecting spends a
+        `POST /users/token` and a `GET setupviewv2` on an account that just
+        asked for *fewer* requests. Repeated failed logins are also the one
+        thing that can lock an account out (docs/api-surface.md), so answering
+        a throttle with a login loop is the worst move available.
+        """
+        retry_after = RATE_LIMIT_BACKOFF
+        header = response.headers.get("Retry-After")
+        if header:
+            try:
+                # Seconds, per RFC 9110. It also allows an HTTP-date, which no
+                # gateway seen here sends; a value that is not a number falls
+                # back to the default rather than throwing inside a poll.
+                retry_after = max(0.0, float(header.strip()))
+            except ValueError:
+                _LOGGER.debug("Unparsed Retry-After: %s", header)
+
+        self._backoff_until = datetime.now(UTC).timestamp() + retry_after
+
+        # At warning level on purpose. Nobody has ever captured a 429 from
+        # Atlantic, so the first person to see one is holding the only evidence
+        # that would say what `rateLimit: 30` actually counts.
+        _LOGGER.warning(
+            "Rate limited by Atlantic on %s ; backing off %.0fs. Headers: %s",
+            what,
+            retry_after,
+            {
+                name: response.headers[name]
+                for name in RATE_LIMIT_HEADERS
+                if name in response.headers
+            },
+        )
+
+        return retry_after
+
     async def connect(self) -> bool:
         """Log in and read the setup view, unless somebody already did.
 
@@ -157,6 +236,16 @@ class CozytouchAccount:
         if self.online:
             return True
 
+        # Checked before the lock and before the login : a reconnect is two
+        # requests, one of them the kind that locks accounts out, and an
+        # account that has just been throttled is the last one to spend them.
+        if self.backoff_remaining:
+            _LOGGER.debug(
+                "Not reconnecting for another %.0fs, rate limited",
+                self.backoff_remaining,
+            )
+            return False
+
         async with self._connect_lock:
             if self.online:
                 return True
@@ -166,6 +255,11 @@ class CozytouchAccount:
                 await self._read_setup()
                 self.online = True
             except CannotConnect:
+                self.online = False
+            except CozytouchRateLimited:
+                # The token was spent and the setup view refused. Nothing to
+                # retry now -- the backoff `_note_rate_limited` armed is what
+                # keeps the next caller from spending another one.
                 self.online = False
             except (TimeoutError, ClientError) as err:
                 _LOGGER.warning("connect: network error: %s", err)
@@ -238,6 +332,15 @@ class CozytouchAccount:
             headers=self._headers(),
             timeout=REQUEST_TIMEOUT,
         ) as response:
+            # Not CannotConnect, which `connect()` and `refresh_setup` both
+            # answer by dropping `online` -- the very reconnect a 429 must not
+            # provoke. It has to stay distinguishable all the way up.
+            if response.status == 429:
+                retry_after = self._note_rate_limited(response, "the setup view")
+                raise CozytouchRateLimited(
+                    "Rate limited by the setup view", retry_after
+                )
+
             json_data = await response.json()
 
             # An empty list or an error dict would blow up on json_data[0]
@@ -257,6 +360,40 @@ class CozytouchAccount:
             await asyncio.get_event_loop().run_in_executor(
                 None, self.update_devices_from_json_data, json_data
             )
+
+    async def refresh_setup(self) -> None:
+        """Re-read the setup view, which is the poll.
+
+        The same request `connect()` makes, called on a beat rather than once :
+        it carries a capability list for **every** device on the account
+        (`update_devices_from_json_data` keeps all of them), so one request
+        refreshes the whole account where the per-device route refreshes one
+        device. It also carries `absence`, which lives nowhere else -- an away
+        window set in the Cozytouch app used to wait for a reconnect to be
+        seen.
+
+        What it does not carry is proof of being as fresh as
+        `/magellan/capabilities/`. The two are the same three fields
+        (docs/api-surface.md) and the integration has always built its entities
+        from this payload at startup, but nobody has compared their latency.
+        `modificationDate` is in both and read by neither, so the measurement
+        is there to be made -- `scripts/probe_api.py --cadence` makes it.
+        """
+        if self.backoff_remaining:
+            raise CozytouchRateLimited(
+                "Still backing off from a 429", self.backoff_remaining
+            )
+
+        try:
+            await self._read_setup()
+        except CannotConnect as err:
+            self.online = False
+            raise CozytouchApiError("Unusable setup view, forcing reconnect") from err
+        except (TimeoutError, ClientError) as err:
+            self.online = False
+            raise CozytouchApiError(
+                f"Network error reading the setup view: {err}, forcing reconnect"
+            ) from err
 
     def check_token(self) -> None:
         """Drop the connection when the token is spent, so the next poll re-auths.
@@ -339,13 +476,23 @@ class CozytouchAccount:
                 )
 
     async def fetch_capabilities(self, deviceId: int) -> list:
-        """GET the capability list of one device, the 60-second poll.
+        """GET the capability list of one device.
+
+        No longer the beat -- `refresh_setup` is, and it covers every device at
+        once. This is what confirms a write on the device that was written to,
+        where re-reading the whole household to check one setpoint would be
+        absurd.
 
         Raises rather than returning a sentinel : the caller is a coordinator,
         and an empty list is a legitimate answer that must not read as a
-        failure. Every failure also drops `online`, which is what asks for the
-        reconnect.
+        failure. Every failure but a 429 also drops `online`, which is what
+        asks for the reconnect.
         """
+        if self.backoff_remaining:
+            raise CozytouchRateLimited(
+                "Still backing off from a 429", self.backoff_remaining
+            )
+
         try:
             async with self._session.get(
                 COZYTOUCH_ATLANTIC_API
@@ -359,6 +506,15 @@ class CozytouchAccount:
                     self.online = False
                     raise CozytouchApiError(
                         "Token rejected (401), forcing re-authentication next poll"
+                    )
+
+                # Before the generic branch below, and without dropping the
+                # session : a 429 is the one status that must not be answered
+                # with a reconnect.
+                if response.status == 429:
+                    retry_after = self._note_rate_limited(response, "the capabilities")
+                    raise CozytouchRateLimited(
+                        "Rate limited by the capabilities endpoint", retry_after
                     )
 
                 if response.status != 200:
@@ -415,6 +571,12 @@ class CozytouchAccount:
         to five more times a second apart -- until it reports 3. Returning
         False means the local value must stay as it was, and the next poll will
         say what actually happened.
+
+        Attempted even while the account is backing off from a 429, unlike the
+        polls : somebody just pressed a button, and refusing to send it because
+        a *reader* was throttled would be a worse answer than letting the
+        server refuse it. A 429 here still arms the backoff, so the readers
+        learn from a write's rejection.
         """
         try:
             async with self._session.post(
@@ -427,6 +589,10 @@ class CozytouchAccount:
                 headers=self._headers(),
                 timeout=REQUEST_TIMEOUT,
             ) as response:
+                if response.status == 429:
+                    self._note_rate_limited(response, "a capability write")
+                    return False
+
                 if response.status != 201:
                     return False
 
@@ -449,6 +615,14 @@ class CozytouchAccount:
                     headers=self._headers(),
                     timeout=REQUEST_TIMEOUT,
                 ) as response:
+                    # This loop is the burstiest thing the integration does --
+                    # up to six requests in five seconds for one button press
+                    # -- so it is the likeliest place to meet the limit, and
+                    # the last place to keep hammering after meeting it.
+                    if response.status == 429:
+                        self._note_rate_limited(response, "an execution poll")
+                        return False
+
                     try:
                         execution_data = await response.json()
                     except ContentTypeError:
@@ -503,6 +677,10 @@ class CozytouchAccount:
             ) as response:
                 if response.status in (200, 204):
                     return True
+
+                if response.status == 429:
+                    self._note_rate_limited(response, "the absence window")
+                    return False
 
                 _LOGGER.error(
                     "Set away mode : response %d (%s)",
@@ -596,3 +774,19 @@ class InvalidAuth(exceptions.HomeAssistantError):
 
 class CozytouchApiError(exceptions.HomeAssistantError):
     """Error to indicate a call to the Cozytouch API did not answer usefully."""
+
+
+class CozytouchRateLimited(CozytouchApiError):
+    """Error to indicate Atlantic asked for fewer requests, not for none.
+
+    A subclass, so a caller that only cares that the call failed keeps
+    working. What it adds is `retry_after` and, more importantly, what it does
+    *not* do : unlike every other failure here it leaves `online` alone,
+    because the session is fine and reconnecting would spend two more requests
+    answering a complaint about spending requests.
+    """
+
+    def __init__(self, message: str, retry_after: float) -> None:
+        """Init with how long the server, or the default, asks us to wait."""
+        super().__init__(message)
+        self.retry_after = retry_after

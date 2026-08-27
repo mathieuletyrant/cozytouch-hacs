@@ -30,6 +30,12 @@ from homeassistant.helpers import selector
 # could shadow the other depending on import order.
 from .account import CannotConnect, CozytouchAccount, InvalidAuth
 from .const import DOMAIN
+from .hub import (
+    DEFAULT_POLL_INTERVAL,
+    MAX_POLL_INTERVAL,
+    MIN_POLL_INTERVAL,
+    POLL_INTERVAL_OPTION,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -330,16 +336,18 @@ class DeviceSubentryFlowHandler(ConfigSubentryFlow):
 class OptionsFlowHandler(OptionsFlow):
     """Handles the options of a Cozytouch account.
 
-    Both of these are account-wide now. `dump_json` always was -- there is one
-    `Cozytouch.json` -- and `create_unknown` follows it rather than earning a
+    All three are account-wide. `dump_json` always was -- there is one
+    `Cozytouch.json` -- `create_unknown` follows it rather than earning a
     reconfigure flow per device for a setting used to work out what a value
-    means.
+    means, and `poll_interval` has to be : there is one poll for the account
+    now, so a per-device interval would describe something that does not
+    exist.
     """
 
-    def _current(self, key: str) -> bool:
+    def _current(self, key: str, default: Any = False) -> Any:
         """Read an option, falling back to the value picked at setup time."""
         return self.config_entry.options.get(
-            key, self.config_entry.data.get(key, False)
+            key, self.config_entry.data.get(key, default)
         )
 
     async def async_step_init(
@@ -359,6 +367,23 @@ class OptionsFlowHandler(OptionsFlow):
                     vol.Required(
                         "dump_json", default=self._current("dump_json")
                     ): bool,
+                    # Bounded by the selector rather than only by the code that
+                    # reads it, so the floor is visible while somebody is
+                    # typing instead of silently applied afterwards.
+                    vol.Required(
+                        POLL_INTERVAL_OPTION,
+                        default=self._current(
+                            POLL_INTERVAL_OPTION, DEFAULT_POLL_INTERVAL
+                        ),
+                    ): selector.NumberSelector(
+                        selector.NumberSelectorConfig(
+                            min=MIN_POLL_INTERVAL,
+                            max=MAX_POLL_INTERVAL,
+                            step=5,
+                            unit_of_measurement="s",
+                            mode=selector.NumberSelectorMode.BOX,
+                        )
+                    ),
                 }
             ),
         )

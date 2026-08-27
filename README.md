@@ -192,6 +192,13 @@ polled once whatever you own.
 To add a device later, use `Add device` on the integration page. To stop
 following one, delete it from there.
 
+Values refresh every **30 seconds** by default. One request covers the whole
+account, so ticking more devices does not make the integration talk to Atlantic
+more often. You can change the interval under `Configure` on the integration
+page; 15 seconds is the lowest it accepts, and below that the requests stop
+buying anything — Atlantic's cloud hears from your hardware on its own
+schedule, whatever we ask it.
+
 Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping). It applies to the whole account.
 
 > **Upgrading from an earlier release** : the integration used to be set up
