@@ -10,6 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ async def async_setup_entry(
     numbers = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "temperature_adjustment_number":
+        if capability["type"] == CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER:
             numbers.append(
                 TemperatureAdjustmentNumber(
                     coordinator=hub,
@@ -38,7 +39,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                 )
             )
-        elif capability["type"] == "temperature_percent_adjustment_number":
+        elif capability["type"] == CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER:
             numbers.append(
                 TemperaturePercentAdjustmentNumber(
                     coordinator=hub,
@@ -47,7 +48,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                 )
             )
-        elif capability["type"] == "hours_adjustment_number":
+        elif capability["type"] == CapabilityType.HOURS_ADJUSTMENT_NUMBER:
             numbers.append(
                 HoursAdjustmentNumber(
                     coordinator=hub,
@@ -56,7 +57,7 @@ async def async_setup_entry(
                     config_uniq_id=config_entry.entry_id,
                 )
             )
-        elif capability["type"] == "minutes_adjustment_number":
+        elif capability["type"] == CapabilityType.MINUTES_ADJUSTMENT_NUMBER:
             numbers.append(
                 MinutesAdjustmentNumber(
                     coordinator=hub,

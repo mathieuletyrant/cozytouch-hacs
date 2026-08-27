@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .hub import CozytouchConfigEntry, Hub
+from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ async def async_setup_entry(
     selects = []
     capabilities = hub.get_capabilities_for_device()
     for capability in capabilities:
-        if capability["type"] == "select":
+        if capability["type"] == CapabilityType.SELECT:
             selects.append(
                 CozytouchSelect(
                     coordinator=hub,
