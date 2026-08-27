@@ -954,12 +954,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1381,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -983,12 +989,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1381,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -2633,12 +2645,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1457,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -2662,12 +2680,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1457,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -4303,12 +4327,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1505,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -4332,12 +4362,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1505,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -5980,12 +6016,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1641,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -6009,12 +6051,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1641,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -7649,12 +7697,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1734,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -7678,12 +7732,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 1734,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -9378,12 +9438,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 211,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -9407,12 +9473,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 211,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -11020,12 +11092,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 2374,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -11049,12 +11127,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 2374,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -12698,12 +12782,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 418,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -12727,12 +12817,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 418,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -14360,12 +14456,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 557,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -14389,12 +14491,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 557,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -16049,12 +16157,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 56,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -16078,12 +16192,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 56,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -17728,12 +17848,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 562,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -17757,12 +17883,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 562,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -19401,12 +19533,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 76,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -19430,12 +19568,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 76,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -21076,12 +21220,18 @@
     "capabilityDuplicate": 226,
     "capabilityId": 222,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 999999,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },
@@ -21105,12 +21255,18 @@
     "capabilityDuplicate": 222,
     "capabilityId": 226,
     "category": "sensor",
-    "icon_0": "mdi:airplane-takeoff",
-    "icon_1": "mdi:airplane-landing",
     "modelId": 999999,
     "name": "away_mode",
-    "name_0": "away_mode_start",
-    "name_1": "away_mode_stop",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
     "timezoneCapabilityId": 315,
     "type": "away_mode_timestamps"
    },

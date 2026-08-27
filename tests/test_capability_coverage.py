@@ -90,9 +90,8 @@ def names_the_mapping_produces():
     for result in capabilities_the_mapping_produces():
         if result.get("name"):
             found.add(result["name"])
-            for extra in ("name_0", "name_1"):
-                if result.get(extra):
-                    found.add(result[extra])
+            for entity in result.get("timestamps", ()):
+                found.add(entity.name)
     return found
 
 
