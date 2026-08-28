@@ -11,6 +11,10 @@ integration that serves the last thing it heard, forever, with no way to tell,
 is the failure people report as "the temperature is wrong" -- and the entity
 built here is what tells those two apart.
 
+The poll sensor at the bottom is the question's other half : when did the
+integration last *ask*. The device's date can sit still because nothing
+changed or because nothing was fetched, and only the pair separates the two.
+
 What it deliberately does *not* do is decide when a device is stale. A stable
 water heater can leave every capability untouched for hours, so a guessed
 threshold would mark working hardware unavailable; the date is surfaced and
@@ -32,7 +36,10 @@ from custom_components.cozytouch import sensor as sensor_platform
 from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.hub import Hub, as_epoch
 from custom_components.cozytouch.infos import ModelInfos
-from custom_components.cozytouch.sensor import CozytouchLastUpdateSensor
+from custom_components.cozytouch.sensor import (
+    CozytouchLastPollSensor,
+    CozytouchLastUpdateSensor,
+)
 from homeassistant.components.sensor.const import SensorDeviceClass
 
 DEVICE_ID = 27906641
@@ -151,11 +158,12 @@ def test_a_siblings_dates_do_not_answer_for_this_device():
 SUBENTRY_ID = "sub-1"
 
 
-def build(last_modification_date, capabilities=()):
+def build(last_modification_date, capabilities=(), last_poll=None):
     """Run the sensor platform and return the entities it built."""
     hub = SimpleNamespace(
         get_capabilities_for_device=lambda deviceId=None: list(capabilities),
         get_last_modification_date=lambda: last_modification_date,
+        get_last_poll=lambda: last_poll,
         get_model_infos=lambda: ModelInfos(name="Air Conditioner (Salon)"),
         get_serial_number=lambda: "3022-6760-8541",
         get_software_version=lambda: "1.2.3",
@@ -250,6 +258,89 @@ def test_the_sensor_lands_on_the_same_device_as_the_others():
     assert info["identifiers"] == {(DOMAIN, SUBENTRY_ID)}
     assert info["serial_number"] == "3022-6760-8541"
     assert info["sw_version"] == "1.2.3"
+
+
+# ---------------------------------------------------------- the poll sensor
+
+# The other half of the freshness question : `modificationDate` says when the
+# hardware last changed a value, the poll date says when the integration last
+# asked. It is the account's date -- one setup-view request refreshes every
+# device -- surfaced per device so it sits next to the values it dates.
+
+POLLED = datetime.datetime.fromtimestamp(CAPTURED + 12, tz=datetime.UTC)
+
+
+def test_the_poll_sensor_exists_once_the_account_has_polled():
+    built = build(None, last_poll=POLLED)
+
+    assert [type(entity).__name__ for entity in built] == ["CozytouchLastPollSensor"]
+
+
+def test_the_two_freshness_sensors_stand_side_by_side():
+    built = build(CAPTURED, last_poll=POLLED)
+
+    assert [type(entity).__name__ for entity in built] == [
+        "CozytouchLastUpdateSensor",
+        "CozytouchLastPollSensor",
+    ]
+
+
+def test_the_poll_sensor_reads_the_accounts_date_unchanged():
+    """The account stamps an aware datetime, so there is nothing to convert."""
+    sensor = build(None, last_poll=POLLED)[0]
+
+    assert sensor.native_value == POLLED
+    assert sensor.native_value.tzinfo is not None
+
+
+def test_the_poll_sensor_follows_the_account_between_polls():
+    """native_value is read on demand, so a fresh poll shows without a rebuild."""
+    dates = [POLLED]
+    hub = SimpleNamespace(get_last_poll=lambda: dates[-1])
+    sensor = CozytouchLastPollSensor(coordinator=hub, config_uniq_id="entry123")
+
+    dates.append(POLLED + datetime.timedelta(seconds=30))
+
+    assert sensor.native_value == POLLED + datetime.timedelta(seconds=30)
+
+
+def test_the_poll_sensor_survives_the_failure_it_dates():
+    """Available on the last success, not on the last attempt.
+
+    A CoordinatorEntity goes unavailable when its coordinator's poll fails,
+    which is exactly when "how old is what the entities show" is being asked.
+    docs/decisions.md carries the argument.
+    """
+    hub = SimpleNamespace(get_last_poll=lambda: POLLED, last_update_success=False)
+    sensor = CozytouchLastPollSensor(coordinator=hub, config_uniq_id="entry123")
+
+    assert sensor.available is True
+
+
+def test_the_poll_sensor_is_a_timestamp_with_no_state_class():
+    """The pair Home Assistant accepts: it refuses a state class on a timestamp."""
+    sensor = build(None, last_poll=POLLED)[0]
+
+    assert sensor.device_class == SensorDeviceClass.TIMESTAMP
+    assert sensor.state_class is None
+
+
+def test_the_poll_sensor_is_a_diagnostic_and_keyed_on_the_entry():
+    """Not on a capability id, since it answers for the whole account."""
+    sensor = build(None, last_poll=POLLED)[0]
+
+    assert sensor.unique_id == f"{DOMAIN}_{SUBENTRY_ID}_last_poll"
+    assert sensor.entity_category == "diagnostic"
+    assert sensor.translation_key == "last_poll"
+
+
+def test_the_poll_sensor_lands_on_the_same_device_as_the_others():
+    """Same identifiers as a capability sensor, or it appears as a second device."""
+    sensor = build(None, last_poll=POLLED)[0]
+
+    info = sensor.device_info
+
+    assert info["identifiers"] == {(DOMAIN, SUBENTRY_ID)}
 
 
 # -------------------------------------------------------------------- the dump

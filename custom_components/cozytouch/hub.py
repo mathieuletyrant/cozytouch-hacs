@@ -744,6 +744,18 @@ class Hub(DataUpdateCoordinator):
 
         return max([date for date in dates if date is not None], default=None)
 
+    def get_last_poll(self) -> datetime | None:
+        """When the integration last heard from the API, as an aware datetime.
+
+        The account's date, not this device's : one setup-view request
+        refreshes every device at once, so every device on the account answers
+        the same. It moves on every successful poll, where
+        `get_last_modification_date` moves only when the hardware changed a
+        value -- the pair is what separates "nothing changed" from "nobody
+        asked".
+        """
+        return self._account.last_poll
+
     async def set_capability_value(self, capabilityId: int, value: str):
         """Set value for a device capability."""
         _LOGGER.debug(

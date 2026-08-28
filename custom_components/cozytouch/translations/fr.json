@@ -280,6 +280,7 @@
             "identify_supported":       { "name": "Identification disponible" },
             "interface_fw":             { "name": "Interface FW" },
             "last_device_update":       { "name": "Dernière mise à jour de l'appareil" },
+            "last_poll":                { "name": "Dernière synchronisation" },
             "linked_interfaces_count":  { "name": "Nombre d'interfaces liées" },
             "main_cursor_information":  { "name": "Informations du curseur principal" },
             "max_schedule_slots_per_day": { "name": "Créneaux max par jour" },

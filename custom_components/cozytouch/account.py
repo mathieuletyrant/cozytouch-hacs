@@ -140,6 +140,11 @@ class CozytouchAccount:
         self.setup: dict = {}
         self.zones: list | dict = []
         self.devices: list = []
+        # When the setup view last answered. One request refreshes the whole
+        # account, so this one date is the age of everything above it. Only a
+        # success moves it: a skipped or failed poll leaves it standing, which
+        # is what makes it readable as "how old is what the entities show".
+        self.last_poll: datetime | None = None
 
         self._dump_json = False
 
@@ -360,6 +365,8 @@ class CozytouchAccount:
             await asyncio.get_event_loop().run_in_executor(
                 None, self.update_devices_from_json_data, json_data
             )
+
+            self.last_poll = datetime.now(UTC)
 
     async def refresh_setup(self) -> None:
         """Re-read the setup view, which is the poll.

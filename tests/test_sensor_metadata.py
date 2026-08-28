@@ -52,11 +52,12 @@ def build(capabilities):
     """
     hub = SimpleNamespace(
         get_capabilities_for_device=lambda deviceId=None: capabilities,
-        # The platform also builds one entity that is not capability-driven,
-        # from the modificationDate the device reports. None here keeps these
-        # cases to the capability table they are about; tests/test_freshness.py
-        # covers the other entity.
+        # The platform also builds two entities that are not capability-driven,
+        # from the modificationDate the device reports and the account's last
+        # successful poll. None here keeps these cases to the capability table
+        # they are about; tests/test_freshness.py covers those two.
         get_last_modification_date=lambda: None,
+        get_last_poll=lambda: None,
     )
     entry = SimpleNamespace(
         runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),

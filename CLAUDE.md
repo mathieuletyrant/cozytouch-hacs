@@ -137,7 +137,9 @@ capture, so a test going green says "nobody changed this by accident", never
   unchanged while the hardware keeps reporting), that the sensor exists only
   when the device reports a date at all, and that the dump carries them per
   capability. It pins the reading, never a staleness threshold — nothing yet
-  says what a normal silence looks like.
+  says what a normal silence looks like. The poll sensor's cases live here
+  too : the account's `last_poll` surfaced per device, and kept available
+  through the very failure it dates.
 - `tests/test_calendar.py` — the weekly program expanded into dated events :
   which capability a weekday reads, that a slot runs until the next one rather
   than for a fixed length and that the last of the day runs to midnight, that

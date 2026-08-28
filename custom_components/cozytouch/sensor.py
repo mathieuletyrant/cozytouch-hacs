@@ -319,6 +319,18 @@ async def async_setup_entry(
                 )
             )
 
+        # Its sibling, dating the poll rather than the hardware. The gate is
+        # the same rule, though in production it is always open : connect()
+        # reads the setup view before any platform loads, so the date exists
+        # by the time this runs.
+        if hub.get_last_poll() is not None:
+            sensors.append(
+                CozytouchLastPollSensor(
+                    config_uniq_id=subentry_id,
+                    coordinator=hub,
+                )
+            )
+
         # Add the entities to HA
         if len(sensors) > 0:
             async_add_entities(sensors, True, config_subentry_id=subentry_id)
@@ -934,6 +946,61 @@ class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):
             return None
 
         return datetime.datetime.fromtimestamp(epoch, tz=datetime.UTC)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Publish whatever the poll just brought back."""
+        self.async_write_ha_state()
+
+
+class CozytouchLastPollSensor(CoordinatorEntity, SensorEntity):
+    """When the integration last fetched the account from the API.
+
+    The other half of the question `CozytouchLastUpdateSensor` answers : that
+    one says when the hardware last changed a value, this one says when the
+    integration last asked. Without it, "the poll runs and nothing changes"
+    and "the poll has stopped running" -- a 429 backoff serving the last known
+    values, an API outage ridden out -- read exactly the same.
+
+    Per device even though the date is the account's : one setup-view request
+    refreshes every device at once, so every device answers the same. The
+    duplication is deliberate, so the reading sits on the device whose values
+    it dates.
+    """
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_translation_key = "last_poll"
+
+    def __init__(self, coordinator: Hub, config_uniq_id: str) -> None:
+        """Initialize the last-poll sensor."""
+        super().__init__(coordinator)
+
+        self._device_uniq_id = config_uniq_id
+        # Like its sibling above : not keyed on a capability id, and
+        # `last_poll` is a name capability.py can never produce.
+        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_poll"
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return device_info_for(self.coordinator, self._device_uniq_id)
+
+    @property
+    def available(self) -> bool:
+        """Available as long as a poll ever succeeded.
+
+        Deliberately not the CoordinatorEntity reading, which follows the last
+        poll's outcome -- see docs/decisions.md.
+        """
+        return self.coordinator.get_last_poll() is not None
+
+    @property
+    def native_value(self) -> datetime.datetime | None:
+        """When the account's setup view last answered, as an aware datetime."""
+        return self.coordinator.get_last_poll()
 
     @callback
     def _handle_coordinator_update(self) -> None:

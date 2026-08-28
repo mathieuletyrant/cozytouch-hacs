@@ -280,6 +280,7 @@
             "identify_supported":       { "name": "Identify Supported" },
             "interface_fw":             { "name": "Interface FW" },
             "last_device_update":       { "name": "Last Device Update" },
+            "last_poll":                { "name": "Last Poll" },
             "linked_interfaces_count":  { "name": "Linked Interfaces Count" },
             "main_cursor_information":  { "name": "Main Cursor Information" },
             "max_schedule_slots_per_day": { "name": "Max Schedule Slots Per Day" },
