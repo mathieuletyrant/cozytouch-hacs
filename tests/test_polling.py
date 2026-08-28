@@ -272,6 +272,53 @@ def test_a_reconnect_publishes_without_asking_twice(monkeypatch):
     assert hubs["a"].updates == 1
 
 
+# --- the poll stamps its own date ------------------------------------------
+
+
+def test_a_successful_poll_stamps_when_the_data_arrived(monkeypatch):
+    """`last_poll` is what the per-device Last Poll sensor reads.
+
+    Stamped by the setup-view read itself, so connect() -- which reads it
+    too -- already leaves a date before the first scheduled poll.
+    """
+    account, _ = connected(monkeypatch)
+    stamped_at_connect = account.last_poll
+    assert stamped_at_connect is not None
+    assert stamped_at_connect.tzinfo is not None
+
+    asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert account.last_poll >= stamped_at_connect
+
+
+def test_a_rate_limited_poll_keeps_the_old_stamp(monkeypatch):
+    """A skipped poll fetched nothing, so the values are as old as the last one.
+
+    This is the reading the stamp exists for : during a backoff the entities
+    keep showing the last known values, and the stamp is what says how old
+    those are.
+    """
+    account, session = connected(monkeypatch)
+    stamped = account.last_poll
+    session._answers["setupviewv2"] = FakeResponse(None, status=429)
+
+    asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert account.last_poll == stamped
+
+
+def test_a_failed_poll_keeps_the_old_stamp(monkeypatch):
+    """A failure is not a fetch, so it must not read as one."""
+    account, session = connected(monkeypatch)
+    stamped = account.last_poll
+    session._answers["setupviewv2"] = FakeResponse([], status=200)
+
+    with pytest.raises(UpdateFailed):
+        asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert account.last_poll == stamped
+
+
 # --- what a 429 must not cost ---------------------------------------------
 
 

@@ -164,6 +164,7 @@ def test_the_migration_flips_the_unique_ids_the_sensors_actually_claim():
             )
         ],
         get_last_modification_date=lambda: None,
+        get_last_poll=lambda: None,
     )
     entry = SimpleNamespace(
         runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),

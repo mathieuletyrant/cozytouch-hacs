@@ -249,6 +249,25 @@ to ship and is kept out of this repository. `OK` is a plain, language-neutral
 token rather than a translated state, matching the raw-string diagnostic
 sensors around it.
 
+### The last-poll sensor stays available through the failure it dates
+
+`CozytouchLastPollSensor` overrides `available` to "a poll ever succeeded"
+instead of inheriting the CoordinatorEntity reading, which follows the *last*
+poll's outcome. The default would take the sensor down with everything else
+the moment the API stops answering -- which is exactly when "how old is what
+the entities show" is the question being asked. A 429 backoff never trips
+either reading (the coordinator deliberately treats it as a skip, not a
+failure), so the override only shows during a real outage: every value sensor
+goes unavailable, and this one keeps naming the moment the data stopped
+moving.
+
+Two smaller choices ride along. The date is stamped by the setup-view read
+itself (`CozytouchAccount._read_setup`), so `connect()` counts as the first
+poll and the sensor is never born empty. And it is surfaced per device even
+though one account-level request refreshes everything, so the reading sits on
+the device whose values it dates -- the duplication is the account beat made
+visible, not N measurements.
+
 ## `custom_components/cozytouch/__init__.py`
 
 ### Setup registers every device itself, before the platforms
