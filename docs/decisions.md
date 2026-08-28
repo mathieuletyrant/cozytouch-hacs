@@ -113,12 +113,12 @@ needs >= 3.14.2 — so a floating minor would let the runner image decide which
 Home Assistant is installable, which is the drift the pinned requirements
 exist to remove.
 
-### pyright, on three files
+### pyright, on the typed core
 
 The declared fields on `ModelInfos`/`CapabilityInfos` are only worth what
 checks them, and until this job nothing did. `pyproject.toml` scopes pyright
-to `infos.py`, `model.py` and `capability.py` — the typed core, where the
-declarations live — rather than the tree : the platforms and the hub read
+to `infos.py`, `model.py`, `capability.py` and `derive.py` — the typed core,
+where the declarations live — rather than the tree : the platforms and the hub read
 Home Assistant's heavily-typed API, and making them pyright-clean is its own
 project, not a line in this one. Basic mode for the same reason.
 
@@ -135,6 +135,68 @@ missing venv configuration and one was real — `get_model_infos` could assign
 a `str | None` device name into the zone's `name` field, which the
 `(deviceName or "")` guard hid from the checker. The run that stays green is
 the run that found one.
+
+## `custom_components/cozytouch/derive.py`
+
+### A derivation exists, and only the diagnostics dump reads it
+
+The vendor's app is not updated when a model ships, which means it cannot
+work the way `model.py` does. Decompiling it (August 2026) showed how it
+does work : it has no `modelId` table at all — it displays the `longName` /
+`modelFamily` the server sends — and every feature the UI offers is derived
+from the capabilities the device reports. `derive.py` is that derivation
+rebuilt on our side ; the entries below say what each piece rests on.
+
+Nothing wires entities from it, because the evidence covers a handful of
+device families and the table carries *deliberate* suppressions the
+derivation would undo — 557-561 report capability 100507 and the vendor app
+still offers no eco mode for them, which is why `ecoModeAvailable` is False
+there. The dump prints the derived description and where it disagrees with
+the declared one, so every report from the tracker measures the derivation
+on hardware nobody here owns. Wiring from it is a later decision, taken
+model by model on that record, with the table kept as the override layer
+for exactly those suppressions.
+
+### `HVAC_MODE_BITS` : capability 100022 is a bitmask over the mode values
+
+Measured against the corpus of captures : the units that report
+`100022 = 411` (bits 0,1,3,4,7,8) are the ones whose `HVACModes` table
+reads {0 off, 1 auto, 3 cool, 4 heat, 7 fan_only, 8 dry} — the exact same
+set — and the heating-only boilers and heat pumps (1382, 1444) read `17`
+(bits 0,4) against their {0 off, 4 heat}. Two independent matches, no
+counter-example seen.
+
+Limits : bit 2 appears on the wire (285, 415, 21) and no capture has named
+it, so the derivation reports it as unknown rather than guessing. And 166
+(`systemOperatingMode`) carries masks in the same space that *shrink* while
+100022 holds steady — one capture reads `166 = 9` {off, cool} on a unit
+whose 100022 says {off, 2?, cool, heat, dry}, mid-summer, so 166 is
+suspected to be the modes *currently permitted* (a seasonal lock) against
+100022's *supported*. The derivation reads only 100022 ; if the vendor app
+turns out to grey modes by 166, reflecting that is a climate-entity
+question, not a mapping one.
+
+### `FAN_MODES` / `SWING_MODES` : global vocabularies, not model data
+
+The value/label pairs `model.py` repeats per model are the vendor's own
+enums, embedded once in the app : fan speeds are `low / medium / high /
+quiet / auto` with the API value one above the enum index (1 low … 5 auto ;
+4 is the quiet speed, which the app drives through 100802 instead), louver
+positions are `position1..4` at face value. The corpus reads only values
+inside those ranges. So availability is the presence of 100801 / 100803,
+and the pairs themselves are constants.
+
+### The identity fields
+
+`modelFamily` is the API's own taxonomy — 13 values, closed list, from the
+app's parser of that field — but it is only populated on the head device of
+an installation : on a captured Navizone account every room unit and zone
+behind the hub reads null, and their `longName` is `ROOM_n` / `---`. Hence
+the two extra inputs : a child falls back to its master's family, and being
+named `masterDeviceId` by anybody makes a device the hub of its line, since
+the family cannot tell the head from the units. The user-facing name is
+capability 154 (the room name typed in the vendor app), then `customName` ;
+the commercial name is the one thing the derivation cannot produce.
 
 ## `custom_components/cozytouch/sensor.py`
 

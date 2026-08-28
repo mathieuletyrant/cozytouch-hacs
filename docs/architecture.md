@@ -431,6 +431,13 @@ added as of the last tick rather than the last reconnect. That is the half a
 dump is read for. It is read off the entry's subentries, so the dump does not
 depend on which hub produced it.
 
+Each device's `model` block also carries a shadow: what the capabilities
+alone would declare (`derived`, from `derive.py`) and where that would wire
+different entities than the table does (`declaredVsDerived`). Nothing acts
+on it — it is evidence collection for a possible switch-over, gathered from
+every report; `docs/decisions.md` has the derivation's sources and why it
+stays read-only.
+
 ## The services
 
 One service, `cozytouch.set_schedule`, writes a weekly program. A day is a
