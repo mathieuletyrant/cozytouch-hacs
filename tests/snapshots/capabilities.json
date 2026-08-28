@@ -407,6 +407,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1381,
     "name": "air_circulation_time_step",
@@ -431,6 +432,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1381,
     "name": "air_circulation_time_min",
@@ -439,6 +441,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1381,
     "name": "air_circulation_time_max",
@@ -2121,6 +2124,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1457,
     "name": "air_circulation_time_step",
@@ -2145,6 +2149,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1457,
     "name": "air_circulation_time_min",
@@ -2153,6 +2158,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1457,
     "name": "air_circulation_time_max",
@@ -3833,6 +3839,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1505,
     "name": "air_circulation_time_step",
@@ -3857,6 +3864,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1505,
     "name": "air_circulation_time_min",
@@ -3865,6 +3873,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1505,
     "name": "air_circulation_time_max",
@@ -5537,6 +5546,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1641,
     "name": "air_circulation_time_step",
@@ -5561,6 +5571,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1641,
     "name": "air_circulation_time_min",
@@ -5569,6 +5580,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1641,
     "name": "air_circulation_time_max",
@@ -7249,6 +7261,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1734,
     "name": "air_circulation_time_step",
@@ -7273,6 +7286,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1734,
     "name": "air_circulation_time_min",
@@ -7281,6 +7295,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 1734,
     "name": "air_circulation_time_max",
@@ -8992,6 +9007,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 211,
     "name": "air_circulation_time_step",
@@ -9016,6 +9032,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 211,
     "name": "air_circulation_time_min",
@@ -9024,6 +9041,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 211,
     "name": "air_circulation_time_max",
@@ -10681,6 +10699,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 2374,
     "name": "air_circulation_time_step",
@@ -10705,6 +10724,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 2374,
     "name": "air_circulation_time_min",
@@ -10713,6 +10733,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 2374,
     "name": "air_circulation_time_max",
@@ -12395,6 +12416,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 418,
     "name": "air_circulation_time_step",
@@ -12419,6 +12441,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 418,
     "name": "air_circulation_time_min",
@@ -12427,6 +12450,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 418,
     "name": "air_circulation_time_max",
@@ -14100,6 +14124,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 557,
     "name": "air_circulation_time_step",
@@ -14124,6 +14149,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 557,
     "name": "air_circulation_time_min",
@@ -14132,6 +14158,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 557,
     "name": "air_circulation_time_max",
@@ -15824,6 +15851,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 56,
     "name": "air_circulation_time_step",
@@ -15848,6 +15876,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 56,
     "name": "air_circulation_time_min",
@@ -15856,6 +15885,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 56,
     "name": "air_circulation_time_max",
@@ -17530,6 +17560,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 562,
     "name": "air_circulation_time_step",
@@ -17554,6 +17585,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 562,
     "name": "air_circulation_time_min",
@@ -17562,6 +17594,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 562,
     "name": "air_circulation_time_max",
@@ -19242,6 +19275,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 76,
     "name": "air_circulation_time_step",
@@ -19266,6 +19300,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 76,
     "name": "air_circulation_time_min",
@@ -19274,6 +19309,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 76,
     "name": "air_circulation_time_max",
@@ -20948,6 +20984,7 @@
    "102022": {
     "capabilityId": 102022,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 999999,
     "name": "air_circulation_time_step",
@@ -20972,6 +21009,7 @@
    "102025": {
     "capabilityId": 102025,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 999999,
     "name": "air_circulation_time_min",
@@ -20980,6 +21018,7 @@
    "102026": {
     "capabilityId": 102026,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan-clock",
     "modelId": 999999,
     "name": "air_circulation_time_max",
