@@ -687,6 +687,21 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1669,
+        {
+            "modelId": 1669,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "CV5 Aeromax Premium 100L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
         1657,
         {
             "modelId": 1657,
