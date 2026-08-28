@@ -138,6 +138,14 @@ capture, so a test going green says "nobody changed this by accident", never
   when the device reports a date at all, and that the dump carries them per
   capability. It pins the reading, never a staleness threshold — nothing yet
   says what a normal silence looks like.
+- `tests/test_calendar.py` — the weekly program expanded into dated events :
+  which capability a weekday reads, that a slot runs until the next one rather
+  than for a fixed length and that the last of the day runs to midnight, that
+  the week repeats over a range, that a slot which began before the window is
+  still the one in charge at its start, and that a calendar exists only for a
+  block the device reports in full -- one case per block, since the three runs
+  (196, 203, 237) are the whole of what it reads. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
+  test process, which is what makes the expected datetimes readable.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering
@@ -145,6 +153,14 @@ capture, so a test going green says "nobody changed this by accident", never
   model and capability ids and nothing about the household, that its query
   keys still match the issue form's field ids and that every field they do not
   fill is required, and that a release mapping a model clears it.
+- `tests/test_services.py` — the schedule services : the matrix `set_schedule`
+  builds, and the round trip that is the promise of `get_schedule`, since what
+  it returns has to be writable again unchanged.
+- `tests/test_device_trigger.py` — the device triggers : which ones a device
+  is offered, given what it reports, and what each one then watches — the right
+  entities for a program, the preset *attribute* rather than the state for a
+  preset. Both halves fail silently in production, since a trigger that never
+  fires logs nothing.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a
