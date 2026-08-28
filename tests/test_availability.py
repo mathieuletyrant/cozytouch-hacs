@@ -81,7 +81,9 @@ def test_a_sibling_availability_does_not_leak():
 def test_a_device_not_on_the_account_reads_none():
     hub = SimpleNamespace(
         _deviceId=999,
-        _account=SimpleNamespace(devices=[{"deviceId": DEVICE_ID, "isAvailable": True}]),
+        _account=SimpleNamespace(
+            devices=[{"deviceId": DEVICE_ID, "isAvailable": True}]
+        ),
     )
     assert Hub.get_is_available(hub) is None
 
