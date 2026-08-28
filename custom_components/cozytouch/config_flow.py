@@ -115,6 +115,10 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
     # is no migration, so it lands in MIGRATION_ERROR and asks to be added
     # again, which is a sentence rather than a traceback.
     VERSION = 2
+    # 2.2: the per-day program sensors of a calendar-covered block are
+    # disabled by default, and async_migrate_entry disables the ones an
+    # existing install already registered. See docs/decisions.md.
+    MINOR_VERSION = 2
 
     def __init__(self) -> None:
         """Init the flow."""

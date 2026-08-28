@@ -5,11 +5,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 import homeassistant.helpers.config_validation as cv
 
 from .account import CozytouchAccount
-from .const import DOMAIN
+from .const import DOMAIN, PROGRAM_BLOCKS
 from .hub import (
     AccountCoordinator,
     CozytouchConfigEntry,
@@ -57,6 +57,66 @@ def _register_devices(
             config_subentry_id=subentry_id,
             **device_info_for(hub, subentry_id),
         )
+
+
+def _covered_prog_unique_ids(
+    subentry_ids, existing_unique_ids: set[str]
+) -> set[str]:
+    """The per-day program sensors whose whole block is in the registry.
+
+    What is in the registry mirrors what the device reported when the entities
+    were built, so the calendar's whole-block condition can be checked without
+    the API: a complete block has a calendar and its per-day sensors are
+    duplicates, a partial one has no calendar and they stay its only view.
+    """
+    covered: set[str] = set()
+    for subentry_id in subentry_ids:
+        for first in PROGRAM_BLOCKS.values():
+            block = {
+                f"{DOMAIN}_{subentry_id}_{capabilityId}"
+                for capabilityId in range(first, first + 7)
+            }
+            if block <= existing_unique_ids:
+                covered |= block
+
+    return covered
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Bring a stored entry up to the current minor version.
+
+    A version 1 entry keeps landing in MIGRATION_ERROR, as it always has:
+    its one-entry-per-device shape is not understood and asking for the
+    device to be added again is the migration. See config_flow.VERSION.
+
+    2.2 disables the per-day program sensors a calendar makes redundant.
+    Once, not per start: enabled_by_default only speaks at first
+    registration, and somebody who re-enables a sensor afterwards must
+    never find it disabled again. INTEGRATION and not USER, so the UI says
+    who did it -- and a sensor the user already disabled keeps saying USER.
+    """
+    if entry.version != 2:
+        return False
+
+    if entry.minor_version < 2:
+        registry = er.async_get(hass)
+        by_unique_id = {
+            entity.unique_id: entity
+            for entity in er.async_entries_for_config_entry(registry, entry.entry_id)
+        }
+        for unique_id in _covered_prog_unique_ids(
+            entry.subentries, set(by_unique_id)
+        ):
+            entity = by_unique_id[unique_id]
+            if entity.disabled_by is None:
+                registry.async_update_entity(
+                    entity.entity_id,
+                    disabled_by=er.RegistryEntryDisabler.INTEGRATION,
+                )
+
+        hass.config_entries.async_update_entry(entry, minor_version=2)
+
+    return True
 
 
 async def _async_entry_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:

@@ -35,3 +35,23 @@ HEATING_MODE_PROG = "prog"
 AIR_CIRCULATION_SPEED_LOW = "low"
 AIR_CIRCULATION_SPEED_MEDIUM = "medium"
 AIR_CIRCULATION_SPEED_HIGH = "high"
+
+
+# The three weekly programs these devices hold, by the first capability of each
+# seven-day run: heating and cooling on a boiler or an air conditioner, hot
+# water on a water heater. A device gets a calendar per block it reports in
+# full, which in practice means one or two of them.
+#
+# Deliberately its own table rather than `services.PROGRAM_FIRST_CAPABILITY`,
+# which knows 196 and 203 only. Reading a program and writing one are not the
+# same risk: what the second member of a hot-water slot means has never been
+# confirmed against a capture, and writing a block on that basis could leave a
+# water heater running a program it never had. Reading it costs nothing, and
+# the prog sensors have rendered 237-243 as a time and a setpoint for as long
+# as they have existed. `set_schedule` still refuses the block, and should
+# until a capture says otherwise.
+#
+# Here rather than in calendar.py, which built it: the blocks a calendar
+# covers are also the blocks whose per-day sensors arrive disabled, and the
+# migration in __init__.py that disables existing ones reads the same table.
+PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
