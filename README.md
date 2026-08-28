@@ -299,6 +299,12 @@ reports -- so the week can be looked at on a dashboard instead of read off
 seven sensors. Each slot is an event running until the next one takes over, and
 its title is the target temperature.
 
+The seven per-day sensors of a block the calendar shows are disabled by
+default, on existing installations too : fourteen near-identical diagnostic
+rows per air conditioner said the same thing worse. Nothing is removed -- a
+dashboard or template that reads one can have it back from the device page,
+under the disabled entities, and it stays enabled from then on.
+
 They are read-only : a calendar event has a start and an end, a program slot
 has only a start, so writing one back would mean deciding what happens to the
 slots after it. `Cozytouch: Set a day program` is where that decision is

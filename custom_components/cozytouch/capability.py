@@ -105,6 +105,20 @@ SELF_DESCRIBING_CAPABILITIES = {
 }
 
 
+def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
+    """Whether the device reports all seven days of the program block at `first`.
+
+    All seven is the calendar platform's condition for building one, so this
+    is also the condition for the per-day sensors arriving disabled: a device
+    with a partial block has no calendar, and its per-day sensors stay its
+    only view. See docs/decisions.md.
+    """
+    return all(
+        capabilityId in availableCapabilityIds
+        for capabilityId in range(first, first + 7)
+    )
+
+
 def get_capability_infos(  # noqa: C901
     modelInfos: ModelInfos,
     capabilityId: int,
@@ -590,6 +604,8 @@ def get_capability_infos(  # noqa: C901
 
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
+        if _whole_block_reported(196 if index < 7 else 203, availableCapabilityIds):
+            capability.enabled_by_default = False
 
     elif capabilityId == 218:
         # A zone reports this and it does not mean anything there: a capture of
@@ -966,6 +982,8 @@ def get_capability_infos(  # noqa: C901
         capability.name = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
+        if _whole_block_reported(237, availableCapabilityIds):
+            capability.enabled_by_default = False
 
     elif capabilityId == 290:
         # DHW fault code, same matrix shape and decoding as the room code (303).

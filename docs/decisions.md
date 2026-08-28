@@ -252,6 +252,41 @@ is a subentry of the same entry -- was always right; what it could not see is
 *when* the gateway's device would appear. Registration order is the other
 half, and `tests/test_topology.py` pins both.
 
+### The per-day program sensors give way to the calendar (issue #42)
+
+A device that reports a whole program block gets a calendar for it, and the
+seven diagnostic sensors next to it render the same days as truncated strings
+-- fourteen near-identical rows per air conditioner (screenshot on the issue).
+The first plan was one consolidated sensor per block, state = today and the
+week as attributes; it died in review against what already exists: the
+calendar *is* that view, with the setpoints as event titles and
+`calendar.event` as "the setpoint in charge right now". Deleting the sensors
+was considered next and dropped too -- disabling gives the same device page
+with a two-click way back for whoever reads one in a template.
+
+So there are two halves, and the whole-block rule gates both, because a
+partial block builds no calendar and its per-day sensors stay its only view:
+
+- the mapping ships a covered block's days `enabled_by_default: False`
+  (`capability.py`), which Home Assistant only reads when an entity is first
+  registered -- new installs and new devices;
+- the 2.2 entry migration (`async_migrate_entry`, `MINOR_VERSION` in the
+  config flow) disables the ones an existing install already registered.
+  Exactly once, which is the point of doing it as a migration rather than at
+  every setup: somebody who re-enables a sensor must never find it disabled
+  again. `disabled_by=INTEGRATION`, and a sensor already disabled by the user
+  keeps saying USER.
+
+The two halves read "whole block" off different evidence, and the gap is
+known: the mapping checks the ids the device *reports*
+(`availableCapabilityIds`), the migration checks the ids the registry
+*holds*, while the calendar checks the seven *values* are not None. A block
+fully reported with a null day would be disabled here and get no calendar --
+no capture has ever shown one, and a wall of unknown-valued sensors is not a
+view worth keeping enabled for that case. The milestone blocks
+(100320-100333) and the time ranges (245-251) have no calendar and stay
+enabled; `tests/test_prog_visibility.py` pins all of it.
+
 ## `.github/workflows/release.yaml`
 
 ### It installs with pip, where tests.yaml uses uv

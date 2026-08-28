@@ -146,6 +146,13 @@ capture, so a test going green says "nobody changed this by accident", never
   block the device reports in full -- one case per block, since the three runs
   (196, 203, 237) are the whole of what it reads. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
   test process, which is what makes the expected datetimes readable.
+- `tests/test_prog_visibility.py` — the per-day program sensors giving way to
+  the calendar : that a whole block's days arrive disabled by default and a
+  partial block's stay enabled (same rule that gates the calendar), that the
+  blocks without a calendar keep their sensors, that the 2.2 migration
+  disables what an existing install registered — exactly once, so a re-enabled
+  sensor stays re-enabled — targeting the same unique_ids the sensor platform
+  actually claims, and that a version 1 entry still refuses to migrate.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering

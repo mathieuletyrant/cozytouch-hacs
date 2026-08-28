@@ -822,6 +822,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_01_z1",
     "type": "prog"
@@ -829,6 +830,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_02_z1",
     "type": "prog"
@@ -836,6 +838,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_03_z1",
     "type": "prog"
@@ -843,6 +846,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_04_z1",
     "type": "prog"
@@ -850,6 +854,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_05_z1",
     "type": "prog"
@@ -857,6 +862,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_06_z1",
     "type": "prog"
@@ -864,6 +870,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_07_z1",
     "type": "prog"
@@ -871,6 +878,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_08_z2",
     "type": "prog"
@@ -878,6 +886,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_09_z2",
     "type": "prog"
@@ -885,6 +894,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_10_z2",
     "type": "prog"
@@ -892,6 +902,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_11_z2",
     "type": "prog"
@@ -899,6 +910,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_12_z2",
     "type": "prog"
@@ -906,6 +918,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_13_z2",
     "type": "prog"
@@ -913,6 +926,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_14_z2",
     "type": "prog"
@@ -1067,6 +1081,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -1074,6 +1089,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -1081,6 +1097,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -1088,6 +1105,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -1095,6 +1113,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -1102,6 +1121,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -1109,6 +1129,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -2513,6 +2534,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_01_z1",
     "type": "prog"
@@ -2520,6 +2542,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_02_z1",
     "type": "prog"
@@ -2527,6 +2550,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_03_z1",
     "type": "prog"
@@ -2534,6 +2558,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_04_z1",
     "type": "prog"
@@ -2541,6 +2566,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_05_z1",
     "type": "prog"
@@ -2548,6 +2574,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_06_z1",
     "type": "prog"
@@ -2555,6 +2582,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_07_z1",
     "type": "prog"
@@ -2562,6 +2590,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_08_z2",
     "type": "prog"
@@ -2569,6 +2598,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_09_z2",
     "type": "prog"
@@ -2576,6 +2606,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_10_z2",
     "type": "prog"
@@ -2583,6 +2614,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_11_z2",
     "type": "prog"
@@ -2590,6 +2622,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_12_z2",
     "type": "prog"
@@ -2597,6 +2630,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_13_z2",
     "type": "prog"
@@ -2604,6 +2638,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_14_z2",
     "type": "prog"
@@ -2758,6 +2793,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -2765,6 +2801,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -2772,6 +2809,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -2779,6 +2817,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -2786,6 +2825,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -2793,6 +2833,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -2800,6 +2841,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -4202,6 +4244,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_01_z1",
     "type": "prog"
@@ -4209,6 +4252,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_02_z1",
     "type": "prog"
@@ -4216,6 +4260,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_03_z1",
     "type": "prog"
@@ -4223,6 +4268,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_04_z1",
     "type": "prog"
@@ -4230,6 +4276,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_05_z1",
     "type": "prog"
@@ -4237,6 +4284,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_06_z1",
     "type": "prog"
@@ -4244,6 +4292,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_07_z1",
     "type": "prog"
@@ -4251,6 +4300,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_08_z2",
     "type": "prog"
@@ -4258,6 +4308,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_09_z2",
     "type": "prog"
@@ -4265,6 +4316,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_10_z2",
     "type": "prog"
@@ -4272,6 +4324,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_11_z2",
     "type": "prog"
@@ -4279,6 +4332,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_12_z2",
     "type": "prog"
@@ -4286,6 +4340,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_13_z2",
     "type": "prog"
@@ -4293,6 +4348,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_14_z2",
     "type": "prog"
@@ -4440,6 +4496,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -4447,6 +4504,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -4454,6 +4512,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -4461,6 +4520,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -4468,6 +4528,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -4475,6 +4536,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -4482,6 +4544,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -5884,6 +5947,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_01_z1",
     "type": "prog"
@@ -5891,6 +5955,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_02_z1",
     "type": "prog"
@@ -5898,6 +5963,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_03_z1",
     "type": "prog"
@@ -5905,6 +5971,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_04_z1",
     "type": "prog"
@@ -5912,6 +5979,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_05_z1",
     "type": "prog"
@@ -5919,6 +5987,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_06_z1",
     "type": "prog"
@@ -5926,6 +5995,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_07_z1",
     "type": "prog"
@@ -5933,6 +6003,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_08_z2",
     "type": "prog"
@@ -5940,6 +6011,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_09_z2",
     "type": "prog"
@@ -5947,6 +6019,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_10_z2",
     "type": "prog"
@@ -5954,6 +6027,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_11_z2",
     "type": "prog"
@@ -5961,6 +6035,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_12_z2",
     "type": "prog"
@@ -5968,6 +6043,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_13_z2",
     "type": "prog"
@@ -5975,6 +6051,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_14_z2",
     "type": "prog"
@@ -6129,6 +6206,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -6136,6 +6214,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -6143,6 +6222,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -6150,6 +6230,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -6157,6 +6238,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -6164,6 +6246,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -6171,6 +6254,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -7565,6 +7649,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_monday",
     "type": "prog"
@@ -7572,6 +7657,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_tuesday",
     "type": "prog"
@@ -7579,6 +7665,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_wednesday",
     "type": "prog"
@@ -7586,6 +7673,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_thursday",
     "type": "prog"
@@ -7593,6 +7681,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_friday",
     "type": "prog"
@@ -7600,6 +7689,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_saturday",
     "type": "prog"
@@ -7607,6 +7697,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heating_sunday",
     "type": "prog"
@@ -7614,6 +7705,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_monday",
     "type": "prog"
@@ -7621,6 +7713,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_tuesday",
     "type": "prog"
@@ -7628,6 +7721,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_wednesday",
     "type": "prog"
@@ -7635,6 +7729,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_thursday",
     "type": "prog"
@@ -7642,6 +7737,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_friday",
     "type": "prog"
@@ -7649,6 +7745,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_saturday",
     "type": "prog"
@@ -7656,6 +7753,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cooling_sunday",
     "type": "prog"
@@ -7810,6 +7908,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -7817,6 +7916,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -7824,6 +7924,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -7831,6 +7932,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -7838,6 +7940,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -7845,6 +7948,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -7852,6 +7956,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -9289,6 +9394,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_01_z1",
     "type": "prog"
@@ -9296,6 +9402,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_02_z1",
     "type": "prog"
@@ -9303,6 +9410,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_03_z1",
     "type": "prog"
@@ -9310,6 +9418,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_04_z1",
     "type": "prog"
@@ -9334,6 +9443,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_05_z1",
     "type": "prog"
@@ -9341,6 +9451,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_06_z1",
     "type": "prog"
@@ -9348,6 +9459,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_07_z1",
     "type": "prog"
@@ -9355,6 +9467,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_08_z2",
     "type": "prog"
@@ -9362,6 +9475,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_09_z2",
     "type": "prog"
@@ -9369,6 +9483,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_10_z2",
     "type": "prog"
@@ -9376,6 +9491,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_11_z2",
     "type": "prog"
@@ -9383,6 +9499,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_12_z2",
     "type": "prog"
@@ -9390,6 +9507,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_13_z2",
     "type": "prog"
@@ -9397,6 +9515,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_14_z2",
     "type": "prog"
@@ -9551,6 +9670,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -9558,6 +9678,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -9565,6 +9686,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -9572,6 +9694,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -9579,6 +9702,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -9586,6 +9710,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -9593,6 +9718,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -10959,6 +11085,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_01_z1",
     "type": "prog"
@@ -10966,6 +11093,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_02_z1",
     "type": "prog"
@@ -10973,6 +11101,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_03_z1",
     "type": "prog"
@@ -10980,6 +11109,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_04_z1",
     "type": "prog"
@@ -10987,6 +11117,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_05_z1",
     "type": "prog"
@@ -10994,6 +11125,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_06_z1",
     "type": "prog"
@@ -11001,6 +11133,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_07_z1",
     "type": "prog"
@@ -11008,6 +11141,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_08_z2",
     "type": "prog"
@@ -11015,6 +11149,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_09_z2",
     "type": "prog"
@@ -11022,6 +11157,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_10_z2",
     "type": "prog"
@@ -11029,6 +11165,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_11_z2",
     "type": "prog"
@@ -11036,6 +11173,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_12_z2",
     "type": "prog"
@@ -11043,6 +11181,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_13_z2",
     "type": "prog"
@@ -11050,6 +11189,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_14_z2",
     "type": "prog"
@@ -11206,6 +11346,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -11213,6 +11354,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -11220,6 +11362,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -11227,6 +11370,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -11234,6 +11378,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -11241,6 +11386,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -11248,6 +11394,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -12650,6 +12797,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_01_z1",
     "type": "prog"
@@ -12657,6 +12805,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_02_z1",
     "type": "prog"
@@ -12664,6 +12813,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_03_z1",
     "type": "prog"
@@ -12671,6 +12821,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_04_z1",
     "type": "prog"
@@ -12678,6 +12829,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_05_z1",
     "type": "prog"
@@ -12685,6 +12837,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_06_z1",
     "type": "prog"
@@ -12692,6 +12845,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_07_z1",
     "type": "prog"
@@ -12699,6 +12853,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_08_z2",
     "type": "prog"
@@ -12706,6 +12861,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_09_z2",
     "type": "prog"
@@ -12713,6 +12869,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_10_z2",
     "type": "prog"
@@ -12720,6 +12877,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_11_z2",
     "type": "prog"
@@ -12727,6 +12885,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_12_z2",
     "type": "prog"
@@ -12734,6 +12893,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_13_z2",
     "type": "prog"
@@ -12741,6 +12901,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_14_z2",
     "type": "prog"
@@ -12895,6 +13056,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -12902,6 +13064,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -12909,6 +13072,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -12916,6 +13080,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -12923,6 +13088,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -12930,6 +13096,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -12937,6 +13104,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -14324,6 +14492,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_monday",
     "type": "prog"
@@ -14331,6 +14500,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_tuesday",
     "type": "prog"
@@ -14338,6 +14508,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_wednesday",
     "type": "prog"
@@ -14345,6 +14516,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_thursday",
     "type": "prog"
@@ -14352,6 +14524,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_friday",
     "type": "prog"
@@ -14359,6 +14532,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_saturday",
     "type": "prog"
@@ -14366,6 +14540,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heating_sunday",
     "type": "prog"
@@ -14373,6 +14548,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_monday",
     "type": "prog"
@@ -14380,6 +14556,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_tuesday",
     "type": "prog"
@@ -14387,6 +14564,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_wednesday",
     "type": "prog"
@@ -14394,6 +14572,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_thursday",
     "type": "prog"
@@ -14401,6 +14580,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_friday",
     "type": "prog"
@@ -14408,6 +14588,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_saturday",
     "type": "prog"
@@ -14415,6 +14596,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cooling_sunday",
     "type": "prog"
@@ -14569,6 +14751,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -14576,6 +14759,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -14583,6 +14767,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -14590,6 +14775,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -14597,6 +14783,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -14604,6 +14791,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -14611,6 +14799,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -16025,6 +16214,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_01_z1",
     "type": "prog"
@@ -16032,6 +16222,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_02_z1",
     "type": "prog"
@@ -16039,6 +16230,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_03_z1",
     "type": "prog"
@@ -16046,6 +16238,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_04_z1",
     "type": "prog"
@@ -16053,6 +16246,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_05_z1",
     "type": "prog"
@@ -16060,6 +16254,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_06_z1",
     "type": "prog"
@@ -16067,6 +16262,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_07_z1",
     "type": "prog"
@@ -16074,6 +16270,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_08_z2",
     "type": "prog"
@@ -16081,6 +16278,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_09_z2",
     "type": "prog"
@@ -16088,6 +16286,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_10_z2",
     "type": "prog"
@@ -16095,6 +16294,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_11_z2",
     "type": "prog"
@@ -16102,6 +16302,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_12_z2",
     "type": "prog"
@@ -16109,6 +16310,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_13_z2",
     "type": "prog"
@@ -16116,6 +16318,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_14_z2",
     "type": "prog"
@@ -16270,6 +16473,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -16277,6 +16481,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -16284,6 +16489,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -16291,6 +16497,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -16298,6 +16505,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -16305,6 +16513,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -16312,6 +16521,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -17716,6 +17926,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_01_z1",
     "type": "prog"
@@ -17723,6 +17934,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_02_z1",
     "type": "prog"
@@ -17730,6 +17942,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_03_z1",
     "type": "prog"
@@ -17737,6 +17950,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_04_z1",
     "type": "prog"
@@ -17744,6 +17958,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_05_z1",
     "type": "prog"
@@ -17751,6 +17966,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_06_z1",
     "type": "prog"
@@ -17758,6 +17974,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_07_z1",
     "type": "prog"
@@ -17765,6 +17982,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_08_z2",
     "type": "prog"
@@ -17772,6 +17990,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_09_z2",
     "type": "prog"
@@ -17779,6 +17998,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_10_z2",
     "type": "prog"
@@ -17786,6 +18006,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_11_z2",
     "type": "prog"
@@ -17793,6 +18014,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_12_z2",
     "type": "prog"
@@ -17800,6 +18022,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_13_z2",
     "type": "prog"
@@ -17807,6 +18030,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_14_z2",
     "type": "prog"
@@ -17961,6 +18185,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -17968,6 +18193,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -17975,6 +18201,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -17982,6 +18209,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -17989,6 +18217,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -17996,6 +18225,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -18003,6 +18233,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -19401,6 +19632,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_01_z1",
     "type": "prog"
@@ -19408,6 +19640,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_02_z1",
     "type": "prog"
@@ -19415,6 +19648,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_03_z1",
     "type": "prog"
@@ -19422,6 +19656,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_04_z1",
     "type": "prog"
@@ -19429,6 +19664,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_05_z1",
     "type": "prog"
@@ -19436,6 +19672,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_06_z1",
     "type": "prog"
@@ -19443,6 +19680,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_07_z1",
     "type": "prog"
@@ -19450,6 +19688,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_08_z2",
     "type": "prog"
@@ -19457,6 +19696,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_09_z2",
     "type": "prog"
@@ -19464,6 +19704,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_10_z2",
     "type": "prog"
@@ -19471,6 +19712,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_11_z2",
     "type": "prog"
@@ -19478,6 +19720,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_12_z2",
     "type": "prog"
@@ -19485,6 +19728,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_13_z2",
     "type": "prog"
@@ -19492,6 +19736,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_14_z2",
     "type": "prog"
@@ -19646,6 +19891,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -19653,6 +19899,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -19660,6 +19907,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -19667,6 +19915,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -19674,6 +19923,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -19681,6 +19931,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -19688,6 +19939,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "dhw_prog_sunday",
     "type": "prog"
@@ -21088,6 +21340,7 @@
    "196": {
     "capabilityId": 196,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_01_z1",
     "type": "prog"
@@ -21095,6 +21348,7 @@
    "197": {
     "capabilityId": 197,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_02_z1",
     "type": "prog"
@@ -21102,6 +21356,7 @@
    "198": {
     "capabilityId": 198,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_03_z1",
     "type": "prog"
@@ -21109,6 +21364,7 @@
    "199": {
     "capabilityId": 199,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_04_z1",
     "type": "prog"
@@ -21116,6 +21372,7 @@
    "200": {
     "capabilityId": 200,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_05_z1",
     "type": "prog"
@@ -21123,6 +21380,7 @@
    "201": {
     "capabilityId": 201,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_06_z1",
     "type": "prog"
@@ -21130,6 +21388,7 @@
    "202": {
     "capabilityId": 202,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_07_z1",
     "type": "prog"
@@ -21137,6 +21396,7 @@
    "203": {
     "capabilityId": 203,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_08_z2",
     "type": "prog"
@@ -21144,6 +21404,7 @@
    "204": {
     "capabilityId": 204,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_09_z2",
     "type": "prog"
@@ -21151,6 +21412,7 @@
    "205": {
     "capabilityId": 205,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_10_z2",
     "type": "prog"
@@ -21158,6 +21420,7 @@
    "206": {
     "capabilityId": 206,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_11_z2",
     "type": "prog"
@@ -21165,6 +21428,7 @@
    "207": {
     "capabilityId": 207,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_12_z2",
     "type": "prog"
@@ -21172,6 +21436,7 @@
    "208": {
     "capabilityId": 208,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_13_z2",
     "type": "prog"
@@ -21179,6 +21444,7 @@
    "209": {
     "capabilityId": 209,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_14_z2",
     "type": "prog"
@@ -21333,6 +21599,7 @@
    "237": {
     "capabilityId": 237,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_monday",
     "type": "prog"
@@ -21340,6 +21607,7 @@
    "238": {
     "capabilityId": 238,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_tuesday",
     "type": "prog"
@@ -21347,6 +21615,7 @@
    "239": {
     "capabilityId": 239,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_wednesday",
     "type": "prog"
@@ -21354,6 +21623,7 @@
    "240": {
     "capabilityId": 240,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_thursday",
     "type": "prog"
@@ -21361,6 +21631,7 @@
    "241": {
     "capabilityId": 241,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_friday",
     "type": "prog"
@@ -21368,6 +21639,7 @@
    "242": {
     "capabilityId": 242,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_saturday",
     "type": "prog"
@@ -21375,6 +21647,7 @@
    "243": {
     "capabilityId": 243,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "dhw_prog_sunday",
     "type": "prog"

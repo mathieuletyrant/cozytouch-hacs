@@ -12,27 +12,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN
+from .const import DOMAIN, PROGRAM_BLOCKS
 from .hub import CozytouchConfigEntry, Hub, device_info_for
 from .services import DAYS, parse_slots
 
 _LOGGER = logging.getLogger(__name__)
-
-# The three weekly programs these devices hold, by the first capability of each
-# seven-day run: heating and cooling on a boiler or an air conditioner, hot
-# water on a water heater. A device gets a calendar per block it reports, which
-# in practice means one or two of them.
-#
-# Deliberately its own table rather than `services.PROGRAM_FIRST_CAPABILITY`,
-# which knows 196 and 203 only. Reading a program and writing one are not the
-# same risk: what the second member of a hot-water slot means has never been
-# confirmed against a capture, and writing a block on that basis could leave a
-# water heater running a program it never had. Reading it costs nothing, and
-# the prog sensors have rendered 237-243 as a time and a setpoint for as long
-# as they have existed -- this shows the same reading, in a form you can look
-# at. `set_schedule` still refuses the block, and should until a capture says
-# otherwise.
-PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
 
 # How far either side of now to look when answering "what is running". A day
 # each way rather than from midnight: the last slot of a day runs into the next
