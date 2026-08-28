@@ -8,6 +8,7 @@ import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
 
@@ -835,3 +836,35 @@ class Hub(DataUpdateCoordinator):
             await self.set_capability_value(capabilityIdMode, valueMode)
 
         self._timestamp_away_mode_last_change = None
+
+
+def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
+    """The device every entity of one subentry belongs to.
+
+    One function rather than a copy per entity class, and here rather than on
+    the sensor platform: setup registers every device from this before any
+    platform runs (see docs/decisions.md), so what the registry holds and what
+    the entities later declare are the same description.
+    """
+    model_name = coordinator.get_model_infos().name
+    info = DeviceInfo(
+        identifiers={(DOMAIN, device_uniq_id)},
+        manufacturer="Atlantic",
+        name=model_name,
+        model=model_name,
+        serial_number=coordinator.get_serial_number(),
+        # The firmware the device reports (capability 121). It is worth
+        # having on the device rather than only as a diagnostic entity:
+        # "which version is this box on" is the first line of a bug
+        # report, and None here just leaves the field empty.
+        sw_version=coordinator.get_software_version(),
+    )
+    # Hang the device under its gateway when that is set up too, instead
+    # of leaving every room unit at the top of the list. via_device is
+    # deprecated for via_device_id, which needs a registry lookup and a
+    # newer HA than this integration asks for.
+    via_device = coordinator.get_via_device()
+    if via_device is not None:
+        info["via_device"] = via_device
+
+    return info

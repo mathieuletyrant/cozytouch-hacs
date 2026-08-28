@@ -226,6 +226,32 @@ to ship and is kept out of this repository. `OK` is a plain, language-neutral
 token rather than a translated state, matching the raw-string diagnostic
 sensors around it.
 
+## `custom_components/cozytouch/__init__.py`
+
+### Setup registers every device itself, before the platforms
+
+A device used to exist in the registry only once some platform added entities
+for it. That is a race: `async_forward_entry_setups` runs the platforms
+concurrently, and a room unit's `device_info` names its gateway in
+`via_device` -- so any platform that reached the room unit before one gave
+the gateway an entity registered a link to a device that was not there. It
+was not theoretical: calendar and climate, which build nothing for a gateway,
+did exactly that on a live install (HA log, 2026-08-28, `via_device
+('cozytouch', <gateway subentry>)` "non existing"), and Home Assistant
+announces that 2025.12 stops honouring such a link instead of warning.
+
+So `async_setup_entry` now walks the subentries and calls
+`async_get_or_create` for each -- gateways first, since the children's links
+point at them -- before forwarding a single platform. The platforms then find
+the device already there and merely restate it, which is why the description
+they use (`device_info_for`) moved to `hub.py`: one function serving setup
+and entities keeps the two registrations identical by construction.
+
+`get_via_device` itself is unchanged. Its check -- link only when the gateway
+is a subentry of the same entry -- was always right; what it could not see is
+*when* the gateway's device would appear. Registration order is the other
+half, and `tests/test_topology.py` pins both.
+
 ## `.github/workflows/release.yaml`
 
 ### It installs with pip, where tests.yaml uses uv

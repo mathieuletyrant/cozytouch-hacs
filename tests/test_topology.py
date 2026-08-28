@@ -14,6 +14,7 @@ subentries, and neither needs a coordinator.
 
 from types import SimpleNamespace
 
+from custom_components.cozytouch import _register_devices
 from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.model import CozytouchDeviceType
@@ -93,6 +94,86 @@ def test_an_unknown_device_id_is_not_linked_to_anything():
     hub = make_hub([device(ROOM_ID, GATEWAY_ID)], deviceId=999999)
 
     assert Hub.get_via_device(hub) is None
+
+
+# --- when the registry learns of the link ----------------------------------
+#
+# Naming an existing gateway is only half of it: the platforms are set up
+# concurrently, and a device used to be created by whichever platform first
+# added entities for it. The gateway gets no calendar and no climate, so those
+# two registered every room unit -- via_device included -- before the gateway's
+# device existed, and the registry warned on a live install. Setup now
+# registers every subentry's device itself, before any platform runs, which is
+# what these pin. See docs/decisions.md.
+
+
+class FakeRegistry:
+    """Records what setup declares, in the order it declares it."""
+
+    def __init__(self):
+        self.created = []
+
+    def async_get_or_create(self, **kwargs):
+        self.created.append(kwargs)
+
+
+def registering_hub(via_device):
+    """A stand-in exposing what device_info_for reads."""
+    return SimpleNamespace(
+        get_model_infos=lambda: SimpleNamespace(name="Air Conditioner"),
+        get_serial_number=lambda: "3022-2624-0400",
+        get_software_version=lambda: None,
+        get_via_device=lambda: via_device,
+    )
+
+
+def test_the_gateway_is_registered_before_the_children_that_name_it():
+    """The subentries come in whatever order they were added; the registry
+    order cannot be that one, since a child names its gateway on the way in.
+    """
+    registry = FakeRegistry()
+    hubs = {
+        "def456": registering_hub((DOMAIN, "abc123")),  # the child first
+        "abc123": registering_hub(None),
+    }
+
+    _register_devices(registry, SimpleNamespace(entry_id="entry123"), hubs)
+
+    assert [d["identifiers"] for d in registry.created] == [
+        {(DOMAIN, "abc123")},
+        {(DOMAIN, "def456")},
+    ]
+
+
+def test_the_device_registered_up_front_is_the_one_the_entities_describe():
+    """Same identifiers, same subentry, same link: the platforms have to find
+    the device setup created, not create a second one next to it.
+    """
+    registry = FakeRegistry()
+    hubs = {"def456": registering_hub((DOMAIN, "abc123"))}
+
+    _register_devices(registry, SimpleNamespace(entry_id="entry123"), hubs)
+
+    (created,) = registry.created
+    assert created["config_entry_id"] == "entry123"
+    assert created["config_subentry_id"] == "def456"
+    assert created["identifiers"] == {(DOMAIN, "def456")}
+    assert created["via_device"] == (DOMAIN, "abc123")
+
+
+def test_a_gateway_is_registered_without_a_link():
+    """get_via_device answering None has to mean no via_device key at all:
+    passing None through would claim a parent called None.
+    """
+    registry = FakeRegistry()
+
+    _register_devices(
+        registry,
+        SimpleNamespace(entry_id="entry123"),
+        {"abc123": registering_hub(None)},
+    )
+
+    assert "via_device" not in registry.created[0]
 
 
 # --- the zone half of the same payload -------------------------------------

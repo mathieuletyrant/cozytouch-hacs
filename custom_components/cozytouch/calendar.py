@@ -13,8 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub
-from .sensor import device_info_for
+from .hub import CozytouchConfigEntry, Hub, device_info_for
 from .services import DAYS, parse_slots
 
 _LOGGER = logging.getLogger(__name__)
