@@ -569,10 +569,11 @@ def get_capability_infos(  # noqa: C901
         capability.icon = "mdi:clock-outline"
 
     elif capabilityId == 303:
-        # ERROR_CODE_ROOM, a matrix the device fills with zeroes when healthy.
-        # Surfaced raw: the list gives the name, not how to read the codes.
+        # Room fault code: a matrix of [system, majorCode, minorCode, level]
+        # rows, all-zero when healthy. The type decodes it to a code list;
+        # see sensor.py and docs/decisions.md for the format and its limits.
         capability.name = "error_code"
-        capability.type = CapabilityType.STRING
+        capability.type = CapabilityType.ERROR_CODE
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:alert-circle-outline"
 
@@ -953,9 +954,10 @@ def get_capability_infos(  # noqa: C901
         capability.icon = "mdi:fan"
 
     elif capabilityId == 150:
-        # Home-level fault code, sibling of the room (303) and DHW (290) codes.
+        # Home-level fault code, sibling of the room (303) and DHW (290) codes,
+        # same matrix shape and decoding.
         capability.name = "home_error_code"
-        capability.type = CapabilityType.STRING
+        capability.type = CapabilityType.ERROR_CODE
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:alert-circle-outline"
 
@@ -966,9 +968,9 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.DIAG
 
     elif capabilityId == 290:
-        # DHW fault code, same raw matrix shape as the room error code (303).
+        # DHW fault code, same matrix shape and decoding as the room code (303).
         capability.name = "dhw_error_code"
-        capability.type = CapabilityType.STRING
+        capability.type = CapabilityType.ERROR_CODE
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:alert-circle-outline"
 
