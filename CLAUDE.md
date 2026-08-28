@@ -157,9 +157,8 @@ capture, so a test going green says "nobody changed this by accident", never
   `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
-  the flag they were written for. It carries a hard count of mapped ids;
-  adding models means updating that number, and widening the walk's range if
-  the new id falls outside it.
+  the flag they were written for. The walk runs over `range(1, 2500)`; a model
+  added outside it needs that range widened.
 - `tests/test_capability_coverage.py` — the seams around the mapping : that a
   self-describing capability arrives switched off, that every name the mapping
   can produce has an entry in all three translation files, and that the
@@ -193,10 +192,9 @@ coordinator per device on top of it.
 3. Translations — a new capability name needs an entry in **all three** of
    `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
    the alphabetical order and column alignment already in the file.
-4. Tests — a case in `MODEL_GROUPS`, the count in `test_capability.py`, and
-   the snapshots regenerated in the same commit
-   (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff shows the
-   new model and nothing else.
+4. Tests — a case in `MODEL_GROUPS`, and the snapshots regenerated in the same
+   commit (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff
+   shows the new model and nothing else.
 5. `README.md` — the table for that device class.
 
 `scripts/dump_capability_map.py` prints what the two tables now resolve to, per

@@ -69,6 +69,7 @@ zone.
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
 | 1656 | Aeromax 6 |
+| 1669 | CV5 Aeromax Premium 100L |
 | 1657 | Calypso 200L |
 | 1658 | Calypso connecté |
 | 1957 | LINEO CONNECTE MP 100L 2250W |
@@ -243,3 +244,4 @@ here because they did it :
 
 Where only part of a pull request was taken, the commit that took it says which
 part and why the rest was left alone.
+| CV5 Aeromax Premium 100L | 1669 | [@Racailloux](https://github.com/Racailloux) |
