@@ -65,6 +65,50 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
     return info
 
 
+# The value a healthy fault code reads as, and the one an empty slot carries.
+# 0xFF fills a field of a slot that holds no fault: on the captures, whole
+# accounts report the same `[0,255,0,4]` row repeated ten times, which is a
+# ten-row empty list and not ten identical faults. See docs/decisions.md.
+ERROR_CODE_HEALTHY = "OK"
+ERROR_CODE_EMPTY_SLOT = 255
+
+
+def decode_error_code(raw: str | None) -> str | None:
+    """Turn a fault-code matrix into the codes that are actually active.
+
+    The device reports a matrix of `[system, majorCode, minorCode, level]`
+    rows (some firmwares carry a fifth field). A row is a fault only when it
+    is neither all-zero (healthy) nor carrying the 0xFF empty-slot sentinel;
+    an active row becomes `system_majorCode_minorCode_level`, the same key
+    shape Atlantic's own fault table uses. Healthy reads as "OK", so the
+    common case stops being a ten-row matrix nobody could read.
+
+    The raw string is returned unchanged when it does not parse, so an
+    encoding this does not expect is surfaced rather than swallowed. What no
+    capture has ever shown is an active row, so the join is derived from the
+    format, not from a decoded example -- and naming a code is a separate
+    step this does not attempt, since that table is Atlantic's to ship.
+    """
+    if raw is None:
+        return None
+
+    try:
+        matrix = json.loads(raw)
+        rows = [[int(field) for field in row] for row in matrix]
+    except (ValueError, TypeError):
+        return raw
+
+    codes = []
+    for row in rows:
+        if not any(row) or ERROR_CODE_EMPTY_SLOT in row:
+            continue
+        code = "_".join(str(field) for field in row)
+        if code not in codes:
+            codes.append(code)
+
+    return ", ".join(codes) if codes else ERROR_CODE_HEALTHY
+
+
 # config flow setup
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -250,6 +294,15 @@ async def async_setup_entry(
             elif capability.type == CapabilityType.TIMEZONE:
                 sensors.append(
                     CozytouchTimezoneSensor(
+                        capability=capability,
+                        config_title=subentry.title,
+                        config_uniq_id=subentry_id,
+                        coordinator=hub,
+                    )
+                )
+            elif capability.type == CapabilityType.ERROR_CODE:
+                sensors.append(
+                    CozytouchErrorCodeSensor(
                         capability=capability,
                         config_title=subentry.title,
                         config_uniq_id=subentry_id,
@@ -831,6 +884,34 @@ class CozytouchProgTimeSensor(CozytouchSensor):
             return strValue
 
         return None
+
+
+class CozytouchErrorCodeSensor(CozytouchSensor):
+    """A fault-code capability, decoded to the codes that are active."""
+
+    def __init__(
+        self,
+        capability,
+        config_title: str,
+        config_uniq_id: str,
+        coordinator: Hub,
+        name: str | None = None,
+        icon: str | None = None,
+    ) -> None:
+        """Initialize an error code Sensor."""
+        super().__init__(
+            capability=capability,
+            config_title=config_title,
+            config_uniq_id=config_uniq_id,
+            coordinator=coordinator,
+            name=name,
+            icon=icon,
+        )
+
+    def get_value(self) -> str | None:
+        """Retrieve value from hub and decode the fault matrix."""
+        value = self.coordinator.get_capability_value(self._capability.capabilityId)
+        return decode_error_code(value)
 
 
 class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):

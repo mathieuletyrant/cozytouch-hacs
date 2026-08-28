@@ -129,8 +129,8 @@ def services_over(hub):
     hass = SimpleNamespace(
         services=SimpleNamespace(
             has_service=lambda domain, service: False,
-            async_register=lambda domain, service, func, schema=None: registered.update(
-                {service: (func, schema)}
+            async_register=lambda domain, service, func, schema=None, **kwargs: (
+                registered.update({service: (func, schema)})
             ),
         )
     )

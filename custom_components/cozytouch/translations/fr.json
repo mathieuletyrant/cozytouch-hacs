@@ -73,6 +73,11 @@
         }
     },
     "entity": {
+        "calendar": {
+            "heating_program":         { "name": "Programme Chauffage" },
+            "cooling_program":         { "name": "Programme Refroidissement" },
+            "hot_water_program":       { "name": "Programme Eau Chaude" }
+        },
         "climate": {
             "air_conditioner":
             {
@@ -436,6 +441,15 @@
             "swing_mode":         { "name": "Mode Oscillation" }
         }
     },
+    "device_automation": {
+        "trigger_type": {
+            "heating_schedule_changed": "Le programme de chauffage a changé",
+            "cooling_schedule_changed": "Le programme de refroidissement a changé",
+            "schedule_resumed":         "{entity_name} suit de nouveau son programme",
+            "schedule_overridden":      "{entity_name} : le programme est forcé",
+            "schedule_stopped":         "{entity_name} ne suit plus son programme"
+        }
+    },
     "issues": {
         "unknown_model": {
             "title": "{device_name} est un modèle que cette intégration ne connaît pas",
@@ -449,11 +463,46 @@
             }
         }
     },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Tous les jours",
+                "weekdays":  "Jours de semaine",
+                "weekend":   "Week-end",
+                "monday":    "Lundi",
+                "tuesday":   "Mardi",
+                "wednesday": "Mercredi",
+                "thursday":  "Jeudi",
+                "friday":    "Vendredi",
+                "saturday":  "Samedi",
+                "sunday":    "Dimanche"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Chauffage",
+                "cooling":   "Refroidissement"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Commence à",
+                "temperature": "Température"
+            }
+        }
+    },
     "services": {
         "clear_away_mode": {
             "name": "Désactiver le mode absence",
             "description": "Referme la période d'absence et sort l'appareil du mode absence."
         },
+        "get_schedule": {
+            "name": "Lire la programmation d'une semaine",
+            "description": "Renvoie les sept programmes journaliers d'un appareil, dans la forme qu'attend « Programmer une journée ».",
+            "fields": {
+                "program":  { "name": "Programme", "description": "Chauffage ou refroidissement." }
+                }
+            },
         "set_away_mode": {
             "name": "Activer le mode absence",
             "description": "Ouvre une période d'absence et met l'appareil en mode absence en un seul appel : la configuration, les horodatages et l'indicateur de mode.",
@@ -469,7 +518,7 @@
             "description": "Écrit le même programme horaire sur un ou plusieurs jours, pour le chauffage ou le refroidissement.",
             "fields": {
                 "program":  { "name": "Programme", "description": "Chauffage ou refroidissement." },
-                "days":     { "name": "Jours", "description": "Les jours qui recevront ce programme." },
+                "days":     { "name": "Jours", "description": "Les jours qui recevront ce programme. Tous les jours, Jours de semaine et Week-end désignent les jours qu'ils nomment." },
                 "slots":    { "name": "Créneaux", "description": "Liste de paires heure/température. Le premier créneau doit commencer à 00:00, dix au maximum." }
             }
         }

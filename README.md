@@ -61,6 +61,7 @@ zone.
 | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
 | 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
 | 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
+| 1368 | Calypso SPLIT VM 200L |
 | 1369, 1376 | Calypso Split |
 | 1371, 1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
@@ -68,6 +69,7 @@ zone.
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
 | 1656 | Aeromax 6 |
+| 1669 | CV5 Aeromax Premium 100L |
 | 1657 | Calypso 200L |
 | 1658 | Calypso connecté |
 | 1957 | LINEO CONNECTE MP 100L 2250W |
@@ -82,7 +84,7 @@ zone.
 | ------: | ----- |
 | 1381 | KELUD 1750W BLC |
 | 1382 | KELUD 1750W Anthracite Standard |
-| 1388 | Doris étroit 1500W BLC |
+| 1388, 1588 | Doris étroit 1500W BLC |
 | 1543 | Asama Connecté II Ventilo 1750W Blanc |
 | 1546 | Asama Connecté II Ventilo 1500W ANTH |
 | 1547 | Asama Connecté II Ventilo 1750W ANTH |
@@ -208,6 +210,109 @@ Only some values are mapped for now, you can select `Create entities for unknown
 > under the account, which means new entity ids, so a dashboard or an
 > automation naming them has to be pointed at the new ones.
 
+## Scheduling
+
+Two actions write and read the weekly program the device holds itself, the one
+the Cozytouch app calls *Chauffage* and *Refroidissement*. It keeps running when
+Home Assistant is off, which is the difference with scheduling the climate
+entity from an automation.
+
+`Cozytouch: Set a day program` writes one day program to as many days as you
+pick. Days can be named one by one or through `Every day`, `Weekdays` and
+`Weekend`. The first slot has to start at `00:00` -- the device has no target
+temperature for the hours before the first one -- and a day holds ten slots at
+most, fewer if the device says so.
+
+`Cozytouch: Read a week's program` returns the seven days of a program in the
+shape the other action takes, so a program can be read, edited and written
+back rather than retyped :
+
+```yaml
+- action: cozytouch.get_schedule
+  target:
+    entity_id: climate.salon
+  data:
+    program: heating
+  response_variable: schedule
+
+- action: cozytouch.set_schedule
+  target:
+    entity_id: climate.salon
+  data:
+    program: heating
+    days: [weekend]
+    slots: "{{ schedule['climate.salon'].days.monday }}"
+```
+
+On Home Assistant older than 2025.7 the slots field is still a YAML editor
+rather than a list of time and temperature pickers : the schema'd form is not
+something those frontends can draw. Everything else works the same.
+
+Temperatures are whole degrees. Every program captured from a real device holds
+integers, so a half degree has never been confirmed to survive the write.
+
+### Triggering on the program
+
+Five device triggers, offered per device and only when the device reports what
+they read. Pick them in the automation editor under *Add trigger > Device*, or
+write them out :
+
+| Trigger | Fires when |
+| ------- | ---------- |
+| `The heating program changed` | any of the seven heating days was rewritten, whether from here, from the Cozytouch app or from the panel |
+| `The cooling program changed` | the same, for the cooling block |
+| `… went back to its program` | the device resumed following its weekly program |
+| `… program was overridden` | a temporary setpoint took over -- which is what setting a temperature while in `prog` does |
+| `… stopped following its program` | the program was switched off for a manual setpoint |
+
+The three preset triggers take an optional `for`, so *overridden for two hours*
+is a trigger rather than an automation with a timer in it.
+
+```yaml
+triggers:
+  - trigger: device
+    domain: cozytouch
+    device_id: 8dd8b7f4c3a24b1e9e0e4a6d5c7b2f10
+    type: heating_schedule_changed
+```
+
+Everything else worth automating on is already a device trigger Home Assistant
+builds itself : *connected* and *disconnected* from the Cozytouch connectivity
+sensor, *turned on* from the away-mode switch, *HVAC mode changed* from the
+climate entity. Conditions and actions about presets come from the `climate`
+domain the same way.
+
+### Seeing the program
+
+A device that holds a program also gets a calendar entity for it -- *Heating
+Program*, *Cooling Program*, *Hot Water Program*, whichever of the three it
+reports -- so the week can be looked at on a dashboard instead of read off
+seven sensors. Each slot is an event running until the next one takes over, and
+its title is the target temperature.
+
+They are read-only : a calendar event has a start and an end, a program slot
+has only a start, so writing one back would mean deciding what happens to the
+slots after it. `Cozytouch: Set a day program` is where that decision is
+spelled out.
+
+What they are good for besides looking at them is the `calendar` triggers,
+since an event starting *is* the program moving to its next setpoint :
+
+```yaml
+triggers:
+  - trigger: calendar
+    entity_id: calendar.salon_heating_program
+    event: start
+```
+
+The hot-water program is shown but cannot be written : `Cozytouch: Set a day
+program` covers heating and cooling only, because what the second value of a
+hot-water slot means has never been confirmed on a real device. Reading it back
+is what the hot-water prog sensors have always done.
+
+The times are read in Home Assistant's own timezone. The device stores minutes
+past midnight and nothing in the API says which clock those belong to, so a hub
+in a different timezone from the house it heats would show the program shifted.
 ## Leaving the house
 
 Away mode is a window : it starts, it ends, and the device holds it itself --
@@ -276,11 +381,14 @@ here because they did it :
 | ------ | ------: | -- |
 | ACI HYB water heaters (PHAZY / AQUEO / DURALIS) | 386-394 | [@FreeTHX](https://github.com/FreeTHX), [@beorn-](https://github.com/beorn-) |
 | Doris étroit 1300W CARAT | 1595 | [@tomcastleman](https://github.com/tomcastleman) |
+| Doris étroit 1500W BLC | 1588 | [@jojeju9428](https://github.com/jojeju9428) |
 | Calypso connecté | 1658 | [@picosam](https://github.com/picosam) |
 | FLAT/S4 IOTHUB gateway | 1763 | [@Joonel](https://github.com/Joonel) |
 | Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
 | Egeo VS 250L | 2346 | [@Mathieu-Pasco-Breillot](https://github.com/Mathieu-Pasco-Breillot) |
 | Explorer EVO 3 (260L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
+| Calypso SPLIT VM 200L | 1368 | [@mplessis](https://github.com/mplessis) |
 
 Where only part of a pull request was taken, the commit that took it says which
 part and why the rest was left alone.
+| CV5 Aeromax Premium 100L | 1669 | [@Racailloux](https://github.com/Racailloux) |

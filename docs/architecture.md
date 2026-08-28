@@ -74,15 +74,31 @@ Each platform's `async_setup_entry` loops over `entry.subentries` and adds its
 entities with `config_subentry_id=`, which is what puts them under the right
 device.
 
-Two entities are not capability-driven, and so are not in that fan-out.
+Three entities are not capability-driven, and so are not in that fan-out.
 `binary_sensor` builds exactly one per subentry, a connectivity sensor
 reflecting `hub.online` — which is the *account's* connection, the same answer
 for every device on it. The sensor platform builds one more beside its
 capability entities: a `timestamp` diagnostic carrying the newest
 `modificationDate` the device reports, which is what says whether the hardware
-is still talking to Atlantic's cloud when a reading has stopped moving. It is
-created only when the device actually reports a date, the same rule the model
-flags follow.
+is still talking to Atlantic's cloud when a reading has stopped moving. And
+`calendar` builds one per program block the device reports — heating (196-202),
+cooling (203-209), hot water (237-243) — expanding the seven stored days over
+real dates. The last two follow the same rule: they exist only when the device
+reports what they read, which for the calendar means all seven days of a block
+rather than any of them, since a missing day would read as an unscheduled one.
+
+The calendar's block table is its own, and wider than the services': while
+`set_schedule` and `get_schedule` know 196 and 203, it knows 237 as well. The
+asymmetry is deliberate — reading a program and writing one are not the same
+risk. What the second member of a hot-water slot means has never been confirmed
+against a capture, and writing the block on that basis could leave a water
+heater running a program it never had; showing what the prog sensors have
+rendered all along costs nothing.
+
+It is read-only for a second reason too. An event has a start and an end; a
+program slot has only a start, and the next slot is what ends it, so writing
+one back would mean deciding what happens to the slots after it. That decision
+belongs to `set_schedule`, which is where somebody said it out loud.
 
 ## One poll for the account
 
@@ -450,13 +466,29 @@ added as of the last tick rather than the last reconnect. That is the half a
 dump is read for. It is read off the entry's subentries, so the dump does not
 depend on which hub produced it.
 
+Each device's `model` block also carries a shadow: what the capabilities
+alone would declare (`derived`, from `derive.py`) and where that would wire
+different entities than the table does (`declaredVsDerived`). Nothing acts
+on it — it is evidence collection for a possible switch-over, gathered from
+every report; `docs/decisions.md` has the derivation's sources and why it
+stays read-only.
+
 ## The services
 
-`cozytouch.set_schedule` writes a weekly program. A day is a
+The schedule services are the same shape read in either direction.
+`cozytouch.set_schedule` writes a weekly program, `cozytouch.get_schedule`
+reads one back in the shape the first one takes. A day is a
 `[[minutes, temperature], …]` matrix of ten slots, unused ones `[0, 0]`, and
 the days are seven consecutive capability ids — 196 for heating Monday, 203
-for cooling Monday. The service validates that the first slot starts at 00:00,
+for cooling Monday. The write validates that the first slot starts at 00:00,
 since otherwise the start of the day would have no target.
+
+The padding is the one thing to get right in both directions: `[0, 0]` ends
+the day, but a genuine midnight slot carries a setpoint, so a pair of zeroes
+is padding and `[0, 17]` is not. The prog sensors already read it that way,
+and `parse_slots` is the one place that reads it now — `get_schedule` and
+`calendar.py` both go through it, so a calendar and a service response cannot
+disagree about what a day holds.
 
 `cozytouch.set_away_mode` and `cozytouch.clear_away_mode` open and close an
 absence window. The window can be said as an end or as a duration — never
@@ -473,14 +505,53 @@ lets it tell apart "that entity belongs to another integration" from "that is
 ours but its entry isn't loaded". The registry entry's `config_subentry_id` is
 the last hop: it names which device, and so which hub.
 
+Capabilities 100320–100333 are a second heating/cooling weekly program, on a
+different device family, and the services do not reach them: `set_schedule`
+and `get_schedule` know 196 and 203 only. Widening them wants a capture from
+one of those devices first. `calendar.py` reads the same two blocks, from the
+same table, so it stops in the same place — and so does the hot-water program
+(237–243), which nothing has confirmed uses the same matrix shape.
+
+## The device triggers
+
+`device_trigger.py` adds five, and the interesting part is what it leaves out.
+Home Assistant builds device triggers from the entity domains a device happens
+to have — the connectivity binary sensor gives connected/disconnected, the
+away-mode switch gives turned on, the climate entity gives HVAC mode changed —
+so the only ones worth writing are the ones no domain covers:
+
+| trigger | what it watches |
+| --- | --- |
+| `heating_schedule_changed` | the seven day sensors of 196–202, as a state trigger |
+| `cooling_schedule_changed` | the same for 203–209 |
+| `schedule_resumed` | the climate `preset_mode` attribute reaching `prog` |
+| `schedule_overridden` | … reaching `override` |
+| `schedule_stopped` | … reaching `basic` |
+
+The program pair carries no `entity_id`: a program is seven sensors and no
+entity stands for it, so the trigger is keyed by device and resolves the seven
+at attach time, by registry id so a rename does not break it. The preset three
+do carry one, since a device can hold more than one climate entity.
+
+Both are offered only when the device has what they read — the program block
+in the entity registry, the preset in the climate entity's `preset_modes` —
+which is the same rule the capability table follows: declare nothing the
+device has not shown you.
+
+`climate` already ships preset conditions and actions, so there is no
+`device_condition.py` and no `device_action.py` here. Adding them would put
+two entries meaning the same thing in the same picker.
+
 ## Testing
 
-434 tests, most of them characterisation tests. They pin the mapping as it
+Most of the suite is characterisation tests. They pin the mapping as it
 stands, not as it ought to be: most entries came from one user's capture of one
 device, so green means "nobody changed this by accident", never "this is
-correct".
+correct". `tests/test_snapshot.py` is that idea taken whole: both tables
+pinned into JSON files, so a pure refactor is provable — if the snapshots do
+not change, no answer did.
 
-Almost all of them are table tests. The exceptions are the two that cover
+Almost all of them are table tests. Two of the exceptions cover
 `sensor.py`. `tests/test_sensor_values.py` pins what the value builders return
 character for character — the zero padding, the double space before a
 temperature, a float setpoint still reading as a whole number. That file

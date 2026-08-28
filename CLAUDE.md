@@ -32,9 +32,11 @@ them updates the upstream pull request and nothing else. Do not repoint them.
 
 ## Tests
 
-Python 3.14.2, `pip install -r requirements_test.txt`, then `pytest tests/ -q`.
-The system `python3` on this machine is too old — build a venv with
-`uv venv --python 3.14.2`. The patch version matters: `requirements_test.txt`
+Python 3.14.2 — the system `python3` on this machine is too old. Build the
+venv with `uv venv --python 3.14.2`, install with
+`uv pip install -r requirements_test.txt`, run `.venv/bin/pytest tests/ -q`.
+`uv pip` and not `pip`, because a uv venv ships no pip of its own.
+The patch version matters: `requirements_test.txt`
 pins Home Assistant exactly, and that release declares Python 3.14.2 as its
 floor, so an older interpreter makes the install fail rather than resolve
 backwards to an HA nobody runs.
@@ -54,8 +56,8 @@ a candidate floor can run this at all.
 
 ## Lint
 
-`pip install -r requirements_lint.txt`, then `ruff check .`. CI runs the same
-command and it has to come back clean.
+`uv pip install -r requirements_lint.txt`, then `.venv/bin/ruff check .`. CI
+runs the same check and it has to come back clean.
 
 CI runs on pull requests based on `main` **or** on a `claude/**` branch. That
 second one is not decoration: the trigger filters on the *base* branch, so
@@ -68,6 +70,11 @@ them matter here. Naming rules (`N803`/`N806`) are not enabled because the
 camelCase locals mirror the field names the Atlantic API itself uses, and
 `PLR2004` is not enabled because the numeric capability ids *are* the domain.
 Do not "fix" code to satisfy a rule the config deliberately drops.
+
+Types are checked by pyright, but only on the typed core — `infos.py`,
+`model.py`, `capability.py` — as `pyproject.toml` scopes it ; CI runs it in
+the pinned test venv (`.venv/bin/pyright`), and the scope's reasons are in
+`docs/decisions.md`.
 
 `ruff format` is **not** run, by CI or otherwise. The tree is not
 formatter-clean; reformatting it is its own change, not something to slip into
@@ -101,6 +108,12 @@ capture, so a test going green says "nobody changed this by accident", never
   found by running this, not by reading a changelog**: it is what established
   that 2025.2 has no subentries and that the whole 2025.3 line cannot be
   installed (a yanked `aiohttp` pin).
+- `tests/test_polling.py` — the account-level beat : one setup-view request
+  for the whole account where it used to be one per device per minute, and
+  what a 429 does — back off and keep the last values, rather than answering
+  a rate-limit complaint with a login. Its `FakeSession` is a deliberate copy
+  of `test_reauth.py`'s, kept separate so a change there cannot quietly
+  rewrite what these say.
 - `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
   unnamed capability ids get listed, since that is what a dump is read for.
 - `tests/test_sensor_values.py` — what the value builders in `sensor.py`
@@ -133,6 +146,14 @@ capture, so a test going green says "nobody changed this by accident", never
   staged pair without undoing an edit in progress, and that the climate `away`
   preset is offered on what the device reports rather than on what the climate
   capability carries. It is the only cover `services.py` has on this branch.
+- `tests/test_calendar.py` — the weekly program expanded into dated events :
+  which capability a weekday reads, that a slot runs until the next one rather
+  than for a fixed length and that the last of the day runs to midnight, that
+  the week repeats over a range, that a slot which began before the window is
+  still the one in charge at its start, and that a calendar exists only for a
+  block the device reports in full -- one case per block, since the three runs
+  (196, 203, 237) are the whole of what it reads. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
+  test process, which is what makes the expected datetimes readable.
 - `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
   model and about every model the table does not know, whatever the API calls
   the device, that one dialog's report covers the whole account and answering
@@ -140,6 +161,14 @@ capture, so a test going green says "nobody changed this by accident", never
   model and capability ids and nothing about the household, that its query
   keys still match the issue form's field ids and that every field they do not
   fill is required, and that a release mapping a model clears it.
+- `tests/test_services.py` — the schedule services : the matrix `set_schedule`
+  builds, and the round trip that is the promise of `get_schedule`, since what
+  it returns has to be writable again unchanged.
+- `tests/test_device_trigger.py` — the device triggers : which ones a device
+  is offered, given what it reports, and what each one then watches — the right
+  entities for a program, the preset *attribute* rather than the state for a
+  preset. Both halves fail silently in production, since a trigger that never
+  fires logs nothing.
 - `tests/test_topology.py` — the gateway link. The API reports the parent in
   `masterDeviceId`, but a device is registered under its config entry, so the
   link can only be drawn when the gateway was set up too; these pin that a
@@ -152,9 +181,14 @@ capture, so a test going green says "nobody changed this by accident", never
   `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
-  the flag they were written for. It carries a hard count of mapped ids;
-  adding models means updating that number, and widening the walk's range if
-  the new id falls outside it.
+  the flag they were written for. The walk runs over `range(1, 2500)`; a model
+  added outside it needs that range widened.
+- `tests/test_capability_coverage.py` — the seams around the mapping : that a
+  self-describing capability arrives switched off, that every name the mapping
+  can produce has an entry in all three translation files, and that the
+  `CapabilityType` members the mapping writes and the ones the platforms match
+  on are the same set — a type on one side only is silent both ways, and two
+  lived exactly there.
 
 ## Entries, subentries, identity
 
@@ -182,7 +216,9 @@ coordinator per device on top of it.
 3. Translations — a new capability name needs an entry in **all three** of
    `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
    the alphabetical order and column alignment already in the file.
-4. Tests — a case in `MODEL_GROUPS`, and the count in `test_capability.py`.
+4. Tests — a case in `MODEL_GROUPS`, and the snapshots regenerated in the same
+   commit (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff
+   shows the new model and nothing else.
 5. `README.md` — the table for that device class.
 
 `scripts/dump_capability_map.py` prints what the two tables now resolve to, per

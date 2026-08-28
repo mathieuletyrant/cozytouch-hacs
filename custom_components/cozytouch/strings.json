@@ -73,6 +73,11 @@
         }
     },
     "entity": {
+        "calendar": {
+            "heating_program":         { "name": "Heating Program" },
+            "cooling_program":         { "name": "Cooling Program" },
+            "hot_water_program":       { "name": "Hot Water Program" }
+        },
         "climate": {
             "air_conditioner":
             {
@@ -436,6 +441,15 @@
             "swing_mode":         { "name": "Swing Mode" }
         }
     },
+    "device_automation": {
+        "trigger_type": {
+            "heating_schedule_changed": "The heating program changed",
+            "cooling_schedule_changed": "The cooling program changed",
+            "schedule_resumed":         "{entity_name} went back to its program",
+            "schedule_overridden":      "{entity_name} program was overridden",
+            "schedule_stopped":         "{entity_name} stopped following its program"
+        }
+    },
     "issues": {
         "unknown_model": {
             "title": "{device_name} is a model this integration does not know",
@@ -449,11 +463,46 @@
             }
         }
     },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Every day",
+                "weekdays":  "Weekdays",
+                "weekend":   "Weekend",
+                "monday":    "Monday",
+                "tuesday":   "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday":  "Thursday",
+                "friday":    "Friday",
+                "saturday":  "Saturday",
+                "sunday":    "Sunday"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Heating",
+                "cooling":   "Cooling"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Starts at",
+                "temperature": "Temperature"
+            }
+        }
+    },
     "services": {
         "clear_away_mode": {
             "name": "Stop away mode",
             "description": "Closes the absence window and takes the device off away mode."
         },
+        "get_schedule": {
+            "name": "Read a week's program",
+            "description": "Returns the seven day programs of a device, in the shape \"Set a day program\" takes.",
+            "fields": {
+                "program":  { "name": "Program", "description": "Heating or cooling." }
+                }
+            },
         "set_away_mode": {
             "name": "Start away mode",
             "description": "Opens an absence window and puts the device on away mode in one call: the setup, the timestamps and the mode flag together.",
@@ -469,7 +518,7 @@
             "description": "Writes the same time program to one or more days, for heating or cooling.",
             "fields": {
                 "program":  { "name": "Program", "description": "Heating or cooling." },
-                "days":     { "name": "Days", "description": "The days that will receive this program." },
+                "days":     { "name": "Days", "description": "The days that will receive this program. Every day, Weekdays and Weekend stand for the days they name." },
                 "slots":    { "name": "Slots", "description": "List of time/temperature pairs. The first slot must start at 00:00, ten at most." }
             }
         }

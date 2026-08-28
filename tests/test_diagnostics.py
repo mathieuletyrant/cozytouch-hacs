@@ -191,6 +191,26 @@ def test_model_flags_are_reported_so_a_report_shows_what_was_wired():
     assert "type" not in infos
 
 
+def test_the_dump_shadows_the_table_with_what_capabilities_would_say():
+    """The dump carries the capability-only derivation next to the declared
+    table, and where the two would wire different entities. 557 suppresses
+    eco on purpose while the hardware reports 100507: the disagreement is
+    the point, so it is what this pins.
+    """
+    hub = make_hub(
+        [device(1, 557, capabilities=[{"capabilityId": 100507, "value": "0"}])],
+        deviceId=1,
+    )
+
+    model = Hub.get_diagnostics(hub)["devices"][0]["model"]
+
+    assert model["derived"]["ecoModeAvailable"] is True
+    assert model["declaredVsDerived"]["ecoModeAvailable"] == {
+        "declared": False,
+        "derived": True,
+    }
+
+
 def test_what_the_api_itself_calls_the_device_is_carried_through():
     """A dump is what an unmapped model gets mapped from, so the vendor's own
     name and family for it are worth more than the ones our table invented.
