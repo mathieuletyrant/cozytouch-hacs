@@ -756,6 +756,28 @@ class Hub(DataUpdateCoordinator):
         """
         return self._account.last_poll
 
+    def get_is_available(self, deviceId: int | None = None) -> bool | None:
+        """The cloud's own reachability flag for this device (`isAvailable`).
+
+        Distinct from `online`, which is the account's session: the session can
+        be working while a single device is unavailable, and this is the finer
+        signal. Read raw from the setup view -- the cloud already reflects a
+        child dropping off its gateway here, so no derivation is done on top.
+
+        None when the field is absent (old captures, never a live account), so
+        a missing reading is unknown rather than a guessed connected state. It
+        is not cleared when the session drops : the last value stands, and the
+        cloud-connectivity sensor is what says whether it is still fresh.
+        """
+        if not deviceId:
+            deviceId = self._deviceId
+
+        for dev in self._account.devices:
+            if dev["deviceId"] == deviceId:
+                return dev.get("isAvailable")
+
+        return None
+
     async def set_capability_value(self, capabilityId: int, value: str):
         """Set value for a device capability."""
         _LOGGER.debug(

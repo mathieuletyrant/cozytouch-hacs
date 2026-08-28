@@ -24,6 +24,28 @@ One device's registration under the account's config entry. Its id is the
 device's identity in Home Assistant and the prefix of every unique id built
 from it.
 
+### Connectivity
+
+**Cloud session**:
+Whether the integration currently holds a working authenticated session to
+Atlantic's cloud and its last setup-view read succeeded (`online`). A property
+of the account, so the same answer on every device; when false, every device's
+data is stale. A 429 backoff deliberately leaves it true — the poll is skipped,
+last values stand. Surfaced as the CloudConnectivity binary sensor.
+_Avoid_: online (the field name — the concept is the session); confusing it
+with device availability.
+
+**Device availability**:
+The cloud's own flag for whether one device is reachable and reporting
+(`isAvailable`), read per device from the setup view. Distinct from the cloud
+session: the session can be working while a single device is unavailable. Read
+raw — the cloud already reflects a child dropping off its gateway — and kept as
+its own sensor rather than folded into the session one, so "the cloud is down"
+and "this device is down" stay tellable apart. Only meaningful while the
+session is working; otherwise stale like everything else.
+_Avoid_: online (that is the session); connected (device-class wording, not the
+concept).
+
 ### Capabilities
 
 **Capability**:

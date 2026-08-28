@@ -136,6 +136,34 @@ a `str | None` device name into the zone's `name` field, which the
 `(deviceName or "")` guard hid from the checker. The run that stays green is
 the run that found one.
 
+## `custom_components/cozytouch/binary_sensor.py`
+
+### Two connectivity sensors, not one
+
+`isAvailable` (the cloud's per-device reachability) and `online` (the account's
+session, the existing CloudConnectivity sensor) are two different questions,
+and the DeviceAvailability sensor keeps them apart rather than folding them.
+
+Folding — `is_on = online and isAvailable` — was considered and rejected: a
+single sensor could not say *which* was down when it read off, and the whole
+value of `isAvailable` is telling "the cloud is unreachable" from "this one
+device is". So there are two connectivity binary sensors on each device: the
+account session (same answer everywhere) and this device's own availability.
+
+`is_on` is the raw `isAvailable`, no gateway→child derivation: the cloud
+already marks a child unavailable when its gateway drops (every capture where
+one device is false has the whole account false), so deriving it again would
+only risk contradicting the field. When the session drops the sensor keeps its
+last value and stays available itself — consistent with the 429 backoff, which
+holds last values rather than flapping every entity unavailable; the
+CloudConnectivity sensor is what says whether the reading is still fresh.
+Absent field reads as unknown, never a guessed state.
+
+Enabled by default, unlike the static descriptors: it is one sensor per device
+and it is the answer to "is my device reachable", which the freshness sensor
+(`last_device_update`) cannot give — a healthy but idle device has an old date
+without being down.
+
 ## `custom_components/cozytouch/capability.py`
 
 ### Capability 218 `wifiConnected` is shown raw, not as a connected/off flag
