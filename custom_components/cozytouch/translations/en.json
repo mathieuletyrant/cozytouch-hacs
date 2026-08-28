@@ -101,6 +101,11 @@
         }
     },
     "entity": {
+        "calendar": {
+            "heating_program":         { "name": "Heating program" },
+            "cooling_program":         { "name": "Cooling program" },
+            "hot_water_program":       { "name": "Hot water program" }
+        },
         "climate": {
             "air_conditioner":
             {
@@ -464,6 +469,15 @@
             "swing_mode":         { "name": "Swing mode" }
         }
     },
+    "device_automation": {
+        "trigger_type": {
+            "heating_schedule_changed": "The heating program changed",
+            "cooling_schedule_changed": "The cooling program changed",
+            "schedule_resumed":         "{entity_name} went back to its program",
+            "schedule_overridden":      "{entity_name} program was overridden",
+            "schedule_stopped":         "{entity_name} stopped following its program"
+        }
+    },
     "issues": {
         "unknown_model": {
             "title": "{device_name} is a model this integration does not know",
@@ -477,13 +491,48 @@
             }
         }
     },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Every day",
+                "weekdays":  "Weekdays",
+                "weekend":   "Weekend",
+                "monday":    "Monday",
+                "tuesday":   "Tuesday",
+                "wednesday": "Wednesday",
+                "thursday":  "Thursday",
+                "friday":    "Friday",
+                "saturday":  "Saturday",
+                "sunday":    "Sunday"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Heating",
+                "cooling":   "Cooling"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Starts at",
+                "temperature": "Temperature"
+            }
+        }
+    },
     "services": {
+        "get_schedule": {
+            "name": "Read a week's program",
+            "description": "Returns the seven day programs of a device, in the shape \"Set a day program\" takes.",
+            "fields": {
+                "program":  { "name": "Program", "description": "Heating or cooling." }
+            }
+        },
         "set_schedule": {
             "name": "Set a day program",
             "description": "Writes the same time program to one or more days, for heating or cooling.",
             "fields": {
                 "program":  { "name": "Program", "description": "Heating or cooling." },
-                "days":     { "name": "Days", "description": "The days that will receive this program." },
+                "days":     { "name": "Days", "description": "The days that will receive this program. Every day, Weekdays and Weekend stand for the days they name." },
                 "slots":    { "name": "Slots", "description": "List of time/temperature pairs. The first slot must start at 00:00, ten at most." }
             }
         }

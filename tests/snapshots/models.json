@@ -11,6 +11,24 @@
   "name": "Calypso Split Interface",
   "type": "hub"
  },
+ "1368": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1368,
+  "name": "Calypso SPLIT VM 200L",
+  "type": "water_heater"
+ },
  "1369": {
   "HVACModes": {
    "0": "off",
@@ -219,6 +237,19 @@
   "name": "Asama Connect\u00e9 II Ventilo 1750W Noir",
   "type": "towel_rack"
  },
+ "1588": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1588,
+  "name": "Doris \u00e9troit 1500W BLC",
+  "type": "towel_rack"
+ },
  "1595": {
   "HVACModes": {
    "0": "off",
@@ -369,6 +400,24 @@
   },
   "modelId": 1658,
   "name": "Calypso connect\u00e9",
+  "type": "water_heater"
+ },
+ "1669": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1669,
+  "name": "CV5 Aeromax Premium 100L",
   "type": "water_heater"
  },
  "1734": {
