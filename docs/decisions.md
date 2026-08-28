@@ -198,6 +198,34 @@ the family cannot tell the head from the units. The user-facing name is
 capability 154 (the room name typed in the vendor app), then `customName` ;
 the commercial name is the one thing the derivation cannot produce.
 
+## `custom_components/cozytouch/sensor.py`
+
+### The fault-code matrix is decoded, not shown raw
+
+Capabilities 150, 290 and 303 (home, DHW and room fault codes) arrive as a
+matrix the device fills with zeroes when healthy, and used to be surfaced as
+that raw matrix -- a ten-row string nobody could read. Decompiling the app
+(research, August 2026) named the row shape: `[system, majorCode, minorCode,
+level]`, the exact key format Atlantic's own fault table uses
+(`50_10_0_1`…). `decode_error_code` turns the matrix into the codes that are
+active, so a healthy device reads `OK` and a faulted one reads its code list.
+
+What counts as "not a fault" rests on the captures, and is two rules: an
+all-zero row is healthy, and a row carrying `255` (`0xFF`) in any field is an
+empty slot. The sentinel is well-supported -- whole accounts report the same
+`[0,255,0,4]` row repeated ten times, which is one empty ten-slot list and
+not ten identical faults. The `0xFF` reading is the app's, confirmed against
+that repetition.
+
+Two limits are deliberate. No capture has ever shown an *active* fault row,
+so the `system_major_minor_level` join is derived from the format, not from a
+decoded example -- if a real fault ever legitimately carried a `255`, this
+would read it as empty. And the code is shown, never its meaning: mapping a
+code to its human text needs Atlantic's fault-string table, which is theirs
+to ship and is kept out of this repository. `OK` is a plain, language-neutral
+token rather than a translated state, matching the raw-string diagnostic
+sensors around it.
+
 ## `.github/workflows/release.yaml`
 
 ### It installs with pip, where tests.yaml uses uv

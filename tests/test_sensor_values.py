@@ -25,11 +25,13 @@ from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.sensor import (
     CozytouchAwayModeSensor,
     CozytouchAwayModeTimestampSensor,
+    CozytouchErrorCodeSensor,
     CozytouchProgSensor,
     CozytouchProgTimeSensor,
     CozytouchTimeSensor,
     CozytouchTimezoneSensor,
     CozytouchUnitSensor,
+    decode_error_code,
 )
 
 CAPABILITY_ID = 42
@@ -373,3 +375,54 @@ def test_the_offset_shifts_by_exactly_what_it_says(in_timezone):
             base + offset, tz=datetime.UTC
         ).strftime("%H:%M %d/%m/%Y")
         assert got == want
+
+
+# ---------------------------------------------------------------- error codes
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        # Healthy: every row all-zero, in both the four- and five-column
+        # shapes different firmwares report. This is what all but one capture
+        # shows, and it stops reading as a ten-row matrix.
+        ("[[0,0,0,0],[0,0,0,0],[0,0,0,0]]", "OK"),
+        ("[[0,0,0,0,0],[0,0,0,0,0]]", "OK"),
+        # The empty-slot sentinel: 0xFF fills a field of a slot holding no
+        # fault. Whole accounts report the same row ten times over, which is
+        # an empty list, not ten identical faults.
+        ("[[0,255,0,4],[0,255,0,4],[0,255,0,4]]", "OK"),
+        ("[[255,255,0,255,0],[255,255,0,255,130]]", "OK"),
+        # An active row -- none has ever been captured, so this pins the
+        # format the join is derived from, not a decoded example.
+        ("[[50,10,0,1],[0,0,0,0]]", "50_10_0_1"),
+        ("[[50,10,0,1],[74,50,1,1]]", "50_10_0_1, 74_50_1_1"),
+        # The same fault repeated across slots is reported once.
+        ("[[50,10,0,1],[50,10,0,1]]", "50_10_0_1"),
+        # A fifth field, when present, rides along in the code.
+        ("[[50,10,0,1,3]]", "50_10_0_1_3"),
+        # Empty matrix is healthy, not an error state.
+        ("[]", "OK"),
+    ],
+)
+def test_the_fault_matrix_decodes_to_the_codes_that_are_active(raw, expected):
+    assert decode_error_code(raw) == expected
+
+
+def test_an_unparseable_value_is_surfaced_rather_than_swallowed():
+    """An encoding this does not expect is worth seeing raw, not hiding as
+    "OK": the point of the sensor is to show a fault, never to mask one.
+    """
+    assert decode_error_code("not json") == "not json"
+
+
+def test_a_missing_value_stays_missing():
+    assert decode_error_code(None) is None
+
+
+def test_the_sensor_reads_the_capability_through_the_decoder():
+    """The class is a thin wrapper: it fetches the id and decodes it, so one
+    case end to end guards the wiring the parametrized tests do not touch.
+    """
+    stub = sensor(CozytouchErrorCodeSensor, "[[0,0,0,0],[0,0,0,0]]")
+    assert CozytouchErrorCodeSensor.get_value(stub) == "OK"
