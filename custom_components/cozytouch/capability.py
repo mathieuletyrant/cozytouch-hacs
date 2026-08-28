@@ -608,19 +608,25 @@ def get_capability_infos(  # noqa: C901
             capability.enabled_by_default = False
 
     elif capabilityId == 218:
-        # A zone reports this and it does not mean anything there: a capture of
-        # a THZONE has `isAvailable: true` alongside 218 reading "0", so the
-        # sensor would sit at "disconnected" for good and contradict the device
-        # it belongs to. A zone has no radio of its own -- the gateway it hangs
-        # off does -- and a diagnostic that is permanently wrong is worse than
-        # one that is absent.
+        # `wifiConnected` by name, but not the boolean it looks like. Every
+        # capture reads "0" (occasionally "4") and never "1", so the connected
+        # sensor -- is_on is value == "1" -- sat permanently at "disconnected"
+        # on hardware that was plainly online, and every unit behind a gateway
+        # reported it too though only the gateway has a radio. The app does not
+        # surface it: it reads a device's `isAvailable` for connectivity. The
+        # 0/4 encoding is unknown (see docs/decisions.md), so it is shown raw
+        # and off by default rather than as a flag that is always wrong.
+        #
+        # A zone still gets nothing at all: it has no readings, and the
+        # fall-through would give it a lone disabled sensor.
         if modelInfos.type is CozytouchDeviceType.ZONE:
             return CapabilityInfos()
 
         capability.name = "wifi_connected"
-        capability.type = CapabilityType.BINARY
+        capability.type = CapabilityType.STRING
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:wifi"
+        capability.enabled_by_default = False
 
     elif capabilityId == 219:
         capability.name = "wifi_ssid"

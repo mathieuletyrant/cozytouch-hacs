@@ -35,17 +35,28 @@ THZONE_CAPABILITIES = {218, 100014}
 
 
 def test_a_zone_gets_no_wifi_sensor():
-    """218 reads "0" on a zone whose `isAvailable` is true, so the sensor would
-    sit at disconnected for good and contradict the device it belongs to. The
-    radio belongs to the gateway the zone hangs off.
+    """218 reads "0" on a zone whose `isAvailable` is true, so any sensor would
+    sit wrong for good and contradict the device it belongs to. The radio
+    belongs to the gateway the zone hangs off, and a zone has nothing else to
+    show either, so it gets no entity at all.
     """
     zone = get_capability_infos(
         get_model_infos(1505, None, "THZONE_0"), 218, "0", THZONE_CAPABILITIES
     )
-    thermostat = get_capability_infos(get_model_infos(418), 218, "0", {218})
 
     assert zone == {}
-    assert thermostat["name"] == "wifi_connected"
+
+
+def test_wifi_connected_is_a_raw_sensor_off_by_default():
+    """218 is `wifiConnected` by name but never reads "1", so a boolean
+    connected sensor was permanently "off". Its 0/4 encoding is unknown, so it
+    is a raw string, off by default, rather than a flag that is always wrong.
+    """
+    result = get_capability_infos(get_model_infos(418), 218, "0", {218})
+
+    assert result["name"] == "wifi_connected"
+    assert result["type"] == "string"
+    assert result["enabled_by_default"] is False
 
 
 def test_a_zone_maps_to_nothing_at_all():
