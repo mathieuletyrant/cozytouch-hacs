@@ -61,6 +61,7 @@ zone.
 | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
 | 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
 | 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
+| 1368 | Calypso SPLIT VM 200L |
 | 1369, 1376 | Calypso Split |
 | 1371, 1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
@@ -237,6 +238,7 @@ here because they did it :
 | Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
 | Egeo VS 250L | 2346 | [@Mathieu-Pasco-Breillot](https://github.com/Mathieu-Pasco-Breillot) |
 | Explorer EVO 3 (260L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
+| Calypso SPLIT VM 200L | 1368 | [@mplessis](https://github.com/mplessis) |
 
 Where only part of a pull request was taken, the commit that took it says which
 part and why the rest was left alone.
