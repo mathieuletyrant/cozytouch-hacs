@@ -1016,6 +1016,7 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.INT
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:fan-clock"
+        capability.enabled_by_default = False
 
     elif capabilityId == 102025:
         # Minimum air-circulation duration; the lower bound of 102021.
@@ -1023,6 +1024,7 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.INT
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:fan-clock"
+        capability.enabled_by_default = False
 
     elif capabilityId == 102026:
         # Maximum air-circulation duration; the upper bound of 102021.
@@ -1030,6 +1032,7 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.INT
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:fan-clock"
+        capability.enabled_by_default = False
 
     elif capabilityId == 104044:
         capability.name = "boost_mode"
