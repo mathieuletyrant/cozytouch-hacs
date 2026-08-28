@@ -5,11 +5,18 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr
 import homeassistant.helpers.config_validation as cv
 
 from .account import CozytouchAccount
 from .const import DOMAIN
-from .hub import AccountCoordinator, CozytouchConfigEntry, CozytouchRuntimeData, Hub
+from .hub import (
+    AccountCoordinator,
+    CozytouchConfigEntry,
+    CozytouchRuntimeData,
+    Hub,
+    device_info_for,
+)
 from .repairs import async_check_model_mapping
 from .services import async_register_services
 
@@ -30,6 +37,26 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 def _setting(entry: ConfigEntry, key: str) -> bool:
     """Read a setting, options first since that is where the options flow writes."""
     return entry.options.get(key, entry.data.get(key, False))
+
+
+def _register_devices(
+    device_registry: dr.DeviceRegistry,
+    entry: CozytouchConfigEntry,
+    hubs: dict[str, Hub],
+) -> None:
+    """Create every subentry's device before any platform needs it.
+
+    Gateways first: the children's via_device points at them, and the registry
+    only honours a link to a device it already holds.
+    """
+    for subentry_id, hub in sorted(
+        hubs.items(), key=lambda item: item[1].get_via_device() is not None
+    ):
+        device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            config_subentry_id=subentry_id,
+            **device_info_for(hub, subentry_id),
+        )
 
 
 async def _async_entry_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
@@ -82,6 +109,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     # built from those capabilities, so a poll that fails leaves values stale
     # instead of failing a setup that already has what it needs.
     await coordinator.async_refresh()
+
+    # Before the platforms, not as a side effect of their first entity: a
+    # child's via_device has to name a device that already exists, and the
+    # platforms run concurrently. See docs/decisions.md.
+    _register_devices(dr.async_get(hass), entry, hubs)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 

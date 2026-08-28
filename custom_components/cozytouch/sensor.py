@@ -28,41 +28,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN, CozytouchCapabilityVariableType
-from .hub import CozytouchConfigEntry, Hub
+from .hub import CozytouchConfigEntry, Hub, device_info_for
 from .infos import CapabilityCategory, CapabilityType
 
 _LOGGER = logging.getLogger(__name__)
-
-
-def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
-    """The device every entity of one config entry belongs to.
-
-    A function rather than a copy per entity class : the freshness sensor below
-    is not built from a capability, so it cannot inherit CozytouchSensor, and a
-    second hand-written copy of this would be the third in the integration.
-    """
-    model_name = coordinator.get_model_infos().name
-    info = DeviceInfo(
-        identifiers={(DOMAIN, device_uniq_id)},
-        manufacturer="Atlantic",
-        name=model_name,
-        model=model_name,
-        serial_number=coordinator.get_serial_number(),
-        # The firmware the device reports (capability 121). It is worth
-        # having on the device rather than only as a diagnostic entity:
-        # "which version is this box on" is the first line of a bug
-        # report, and None here just leaves the field empty.
-        sw_version=coordinator.get_software_version(),
-    )
-    # Hang the device under its gateway when that is set up too, instead
-    # of leaving every room unit at the top of the list. via_device is
-    # deprecated for via_device_id, which needs a registry lookup and a
-    # newer HA than this integration asks for.
-    via_device = coordinator.get_via_device()
-    if via_device is not None:
-        info["via_device"] = via_device
-
-    return info
 
 
 # The value a healthy fault code reads as, and the one an empty slot carries.
