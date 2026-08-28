@@ -590,6 +590,7 @@ def get_capability_infos(  # noqa: C901
 
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:calendar-clock"
 
     elif capabilityId == 218:
         # A zone reports this and it does not mean anything there: a capture of
@@ -966,6 +967,7 @@ def get_capability_infos(  # noqa: C901
         capability.name = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:calendar-clock"
 
     elif capabilityId == 290:
         # DHW fault code, same matrix shape and decoding as the room code (303).
