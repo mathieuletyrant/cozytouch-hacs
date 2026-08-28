@@ -380,7 +380,7 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1388:
+    elif modelId in (1388, 1588):
         modelInfos.name = "Doris étroit 1500W BLC"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {

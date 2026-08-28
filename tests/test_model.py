@@ -532,6 +532,16 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1588,
+        {
+            "modelId": 1588,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Doris étroit 1500W BLC",
+            "type": CozytouchDeviceType.TOWEL_RACK,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+        },
+    ),
+    (
         1595,
         {
             "modelId": 1595,

@@ -83,7 +83,7 @@ zone.
 | ------: | ----- |
 | 1381 | KELUD 1750W BLC |
 | 1382 | KELUD 1750W Anthracite Standard |
-| 1388 | Doris étroit 1500W BLC |
+| 1388, 1588 | Doris étroit 1500W BLC |
 | 1543 | Asama Connecté II Ventilo 1750W Blanc |
 | 1546 | Asama Connecté II Ventilo 1500W ANTH |
 | 1547 | Asama Connecté II Ventilo 1750W ANTH |
@@ -233,6 +233,7 @@ here because they did it :
 | ------ | ------: | -- |
 | ACI HYB water heaters (PHAZY / AQUEO / DURALIS) | 386-394 | [@FreeTHX](https://github.com/FreeTHX), [@beorn-](https://github.com/beorn-) |
 | Doris étroit 1300W CARAT | 1595 | [@tomcastleman](https://github.com/tomcastleman) |
+| Doris étroit 1500W BLC | 1588 | [@jojeju9428](https://github.com/jojeju9428) |
 | Calypso connecté | 1658 | [@picosam](https://github.com/picosam) |
 | FLAT/S4 IOTHUB gateway | 1763 | [@Joonel](https://github.com/Joonel) |
 | Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
