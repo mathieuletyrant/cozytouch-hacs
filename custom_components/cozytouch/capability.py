@@ -999,11 +999,16 @@ def get_capability_infos(  # noqa: C901
         capability.icon = "mdi:alert-circle-outline"
 
     elif capabilityId == 102005:
-        # The set of air-circulation modes this device supports.
+        # The set of air-circulation modes this device supports -- a static
+        # descriptor bitmask, not a control. Off by default like every other
+        # supported_*/available_* descriptor (which reach that state through
+        # SELF_DESCRIBING_CAPABILITIES); this one has its own branch and was
+        # the lone one left visible.
         capability.name = "air_circulation_supported_modes"
         capability.type = CapabilityType.STRING
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:fan"
+        capability.enabled_by_default = False
 
     elif capabilityId == 102022:
         # Step for the air-circulation duration (102021).

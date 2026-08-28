@@ -388,6 +388,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1381,
     "name": "air_circulation_supported_modes",
@@ -2101,6 +2102,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1457,
     "name": "air_circulation_supported_modes",
@@ -3812,6 +3814,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1505,
     "name": "air_circulation_supported_modes",
@@ -5515,6 +5518,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1641,
     "name": "air_circulation_supported_modes",
@@ -7226,6 +7230,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1734,
     "name": "air_circulation_supported_modes",
@@ -8968,6 +8973,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 211,
     "name": "air_circulation_supported_modes",
@@ -10656,6 +10662,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 2374,
     "name": "air_circulation_supported_modes",
@@ -12369,6 +12376,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 418,
     "name": "air_circulation_supported_modes",
@@ -14073,6 +14081,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 557,
     "name": "air_circulation_supported_modes",
@@ -15796,6 +15805,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 56,
     "name": "air_circulation_supported_modes",
@@ -17501,6 +17511,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 562,
     "name": "air_circulation_supported_modes",
@@ -19212,6 +19223,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 76,
     "name": "air_circulation_supported_modes",
@@ -20917,6 +20929,7 @@
    "102005": {
     "capabilityId": 102005,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 999999,
     "name": "air_circulation_supported_modes",
