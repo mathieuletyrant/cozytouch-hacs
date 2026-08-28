@@ -630,7 +630,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1381,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -1296,7 +1296,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1381,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -1344,7 +1344,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1381,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -2321,7 +2321,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1457,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -2987,7 +2987,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1457,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -3035,7 +3035,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1457,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -4010,7 +4010,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1505,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -4669,7 +4669,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1505,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -4717,7 +4717,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1505,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -5692,7 +5692,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1641,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -6358,7 +6358,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1641,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -6406,7 +6406,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1641,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -7381,7 +7381,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1734,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -8039,7 +8039,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1734,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -8087,7 +8087,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 1734,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -9095,7 +9095,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 211,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -9780,7 +9780,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 211,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -9828,7 +9828,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 211,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -10767,7 +10767,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 2374,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -11435,7 +11435,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 2374,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -11483,7 +11483,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 2374,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -12458,7 +12458,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 418,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -13124,7 +13124,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 418,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -13172,7 +13172,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 418,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -14140,7 +14140,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 557,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -14798,7 +14798,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 557,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -14846,7 +14846,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 557,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -15841,7 +15841,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 56,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -16499,7 +16499,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 56,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -16547,7 +16547,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 56,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -17524,7 +17524,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 562,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -18190,7 +18190,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 562,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -18238,7 +18238,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 562,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -19207,7 +19207,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 76,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -19875,7 +19875,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 76,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -19923,7 +19923,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 76,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
@@ -20896,7 +20896,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 999999,
     "name": "home_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "152": {
     "capabilityId": 152,
@@ -21562,7 +21562,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 999999,
     "name": "dhw_error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "292": {
     "capabilityId": 292,
@@ -21610,7 +21610,7 @@
     "icon": "mdi:alert-circle-outline",
     "modelId": 999999,
     "name": "error_code",
-    "type": "string"
+    "type": "error_code"
    },
    "306": {
     "capabilityId": 306,
