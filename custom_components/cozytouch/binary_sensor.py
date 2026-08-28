@@ -15,6 +15,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub
+from .sensor import device_info_for
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,13 +31,11 @@ async def async_setup_entry(
     # device page it shows up on, and what it reports -- whether the account
     # reached the Cozytouch cloud -- is the same answer for all of them.
     for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
         async_add_entities(
             [
-                CloudConnectivity(
-                    config_entry.runtime_data.hubs[subentry_id],
-                    subentry.title,
-                    subentry_id,
-                )
+                CloudConnectivity(hub, subentry.title, subentry_id),
+                DeviceAvailability(hub, subentry_id),
             ],
             True,
             config_subentry_id=subentry_id,
@@ -87,4 +86,41 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         self._attr_is_on = self.coordinator.online
+        self.async_write_ha_state()
+
+
+class DeviceAvailability(CoordinatorEntity, BinarySensorEntity):
+    """Whether the cloud reports this device as reachable (`isAvailable`).
+
+    Distinct from CloudConnectivity : that one is the account's session to the
+    cloud, the same answer on every device, while this is the cloud's own
+    per-device flag. A device can be unavailable while the session -- and every
+    other device on it -- is fine, and that is the case this one exists to show.
+
+    It reads the raw last value and stays available itself when the session
+    drops : the cloud-connectivity sensor is what says whether that value is
+    still fresh, and marking this one unavailable on a backoff would flap it the
+    way the poll deliberately does not. Unknown when the field is absent.
+    """
+
+    _attr_has_entity_name = True
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_name = "Available"
+    _attr_device_class = BinarySensorDeviceClass.CONNECTIVITY
+
+    def __init__(self, coordinator: Hub, uniq_id: str) -> None:
+        """Initialize the device availability binary sensor."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{DOMAIN}_{uniq_id}_device_availability"
+        self._device_uniq_id = uniq_id
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return device_info_for(self.coordinator, self._device_uniq_id)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._attr_is_on = self.coordinator.get_is_available()
         self.async_write_ha_state()
