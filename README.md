@@ -61,6 +61,7 @@ zone.
 | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
 | 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
 | 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
+| 1368 | Calypso SPLIT VM 200L |
 | 1369, 1376 | Calypso Split |
 | 1371, 1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
@@ -68,6 +69,7 @@ zone.
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
 | 1656 | Aeromax 6 |
+| 1669 | CV5 Aeromax Premium 100L |
 | 1657 | Calypso 200L |
 | 1658 | Calypso connecté |
 | 1957 | LINEO CONNECTE MP 100L 2250W |
@@ -82,7 +84,7 @@ zone.
 | ------: | ----- |
 | 1381 | KELUD 1750W BLC |
 | 1382 | KELUD 1750W Anthracite Standard |
-| 1388 | Doris étroit 1500W BLC |
+| 1388, 1588 | Doris étroit 1500W BLC |
 | 1543 | Asama Connecté II Ventilo 1750W Blanc |
 | 1546 | Asama Connecté II Ventilo 1500W ANTH |
 | 1547 | Asama Connecté II Ventilo 1750W ANTH |
@@ -336,11 +338,14 @@ here because they did it :
 | ------ | ------: | -- |
 | ACI HYB water heaters (PHAZY / AQUEO / DURALIS) | 386-394 | [@FreeTHX](https://github.com/FreeTHX), [@beorn-](https://github.com/beorn-) |
 | Doris étroit 1300W CARAT | 1595 | [@tomcastleman](https://github.com/tomcastleman) |
+| Doris étroit 1500W BLC | 1588 | [@jojeju9428](https://github.com/jojeju9428) |
 | Calypso connecté | 1658 | [@picosam](https://github.com/picosam) |
 | FLAT/S4 IOTHUB gateway | 1763 | [@Joonel](https://github.com/Joonel) |
 | Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
 | Egeo VS 250L | 2346 | [@Mathieu-Pasco-Breillot](https://github.com/Mathieu-Pasco-Breillot) |
 | Explorer EVO 3 (260L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
+| Calypso SPLIT VM 200L | 1368 | [@mplessis](https://github.com/mplessis) |
 
 Where only part of a pull request was taken, the commit that took it says which
 part and why the rest was left alone.
+| CV5 Aeromax Premium 100L | 1669 | [@Racailloux](https://github.com/Racailloux) |

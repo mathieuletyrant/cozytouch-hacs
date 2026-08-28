@@ -25,12 +25,12 @@ Optional :
 
 from enum import StrEnum
 
-from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     FAN_AUTO,
     FAN_HIGH,
     FAN_LOW,
     FAN_MEDIUM,
+    HVACMode,
 )
 
 from .const import (
@@ -91,7 +91,7 @@ def get_model_infos(  # noqa: C901
     """
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
-    if (deviceName or "").startswith(ZONE_NAME_PREFIX):
+    if deviceName is not None and deviceName.startswith(ZONE_NAME_PREFIX):
         # A THZONE is one zone of a ducted heat pump, not a product. What it
         # reports, in the one capture there is, is two capabilities -- 218
         # reading "0" and 100014 reading "255" -- and no climate capability:
@@ -322,6 +322,20 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
+    elif modelId == 1368:
+        modelInfos.name = "Calypso SPLIT VM 200L"
+        modelInfos.type = CozytouchDeviceType.WATER_HEATER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos.HeatingModes = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
     elif modelId in (1369, 1376):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
@@ -366,7 +380,7 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1388:
+    elif modelId in (1388, 1588):
         modelInfos.name = "Doris étroit 1500W BLC"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
@@ -487,6 +501,20 @@ def get_model_infos(  # noqa: C901
 
     elif modelId == 1656:
         modelInfos.name = "Aeromax 6"
+        modelInfos.type = CozytouchDeviceType.WATER_HEATER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos.HeatingModes = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+            4: HEATING_MODE_PROG,
+        }
+
+    elif modelId == 1669:
+        modelInfos.name = "CV5 Aeromax Premium 100L"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
