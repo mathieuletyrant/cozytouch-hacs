@@ -121,10 +121,11 @@ known-first-party = ["homeassistant", "custom_components", "tests"]
 convention = "pep257"
 
 [tool.pyright]
-# Three files, not the tree -- the scope and its reasons are in
+# The typed core, not the tree -- the scope and its reasons are in
 # docs/decisions.md.
 include = [
     "custom_components/cozytouch/capability.py",
+    "custom_components/cozytouch/derive.py",
     "custom_components/cozytouch/infos.py",
     "custom_components/cozytouch/model.py",
 ]
