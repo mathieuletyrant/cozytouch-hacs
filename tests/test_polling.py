@@ -514,6 +514,43 @@ def test_a_setup_view_without_a_rate_limit_declares_nothing(monkeypatch):
     assert account.rate_limit is None
 
 
+# --- the beat is booked -----------------------------------------------------
+
+
+def test_a_built_coordinator_has_its_next_poll_booked(monkeypatch):
+    """Built, the coordinator already holds a tick with the event loop.
+
+    Home Assistant books a coordinator's next refresh only while at least one
+    listener is subscribed (`async_add_listener`, and again at the end of every
+    `_async_refresh`) -- and every entity of this integration listens to a hub,
+    none to the account. So the coordinator subscribes to itself. Before it
+    did, the one refresh setup runs was the last poll the account ever made :
+    every value froze at whatever time Home Assistant last started, whatever
+    the configured interval said, and only the `last_poll` sensor was there to
+    show it.
+
+    The rest of this file drives `_async_update_data` by hand, which is why
+    none of it could have caught this. `_unsub_refresh` is Home Assistant's
+    own handle on the booked tick ; None means no poll is ever coming.
+    """
+    account, _ = connected(monkeypatch)
+
+    async def build():
+        hass = SimpleNamespace(loop=asyncio.get_running_loop())
+        config_entry = SimpleNamespace(
+            options={},
+            data={},
+            entry_id="an-entry",
+            pref_disable_polling=False,
+            async_on_unload=lambda cb: None,
+        )
+        return AccountCoordinator(hass, account, config_entry, {"a": FakeHub()})
+
+    coordinator = asyncio.run(build())
+
+    assert coordinator._unsub_refresh is not None
+
+
 # --- what the hub kept ----------------------------------------------------
 
 

@@ -157,6 +157,13 @@ class AccountCoordinator(DataUpdateCoordinator):
         self._account = account
         self._hubs = hubs
 
+        # Subscribed to itself, because nothing else ever is : every entity
+        # listens to its hub, and Home Assistant books a coordinator's next
+        # refresh only while it has at least one listener. Without this the
+        # interval above is dead letter -- setup's one refresh runs and no
+        # poll ever follows it.
+        self.async_add_listener(lambda: None)
+
     async def _async_update_data(self) -> None:
         """Read the setup view once, and hand it to every device."""
         self._account.check_token()
