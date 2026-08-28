@@ -942,10 +942,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 1381,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -2654,10 +2655,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 1457,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -6067,10 +6069,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 1641,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -7769,10 +7772,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 1734,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -9531,10 +9535,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 211,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -11205,10 +11210,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 2374,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -12917,10 +12923,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 418,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -14612,10 +14619,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 557,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -16334,10 +16342,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 56,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -18046,10 +18055,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 562,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -19752,10 +19762,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 76,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,
@@ -21460,10 +21471,11 @@
    "218": {
     "capabilityId": 218,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:wifi",
     "modelId": 999999,
     "name": "wifi_connected",
-    "type": "binary"
+    "type": "string"
    },
    "219": {
     "capabilityId": 219,

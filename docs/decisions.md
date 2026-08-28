@@ -136,6 +136,29 @@ a `str | None` device name into the zone's `name` field, which the
 `(deviceName or "")` guard hid from the checker. The run that stays green is
 the run that found one.
 
+## `custom_components/cozytouch/capability.py`
+
+### Capability 218 `wifiConnected` is shown raw, not as a connected/off flag
+
+218 is `wifiConnected` by name, and was mapped as a boolean binary sensor
+whose `is_on` is `value == "1"`. It reads permanently "disconnected" on
+working hardware, because the value is never "1": across 42 models in the
+capture corpus it is "0" (92 readings) or "4" (6), never "1". A device
+plainly online with a -62 dB wifi signal still read "off", and so did every
+unit sitting behind a gateway with no radio of its own.
+
+The app does not use 218 for this at all — it reads a device's `isAvailable`
+field for connectivity. And nothing decodes the 0/4 value space: it is not
+referenced in the decompiled Dart or the Kotlin SDK, and no reflected enum
+covers it (the parser confirms only the name, id 218 → case 2 → wifiConnected).
+
+So the honest reading is that we do not know what 218 encodes. It is surfaced
+raw and `enabled_by_default` False rather than as a flag that is always
+wrong; account reachability is the connectivity binary sensor, and a proper
+per-device connectivity sensor would come from `isAvailable`, the way the app
+does it. The `4` reading is still unexplained. Research in
+`research/FINDINGS.md`.
+
 ## `custom_components/cozytouch/derive.py`
 
 ### A derivation exists, and only the diagnostics dump reads it
