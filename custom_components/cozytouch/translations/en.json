@@ -279,7 +279,7 @@
             "hot_water_showers_remaining": { "name": "Hot Water Showers Remaining" },
             "identify_supported":       { "name": "Identify Supported" },
             "interface_fw":             { "name": "Interface FW" },
-            "last_device_update":       { "name": "Last Device Update" },
+            "last_device_update":       { "name": "Last Reported Change" },
             "last_poll":                { "name": "Last Poll" },
             "linked_interfaces_count":  { "name": "Linked Interfaces Count" },
             "main_cursor_information":  { "name": "Main Cursor Information" },
