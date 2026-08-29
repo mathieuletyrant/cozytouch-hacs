@@ -117,7 +117,7 @@ exist to remove.
 
 The declared fields on `ModelInfos`/`CapabilityInfos` are only worth what
 checks them, and until this job nothing did. `pyproject.toml` scopes pyright
-to `infos.py`, `model.py`, `capability.py` and `derive.py` — the typed core,
+to `infos.py`, `model.py` and `capability.py` — the typed core,
 where the declarations live — rather than the tree : the platforms and the hub read
 Home Assistant's heavily-typed API, and making them pyright-clean is its own
 project, not a line in this one. Basic mode for the same reason.
@@ -187,26 +187,37 @@ per-device connectivity sensor would come from `isAvailable`, the way the app
 does it. The `4` reading is still unexplained. Research in
 `research/FINDINGS.md`.
 
-## `custom_components/cozytouch/derive.py`
+## The capability-only derivation (tried, and dropped)
 
-### A derivation exists, and only the diagnostics dump reads it
+### `derive.py` existed for one release, and the dump carries its inputs now
 
 The vendor's app is not updated when a model ships, which means it cannot
 work the way `model.py` does. Decompiling it (August 2026) showed how it
 does work : it has no `modelId` table at all — it displays the `longName` /
 `modelFamily` the server sends — and every feature the UI offers is derived
-from the capabilities the device reports. `derive.py` is that derivation
-rebuilt on our side ; the entries below say what each piece rests on.
+from the capabilities the device reports. `derive.py` was that derivation
+rebuilt on our side, printed in the dump as a shadow next to the declared
+table (`derived` / `declaredVsDerived` in each device's `model` block).
 
-Nothing wires entities from it, because the evidence covers a handful of
-device families and the table carries *deliberate* suppressions the
+Nothing ever wired entities from it, because the evidence covers a handful
+of device families and the table carries *deliberate* suppressions the
 derivation would undo — 557-561 report capability 100507 and the vendor app
 still offers no eco mode for them, which is why `ecoModeAvailable` is False
-there. The dump prints the derived description and where it disagrees with
-the declared one, so every report from the tracker measures the derivation
-on hardware nobody here owns. Wiring from it is a later decision, taken
-model by model on that record, with the table kept as the override layer
-for exactly those suppressions.
+there.
+
+It was removed (August 2026, one release after it landed) rather than kept
+as a read-only shadow : a derivation nothing acts on is a second mapping to
+maintain, and every conclusion it printed can be recomputed offline from a
+dump that carries the raw inputs. So the dump carries exactly those instead
+— every capability id with its value, and the API's identity fields
+(`customName`, added to `API_DECLARED_FIELDS` for this ; `longName`,
+`modelFamily`, `masterDeviceId`, `isAvailable`). A future switch-over would
+start from the evidence below and the dumps on the tracker, with the table
+kept as the override layer for exactly those suppressions.
+
+The entries below are what the derivation rested on ; they stay because
+they document what the capabilities *mean*, which outlives the module that
+read them.
 
 ### `HVAC_MODE_BITS` : capability 100022 is a bitmask over the mode values
 
