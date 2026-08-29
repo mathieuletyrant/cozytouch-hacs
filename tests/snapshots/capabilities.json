@@ -305,11 +305,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 1381,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -2015,11 +2015,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 1457,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -3730,11 +3730,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 1505,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -5437,11 +5437,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 1641,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -7152,11 +7152,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 1734,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -8898,11 +8898,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 211,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -10590,11 +10590,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 2374,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -12307,11 +12307,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 418,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -14022,11 +14022,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 557,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -15742,11 +15742,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 56,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -17451,11 +17451,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 562,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -19166,11 +19166,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 76,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,
@@ -20875,11 +20875,11 @@
    },
    "100450": {
     "capabilityId": 100450,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-fast",
     "modelId": 999999,
     "name": "schedule_anticipation",
-    "type": "string"
+    "type": "switch"
    },
    "100503": {
     "capabilityId": 100503,

@@ -298,7 +298,6 @@
             "open_window_detection":    { "name": "Open Window Detection" },
             "open_window_state":        { "name": "Open Window State" },
             "override_setpoint_activation": { "name": "Override Setpoint Activation" },
-            "schedule_anticipation":    { "name": "Schedule Anticipation" },
             "schedule_anticipation_state": { "name": "Schedule Anticipation State" },
             "schedule_minimum_interval": { "name": "Schedule Minimum Interval" },
             "schedule_range_max_duration": { "name": "Schedule Range Maximum Duration" },
@@ -439,6 +438,7 @@
             "presence_mode":      { "name": "Presence Mode" },
             "prog_mode":          { "name": "Prog Mode" },
             "quiet_mode":         { "name": "Quiet Mode" },
+            "schedule_anticipation": { "name": "Schedule Anticipation" },
             "swing_mode":         { "name": "Swing Mode" }
         }
     },
