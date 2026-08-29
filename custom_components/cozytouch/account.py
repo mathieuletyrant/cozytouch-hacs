@@ -67,9 +67,11 @@ RATE_LIMIT_HEADERS = (
 # and family for a model the table does not know is the first thing worth
 # having. On the one account these were read from, only the gateway carries a
 # real longName and a modelFamily -- its children report an internal name or a
-# literal "---" -- so what other product families put here is still open.
-# docs/api-surface.md has the detail.
+# literal "---", and the name the user actually typed is customName -- so what
+# other product families put here is still open. docs/api-surface.md has the
+# detail.
 API_DECLARED_FIELDS = (
+    "customName",
     "longName",
     "modelFamily",
     "productRange",

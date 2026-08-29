@@ -20,7 +20,6 @@ from .account import (
 )
 from .capability import get_capability_infos
 from .const import DOMAIN
-from .derive import declared_vs_derived, derive_model_infos
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
 from .model import CozytouchDeviceType, get_model_infos
 
@@ -601,19 +600,6 @@ class Hub(DataUpdateCoordinator):
             for subentry in self._entry.subentries.values()
         }
 
-        # What the derivation needs and a device's own report does not carry:
-        # the family of its master (`modelFamily` is null on everything behind
-        # a hub) and whether anything names it as master.
-        familyById = {
-            dev["deviceId"]: dev.get("modelFamily")
-            for dev in self._account.devices
-        }
-        masterIds = {
-            dev.get("masterDeviceId")
-            for dev in self._account.devices
-            if dev.get("masterDeviceId") is not None
-        }
-
         devices = []
         for dev in self._account.devices:
             # Zones are not hardware anybody has to map, and a dump is read to
@@ -628,21 +614,6 @@ class Hub(DataUpdateCoordinator):
 
             modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             mapped, unmapped = self.get_capability_names(dev["deviceId"])
-
-            # The declared table's shadow: what the capabilities alone would
-            # say, and where that would wire different entities. Reported so
-            # every dump measures the derivation against the table on hardware
-            # nobody here owns; see derive.py for why nothing acts on it.
-            derived = derive_model_infos(
-                dev,
-                masterFamily=familyById.get(dev.get("masterDeviceId")),
-                isMaster=dev["deviceId"] in masterIds,
-            )
-            declaredVsDerived = declared_vs_derived(
-                modelInfos,
-                derived,
-                {cap["capabilityId"] for cap in dev["capabilities"]},
-            )
 
             devices.append(
                 {
@@ -668,8 +639,6 @@ class Hub(DataUpdateCoordinator):
                             for key, value in modelInfos.items()
                             if key not in ("name", "type")
                         },
-                        "derived": derived,
-                        "declaredVsDerived": declaredVsDerived,
                     },
                     "capabilities": {
                         "mapped": mapped,

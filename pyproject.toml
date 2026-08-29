@@ -125,7 +125,6 @@ convention = "pep257"
 # docs/decisions.md.
 include = [
     "custom_components/cozytouch/capability.py",
-    "custom_components/cozytouch/derive.py",
     "custom_components/cozytouch/infos.py",
     "custom_components/cozytouch/model.py",
 ]
