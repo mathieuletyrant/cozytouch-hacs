@@ -92,7 +92,6 @@ SELF_DESCRIBING_CAPABILITIES = {
     100338: "new_schedule_friday",
     100339: "new_schedule_saturday",
     100341: "new_schedule_sunday",
-    100450: "schedule_anticipation",
     100503: "wifi_fw",
     100800: "available_fan_speeds",
     103034: "room_controls_capabilities",
@@ -835,6 +834,14 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.INT
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:fire"
+
+    elif capabilityId == 100450:
+        # The vendor app's "Anticipation de chauffe"; 0/1 encoding verified on
+        # a live toggle -- see docs/decisions.md.
+        capability.name = "schedule_anticipation"
+        capability.type = CapabilityType.SWITCH
+        capability.category = CapabilityCategory.SENSOR
+        capability.icon = "mdi:clock-fast"
 
     elif capabilityId == 100505:
         capability.name = "powerful_mode"

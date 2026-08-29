@@ -187,6 +187,23 @@ per-device connectivity sensor would come from `isAvailable`, the way the app
 does it. The `4` reading is still unexplained. Research in
 `research/FINDINGS.md`.
 
+### Capability 100450 `activationProgAnticipation` is a switch
+
+The vendor app's "Anticipation de chauffe" toggle, per room: on, the device
+starts early so the room is at temperature at the scheduled time; off, it
+starts heating at the scheduled time. Promoted from a self-describing raw
+sensor to a writable switch on a live experiment (2026-08-29): the toggle
+was flipped Off on one of three room ACs and the diagnostics dump read back
+`100450 = "0"` on that unit with a `modificationDate` stamped at the moment
+of the toggle, `"1"` untouched on the other two -- and 100450 was the *only*
+capability whose date moved, so the app writes this id directly rather than
+through a sibling.
+
+Limits: verified on models 557-559, which are also the only models in the
+capture corpus that report the id at all, always as 0/1. The companion
+103450 (`progMilestoneAnticipationState`, presumably "currently
+anticipating") appears on no captured hardware and stays self-describing.
+
 ## `custom_components/cozytouch/derive.py`
 
 ### A derivation exists, and only the diagnostics dump reads it
