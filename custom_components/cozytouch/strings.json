@@ -182,7 +182,6 @@
             "away_mode_stop":   { "name": "Away Mode Stop" }
         },
         "number": {
-            "air_circulation_total_time": { "name": "Air Circulation Total Time" },
             "away_mode_temperature":      { "name": "Away Mode Temperature" },
             "boost_timeout_max":          { "name": "Boost Timeout Max." },
             "override_total_time":        { "name": "Override Total Time" },
@@ -206,6 +205,7 @@
                     "high": "High"
                 }
             },
+            "air_circulation_total_time": { "name": "Air Circulation Total Time" },
             "domestic_hot_water_mode":
             {
                 "name": "Domestic Hot Water Mode",

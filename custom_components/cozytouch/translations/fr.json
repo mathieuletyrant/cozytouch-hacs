@@ -182,7 +182,6 @@
             "away_mode_stop":   { "name": "Absence Fin" }
         },
         "number": {
-            "air_circulation_total_time": { "name": "Durée Brassage Totale" },
             "away_mode_temperature":      { "name": "Température Absence" },
             "boost_timeout_max":          { "name": "Temporisation Max. Boost" },
             "override_total_time":        { "name": "Durée Délégation" },
@@ -206,6 +205,7 @@
                     "high": "Rapide"
                 }
             },
+            "air_circulation_total_time": { "name": "Durée Brassage Totale" },
             "domestic_hot_water_mode":
             {
                 "name": "Mode eau chaude",

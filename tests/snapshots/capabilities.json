@@ -397,12 +397,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 1381,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -2114,12 +2118,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 1457,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -3829,12 +3837,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 1505,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -5536,12 +5548,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 1641,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -7251,12 +7267,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 1734,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -8997,12 +9017,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 211,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -10689,12 +10713,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 2374,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -12406,12 +12434,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 418,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -14114,12 +14146,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 557,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -15841,12 +15877,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 56,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -17550,12 +17590,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 562,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -19265,12 +19309,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 76,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
@@ -20974,12 +21022,16 @@
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
+    "highestValueCapabilityId": 102026,
     "highest_value": 300,
     "icon": "mdi:fan-clock",
+    "lowestValueCapabilityId": 102025,
     "lowest_value": 15,
     "modelId": 999999,
     "name": "air_circulation_total_time",
-    "type": "minutes_adjustment_number"
+    "step": 15,
+    "stepCapabilityId": 102022,
+    "type": "duration_select"
    },
    "102022": {
     "capabilityId": 102022,
