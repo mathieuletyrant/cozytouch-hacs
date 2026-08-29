@@ -300,6 +300,7 @@
             "open_window_detection":    { "name": "Détection fenêtre ouverte" },
             "open_window_state":        { "name": "État fenêtre ouverte" },
             "override_setpoint_activation": { "name": "Activation consigne dérogation" },
+            "schedule_anticipation":    { "name": "Anticipation du programme" },
             "schedule_anticipation_state": { "name": "État de l'anticipation du programme" },
             "schedule_minimum_interval": { "name": "Intervalle minimum entre créneaux" },
             "schedule_range_max_duration": { "name": "Durée maximale d'une plage" },
