@@ -960,15 +960,23 @@ def get_capability_infos(  # noqa: C901
         capability.modelList = "AirCirculationSpeeds"
 
     elif capabilityId == 102021:
-        # Air circulation runs for a set number of minutes. Its bounds and step
-        # are reported alongside: 102025 the minimum (15), 102026 the maximum
-        # (300), 102022 the step -- exposed as their own diag entities below.
+        # Air circulation runs for a set number of minutes, and the app offers
+        # the duration as a picker on a grid the device itself declares --
+        # 102025 the minimum, 102026 the maximum, 102022 the step. A select
+        # built from those rather than a free number; see docs/decisions.md.
+        # The grid capabilities stay exposed as their own diag entities below.
         capability.name = "air_circulation_total_time"
-        capability.type = CapabilityType.MINUTES_ADJUSTMENT_NUMBER
+        capability.type = CapabilityType.DURATION_SELECT
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:fan-clock"
+        capability.lowestValueCapabilityId = 102025
+        capability.highestValueCapabilityId = 102026
+        capability.stepCapabilityId = 102022
+        # The corpus values, for a device reporting the duration without its
+        # grid.
         capability.lowest_value = 15
         capability.highest_value = 300
+        capability.step = 15
 
     elif capabilityId == 102023:
         capability.name = "air_circulation_remaining_time"

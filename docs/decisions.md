@@ -204,6 +204,34 @@ capture corpus that report the id at all, always as 0/1. The companion
 103450 (`progMilestoneAnticipationState`, presumably "currently
 anticipating") appears on no captured hardware and stays self-describing.
 
+## `custom_components/cozytouch/select.py`
+
+### The air-circulation duration is a select on the device's own grid
+
+Capability 102021 was a free number bounded 15-300, and the vendor app never
+offers it that way: its picker (seen 2026-08-29 on a room AC) runs 00:15,
+00:30, 00:45 … 05:00 -- every quarter hour and nothing between, 16 or 17
+minutes not enterable. The grid is not the app's invention either: the
+device itself declares it, 102025 the minimum (15), 102026 the maximum
+(300), 102022 the step (15), which the corpus reads on every model that
+reports the duration at all (557-559).
+
+A number entity cannot promise that grid -- Home Assistant validates a
+typed value against the bounds but not against the step -- so a value the
+hardware would refuse (or worse, silently round) was one keystroke away.
+`CozytouchDurationSelect` builds its options from the three grid
+capabilities read live, falling back to the mapping's constants for a
+device that reports the duration without its grid, and shows them the way
+the app does (`HH:MM`). A reported value off the grid reads as unknown
+rather than snapping to a neighbour, since a snap would misreport what the
+device said. The grid capabilities stay exposed as diag entities, disabled
+by default (see the entry that hid them).
+
+The entity moves platform (number → select), so its unique_id changes and
+an existing install keeps an orphan number entity to delete by hand --
+same trade as every promotion, taken for the same reason: the old shape
+accepted writes the hardware never did.
+
 ## The capability-only derivation (tried, and dropped)
 
 ### `derive.py` existed for one release, and the dump carries its inputs now

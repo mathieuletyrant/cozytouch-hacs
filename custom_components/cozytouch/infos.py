@@ -38,6 +38,7 @@ class CapabilityType(StrEnum):
     AWAY_MODE_TIMESTAMPS = "away_mode_timestamps"
     BINARY = "binary"
     CLIMATE = "climate"
+    DURATION_SELECT = "duration_select"
     ENERGY = "energy"
     ERROR_CODE = "error_code"
     HOURS_ADJUSTMENT_NUMBER = "hours_adjustment_number"
