@@ -47,7 +47,7 @@ Base: `https://apis.groupe-atlantic.com`
 | ----- | ----- |
 | `POST /users/token` | used. Basic auth with the client id in `const.py`, username prefixed `GA-PRIVATEPERSON/` |
 | `GET /magellan/cozytouch/setupviewv2` | used. Everything the integration knows comes from here, and polled every 30s because of it |
-| `GET /magellan/capabilities/?deviceId=` | used, after a write. A subset of the setup view, so no longer the poll |
+| `GET /magellan/capabilities/?deviceId=` | **no caller left**. A subset of the setup view, so neither the poll nor the post-write read; kept as a fallback, see docs/decisions.md |
 | `POST /magellan/executions/writecapability` | used, writes |
 | `GET /magellan/executions/{id}` | used, polls a write |
 | `PUT /magellan/v2/setups/{id}/…` | used, away mode |
@@ -155,11 +155,16 @@ Worth recording that the poll now reads this route rather than
 `/magellan/capabilities/`. The device blocks embed a capability list each, so
 one request answers for the whole account where the per-device route answers
 for one -- which is what let the interval halve while the request count fell.
+The refresh a hub makes after a write reads it too, for the same price and
+because a write is not always confined to the device it was addressed to; that
+leaves the per-device route with no caller at all.
+
 What is **not** established is that the two are equally *fresh*: this session
 compared their shape, never their latency, and a setup view served from an
 aggregated cache would look identical while lagging.
 `scripts/probe_api.py --cadence` compares `modificationDate` between them,
-which is the measurement nobody has made.
+which is the measurement nobody has made -- and which now decides more than it
+did, since a lag would show up after every write and not only on the beat.
 
 `type`, `mainHeatingEnergy`, `mainDHWEnergy`, `setupBuildingDate` and a zone's
 `zoneType` are all integer enums with no catalogue to decode them: the same

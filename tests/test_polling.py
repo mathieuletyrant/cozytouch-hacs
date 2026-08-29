@@ -14,6 +14,12 @@ docs/api-surface.md says repeated failed logins are the one thing that can lock
 an account out. Polling faster without fixing that would have made the failure
 mode worse in exact proportion to the improvement.
 
+A third followed later, at the bottom of the file: the refresh a hub makes
+after a write reads the account too, and hands the answer to the other hubs.
+Some of what the cloud accepts is applied to the household rather than to the
+device it was addressed to -- air circulation and away mode both are -- and the
+siblings used to sit on their old value until the next tick.
+
 `FakeSession` is the same stand-in `tests/test_reauth.py` introduced, kept
 separate rather than imported so a change there cannot quietly rewrite what
 these say.
@@ -395,8 +401,14 @@ def test_an_unparsable_retry_after_does_not_break_the_poll(monkeypatch):
     assert RATE_LIMIT_BACKOFF - 5 < account.backoff_remaining <= RATE_LIMIT_BACKOFF
 
 
-def test_a_targeted_refresh_is_throttled_too(monkeypatch):
-    """The per-device route shares the account's budget, so it shares its backoff."""
+def test_the_per_device_route_is_throttled_too(monkeypatch):
+    """The per-device route shares the account's budget, so it shares its backoff.
+
+    Nothing calls it any more -- the post-write refresh reads the setup view,
+    for the same one request and an answer covering every device. This is the
+    coverage that keeps it honest while it is kept as a fallback; it goes when
+    the route does.
+    """
     account, session = connected(monkeypatch)
     session._answers["/magellan/capabilities/"] = FakeResponse(None, status=429)
 
@@ -409,6 +421,42 @@ def test_a_targeted_refresh_is_throttled_too(monkeypatch):
 
     assert session.requests == []
     assert account.online is True
+
+
+def test_two_setup_reads_do_not_rebuild_the_devices_at_once(monkeypatch):
+    """`update_devices_from_json_data` runs on a worker thread, so two really do.
+
+    It removes what is gone and appends what is new; interleaved, both runs can
+    find a device absent and both append it. The beat could always overlap a
+    hub's post-write refresh -- what kept that harmless was the hub writing one
+    device's capabilities rather than rebuilding the list, and it now reads the
+    account the same way the beat does.
+
+    `depth` is what the lock is for : 1 means the second caller waited, 2 means
+    two threads were inside the rebuild together.
+    """
+    import time
+
+    account, _ = connected(monkeypatch)
+    depth = {"now": 0, "max": 0}
+    rebuild = account.update_devices_from_json_data
+
+    def counted(json_data):
+        depth["now"] += 1
+        depth["max"] = max(depth["max"], depth["now"])
+        time.sleep(0.02)  # wide enough for the other thread to arrive
+        rebuild(json_data)
+        depth["now"] -= 1
+
+    account.update_devices_from_json_data = counted
+
+    async def both():
+        await asyncio.gather(account.refresh_setup(), account.refresh_setup())
+
+    asyncio.run(both())
+
+    assert depth["max"] == 1
+    assert len(account.devices) == 3
 
 
 def test_a_write_is_still_attempted_while_throttled(monkeypatch):
@@ -554,8 +602,13 @@ def test_a_built_coordinator_has_its_next_poll_booked(monkeypatch):
 # --- what the hub kept ----------------------------------------------------
 
 
-def hub_over(account, deviceId=1):
-    """A hub with nothing but what the update paths read."""
+def hub_over(account, deviceId=1, siblings=None):
+    """A hub with nothing but what the update paths read.
+
+    `siblings` stands in for the entry's `runtime_data`, which is where a hub
+    finds the others on its account. None means an entry that carries none --
+    a hub built without one, as most of these are.
+    """
     hub = object.__new__(Hub)
     hub._account = account
     hub._deviceId = deviceId
@@ -563,32 +616,84 @@ def hub_over(account, deviceId=1):
     hub._timestamps_away_mode_capability_id = None
     hub._timestamp_away_mode_start = None
     hub._timestamp_away_mode_end = None
+    hub._entry = (
+        None
+        if siblings is None
+        else SimpleNamespace(runtime_data=SimpleNamespace(hubs=siblings))
+    )
 
     return hub
 
 
-def test_a_targeted_refresh_asks_for_one_device(monkeypatch):
-    """The per-device route was demoted, not deleted.
+def test_a_targeted_refresh_reads_the_whole_account(monkeypatch):
+    """A write is not always confined to the device it was addressed to.
 
-    It is what confirms a write on the device that was written to, where
-    re-reading the whole household to check one setpoint would be absurd.
+    Air circulation and away mode are set on one unit and applied to the
+    household, so the refresh that follows a write has to be able to see the
+    siblings move. It reads the setup view for that -- one request either way,
+    since the budget is counted in requests and not in bytes, and this one
+    answers for every device.
     """
     account, session = connected(monkeypatch)
-    session._answers["/magellan/capabilities/"] = FakeResponse(
-        [{"capabilityId": 100, "value": "23"}]
-    )
+    session._answers["setupviewv2"] = FakeResponse(setup_view(value="23"))
 
     asyncio.run(hub_over(account)._async_update_data())
 
-    assert len(session.capability_polls()) == 1
-    assert session.setup_views() == []
+    assert len(session.setup_views()) == 1
+    assert session.capability_polls() == []
+    assert [dev["capabilities"] for dev in account.devices] == [
+        [{"capabilityId": 100, "value": "23"}]
+    ] * 3
+
+
+def test_a_targeted_refresh_tells_the_other_devices(monkeypatch):
+    """Reading every device is only half of it; their entities have to hear.
+
+    Without this the sibling hubs hold fresh values and publish nothing, so a
+    brassage switch turned on in one room still reads off in the next until the
+    account's own tick -- which is the bug, one poll interval later.
+    """
+    account, session = connected(monkeypatch)
+    session._answers["setupviewv2"] = FakeResponse(setup_view(value="23"))
+    others = [FakeHub(), FakeHub()]
+    hub = hub_over(account, siblings={"b": others[0], "c": others[1]})
+    hub._entry.runtime_data.hubs["a"] = hub
+
+    asyncio.run(hub._async_update_data())
+
+    assert [other.updates for other in others] == [1, 1]
+
+
+def test_a_targeted_refresh_does_not_publish_to_itself(monkeypatch):
+    """The refreshing hub is served by returning, not by being told.
+
+    `async_set_updated_data` on a coordinator that is inside its own
+    `_async_update_data` sets the data twice and cancels a refresh mid-flight,
+    which is why this does not go through `AccountCoordinator._publish`.
+    """
+    account, session = connected(monkeypatch)
+    session._answers["setupviewv2"] = FakeResponse(setup_view())
+    hub = hub_over(account, siblings={})
+    hub._entry.runtime_data.hubs["a"] = hub
+    hub.async_account_updated = None  # called, this would raise
+
+    asyncio.run(hub._async_update_data())
+
+
+def test_a_targeted_refresh_without_an_entry_still_refreshes(monkeypatch):
+    """A hub whose entry has not finished loading has no siblings to tell."""
+    account, session = connected(monkeypatch)
+    session._answers["setupviewv2"] = FakeResponse(setup_view(value="23"))
+
+    asyncio.run(hub_over(account)._async_update_data())
+
     assert account.devices[0]["capabilities"] == [{"capabilityId": 100, "value": "23"}]
 
 
 def test_a_throttled_targeted_refresh_keeps_the_device_available(monkeypatch):
     """A backoff is not an outage, on this path either."""
     account, session = connected(monkeypatch)
-    session._answers["/magellan/capabilities/"] = FakeResponse(None, status=429)
+    session._answers["setupviewv2"] = FakeResponse(None, status=429)
 
     asyncio.run(hub_over(account)._async_update_data())
 
