@@ -279,7 +279,7 @@
             "hot_water_showers_remaining": { "name": "Douches restantes" },
             "identify_supported":       { "name": "Identification disponible" },
             "interface_fw":             { "name": "Interface FW" },
-            "last_device_update":       { "name": "Dernière mise à jour de l'appareil" },
+            "last_device_update":       { "name": "Dernier changement rapporté" },
             "last_poll":                { "name": "Dernière synchronisation" },
             "linked_interfaces_count":  { "name": "Nombre d'interfaces liées" },
             "main_cursor_information":  { "name": "Informations du curseur principal" },
