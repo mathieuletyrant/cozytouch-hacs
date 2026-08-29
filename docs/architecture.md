@@ -447,12 +447,12 @@ added as of the last tick rather than the last reconnect. That is the half a
 dump is read for. It is read off the entry's subentries, so the dump does not
 depend on which hub produced it.
 
-Each device's `model` block also carries a shadow: what the capabilities
-alone would declare (`derived`, from `derive.py`) and where that would wire
-different entities than the table does (`declaredVsDerived`). Nothing acts
-on it — it is evidence collection for a possible switch-over, gathered from
-every report; `docs/decisions.md` has the derivation's sources and why it
-stays read-only.
+The dump carries the raw material a capability-only reading needs — every
+capability id with its value, and the API's own identity fields
+(`customName`, `longName`, `modelFamily`, `masterDeviceId`) — rather than a
+computed reading of them. A `derived` block used to sit in each device's
+`model` and was dropped; `docs/decisions.md` has the derivation's evidence
+and why the dump now carries inputs, not conclusions.
 
 ## The services
 

@@ -102,13 +102,14 @@ what putting the dates in the dump is for.
 
 ## Devices: the server names only the gateway
 
-`setupviewv2` returns 19 fields per device. Seven drive behaviour; the five
+`setupviewv2` returns 19 fields per device. Seven drive behaviour; the six
 below are carried to the diagnostics dump under the API's own names, because
 what an unmapped model gets mapped from is what the vendor says about it. The
 values are from the one account probed:
 
 | Field | Gateway (1758) | Room AC (557-559) | Thermal zone (1505-1507) |
 | ----- | -------------- | ----------------- | ------------------------ |
+| `customName` | what the user typed | `"ROOM_0…2"` | `"THZONE_0…2"` |
 | `longName` | `"HUB Navizone"` | `"ROOM_0…2"` | `"---"` |
 | `modelFamily` | `"Air_Conditioning"` | `null` | `null` |
 | `productRange` | `null` | `null` | `null` |
@@ -118,7 +119,10 @@ values are from the one account probed:
 `longName` on the gateway is exactly the string `MODELS` hardcodes for 1758.
 On the children it is an internal name or a literal `"---"` placeholder, so it
 is **not** a substitute for the model table -- least of all for the devices
-that need one, the unmapped ones.
+that need one, the unmapped ones. `customName` is the one name a reporter
+recognises -- it is the name typed in the vendor app -- though on this account
+only the gateway's was ever renamed; the room name people actually see lives
+in capability 154.
 
 `masterDeviceId` is the real find: server-declared parent/child topology, so
 the gateway a device hangs off is reported rather than guessed. `get_via_device`
