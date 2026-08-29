@@ -154,6 +154,23 @@ def test_the_translation_files_cover_the_same_keys(path):
     assert translated_keys(path) == reference
 
 
+@pytest.mark.parametrize("path", TRANSLATIONS)
+def test_every_switch_key_is_also_a_sensor_key(path):
+    """sensor.py builds a read-only twin for every SWITCH capability, and the
+    twin is registered by the sensor platform, so Home Assistant looks its
+    name up in the sensor section. A key living only under switch therefore
+    translates the control and shows the raw key on the twin -- which the
+    flat check above cannot see, and where air_circulation and
+    domestic_hot_water_boost both lived.
+    """
+    with open(path, encoding="utf-8") as handle:
+        entity = json.load(handle)["entity"]
+
+    missing = set(entity["switch"]) - set(entity["sensor"])
+
+    assert not missing, f"{path} sensor section has no name for {sorted(missing)}"
+
+
 @pytest.mark.parametrize("capabilityId", sorted(SELF_DESCRIBING_CAPABILITIES))
 def test_a_self_describing_capability_arrives_switched_off(capabilityId):
     """A device reports dozens of these; on by default they bury the rest."""
