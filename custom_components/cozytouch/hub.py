@@ -243,7 +243,9 @@ class Hub(DataUpdateCoordinator):
     `update_interval=None` means it never fires by itself; it is pushed to by
     `AccountCoordinator`, and it fetches on its own only when something asks --
     `async_request_refresh()` after a write, which is what makes a setpoint
-    appear without waiting for the account's next tick.
+    appear without waiting for the account's next tick. That fetch reads the
+    account rather than the device and hands the answer to the other hubs, so
+    a write the cloud applied to the household shows up everywhere at once.
     """
 
     manufacturer = "Atlantic Group"
@@ -318,12 +320,19 @@ class Hub(DataUpdateCoordinator):
         self.async_set_updated_data(None)
 
     async def _async_update_data(self):
-        """Fetch this one device, for a refresh that could not wait.
+        """Re-read the account, for a refresh that could not wait.
 
         No longer the beat -- `AccountCoordinator` is -- so this runs when
-        `async_request_refresh()` asks, which is after a write. Re-reading the
-        whole account to confirm one setpoint would be the wrong trade at this
-        one moment, which is why the per-device route survives its demotion.
+        `async_request_refresh()` asks, which is after a write. It reads the
+        setup view rather than this one device, because a write does not always
+        land on the device it was addressed to : air circulation and away mode
+        are set on one unit and applied to the household, and the siblings used
+        to show their old value until the account's next tick. See
+        docs/decisions.md.
+
+        One request either way -- the budget is counted in requests
+        (`rateLimit`), not in bytes -- so the account-wide answer costs the same
+        as the per-device one and says strictly more.
         """
         _LOGGER.debug("_async_update_data %d", self._deviceId)
 
@@ -340,11 +349,12 @@ class Hub(DataUpdateCoordinator):
 
             # A reconnect re-reads the setup view, which carries the capability
             # list of every device, so this round has nothing left to fetch.
+            await self._publish_to_siblings()
             await self._commit_staged_away_mode()
             return
 
         try:
-            capabilities = await self._account.fetch_capabilities(self._deviceId)
+            await self._account.refresh_setup()
         except CozytouchRateLimited:
             # Keep the values and stay available : the account is throttled,
             # not broken, and the next account poll will bring this device
@@ -353,8 +363,34 @@ class Hub(DataUpdateCoordinator):
         except CozytouchApiError as err:
             raise UpdateFailed(str(err)) from err
 
-        self._account.store_capabilities(self._deviceId, capabilities)
+        await self._publish_to_siblings()
         await self._commit_staged_away_mode()
+
+    def _siblings(self) -> list[Hub]:
+        """The other devices of this account, once the entry carries its hubs.
+
+        Empty until `async_setup_entry` has assigned `runtime_data`, and empty
+        for a hub built without an entry, which is what the tests do : a
+        refresh that finds no siblings is a refresh of one device, which is the
+        old behaviour rather than a failure.
+        """
+        runtime = getattr(self._entry, "runtime_data", None)
+        if runtime is None:
+            return []
+
+        return [hub for hub in runtime.hubs.values() if hub is not self]
+
+    async def _publish_to_siblings(self) -> None:
+        """Tell the other devices that the account was just re-read.
+
+        Deliberately not through `AccountCoordinator._publish`, which reaches
+        every hub including this one : `async_set_updated_data` on a
+        coordinator that is currently inside its own `_async_update_data` would
+        set the data twice and cancel a refresh mid-flight. This hub is served
+        by returning.
+        """
+        for hub in self._siblings():
+            await hub.async_account_updated()
 
     async def _commit_staged_away_mode(self) -> None:
         """Send the away window once both ends have stopped moving.

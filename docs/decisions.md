@@ -136,6 +136,40 @@ a `str | None` device name into the zone's `name` field, which the
 `(deviceName or "")` guard hid from the checker. The run that stays green is
 the run that found one.
 
+## `custom_components/cozytouch/account.py`
+
+### The setup view is read one at a time
+
+`_read_setup` holds `_setup_lock` for the whole request-and-rebuild, because
+`update_devices_from_json_data` runs in an executor — a real worker thread —
+and rebuilds `self.devices` by removing what is gone and appending what is
+new. Two of those interleaved can both find a device absent and both append
+it, leaving the account holding it twice.
+
+The overlap itself is not new: the beat and a hub's post-write refresh could
+always run together. What kept it harmless was that the hub wrote one device's
+capability list (`store_capabilities`) rather than rebuilding the list, and
+the hub now reads the account the same way the beat does — so the two
+rebuilds became concurrent with each other. `connect()` reaches `_read_setup`
+too and is covered by the same lock; nothing takes `_connect_lock` while
+holding `_setup_lock`, so the order is always connect then setup and the pair
+cannot deadlock.
+
+`test_two_setup_reads_do_not_rebuild_the_devices_at_once` counts how many
+threads are inside the rebuild at once, and fails at 2 with the lock removed.
+
+### `fetch_capabilities` and `store_capabilities` are kept, uncalled
+
+Nothing calls them since the post-write refresh moved to the setup view. They
+stay for as long as that change is on trial, for two reasons: the latency
+measurement has not been made, and `update_devices_from_json_data` guards on
+`"capabilities" in remote_device`, so a setup view that omitted a device's
+list would leave the per-device route the only way to read it — a case no
+capture has produced and none rules out.
+`test_the_per_device_route_is_throttled_too` is what keeps them honest in the
+meantime. They go, with that test and the route's row in
+`docs/api-surface.md`, once the change has held.
+
 ## `custom_components/cozytouch/binary_sensor.py`
 
 ### Two connectivity sensors, not one
@@ -304,6 +338,54 @@ named `masterDeviceId` by anybody makes a device the hub of its line, since
 the family cannot tell the head from the units. The user-facing name is
 capability 154 (the room name typed in the vendor app), then `customName` ;
 the commercial name is the one thing the derivation cannot produce.
+
+## `custom_components/cozytouch/hub.py`
+
+### The refresh after a write reads the account, not the device
+
+Reported on a boiler where turning on air circulation — *brassage*, capability
+102024 — turns it on across the household, the way away mode already did. The
+integration wrote it, mirrored the new value on the device written to, and
+re-read that one device; every sibling kept showing its old value until the
+account's next tick. At the default 30 s interval that is a switch that looks
+broken for half a minute, and at the 600 s ceiling the option allows, for ten
+minutes.
+
+`Hub._async_update_data` now calls `account.refresh_setup()` and hands the
+answer to the other hubs. Three things made that the cheap fix rather than a
+trade :
+
+- **It costs the same.** One HTTP request either way. The budget the account
+  declares is `rateLimit`, counted in requests per minute (`poll_interval`
+  reads it as such), so a bigger payload buys strictly more for the same
+  price.
+- **It needs no table.** The alternative was to fan the written value out to
+  the siblings locally — no request at all, instant — but only for capability
+  ids known to be household-wide. That list would have to be built per model
+  from user captures, and the evidence here is one report on one model. Air
+  circulation carries a `air_circulation_scope` capability (358) that probably
+  encodes exactly this, but its encoding has never been confirmed against a
+  capture.
+- **It is not specific to brassage.** Away mode, and anything else the cloud
+  applies to the household that nobody has noticed yet, are fixed by the same
+  change.
+
+Publishing goes to the *siblings* rather than through
+`AccountCoordinator._publish`, which reaches every hub including the one
+refreshing: `async_set_updated_data` on a coordinator inside its own
+`_async_update_data` sets the data twice and cancels a refresh mid-flight. The
+refreshing hub is served by returning.
+
+**The unverified part, and it is the same one `refresh_setup` already carried.**
+Nobody has compared the latency of the setup view against
+`/magellan/capabilities/?deviceId=`. They carry the same three fields, and the
+integration has always built its entities from the setup view at startup, but a
+setup view served from an aggregated cache would look identical while being
+minutes behind. `scripts/probe_api.py --cadence` is what settles it. Before
+this change a lag there meant one stale device; now it would mean every device
+stale after a write. The report this came from says no lag is apparent in use,
+which is a user's impression and not a measurement — so this ships as a change
+to watch, and reverts as one commit if a lag shows up.
 
 ## `custom_components/cozytouch/sensor.py`
 

@@ -55,7 +55,7 @@ config entry (the account) ──> CozytouchAccount
                                 ▼
   subentry (a device) ──> Hub (DataUpdateCoordinator, update_interval=None)
                                 │
-                                │  GET /magellan/capabilities/?deviceId=  after a write only
+                                │  refresh_setup() after a write, then tells the other hubs
                                 │
                     get_capabilities_for_device()
                                   │
@@ -122,17 +122,24 @@ The hubs are still coordinators, so every entity is a `CoordinatorEntity` of
 its own device and a device can be unavailable on its own. What they no longer
 have is a clock: `update_interval=None`, and `async_account_updated()` pushes
 to them. Their own `_async_update_data` survives for the one case that should
-not wait for the account's tick — `async_request_refresh()` after a write,
-where re-reading the whole household to confirm one setpoint would be absurd.
+not wait for the account's tick — `async_request_refresh()` after a write.
+
+That refresh reads the account too, and publishes to the other hubs. A write is
+not always confined to the device it was addressed to: air circulation
+(capability 102024) and away mode are set on one unit and applied to the
+household, so a per-device re-read left every sibling showing its old value
+until the next tick. It is the same one request — `rateLimit` is counted in
+requests, not bytes — for an answer covering every device. `docs/decisions.md`
+records what was weighed, including the local fan-out that was not taken.
 
 **The unverified part.** Nobody has compared the *latency* of the two routes.
 They carry the same fields, and the integration has always built its entities
 from the setup view at startup, but a setup view served from an aggregated
 cache would look identical while being minutes behind.
 `scripts/probe_api.py --cadence` is what settles it: `modificationDate` is in
-both answers and read by neither. If it shows a lag, the per-device poll has to
-come back as the beat, and the 429 handling below is the half of this that
-stands either way.
+both answers and read by neither. If it shows a lag, the per-device route has
+to come back — as the beat, and now as the post-write read as well — and the
+429 handling below is the half of this that stands either way.
 
 ## Being told to slow down
 

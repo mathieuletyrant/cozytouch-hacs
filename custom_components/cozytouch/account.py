@@ -134,6 +134,9 @@ class CozytouchAccount:
         # account poll, or a hub confirming a write -- and the lock is what
         # turns several of them arriving at once into one login.
         self._connect_lock = asyncio.Lock()
+        # Serialises the setup view, whose answer rebuilds `devices` on a
+        # worker thread. See `_read_setup`.
+        self._setup_lock = asyncio.Lock()
         # Set by a 429, and honoured by every caller before it spends a
         # request. 0 = not throttled.
         self._backoff_until: float = 0
@@ -333,8 +336,19 @@ class CozytouchAccount:
             self._token_expiry = datetime.now(UTC).timestamp() + expires_in - 60
 
     async def _read_setup(self) -> None:
-        """GET setupviewv2, which is everything the integration knows."""
-        async with self._session.get(
+        """GET setupviewv2, which is everything the integration knows.
+
+        One at a time. `update_devices_from_json_data` rebuilds `self.devices`
+        -- removing what is gone, appending what is new -- and it runs in an
+        executor, so two of them run on two threads for real. Interleaved, both
+        can find a device absent and both append it. The beat could always
+        overlap a hub's post-write refresh; what made that harmless was the hub
+        writing one device's capabilities rather than rebuilding the list, and
+        it now reads the account like the beat does. Nothing takes
+        `_connect_lock` while holding this one, so the order is always connect
+        then setup and the pair cannot deadlock.
+        """
+        async with self._setup_lock, self._session.get(
             COZYTOUCH_ATLANTIC_API + "/magellan/cozytouch/setupviewv2",
             headers=self._headers(),
             timeout=REQUEST_TIMEOUT,
@@ -379,7 +393,9 @@ class CozytouchAccount:
         refreshes the whole account where the per-device route refreshes one
         device. It also carries `absence`, which lives nowhere else -- an away
         window set in the Cozytouch app used to wait for a reconnect to be
-        seen.
+        seen. It is also what a hub reads after a write, so that a value the
+        cloud applied to the whole household reaches every device's entities
+        rather than only the one that was written to.
 
         What it does not carry is proof of being as fresh as
         `/magellan/capabilities/`. The two are the same three fields
@@ -487,10 +503,17 @@ class CozytouchAccount:
     async def fetch_capabilities(self, deviceId: int) -> list:
         """GET the capability list of one device.
 
-        No longer the beat -- `refresh_setup` is, and it covers every device at
-        once. This is what confirms a write on the device that was written to,
-        where re-reading the whole household to check one setpoint would be
-        absurd.
+        Nothing calls this. It was the beat, then it was what confirmed a write
+        on the device written to, and the post-write refresh now reads the
+        setup view as well -- for the same one request, and because a write is
+        not always confined to the device it was addressed to.
+
+        Kept rather than deleted, for as long as that change is on trial : the
+        two routes have never been compared for latency
+        (`scripts/probe_api.py --cadence`), and `update_devices_from_json_data`
+        guards on `"capabilities" in remote_device`, so a setup view that
+        omitted a device's list would leave this the only way to read it. See
+        docs/decisions.md.
 
         Raises rather than returning a sentinel : the caller is a coordinator,
         and an empty list is a legitimate answer that must not read as a
@@ -564,7 +587,11 @@ class CozytouchAccount:
             ) from err
 
     def store_capabilities(self, deviceId: int, capabilities: list) -> None:
-        """Put a freshly polled capability list back on the device."""
+        """Put a freshly polled capability list back on the device.
+
+        Uncalled, like `fetch_capabilities` whose answer it stored, and kept
+        for the same reason.
+        """
         for dev in self.devices:
             if dev["deviceId"] == deviceId:
                 dev["capabilities"] = copy.deepcopy(capabilities)
