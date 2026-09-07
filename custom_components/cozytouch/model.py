@@ -244,7 +244,7 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId == 1758:
+    elif modelId in (1681, 1758):
         # AC gateway, drives the same 557-561 units as the 556 Naviclim hub
         modelInfos.name = "HUB Navizone"
         modelInfos.type = CozytouchDeviceType.HUB

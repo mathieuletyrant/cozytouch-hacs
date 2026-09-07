@@ -420,6 +420,19 @@
   "name": "CV5 Aeromax Premium 100L",
   "type": "water_heater"
  },
+ "1681": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 1681,
+  "name": "HUB Navizone",
+  "type": "hub"
+ },
  "1734": {
   "AirCirculationSpeeds": {
    "1": "low",

@@ -291,6 +291,17 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1681,
+        {
+            "modelId": 1681,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "HUB Navizone",
+            "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
         1758,
         {
             "modelId": 1758,
