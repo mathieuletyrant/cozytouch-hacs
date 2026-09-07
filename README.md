@@ -120,6 +120,7 @@ brings the rooms in.
 | 556 | Naviclim Hub |
 | 1353 | Calypso Split Interface |
 | 1457 | HUB Cozytouch |
+| 1681 | HUB Navizone |
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
 

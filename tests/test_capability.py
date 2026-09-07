@@ -77,7 +77,7 @@ def test_a_zone_maps_to_nothing_at_all():
     ("flag", "owners"),
     [
         ("quietModeAvailable", AIR_CONDITIONERS | {1734}),
-        ("awayModeTemperatureAvailable", AIR_CONDITIONERS | {556, 1734, 1758}),
+        ("awayModeTemperatureAvailable", AIR_CONDITIONERS | {556, 1681, 1734, 1758}),
         ("ecoModeAvailable", AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),
         ("currentTemperatureAvailableZ1", {76, 211, 418}),
@@ -124,7 +124,7 @@ def test_the_eco_preset_is_wired_exactly_where_its_flag_allows_it():
             assert not wired, modelId
 
 
-@pytest.mark.parametrize("hub", [556, 1457, 1758])
+@pytest.mark.parametrize("hub", [556, 1457, 1681, 1758])
 def test_a_hub_declares_nothing_that_reaches_a_heating_product(hub):
     """Touching a hub is the change that keeps happening. Bound what it can move."""
     hubFlags = set(get_model_infos(hub)) - {
