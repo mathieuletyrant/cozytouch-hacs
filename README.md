@@ -1,51 +1,51 @@
-# 🏠 Atlantic Cozytouch
+# Atlantic Cozytouch
 
-A Home Assistant integration for Atlantic's **Cozytouch** cloud — boilers, heat
+A Home Assistant integration for Atlantic's Cozytouch cloud -- boilers, heat
 pumps, water heaters, towel rails and air conditioners.
 
 Atlantic runs several protocols behind the Cozytouch brand. This one talks to
-the API the Cozytouch mobile app uses, which is **not** the one the official
-`overkiz` integration covers — so it fills the gap for the hardware Overkiz
+the API the Cozytouch mobile app uses, which is not the one the official
+`overkiz` integration covers -- so it fills the gap for the hardware Overkiz
 does not see.
 
-## 📬 Contact
+## Contact
 
 For anything about a device -- unmapped model, wrong entity, a value that reads
 nothing like the app -- open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
-and attach the diagnostics dump. It is not politeness : a report without the
-dump cannot be acted on, and an issue keeps the answer where the next person
-with that model will find it.
+and attach the diagnostics dump. A report without the dump cannot be acted on,
+and an issue keeps the answer where the next person with that model will find
+it.
 
 For anything else -- something you would rather not post in public, or a
 question that is not about the code -- <midtown_saucers9e@icloud.com>.
 
-## ✨ What you get
+## What it does
 
-- 🌡️ **Climate control** — temperature, mode and fan/swing on anything that has
-  them, with the room temperature read back.
-- 🗓️ **Weekly schedules** — read and write the program the device runs on its
-  own, and see it as a calendar on your dashboard.
-- 📊 **Sensors** — energy, water, wifi signal, decoded error codes and more, per
-  device.
-- 🤖 **Automations** — device triggers for schedule changes and program
-  overrides, on top of the ones Home Assistant builds itself.
-- 🩺 **One-click diagnostics** — an unmapped device says so on its own and hands
-  you everything needed to get it supported.
+You get the climate entity you would expect : temperature, mode, and fan and
+swing where the hardware has them, with the room temperature read back. On top
+of that :
 
-Everything runs over the cloud: **one login, one poll for the whole account**,
+- the weekly program the device runs on its own, read and written from Home
+  Assistant, and shown as a calendar
+- sensors per device for energy, water, wifi signal and decoded error codes
+- device triggers for schedule changes and program overrides, on top of the ones
+  Home Assistant builds itself
+- a diagnostics dump that an unmapped device points you at by itself
+
+Everything runs over the cloud : one login, one poll for the whole account,
 every 30 seconds by default.
 
-## 📋 Supported devices
+## Supported devices
 
 Every Cozytouch device is identified by a numeric `modelId`, and each one needs
 its own mapping before its capabilities turn into Home Assistant entities. The
 tables below are the whole of what is mapped today.
 
 Most of these mappings were built from a single user's capture of their own
-unit. They say what that device reported — not that every feature has been
+unit. They say what that device reported -- not that every feature has been
 exercised on every variant.
 
-### 🔥 Boilers / Chaudières
+### Boilers / Chaudières
 
 | modelId | Model |
 | ------: | ----- |
@@ -55,21 +55,21 @@ exercised on every variant.
 | 1444 | Naema 3 Micro 25 |
 | 1447 | Naema 3 Duo 25 |
 
-### ♨️ Heat pumps / Pompes à chaleur
+### Heat pumps / Pompes à chaleur
 
 | modelId | Model |
 | ------: | ----- |
 | 76 | Alfea Extensa Duo AI UE |
 | 211 | Alfea Extensa Duo A.I. 3 R32 |
 
-### 🎛️ Thermostats
+### Thermostats
 
 | modelId | Model |
 | ------: | ----- |
 | 235 | Thermostat Navilink Connect |
 | 418 | Atlantic Loria Duo 6006 |
 
-### 🚿 Water heaters / Chauffe-eau
+### Water heaters / Chauffe-eau
 
 | modelId | Model |
 | ------: | ----- |
@@ -100,7 +100,7 @@ exercised on every variant.
 | 2346 | Egeo VS 250L |
 | 2374 | Explorer EVO 3 (260L) |
 
-### 🧖 Towel racks / Sèche-serviettes
+### Towel racks / Sèche-serviettes
 
 | modelId | Model |
 | ------: | ----- |
@@ -114,7 +114,7 @@ exercised on every variant.
 | 1595 | Doris étroit 1300W CARAT |
 | 1622 | Thermor Riva 5 |
 
-### ❄️ Air conditioning / Climatisation
+### Air conditioning / Climatisation
 
 Room units do not talk to the cloud themselves : they sit behind a gateway,
 which reports each of them under its own `modelId`. Adding the gateway is what
@@ -125,7 +125,7 @@ brings the rooms in.
 | 557-561, 1734 | Air conditioner (room unit) |
 | 562-570 | Air conditioner user interface |
 
-### 📡 Gateways / Passerelles
+### Gateways / Passerelles
 
 | modelId | Model |
 | ------: | ----- |
@@ -136,21 +136,7 @@ brings the rooms in.
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
 
-### ✅ Confirmed on real hardware
-
-These are the devices the mappings were originally written against, and that are
-known to work end to end :
-
-  - `Atlantic Naema 2 Micro 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
-  - `Atlantic Naema 2 Duo 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
-  - `Atlantic Naia 2 Micro 25` gas boiler, through a `Navilink Radio-Connect 128` thermostat
-  - `Atlantic Loria Duo 6006 R32` heat pump, through a `Navilink Radio-Connect 128` thermostat
-  - `Takao M3` air conditioning
-  - `HUB Navizone` air conditioning gateway driving room units
-  - `Kelud 1750W` towel rack
-  - `Sauter Asama Connecté II Ventilo 1750W` towel rack
-
-### ❓ My device is not listed
+### My device is not listed
 
 It will show up as `Unknown product (…)`, and only its generic capabilities will
 work. Home Assistant says so on its own : an unmapped device raises a repair
@@ -180,59 +166,57 @@ If you want to see the unmapped capabilities as entities in the meantime, tick
 [Configuration](#configuration)). It is useful for working out what a value
 means, and noisy enough that you will want it off again afterwards.
 
-## 📦 Installation
+## Installation
 
-You can install it using HACS or manually.
+### With HACS
 
-#### With HACS
-
-This integration is not in the HACS default store, so add it as a custom repository first:
+This integration is not in the HACS default store, so add it as a custom
+repository first :
 
 [![Add HACS repository.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=mathieuletyrant&repository=cozytouch-hacs&category=integration)
 
-Or manually, in HACS : `⋮ -> Custom repositories`, URL `https://github.com/mathieuletyrant/cozytouch-hacs`, type `Integration`.
+Or by hand, in HACS : `⋮ -> Custom repositories`, URL
+`https://github.com/mathieuletyrant/cozytouch-hacs`, type `Integration`. More
+about HACS [here](https://hacs.xyz/).
 
-More informations about HACS [here](https://hacs.xyz/).
+### Manually
 
-#### Manually
+Clone this repository, copy `custom_components/cozytouch` into your Home
+Assistant config directory (so `config/custom_components/cozytouch`), and
+restart Home Assistant.
 
-Clone this repository and copy `custom_components/cozytouch` to your Home Assistant config durectory (ex : `config/custom_components/cozytouch`)
+## Configuration
 
-Restart Home Assistant.
+Go to `Settings -> Devices & Services -> Add an integration`, search for
+`cozytouch`, pick `Atlantic Cozytouch` and enter your Cozytouch credentials.
 
-## ⚙️ Configuration
-
-Once your Home Assistant has restarted, go to `Settings -> Devices & Services -> Add an  integration`.
-
-Search for `cozytouch` and select the `Atlantic Cozytouch` integration.
-
-Enter your Cozytouch credentials.
-
-If the connection works, you get the list of devices on your account: the
+If the connection works, you get the list of devices on your account : the
 gateway and each unit it reports. Tick the ones you want entities for. You get
-**one entry for the account**, with **one device per device you picked**, so the
+one entry for the account, with one device per device you picked, so the
 credentials are sent once and the account is polled once whatever you own.
 
 To add a device later, use `Add device` on the integration page. To stop
 following one, delete it from there.
 
-Values refresh every **30 seconds** by default. One request covers the whole
+Values refresh every 30 seconds by default. One request covers the whole
 account, so ticking more devices does not make the integration talk to Atlantic
 more often. You can change the interval under `Configure` on the integration
 page; 15 seconds is the lowest it accepts, and below that the requests stop
-buying anything — Atlantic's cloud hears from your hardware on its own
+buying anything -- Atlantic's cloud hears from your hardware on its own
 schedule, whatever we ask it.
 
-Only some values are mapped for now, you can select `Create entities for unknown capabilities` if you want to add all detected capabilities (this can be useful to help mapping). It applies to the whole account.
+Only some values are mapped so far. `Create entities for unknown capabilities`
+turns every capability the API reports into an entity, mapped or not, which is
+how a mapping gets worked out. It applies to the whole account.
 
-> **Upgrading from an earlier release** : the integration used to be set up
+> Upgrading from an earlier release : the integration used to be set up
 > one entry per device, and there is no automatic migration -- Home Assistant
 > will say the entry cannot be migrated. Remove the integration and add it
-> again. The devices and their entities are recreated
-> under the account, which means new entity ids, so a dashboard or an
-> automation naming them has to be pointed at the new ones.
+> again. The devices and their entities are recreated under the account, which
+> means new entity ids, so a dashboard or an automation naming them has to be
+> pointed at the new ones.
 
-## 🗓️ Scheduling
+## Scheduling
 
 Two actions write and read the weekly program the device holds itself, the one
 the Cozytouch app calls *Chauffage* and *Refroidissement*. It keeps running when
@@ -342,7 +326,7 @@ The times are read in Home Assistant's own timezone. The device stores minutes
 past midnight and nothing in the API says which clock those belong to, so a hub
 in a different timezone from the house it heats would show the program shifted.
 
-## 🏷️ Versioning
+## Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
 
@@ -353,7 +337,7 @@ workflow refuses to run while the manifest says something else, and otherwise
 tags the commit and writes the notes from the commit subjects since the
 previous tag.
 
-## 🙏 Credits
+## Credits
 
 This integration started as a fork of [gduteil/cozytouch](https://github.com/gduteil/cozytouch)
 and is now maintained independently here. All the original work is theirs.
