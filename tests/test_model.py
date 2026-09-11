@@ -573,6 +573,16 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1447,
+        {
+            "modelId": 1447,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Naema 3 Duo 25",
+            "type": CozytouchDeviceType.GAZ_BOILER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+        },
+    ),
+    (
         1543,
         {
             "modelId": 1543,

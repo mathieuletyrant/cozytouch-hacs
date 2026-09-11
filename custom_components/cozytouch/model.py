@@ -404,6 +404,14 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
+    elif modelId == 1447:
+        modelInfos.name = "Naema 3 Duo 25"
+        modelInfos.type = CozytouchDeviceType.GAZ_BOILER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
     elif modelId == 1543:
         modelInfos.name = "Asama Connecté II Ventilo 1750W Blanc"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK

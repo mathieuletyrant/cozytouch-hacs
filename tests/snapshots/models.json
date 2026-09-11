@@ -153,6 +153,19 @@
   "name": "Naema 3 Micro 25",
   "type": "gaz_boiler"
  },
+ "1447": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1447,
+  "name": "Naema 3 Duo 25",
+  "type": "gaz_boiler"
+ },
  "1457": {
   "HVACModes": {
    "0": "off"

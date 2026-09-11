@@ -42,6 +42,7 @@ exercised on every variant.
 | 61 | Naia 2 Micro 25 |
 | 65 | Naema 2 Duo 25 |
 | 1444 | Naema 3 Micro 25 |
+| 1447 | Naema 3 Duo 25 |
 
 ### ♨️ Heat pumps / Pompes à chaleur
 
