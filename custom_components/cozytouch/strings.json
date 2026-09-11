@@ -241,6 +241,7 @@
             "available_schedule_types": { "name": "Available Schedule Types" },
             "available_thermostat_modes": { "name": "Available Thermostat Modes" },
             "away_mode":                { "name": "Away Mode" },
+            "away_mode_cooling_temperature": { "name": "Away Mode Cooling Temperature" },
             "away_mode_start":          { "name": "Away Mode Start" },
             "away_mode_stop":           { "name": "Away Mode Stop" },
             "ble_pairing_compatibility": { "name": "BLE Pairing Compatibility" },

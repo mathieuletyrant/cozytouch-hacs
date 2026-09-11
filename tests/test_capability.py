@@ -18,6 +18,7 @@ added later joins these tests on its own.
 import pytest
 
 from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 AIR_CONDITIONERS = {557, 558, 559, 560, 561}
@@ -94,12 +95,25 @@ def test_a_flag_reaches_exactly_the_models_that_name_it(flag, owners):
     assert declared == owners
 
 
-def test_the_absence_setpoint_appears_exactly_where_its_flag_allows_it():
-    """Capability 172 follows awayModeTemperatureAvailable, for every model."""
+@pytest.mark.parametrize("capabilityId", [171, 172])
+def test_the_absence_setpoint_appears_exactly_where_its_flag_allows_it(capabilityId):
+    """Both halves of the setpoint follow awayModeTemperatureAvailable."""
     for modelId in sorted(MAPPED_MODEL_IDS):
         infos = get_model_infos(modelId)
-        mapped = bool(get_capability_infos(infos, 172, "20.0", {160, 161, 172}))
+        reported = {160, 161, 162, 163, capabilityId}
+        mapped = bool(get_capability_infos(infos, capabilityId, "20.0", reported))
         assert mapped is infos.get("awayModeTemperatureAvailable", True), modelId
+
+
+def test_the_cooling_absence_setpoint_is_read_only():
+    """171 is named and typed, but nothing has been seen writing it."""
+    infos = get_model_infos(1447)
+    capability = get_capability_infos(infos, 171, "35.0", {162, 163, 171})
+
+    assert capability is not None
+    assert capability.name == "away_mode_cooling_temperature"
+    assert capability.type is CapabilityType.TEMPERATURE
+    assert capability.enabled_by_default is False
 
 
 def test_the_eco_switch_appears_exactly_where_its_flag_allows_it():

@@ -204,6 +204,30 @@ capture corpus that report the id at all, always as 0/1. The companion
 103450 (`progMilestoneAnticipationState`, presumably "currently
 anticipating") appears on no captured hardware and stays self-describing.
 
+### Capability 171 `awayCooling` is read-only, where 172 is a number
+
+171 sits next to 172 `awayHeating`, which has been the writable
+`away_mode_temperature` since long before this entry. The name comes from the
+decompiled app (`research/Capability-Reference.md`), and the capture corpus
+agrees on the unit without exception : 35.0 on all eight models that report it
+(211, 422, 1444, 1693, 1715, 1758, 1941, 2145), against 17.0 for the heating
+side on the boiler the mapping was read from.
+
+What no capture shows is anything writing it. 172 is a number because the app
+offers that setting and a dump read the written value back ; nothing equivalent
+was seen for 171, and every reading of it is the same untouched 35.0. So it is
+a temperature sensor, diagnostic, `enabled_by_default` False -- the unit is
+known, the direction is not. Promoting it takes one person moving the absence
+cooling setpoint in the app and a dump showing 171 followed.
+
+It carries the same `awayModeTemperatureAvailable` gate as 172, for the reason
+given there : an air conditioner stores an absence setpoint and never acts on
+it.
+
+The heat-pump branch used to carry `# capability.highestValueCapabilityId =
+171` commented out, which would have read the absence setpoint as a maximum
+bound. It was never live and is now gone.
+
 ## `custom_components/cozytouch/select.py`
 
 ### The air-circulation duration is a select on the device's own grid

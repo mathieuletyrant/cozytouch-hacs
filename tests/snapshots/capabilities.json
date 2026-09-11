@@ -777,6 +777,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -2498,6 +2506,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -4217,6 +4233,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -5927,6 +5951,14 @@
     "modelId": 1641,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
    },
    "172": {
     "capabilityId": 172,
@@ -7647,6 +7679,7 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {},
    "172": {},
    "177": {
     "capabilityId": 177,
@@ -9393,6 +9426,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -11092,6 +11133,14 @@
     "modelId": 2374,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
    },
    "172": {
     "capabilityId": 172,
@@ -12814,6 +12863,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -14526,6 +14583,7 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {},
    "172": {},
    "177": {
     "capabilityId": 177,
@@ -16257,6 +16315,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
+   },
    "172": {
     "capabilityId": 172,
     "category": "sensor",
@@ -17969,6 +18035,14 @@
     "modelId": 562,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
    },
    "172": {
     "capabilityId": 172,
@@ -19684,6 +19758,14 @@
     "modelId": 76,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
    },
    "172": {
     "capabilityId": 172,
@@ -21401,6 +21483,14 @@
     "modelId": 999999,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "171": {
+    "capabilityId": 171,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "away_mode_cooling_temperature",
+    "type": "temperature"
    },
    "172": {
     "capabilityId": 172,

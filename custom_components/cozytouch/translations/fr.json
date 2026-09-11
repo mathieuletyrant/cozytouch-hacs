@@ -241,6 +241,7 @@
             "available_schedule_types": { "name": "Types de programme disponibles" },
             "available_thermostat_modes": { "name": "Modes thermostat disponibles" },
             "away_mode":                { "name": "Absence" },
+            "away_mode_cooling_temperature": { "name": "Température Absence Froid" },
             "away_mode_start":          { "name": "Absence Début" },
             "away_mode_stop":           { "name": "Absence Fin" },
             "ble_pairing_compatibility": { "name": "Compatibilité d'appairage BLE" },

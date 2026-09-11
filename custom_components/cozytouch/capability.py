@@ -215,8 +215,6 @@ def get_capability_infos(  # noqa: C901
                 else:
                     capability.currentValueCapabilityId = None
 
-            # capability.lowestValueCapabilityId = 172
-            # capability.highestValueCapabilityId = 171
             del capability.lowestValueCapabilityId
             del capability.highestValueCapabilityId
             capability.icon = "mdi:heat-pump"
@@ -538,6 +536,19 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.PERCENTAGE
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:radio-tower"
+
+    elif capabilityId == 171:
+        # The cooling half of the absence setpoint, 172 being the heating one.
+        # Read-only where 172 is a number : the app names it, and every capture
+        # agrees on the unit, but nothing has been seen writing it. See
+        # docs/decisions.md.
+        if not modelInfos.get("awayModeTemperatureAvailable", True):
+            return CapabilityInfos()
+
+        capability.name = "away_mode_cooling_temperature"
+        capability.type = CapabilityType.TEMPERATURE
+        capability.category = CapabilityCategory.DIAG
+        capability.enabled_by_default = False
 
     elif capabilityId == 172:
         # Absence setpoint. Only the heating products act on it. An air
