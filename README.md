@@ -8,6 +8,17 @@ the API the Cozytouch mobile app uses, which is **not** the one the official
 `overkiz` integration covers — so it fills the gap for the hardware Overkiz
 does not see.
 
+## 📬 Contact
+
+For anything about a device -- unmapped model, wrong entity, a value that reads
+nothing like the app -- open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
+and attach the diagnostics dump. It is not politeness : a report without the
+dump cannot be acted on, and an issue keeps the answer where the next person
+with that model will find it.
+
+For anything else -- something you would rather not post in public, or a
+question that is not about the code -- <midtown_saucers9e@icloud.com>.
+
 ## ✨ What you get
 
 - 🌡️ **Climate control** — temperature, mode and fan/swing on anything that has
@@ -341,17 +352,6 @@ released ; then a `Release` workflow dispatch naming that same version. The
 workflow refuses to run while the manifest says something else, and otherwise
 tags the commit and writes the notes from the commit subjects since the
 previous tag.
-
-## 📬 Contact
-
-For anything about a device -- unmapped model, wrong entity, a value that reads
-nothing like the app -- open an [issue](https://github.com/mathieuletyrant/cozytouch-hacs/issues)
-and attach the diagnostics dump. It is not politeness : a report without the
-dump cannot be acted on, and an issue keeps the answer where the next person
-with that model will find it.
-
-For anything else -- something you would rather not post in public, or a
-question that is not about the code -- <midtown_saucers9e@icloud.com>.
 
 ## 🙏 Credits
 
