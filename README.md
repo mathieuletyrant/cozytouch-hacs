@@ -17,7 +17,7 @@ and an issue keeps the answer where the next person with that model will find
 it.
 
 For anything else -- something you would rather not post in public, or a
-question that is not about the code -- <mathieu.letyrant@proton.me>.
+question that is not about the code -- <midtown_saucers9e@icloud.com>.
 
 ## ✨ What it does
 
