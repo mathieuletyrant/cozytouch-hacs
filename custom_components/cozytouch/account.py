@@ -33,7 +33,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
-from .model import CozytouchDeviceType, get_model_infos
+from .model import CozytouchDeviceType, get_device_model_infos
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -457,7 +457,6 @@ class CozytouchAccount:
                     "modelId": remote_device["modelId"],
                     "productId": remote_device["productId"],
                     "zoneId": remote_device["zoneId"],
-                    "modelInfos": get_model_infos(remote_device["modelId"]),
                     "capabilities": [],
                     "tags": [],
                 }
@@ -719,7 +718,7 @@ class CozytouchAccount:
         """
         summaries = []
         for dev in self.devices:
-            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            modelInfos = get_device_model_infos(self.devices, dev)
             if modelInfos.type is CozytouchDeviceType.ZONE:
                 continue
 
@@ -761,7 +760,7 @@ class CozytouchAccount:
             # The name, because a zone is recognised by it rather than by an
             # id: without it a THZONE reads as an unknown product and the
             # repair asks for a dump about it, once per zone.
-            if get_model_infos(dev["modelId"], deviceName=dev.get("name")).type
+            if get_device_model_infos(self.devices, dev).type
             is CozytouchDeviceType.UNKNOWN
         }
 

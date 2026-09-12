@@ -21,7 +21,7 @@ from .account import (
 from .capability import get_capability_infos
 from .const import DOMAIN
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
-from .model import CozytouchDeviceType, get_model_infos
+from .model import CozytouchDeviceType, get_device_model_infos, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -416,8 +416,8 @@ class Hub(DataUpdateCoordinator):
                                 zoneId = masterDev["zoneId"]
                                 break
 
-                return get_model_infos(
-                    dev["modelId"], self.get_zone_name(zoneId), dev.get("name")
+                return get_device_model_infos(
+                    self._account.devices, dev, self.get_zone_name(zoneId)
                 )
 
         return get_model_infos(-1)
@@ -496,9 +496,7 @@ class Hub(DataUpdateCoordinator):
         capabilities = []
         for dev in self._account.devices:
             if dev["deviceId"] == deviceId:
-                modelInfos = get_model_infos(
-                    dev["modelId"], deviceName=dev.get("name")
-                )
+                modelInfos = get_device_model_infos(self._account.devices, dev)
                 availableCapabilityIds = {
                     cap["capabilityId"] for cap in dev["capabilities"]
                 }
@@ -553,7 +551,7 @@ class Hub(DataUpdateCoordinator):
             if dev["deviceId"] != deviceId:
                 continue
 
-            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
+            modelInfos = get_device_model_infos(self._account.devices, dev)
             availableCapabilityIds = {
                 cap["capabilityId"] for cap in dev["capabilities"]
             }
@@ -602,17 +600,14 @@ class Hub(DataUpdateCoordinator):
 
         devices = []
         for dev in self._account.devices:
+            modelInfos = get_device_model_infos(self._account.devices, dev)
             # Zones are not hardware anybody has to map, and a dump is read to
             # find hardware that is. Listing them put two capability ids that
             # resolve to nothing -- one of them declined on purpose -- in front
             # of whoever reads it, which reads exactly like work to do.
-            if (
-                get_model_infos(dev["modelId"], deviceName=dev.get("name")).type
-                is CozytouchDeviceType.ZONE
-            ):
+            if modelInfos.type is CozytouchDeviceType.ZONE:
                 continue
 
-            modelInfos = get_model_infos(dev["modelId"], deviceName=dev.get("name"))
             mapped, unmapped = self.get_capability_names(dev["deviceId"])
 
             devices.append(

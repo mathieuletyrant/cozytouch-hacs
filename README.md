@@ -114,6 +114,16 @@ exercised on every variant.
 | 1595 | Doris étroit 1300W CARAT |
 | 1622 | Thermor Riva 5 |
 
+### 🔥 Radiators / Radiateurs
+
+Like the air conditioner room units below, these sit behind a gateway which
+reports each room under its own `modelId`. The ids are the *room's* index and
+overlap with the air conditioners'; what tells them apart is the gateway.
+
+| modelId | Model |
+| ------: | ----- |
+| 557-561, behind a CozyBox (2447) | Radiator (room unit) |
+
 ### ❄️ Air conditioning / Climatisation
 
 Room units do not talk to the cloud themselves : they sit behind a gateway,
@@ -122,7 +132,7 @@ brings the rooms in.
 
 | modelId | Model |
 | ------: | ----- |
-| 557-561, 1734-1737 | Air conditioner (room unit) |
+| 557-561 (behind a Naviclim or Navizone), 1734-1737 | Air conditioner (room unit) |
 | 562-570 | Air conditioner user interface |
 
 ### 📡 Gateways / Passerelles

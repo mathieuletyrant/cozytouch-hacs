@@ -12,6 +12,13 @@ from .infos import (
 )
 from .model import CozytouchDeviceType
 
+# The API's own families split the electric heaters in two -- Radiator and
+# Towel_Dryer -- and the mapping follows, because "seche-serviettes" in front
+# of a radiator is what gduteil/cozytouch#172 was about. Same wiring on this
+# side of it : both report the same ids and mean the same things by them. The
+# one place they part is 100506, below.
+ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
+
 PROG_DAYS = (
     "monday",
     "tuesday",
@@ -171,7 +178,7 @@ def get_capability_infos(  # noqa: C901
             capability.progOverrideCapabilityId = 157
             capability.progOverrideTotalTimeCapabilityId = 158
             capability.progOverrideTimeCapabilityId = 159
-        elif modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
+        elif modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "heat"
             capability.icon = "mdi:heating-coil"
             capability.progCapabilityId = 184
@@ -441,7 +448,7 @@ def get_capability_infos(  # noqa: C901
             capability.timestampsCapabilityId = 226
 
     elif capabilityId == 153:
-        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
+        if modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "resistance"
             capability.icon = "mdi:radiator"
         else:
@@ -468,7 +475,7 @@ def get_capability_infos(  # noqa: C901
     #    return CapabilityInfos()
 
     elif capabilityId == 158:
-        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
+        if modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "override_total_time"
         else:
             capability.name = "override_total_time_z1"
@@ -480,7 +487,7 @@ def get_capability_infos(  # noqa: C901
         capability.highest_value = 24
 
     elif capabilityId == 159:
-        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
+        if modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "override_remain_time"
         else:
             capability.name = "override_remain_time_z1"
@@ -861,6 +868,9 @@ def get_capability_infos(  # noqa: C901
         capability.icon = "mdi:wind-power"
 
     elif capabilityId == 100506:
+        # Towel dryers only: no capture has one reporting it, and the branch
+        # predates the room radiators, which do report it and are sold on the
+        # presence detection.
         if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
             capability = CapabilityInfos()
         else:
