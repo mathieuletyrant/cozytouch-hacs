@@ -187,6 +187,7 @@ class CapabilityInfos(AttributeDict):
     highestCoolValueCapabilityId: int
     stepCapabilityId: int
     hvacActionCapabilityId: int
+    heatingActiveCapabilityId: int
     airCirculationCapabilityId: int
     progCapabilityId: int
     progOverrideCapabilityId: int
