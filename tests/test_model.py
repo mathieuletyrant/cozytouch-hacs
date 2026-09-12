@@ -27,7 +27,11 @@ from custom_components.cozytouch.const import (
     SWING_MODE_MIDDLE_UP,
     SWING_MODE_UP,
 )
-from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
+from custom_components.cozytouch.model import (
+    CozytouchDeviceType,
+    get_device_model_infos,
+    get_model_infos,
+)
 from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     FAN_AUTO,
@@ -966,3 +970,57 @@ def test_an_unmapped_model_falls_through_to_unknown():
     infos = get_model_infos(424242)
     assert infos["type"] == CozytouchDeviceType.UNKNOWN
     assert infos["name"] == "Unknown product (424242)"
+
+
+# --------------------------------------------------------- the room slots
+
+
+@pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
+def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId):
+    """557-561 is the room's index under a hub and says nothing about the
+    hardware : the same ids, productIds and ROOM_n names arrive behind a
+    Navizone driving air conditioners and behind a CozyBox driving connected
+    electric radiators. gduteil/cozytouch#172 is the second case.
+    """
+    infos = get_model_infos(modelId, "Billard R-1", f"ROOM_{modelId - 557}", 2447)
+
+    assert infos["type"] is CozytouchDeviceType.RADIATOR
+    assert infos["name"] == "Radiator (Billard R-1)"
+    assert infos["HVACModes"] == {0: HVACMode.OFF, 4: HVACMode.HEAT}
+
+
+def test_a_room_slot_without_its_zone_is_numbered_like_the_air_conditioners():
+    assert get_model_infos(560, None, "ROOM_3", 2447)["name"] == "Radiator (#4)"
+
+
+@pytest.mark.parametrize("masterModelId", [None, 556, 1681, 1758])
+def test_a_room_slot_behind_anything_else_stays_an_air_conditioner(masterModelId):
+    """The narrow rule is the point : one account is the whole of what says a
+    CozyBox drives radiators, so every other hub keeps the answer it had.
+    """
+    infos = get_model_infos(557, "Chambre parentale", "ROOM_0", masterModelId)
+
+    assert infos["type"] is CozytouchDeviceType.AC
+
+
+def test_the_hub_a_device_hangs_off_is_read_off_the_account():
+    """What a caller actually has is the device list, and the master is
+    resolved through it -- a child whose hub is not on the account falls back
+    to the answer the id alone gives.
+    """
+    cozybox = {"deviceId": 28008536, "modelId": 2447, "name": "CozyBox"}
+    room = {
+        "deviceId": 28008564,
+        "modelId": 560,
+        "name": "ROOM_3",
+        "masterDeviceId": 28008536,
+    }
+
+    assert (
+        get_device_model_infos([cozybox, room], room, "Billard R-1")["type"]
+        is CozytouchDeviceType.RADIATOR
+    )
+    assert (
+        get_device_model_infos([room], room, "Billard R-1")["type"]
+        is CozytouchDeviceType.AC
+    )

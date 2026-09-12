@@ -162,6 +162,7 @@ def test_a_hub_declares_nothing_that_reaches_a_heating_product(hub):
             CozytouchDeviceType.HEAT_PUMP,
             CozytouchDeviceType.WATER_HEATER,
             CozytouchDeviceType.TOWEL_RACK,
+            CozytouchDeviceType.RADIATOR,
             CozytouchDeviceType.THERMOSTAT,
         )
     }

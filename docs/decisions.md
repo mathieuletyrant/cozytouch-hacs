@@ -270,6 +270,57 @@ whether the app exposes it. The `(#n)` numbering was left alone rather than
 made to read `#6` for 1734 : it would rename an existing model's fallback on
 the strength of one household's slot order.
 
+### A room slot is whatever its gateway drives, not an air conditioner (issue #172)
+
+`557-561` was read as "air conditioner room unit" from the accounts that had
+one. It is not a product: it is the *room's index* behind a gateway. Issue
+gduteil/cozytouch#172 (September 2026) is the same five ids reporting Sauter
+connected radiators, and the two are indistinguishable device-side:
+
+| | Navizone account (Mathieu, 28/08) | CozyBox account (issue #172) |
+| - | - | - |
+| `modelId` / `productId` | 557-559 / 26-28 | 557-560 / 26-29 |
+| `longName` | `ROOM_0`… | `ROOM_0`… |
+| `modelFamily`, `productRange` | null | null |
+| gateway | 1758, `Air_Conditioning` | 2447, `Connectivity_Box` |
+
+So the gateway is the only thing that differs, and `get_model_infos` gains a
+fourth input for it. Resolving it needs the account's whole device list
+(`masterDeviceId` is an id, not a model), which is why every caller now goes
+through `get_device_model_infos(devices, dev, zoneName)` instead of calling
+the table with a bare model id -- a caller that passed the id alone got the
+wrong answer silently, and there were seven of them.
+
+The radiators get `CozytouchDeviceType.RADIATOR`, a member added next to
+`TOWEL_RACK` rather than reusing it: the API's own `ProductMainFamily` splits
+`Radiator` from `Towel_Dryer` (`research/data/model_families.txt`), and the
+reporter's first complaint after "it is not an air conditioner" would have
+been "it is not a towel rail". The wiring is the towel rail's, via
+`ELECTRIC_HEATERS` in `capability.py`; the one id where they part is 100506,
+which stays dropped for towel dryers only -- no capture has one reporting it,
+and the room radiators both report it and are sold on presence detection.
+
+Limits, and they are real.
+
+*The gateway is a proxy, not the answer.* Sauter sells the CozyBox for
+radiators **and** heat pumps, so "behind a 2447" does not mean "radiator" in
+general -- it means "not an air conditioner", which is the half that fixes
+this report. A CozyBox driving a reversible heat pump would be named wrong
+here. It stays this way because the alternative is worse: nothing the child
+reports separates the two. The corpus was checked id by id --
+
+- 100022 (`supportedSystemOperatingMode`, the HVAC-mode bitmask) reads 415 on
+  the radiators and 415 on the 1734-1737 air conditioners. Useless.
+- 166 reads 17 = {off, heat} on the radiators, but it is the *currently
+  permitted* mask: the same Navizone air conditioners read 9 = {off, cool}
+  under a summer lock and 411 elsewhere. An air conditioner under a winter
+  lock would read 17 too.
+- presence of 100800/100802/100804 (fan, quiet, louver) does not split them
+  either: the radiators report all three and the Navizone units report none.
+
+*One account.* Four rooms behind one CozyBox is the whole of the evidence,
+and the commands were never tested -- the reporter said as much.
+
 ## `custom_components/cozytouch/select.py`
 
 ### The air-circulation duration is a select on the device's own grid

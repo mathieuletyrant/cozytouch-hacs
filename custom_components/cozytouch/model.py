@@ -57,6 +57,7 @@ class CozytouchDeviceType(StrEnum):
     HEAT_PUMP = "heat_pump"
     WATER_HEATER = "water_heater"
     TOWEL_RACK = "towel_rack"
+    RADIATOR = "radiator"
     AC = "ac"
     AC_CONTROLLER = "ac_controller"
     HUB = "hub"
@@ -73,10 +74,35 @@ class CozytouchDeviceType(StrEnum):
 ZONE_NAME_PREFIX = "THZONE"
 
 
+def get_device_model_infos(
+    devices: list[dict], dev: dict, zoneName: str | None = None
+) -> ModelInfos:
+    """The table's answer for one device, given every device on its account.
+
+    The entry point every caller uses, because two of the table's inputs are
+    properties of the account rather than of the device : the name a zone is
+    recognised by, and the model id of the hub the device hangs off -- which is
+    what says whether a room slot is a radiator or an air conditioner. A caller
+    that passed the model id alone got the wrong one of those, silently.
+    """
+    masterDeviceId = dev.get("masterDeviceId")
+    masterModelId = next(
+        (
+            master["modelId"]
+            for master in devices
+            if master["deviceId"] == masterDeviceId
+        ),
+        None,
+    )
+
+    return get_model_infos(dev["modelId"], zoneName, dev.get("name"), masterModelId)
+
+
 def get_model_infos(  # noqa: C901
     modelId: int,
     zoneName: str | None = None,
     deviceName: str | None = None,
+    masterModelId: int | None = None,
 ) -> ModelInfos:
     """Return infos from model ID.
 
@@ -88,6 +114,11 @@ def get_model_infos(  # noqa: C901
     `deviceName` is the exception to that: a zone is recognised by the name the
     API gives it, before any id is looked at, because the ids are per zone
     rather than per product.
+
+    `masterModelId` is the second one: a room slot's id says which room, not
+    what the hardware is, so the hub it hangs off is what tells a radiator from
+    an air conditioner. None when the device has no hub, or when the account
+    does not hold it.
     """
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
@@ -260,6 +291,23 @@ def get_model_infos(  # noqa: C901
         modelInfos.awayModeTemperatureAvailable = False
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
+        }
+
+    elif masterModelId == 2447 and 557 <= modelId <= 561:
+        # A room slot behind a hub, not a product: 557-561 is the room's index
+        # and says nothing about the hardware. Behind a CozyBox the slot is a
+        # connected electric radiator, behind a Naviclim or Navizone a room air
+        # conditioner unit -- same ids, same productIds, same ROOM_n name.
+        # See docs/decisions.md.
+        modelInfos.name = (
+            "Radiator (" + zoneName + ")"
+            if zoneName is not None
+            else "Radiator (#" + str(modelId - 556) + ")"
+        )
+        modelInfos.type = CozytouchDeviceType.RADIATOR
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
         }
 
     elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
