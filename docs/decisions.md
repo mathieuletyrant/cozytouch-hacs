@@ -315,8 +315,59 @@ any other. **The nine Alfea heat pumps the same sweep returned (25, 29, 32,
 capture. Naming them would mean guessing which zones they report, which is
 the one thing this table must not do.
 
-The sweep itself stopped at model id 56 (`research/fetch_model_catalogue.py`
-is resumable); the rest of the range is unread.
+The sweep itself stopped at model id 56 when this was written
+(`research/fetch_model_catalogue.py` is resumable); it has since been finished,
+and what that changed is the entry below.
+
+### The whole catalogue ships, as a name and nothing more
+
+`research/fetch_model_catalogue.py` finished the sweep the boilers entry above
+started : 1759 rows, every id `GET /magellan/productmodels/models/{id}` answers
+for, up to 2450. `model_catalogue.py` is that table, verbatim, minus the 101
+rows whose name is a firmware slot rather than a product -- `BD1 DEFAULT`,
+`ROOM_0`, `UI_3`, the `GENERATOR_n` nodes. 1583 names, of which 1526 belong to
+ids this table has no branch for.
+
+It is read in one place, the fall-through at the end of `get_model_infos`, and
+it sets the name and nothing else. The type stays `UNKNOWN`, the modes stay the
+off/heat pair the fall-through always gave, and `get_unmapped_models` keys on
+the type -- so every repair that asked its owner for a dump still asks. What
+changes is that the dialog is about "Alfea Extensa A.I. 3 R32" instead of
+"Unknown product (207)", which is the difference between a reporter recognising
+their hardware and not.
+
+This is the opposite trade from the boilers above, and deliberately so. Mapping
+a model *silences* the repair, which is why only 38 of these 1583 were mapped :
+naming one in the fall-through costs nothing, because the signal that the model
+exists is untouched. The names are kept in the vendor's own spelling, capitals
+and all -- `BILBAO 4 H 0750W BLC` reads oddly in Home Assistant, but inventing
+a prettier form for 1526 products nobody here has seen would be a guess per
+product.
+
+Limits. A name is all it is : no capabilities, no modes, no flags, and no type.
+`productId` was dropped from the shipped table -- it groups the catalogue into
+families (1 boilers, 2 heat pumps, 47/62 water heaters, 53/64 radiators) and
+that grouping is exactly the inference the boilers entry argues has to be
+earned family by family, not read off a column.
+
+### Seven names the vendor spells differently
+
+The same sweep is checkable against the branches, and it contradicts seven of
+them on a point of fact rather than of style :
+
+| id | was | now | what the catalogue says |
+| -: | --- | --- | --- |
+| 418 | Atlantic Loria Duo 6006 | Loria 3 Duo R32 | 416-425 is a contiguous Loria R32 block; 418 is `LORIA 3 DUO R32`, and the Loria Duo 4/6-8 are ids 575-578 |
+| 1543, 1546, 1547, 1551 | Asama Connecté II **Ventilo** … | Asama Connecté II … | the catalogue enumerates the whole line as wattage × colour (1540-1555) with no Ventilo variant, and these four land on a cell each |
+| 1622 | Thermor Riva 5 | Riva 5 étroit 1300W BLC | `RIVA 5 ETROIT 1300W BLC BRI`; the plain Riva 5 is 1559-1561 |
+| 2374 | Explorer EVO 3 (260L) | Explorer EVO 3 (270L) | `AE CV5 DACH FS 270L PE COIL (DE)` |
+
+The forty-odd other disagreements are left alone : they are the branches
+spelling a readable name where the catalogue has an internal reference
+(`Calypso 200L` against `TD 200 VS AT 1200M TYB V5S`) or a slot placeholder
+(`Naviclim Hub` against `CLIF Default`), and the readable one is the point.
+Nothing here touches a type, a mode or a flag -- the seven are names on
+hardware nobody here owns, and the evidence is a name.
 
 ### A room slot is whatever its gateway drives, not an air conditioner (issue #172)
 

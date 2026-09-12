@@ -101,10 +101,13 @@ model named here still needs a dump before it can claim anything a device
 question about. Nothing here is worth turning into a crawl of somebody else's
 production API.
 
-Measured against ids 1-784: of the 46 mapped in that range, 28 carry the
-vendor's name character for character. The three that disagree are recorded in
-`docs/decisions.md`; the rest are the room and interface slots, whose internal
-`ROOM_n` / `UI_n` names this table deliberately does not use.
+The sweep is now complete: ids 1-2450, 1759 rows, and it ships as
+`custom_components/cozytouch/model_catalogue.py` -- the name an unmapped model
+arrives under, and nothing else (`docs/decisions.md`). Measured against the
+branches: of the 110 mapped ids the catalogue also names, 65 carry the vendor's
+name character for character, seven disagreed on a point of fact and were
+changed, and the rest are the room and interface slots and the readable names
+this table keeps where the catalogue has an internal reference.
 
 ## There is no capability catalogue
 

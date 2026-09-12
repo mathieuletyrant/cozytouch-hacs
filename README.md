@@ -76,7 +76,7 @@ rooms in.
 | modelId | Model |
 | ------: | ----- |
 | 235 | Thermostat Navilink Connect |
-| 418 | Atlantic Loria Duo 6006 |
+| 418 | Loria 3 Duo R32 |
 
 ### 🚿 Water heaters / Chauffe-eau
 
@@ -107,7 +107,7 @@ rooms in.
 | 1962 | Thermor Malicio 3 65L |
 | 1966 | Thermor Malicio 3 120L |
 | 2346 | Egeo VS 250L |
-| 2374 | Explorer EVO 3 (260L) |
+| 2374 | Explorer EVO 3 (270L) |
 
 ### 🧖 Towel racks / Sèche-serviettes
 
@@ -116,12 +116,12 @@ rooms in.
 | 1381 | KELUD 1750W BLC |
 | 1382 | KELUD 1750W Anthracite Standard |
 | 1388, 1588 | Doris étroit 1500W BLC |
-| 1543 | Asama Connecté II Ventilo 1750W Blanc |
-| 1546 | Asama Connecté II Ventilo 1500W ANTH |
-| 1547 | Asama Connecté II Ventilo 1750W ANTH |
-| 1551 | Asama Connecté II Ventilo 1750W Noir |
+| 1543 | Asama Connecté II 1750W Blanc |
+| 1546 | Asama Connecté II 1500W ANTH |
+| 1547 | Asama Connecté II 1750W ANTH |
+| 1551 | Asama Connecté II 1750W Noir |
 | 1595 | Doris étroit 1300W CARAT |
-| 1622 | Thermor Riva 5 |
+| 1622 | Riva 5 étroit 1300W BLC |
 
 ### 🏠 Room slots / Emplacements de pièce
 
@@ -155,8 +155,9 @@ that is the bug -- send the diagnostics dump and say which gateway it sits on.
 
 ### ❓ My device is not listed
 
-It will show up as `Unknown product (…)`, and only its generic capabilities will
-work. Home Assistant says so on its own : an unmapped device raises a repair
+It will show up under its commercial name if Atlantic's own catalogue knows the
+model, and as `Unknown product (…)` otherwise -- either way only its generic
+capabilities will work, because a name is all the catalogue gives. Home Assistant says so on its own : an unmapped device raises a repair
 under `Settings -> System -> Repairs`. Opening it hands you a link to an issue
 already carrying every unmapped model on the account, with the capability ids
 nothing names for each and nothing else about your home -- so a gateway with
@@ -372,7 +373,7 @@ here because they did it :
 | FLAT/S4 IOTHUB gateway | 1763 | [@Joonel](https://github.com/Joonel) |
 | Thermor Malicio 3 65L | 1962 | [@genmllc](https://github.com/genmllc) |
 | Egeo VS 250L | 2346 | [@Mathieu-Pasco-Breillot](https://github.com/Mathieu-Pasco-Breillot) |
-| Explorer EVO 3 (260L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
+| Explorer EVO 3 (270L) | 2374 | [@StefanWokusch](https://github.com/StefanWokusch) |
 | Calypso SPLIT VM 200L | 1368 | [@mplessis](https://github.com/mplessis) |
 | CV5 Aeromax Premium 100L | 1669 | [@Racailloux](https://github.com/Racailloux) |
 

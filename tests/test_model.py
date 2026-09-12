@@ -32,6 +32,7 @@ from custom_components.cozytouch.model import (
     get_device_model_infos,
     get_model_infos,
 )
+from custom_components.cozytouch.model_catalogue import MODEL_CATALOGUE
 from homeassistant.components.climate import HVACMode
 from homeassistant.components.climate.const import (
     FAN_AUTO,
@@ -264,7 +265,7 @@ MODEL_GROUPS = [
         {
             "modelId": 418,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Atlantic Loria Duo 6006",
+            "name": "Loria 3 Duo R32",
             "type": CozytouchDeviceType.THERMOSTAT,
             "exhaustTemperatureAvailable": True,
             "currentTemperatureAvailableZ1": True,
@@ -633,7 +634,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1543,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II Ventilo 1750W Blanc",
+            "name": "Asama Connecté II 1750W Blanc",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -643,7 +644,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1546,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II Ventilo 1500W ANTH",
+            "name": "Asama Connecté II 1500W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -653,7 +654,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1547,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II Ventilo 1750W ANTH",
+            "name": "Asama Connecté II 1750W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -663,7 +664,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1551,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II Ventilo 1750W Noir",
+            "name": "Asama Connecté II 1750W Noir",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -673,7 +674,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1622,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Thermor Riva 5",
+            "name": "Riva 5 étroit 1300W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -869,7 +870,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2374,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Explorer EVO 3 (260L)",
+            "name": "Explorer EVO 3 (270L)",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -970,6 +971,21 @@ def test_an_unmapped_model_falls_through_to_unknown():
     infos = get_model_infos(424242)
     assert infos["type"] == CozytouchDeviceType.UNKNOWN
     assert infos["name"] == "Unknown product (424242)"
+
+
+def test_an_unmapped_model_the_vendor_names_arrives_under_that_name():
+    """The catalogue names a model the table has no branch for -- and names it
+    only : it stays UNKNOWN, which is what the repair asking for a dump reads.
+    """
+    infos = get_model_infos(207)
+    assert infos["name"] == "Alfea Extensa A.I. 3 R32"
+    assert infos["type"] == CozytouchDeviceType.UNKNOWN
+
+
+def test_a_mapped_model_ignores_the_catalogue():
+    """The branches win : several spell a name the vendor's table does not."""
+    assert MODEL_CATALOGUE[1457] == "HUB ATLANTIC COZYTOUCH"
+    assert get_model_infos(1457)["name"] == "HUB Cozytouch"
 
 
 # --------------------------------------------------------- the room slots
