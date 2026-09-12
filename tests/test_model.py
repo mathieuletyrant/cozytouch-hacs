@@ -4,8 +4,8 @@ get_model_infos is the single place that says what a device can do: capability.p
 reads the flags it returns to decide which entities to create, so a group that
 silently gains or loses one changes the entity list of every user who owns that
 hardware. One case per branch of the table, plus the ids inside a branch that
-resolve differently -- 1734 shares the air conditioner branch with 557-561 but
-comes out with its own set of flags, and only a case each pins that down.
+resolve differently -- 1734-1737 share the air conditioner branch with 557-561
+but come out with their own set of flags, and only a case each pins that down.
 
 These are characterisation tests. The expectations were read off the mapping as
 it stands, so they say nothing about whether a model is mapped *correctly* --
@@ -382,6 +382,37 @@ MODEL_GROUPS = [
             "modelId": 1734,
             "HVACModesCapabilityId": {7, 8},
             "name": "Air Conditioner (#1)",
+            "type": CozytouchDeviceType.AC,
+            "quietModeAvailable": True,
+            "awayModeTemperatureAvailable": False,
+            "AirCirculationSpeeds": {
+                1: AIR_CIRCULATION_SPEED_LOW,
+                2: AIR_CIRCULATION_SPEED_MEDIUM,
+                3: AIR_CIRCULATION_SPEED_HIGH,
+            },
+            "fanModes": {1: FAN_LOW, 2: FAN_MEDIUM, 3: FAN_HIGH, 5: FAN_AUTO},
+            "swingModes": {
+                1: SWING_MODE_UP,
+                2: SWING_MODE_MIDDLE_UP,
+                3: SWING_MODE_MIDDLE_DOWN,
+                4: SWING_MODE_DOWN,
+            },
+            "HVACModes": {
+                0: HVACMode.OFF,
+                1: HVACMode.AUTO,
+                3: HVACMode.COOL,
+                4: HVACMode.HEAT,
+                7: HVACMode.FAN_ONLY,
+                8: HVACMode.DRY,
+            },
+        },
+    ),
+    (
+        1737,
+        {
+            "modelId": 1737,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Air Conditioner (#4)",
             "type": CozytouchDeviceType.AC,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,

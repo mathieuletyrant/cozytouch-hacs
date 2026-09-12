@@ -518,6 +518,114 @@
   },
   "type": "ac"
  },
+ "1735": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 1735,
+  "name": "Air Conditioner (#2)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "1736": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 1736,
+  "name": "Air Conditioner (#3)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
+ "1737": {
+  "AirCirculationSpeeds": {
+   "1": "low",
+   "2": "medium",
+   "3": "high"
+  },
+  "HVACModes": {
+   "0": "off",
+   "1": "auto",
+   "3": "cool",
+   "4": "heat",
+   "7": "fan_only",
+   "8": "dry"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "fanModes": {
+   "1": "low",
+   "2": "medium",
+   "3": "high",
+   "5": "auto"
+  },
+  "modelId": 1737,
+  "name": "Air Conditioner (#4)",
+  "quietModeAvailable": true,
+  "swingModes": {
+   "1": "up",
+   "2": "middle_up",
+   "3": "middle_down",
+   "4": "down"
+  },
+  "type": "ac"
+ },
  "1758": {
   "HVACModes": {
    "0": "off"

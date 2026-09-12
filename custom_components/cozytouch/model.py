@@ -253,7 +253,7 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif (modelId >= 557 and modelId <= 561) or modelId == 1734:
+    elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
         name = "Air Conditioner "
         if zoneName is not None:
             modelInfos.name = name + "(" + zoneName + ")"
@@ -267,8 +267,8 @@ def get_model_infos(  # noqa: C901
         modelInfos.awayModeTemperatureAvailable = False
 
         # The room units behind a Naviclim/Navizone hub report 100507, but the
-        # Cozytouch app offers no eco mode for them anywhere. 1734 is a separate
-        # product and is left alone, no report either way on that one.
+        # Cozytouch app offers no eco mode for them anywhere. 1734-1737 are
+        # left alone, no report either way on those -- see docs/decisions.md.
         if modelId <= 561:
             modelInfos.ecoModeAvailable = False
 
