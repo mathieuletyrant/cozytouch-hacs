@@ -187,6 +187,36 @@ per-device connectivity sensor would come from `isAvailable`, the way the app
 does it. The `4` reading is still unexplained. Research in
 `research/FINDINGS.md`.
 
+### An electric heater's action is the element (153), not the mode (181)
+
+181 carries the mode a device is really running, as against the one it was
+asked for, and the climate entity turns it into an `HVACAction`. On a radiator
+that reads `heating` from the moment the thing is switched on : 181 says heat,
+and heat is what it says whether or not the element is drawing.
+
+gduteil/cozytouch#68 is that seen from a dashboard. A Sauter Tahual behind a
+CozyBox, setpoint 19, room 22.95, and Home Assistant reporting that the
+radiator was heating. Its dump has `153` -- the element -- reading 0, which is
+the answer: on, at temperature, idle.
+
+153 is not new here. It already ships as a binary sensor, named `resistance`
+on an electric heater and `flame` on a boiler, so what it means is established
+in the mapping rather than guessed for this. The wiring is narrow on purpose:
+`heatingActiveCapabilityId` is set only for `ELECTRIC_HEATERS`, and only when
+the device reports 153. It can only ever turn `HEATING` into `IDLE` -- off
+stays off, and nothing else is second-guessed.
+
+Limits. The only capture is one radiator idling, 153 at 0 with the room three
+degrees over setpoint; nobody has sent a paired reading of the same radiator
+drawing. The reading rests on what the mapping already calls the capability,
+not on that pair. **Boilers are deliberately left out** even though 153 is the
+flame there : a boiler's flame can be lit for domestic hot water while the
+central heating circuit is genuinely idle, so the same rule would report the
+opposite error on hardware nobody has a dump for. Air conditioners too -- 153
+is reported on the room slots behind a Navizone and reads 0 on every one of
+them, which is either an idle compressor or a field the hardware never fills,
+and one dump cannot say which.
+
 ### Capability 100450 `activationProgAnticipation` is a switch
 
 The vendor app's "Anticipation de chauffe" toggle, per room: on, the device

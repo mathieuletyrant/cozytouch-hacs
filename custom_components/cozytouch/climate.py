@@ -225,6 +225,14 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 actionMode = HVACModes.get(int(actionRaw), None)
                 self._attr_hvac_action = HVAC_ACTIONS.get(actionMode)
 
+        # Which mode is running is not whether the element is drawing: a
+        # radiator that has reached its setpoint stays on, and idles.
+        activeId = self._capability.get("heatingActiveCapabilityId", None)
+        if activeId and self._attr_hvac_action == HVACAction.HEATING:
+            activeRaw = self.coordinator.get_capability_value(activeId)
+            if activeRaw is not None and int(activeRaw) == 0:
+                self._attr_hvac_action = HVACAction.IDLE
+
         # Air circulation reads back as mode 0 on the effective mode capability,
         # which would otherwise be reported as "off" while the unit blows air
         if self._air_circulation_active():

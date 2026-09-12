@@ -181,6 +181,11 @@ def get_capability_infos(  # noqa: C901
         elif modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "heat"
             capability.icon = "mdi:heating-coil"
+            # 153 is the element itself. 181 above only says which mode is
+            # running, so a radiator sitting above its setpoint read as
+            # heating -- see docs/decisions.md
+            if 153 in availableCapabilityIds:
+                capability.heatingActiveCapabilityId = 153
             capability.progCapabilityId = 184
             capability.progOverrideCapabilityId = 157
             capability.progOverrideTotalTimeCapabilityId = 158
