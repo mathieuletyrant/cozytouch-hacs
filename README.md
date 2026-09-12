@@ -135,6 +135,7 @@ brings the rooms in.
 | 1681 | HUB Navizone |
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
+| 2447 | CozyBox |
 
 ### ❓ My device is not listed
 

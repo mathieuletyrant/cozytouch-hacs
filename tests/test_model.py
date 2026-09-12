@@ -313,6 +313,17 @@ MODEL_GROUPS = [
         },
     ),
     (
+        2447,
+        {
+            "modelId": 2447,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "CozyBox",
+            "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
         557,
         {
             "modelId": 557,

@@ -791,6 +791,19 @@
   "name": "Explorer EVO 3 (260L)",
   "type": "water_heater"
  },
+ "2447": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 2447,
+  "name": "CozyBox",
+  "type": "hub"
+ },
  "386": {
   "HVACModes": {
    "0": "off",
