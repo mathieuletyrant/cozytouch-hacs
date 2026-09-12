@@ -58,11 +58,9 @@ rooms in.
 
 | modelId | Model |
 | ------: | ----- |
-| 1-12, 253-270 | Naema / Naia (Micro 25-35, 12, 20, Duo 25-35) |
-| 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35) |
-| 56 | Naema 2 Micro 25 |
-| 61 | Naia 2 Micro 25 |
-| 65 | Naema 2 Duo 25 |
+| 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
+| 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
+| 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
 | 1444 | Naema 3 Micro 25 |
 | 1447 | Naema 3 Duo 25 |
 
