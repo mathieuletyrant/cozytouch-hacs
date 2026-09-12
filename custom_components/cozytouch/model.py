@@ -253,6 +253,15 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
+    elif modelId == 2447:
+        # Connectivity box, seen driving 557-560 room units like the hubs above
+        modelInfos.name = "CozyBox"
+        modelInfos.type = CozytouchDeviceType.HUB
+        modelInfos.awayModeTemperatureAvailable = False
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+        }
+
     elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
         name = "Air Conditioner "
         if zoneName is not None:
