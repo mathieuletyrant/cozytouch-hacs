@@ -553,6 +553,31 @@ the commercial name is the one thing the derivation cannot produce.
 
 ## `custom_components/cozytouch/sensor.py`
 
+### A reading of zero is a reading
+
+`CozytouchUnitSensor.native_value` asked `if self._last_value:` and returned
+None otherwise. Every way a device says zero is falsy -- `0`, `0.0`, `"0"`,
+and the `"0.00000000000000000000"` the API actually sends -- so a sensor
+reading zero reported *unknown*. An outside temperature at 0 C, an idle power
+at 0 W and a thermostat with no probe all came out identical, and none of them
+was in fact unknown.
+
+It surfaced from the other end: the reporter on gduteil/cozytouch#69 has a
+`Température Thermostat Z1` sensor reading "Inconnu" while the climate card
+next to it says "Actuellement : 0 °C". Same capability, two readings, because
+one goes through this property and the other does not.
+
+The guard is now against None and the empty string. Two things it deliberately
+does not change: an unparseable value still reads as 0.0 rather than as
+unknown, which is inherited and which `tests/test_sensor_values.py` pins with
+its reasons; and nothing here decides whether a zero is *meaningful* -- a
+thermostat with no probe genuinely reports 0, and that is the mapping's
+problem, not the sensor's.
+
+The same method scaled before it looked: `float(value) * self._display_factor`
+on a capability the device had stopped reporting is a TypeError, reachable by
+any ENERGY capability declared in kWh. Guarded in the same place.
+
 ### The fault-code matrix is decoded, not shown raw
 
 Capabilities 150, 290 and 303 (home, DHW and room fault codes) arrive as a
