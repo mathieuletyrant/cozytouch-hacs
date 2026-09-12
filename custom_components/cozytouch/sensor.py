@@ -664,7 +664,7 @@ class CozytouchUnitSensor(CozytouchSensor):
     def get_value(self):
         """Retrieve value from hub and convert it if needed."""
         value = super().get_value()
-        if self._display_factor != 1.0:
+        if value is not None and self._display_factor != 1.0:
             return float(value) * self._display_factor
 
         return value
@@ -672,13 +672,15 @@ class CozytouchUnitSensor(CozytouchSensor):
     @property
     def native_value(self) -> float | None:
         """Value of the sensor."""
-        if self._last_value:
-            try:
-                return float(self._last_value)
-            except ValueError:
-                return 0.0
+        # Against None and the empty string, not against falsiness: a reading
+        # of zero is a reading. See docs/decisions.md.
+        if self._last_value is None or self._last_value == "":
+            return None
 
-        return None
+        try:
+            return float(self._last_value)
+        except ValueError:
+            return 0.0
 
 
 class CozytouchTimeSensor(CozytouchSensor):

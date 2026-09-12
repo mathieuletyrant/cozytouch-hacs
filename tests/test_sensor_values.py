@@ -235,12 +235,36 @@ def test_a_display_factor_of_one_hands_the_value_back_untouched():
     assert CozytouchUnitSensor.get_value(stub) == 1500.0
 
 
-@pytest.mark.parametrize(("last", "expected"), [(None, None), ("", None), (0, None)])
+@pytest.mark.parametrize(("last", "expected"), [(None, None), ("", None)])
 def test_a_unit_sensor_with_nothing_behind_it_has_no_native_value(last, expected):
     """The other implicit return that is now explicit."""
     stub = object.__new__(CozytouchUnitSensor)
     stub._last_value = last
     assert CozytouchUnitSensor.native_value.fget(stub) is expected
+
+
+@pytest.mark.parametrize("last", [0, 0.0, "0", "0.00000000000000000000"])
+def test_a_reading_of_zero_is_a_reading(last):
+    """It used to read as unknown: the test was `if self._last_value`, and
+    every way a device says zero is falsy. An outside temperature at 0 C, an
+    idle power at 0 W and a thermostat with no probe all came out the same.
+    """
+    stub = object.__new__(CozytouchUnitSensor)
+    stub._last_value = last
+    assert CozytouchUnitSensor.native_value.fget(stub) == 0.0
+
+
+def test_a_scaled_sensor_that_reports_nothing_does_not_raise():
+    """float(None) is a TypeError, and the scaling ran before anything looked
+    at whether there was a value to scale.
+    """
+    stub = sensor(
+        CozytouchUnitSensor,
+        None,
+        _value_type=CozytouchCapabilityVariableType.FLOAT,
+        _display_factor=0.001,
+    )
+    assert CozytouchUnitSensor.get_value(stub) is None
 
 
 def test_a_unit_sensor_that_cannot_parse_its_value_reads_as_zero():
