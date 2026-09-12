@@ -228,6 +228,48 @@ The heat-pump branch used to carry `# capability.highestValueCapabilityId =
 171` commented out, which would have read the absence setpoint as a maximum
 bound. It was never live and is now gone.
 
+## `custom_components/cozytouch/model.py`
+
+### 1734-1737 are the room air conditioners a gateway numbers past its fifth (issue #61)
+
+One household (issue #61, September 2026) runs nine room units behind a
+single HUB Cozytouch (1457). The API names them `ROOM_0` to `ROOM_8` and
+hands the first five the ids 557-561, then jumps : `ROOM_5` is 1734 and
+`ROOM_6`, `ROOM_7`, `ROOM_8` are 1735, 1736, 1737, with `productId` running
+97-100 where the first block runs 26-30. So 1734, mapped earlier on its own
+from a single report, was the first id of a second block rather than a
+separate product, and the three after it are the same thing : the
+`iothubChildrenIds` tag is a `THZONE_n` on every one of them, `masterDeviceId`
+is the hub, and the reporter calls the units a "Murao" -- the Atlantic
+wall-mounted split, sold in multi-split sets, which is what nine indoor units
+on one gateway would be.
+
+What the dump shows is the same capability id set on 1734, 1735, 1736 and
+1737, id for id -- 77 of them, the climate ids, both program blocks, the fan
+and louver ids 100801/100803, the eco flag 100507 -- and 557 differs from
+them only by four more : 341, 347, 348 and 100100. The values read as an air conditioner
+too : 100022 is 415 on all of them, the same bitmask the 557-561 units carry
+for {off, auto, cool, heat, fan_only, dry} ; 1736 was captured cooling, with
+7 and 181 both at 3 and its cooling setpoint at 16.0 ; and every fan and
+louver value falls inside the vocabularies `model.py` declares.
+
+So the branch condition widens from `modelId == 1734` to `1734 <= modelId <=
+1737` and nothing else changes : the same flags 1734 had, the same
+`(#n)` fallback name counted from 1734 -- which almost nobody sees, since a
+hub child always carries a zone name and that is what the entity is called.
+
+Limits. The range stops at 1737 because that is where this household stops ;
+a tenth room would arrive unmapped and ask for its own report, which is the
+right failure -- the ids are not known to be per-slot the way the THZONE ones
+are. The eco gate that 557-561 carry (`ecoModeAvailable = False`, because the
+app offers none for them) is *not* extended : this report attaches the dump
+in place of what the app shows, so there is still no statement either way for
+1734-1737, and they stay on the default as 1734 already did. Reading 100507
+at 0 on every one of them, next to 557-561 also at 0, says nothing about
+whether the app exposes it. The `(#n)` numbering was left alone rather than
+made to read `#6` for 1734 : it would rename an existing model's fallback on
+the strength of one household's slot order.
+
 ## `custom_components/cozytouch/select.py`
 
 ### The air-circulation duration is a select on the device's own grid

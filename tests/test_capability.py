@@ -22,6 +22,8 @@ from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 AIR_CONDITIONERS = {557, 558, 559, 560, 561}
+# The rooms a gateway numbers past its fifth, same branch without the eco gate.
+SECOND_BLOCK_AIR_CONDITIONERS = {1734, 1735, 1736, 1737}
 
 # Every model id the table maps, as opposed to the ones it sends to UNKNOWN.
 MAPPED_MODEL_IDS = frozenset(
@@ -77,8 +79,11 @@ def test_a_zone_maps_to_nothing_at_all():
 @pytest.mark.parametrize(
     ("flag", "owners"),
     [
-        ("quietModeAvailable", AIR_CONDITIONERS | {1734}),
-        ("awayModeTemperatureAvailable", AIR_CONDITIONERS | {556, 1681, 1734, 1758}),
+        ("quietModeAvailable", AIR_CONDITIONERS | SECOND_BLOCK_AIR_CONDITIONERS),
+        (
+            "awayModeTemperatureAvailable",
+            AIR_CONDITIONERS | SECOND_BLOCK_AIR_CONDITIONERS | {556, 1681, 1758},
+        ),
         ("ecoModeAvailable", AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),
         ("currentTemperatureAvailableZ1", {76, 211, 418}),

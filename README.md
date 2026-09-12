@@ -122,7 +122,7 @@ brings the rooms in.
 
 | modelId | Model |
 | ------: | ----- |
-| 557-561, 1734 | Air conditioner (room unit) |
+| 557-561, 1734-1737 | Air conditioner (room unit) |
 | 562-570 | Air conditioner user interface |
 
 ### 📡 Gateways / Passerelles
