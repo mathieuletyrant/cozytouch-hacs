@@ -46,6 +46,7 @@ from .const import (
     SWING_MODE_UP,
 )
 from .infos import ModelInfos
+from .model_catalogue import MODEL_CATALOGUE
 
 
 class CozytouchDeviceType(StrEnum):
@@ -324,7 +325,7 @@ def get_model_infos(  # noqa: C901
         }
 
     elif modelId == 418:
-        modelInfos.name = "Atlantic Loria Duo 6006"
+        modelInfos.name = "Loria 3 Duo R32"
         modelInfos.type = CozytouchDeviceType.THERMOSTAT
         modelInfos.exhaustTemperatureAvailable = True
         modelInfos.currentTemperatureAvailableZ1 = True
@@ -546,22 +547,22 @@ def get_model_infos(  # noqa: C901
         }
 
     elif modelId == 1543:
-        modelInfos.name = "Asama Connecté II Ventilo 1750W Blanc"
+        modelInfos.name = "Asama Connecté II 1750W Blanc"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
             4: HVACMode.HEAT,
         }
-    elif modelId == 1546:  # Asama Connecté II Ventilo 1500W
-        modelInfos.name = "Asama Connecté II Ventilo 1500W ANTH"
+    elif modelId == 1546:  # Asama Connecté II 1500W
+        modelInfos.name = "Asama Connecté II 1500W ANTH"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1547:  # Asama Connecté II Ventilo 1750W
-        modelInfos.name = "Asama Connecté II Ventilo 1750W ANTH"
+    elif modelId == 1547:  # Asama Connecté II 1750W
+        modelInfos.name = "Asama Connecté II 1750W ANTH"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -569,7 +570,7 @@ def get_model_infos(  # noqa: C901
         }
 
     elif modelId == 1551:
-        modelInfos.name = "Asama Connecté II Ventilo 1750W Noir"
+        modelInfos.name = "Asama Connecté II 1750W Noir"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -577,7 +578,7 @@ def get_model_infos(  # noqa: C901
         }
 
     elif modelId == 1622:
-        modelInfos.name = "Thermor Riva 5"
+        modelInfos.name = "Riva 5 étroit 1300W BLC"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -758,7 +759,7 @@ def get_model_infos(  # noqa: C901
         }
 
     elif modelId == 2374:
-        modelInfos.name = "Explorer EVO 3 (260L)"
+        modelInfos.name = "Explorer EVO 3 (270L)"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -772,7 +773,13 @@ def get_model_infos(  # noqa: C901
         }
 
     else:
-        modelInfos.name = "Unknown product (" + str(modelId) + ")"
+        # The vendor names far more models than this table has branches
+        # for, and a name is what lets somebody recognise the device they
+        # own. The type stays UNKNOWN either way, so the repair asking for
+        # a dump is raised exactly as before.
+        modelInfos.name = MODEL_CATALOGUE.get(
+            modelId, "Unknown product (" + str(modelId) + ")"
+        )
         modelInfos.type = CozytouchDeviceType.UNKNOWN
         modelInfos.HVACModes = {
             0: HVACMode.OFF,

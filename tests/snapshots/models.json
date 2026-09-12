@@ -260,7 +260,7 @@
    8
   ],
   "modelId": 1543,
-  "name": "Asama Connect\u00e9 II Ventilo 1750W Blanc",
+  "name": "Asama Connect\u00e9 II 1750W Blanc",
   "type": "towel_rack"
  },
  "1546": {
@@ -273,7 +273,7 @@
    8
   ],
   "modelId": 1546,
-  "name": "Asama Connect\u00e9 II Ventilo 1500W ANTH",
+  "name": "Asama Connect\u00e9 II 1500W ANTH",
   "type": "towel_rack"
  },
  "1547": {
@@ -286,7 +286,7 @@
    8
   ],
   "modelId": 1547,
-  "name": "Asama Connect\u00e9 II Ventilo 1750W ANTH",
+  "name": "Asama Connect\u00e9 II 1750W ANTH",
   "type": "towel_rack"
  },
  "1551": {
@@ -299,7 +299,7 @@
    8
   ],
   "modelId": 1551,
-  "name": "Asama Connect\u00e9 II Ventilo 1750W Noir",
+  "name": "Asama Connect\u00e9 II 1750W Noir",
   "type": "towel_rack"
  },
  "1588": {
@@ -338,7 +338,7 @@
    8
   ],
   "modelId": 1622,
-  "name": "Thermor Riva 5",
+  "name": "Riva 5 \u00e9troit 1300W BLC",
   "type": "towel_rack"
  },
  "1641": {
@@ -853,7 +853,7 @@
    "4": "prog"
   },
   "modelId": 2374,
-  "name": "Explorer EVO 3 (260L)",
+  "name": "Explorer EVO 3 (270L)",
   "type": "water_heater"
  },
  "2447": {
@@ -1239,7 +1239,7 @@
   "currentTemperatureAvailableZ2": false,
   "exhaustTemperatureAvailable": true,
   "modelId": 418,
-  "name": "Atlantic Loria Duo 6006",
+  "name": "Loria 3 Duo R32",
   "overrideModeAvailable": true,
   "type": "thermostat"
  },

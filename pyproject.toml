@@ -116,6 +116,9 @@ known-first-party = ["homeassistant", "custom_components", "tests"]
 # These are operator tools run by hand, not shipped code: printing is their
 # output, and probe_api.py opens URLs because probing the API is its job.
 "scripts/*" = ["T20", "S310", "D1"]
+# A scraped table, kept in the vendor's own spelling. Five of the Alfea names
+# run past 88 columns; wrapping them would be editing the data.
+"custom_components/cozytouch/model_catalogue.py" = ["E501"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "pep257"
