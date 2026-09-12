@@ -1,4 +1,56 @@
 {
+ "1": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1,
+  "name": "Naema Micro 30",
+  "type": "gaz_boiler"
+ },
+ "10": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 10,
+  "name": "Naia Micro 30",
+  "type": "gaz_boiler"
+ },
+ "11": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 11,
+  "name": "Naia Micro 35",
+  "type": "gaz_boiler"
+ },
+ "12": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 12,
+  "name": "Naia Duo 30",
+  "type": "gaz_boiler"
+ },
  "1353": {
   "HVACModes": {
    "0": "off"
@@ -704,6 +756,19 @@
   "name": "Thermor Malicio 3 120L",
   "type": "water_heater"
  },
+ "2": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 2,
+  "name": "Naema 12",
+  "type": "gaz_boiler"
+ },
  "211": {
   "HVACModes": {
    "0": "off",
@@ -803,6 +868,188 @@
   "modelId": 2447,
   "name": "CozyBox",
   "type": "hub"
+ },
+ "253": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 253,
+  "name": "Naema 20 Sr",
+  "type": "gaz_boiler"
+ },
+ "254": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 254,
+  "name": "Naema 20 SP",
+  "type": "gaz_boiler"
+ },
+ "256": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 256,
+  "name": "Naema Micro 25 Cuerpo Caldera",
+  "type": "gaz_boiler"
+ },
+ "257": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 257,
+  "name": "Naema Micro 25",
+  "type": "gaz_boiler"
+ },
+ "258": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 258,
+  "name": "Naema Micro 30",
+  "type": "gaz_boiler"
+ },
+ "259": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 259,
+  "name": "Naema Micro 35",
+  "type": "gaz_boiler"
+ },
+ "260": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 260,
+  "name": "Naema Micro 25",
+  "type": "gaz_boiler"
+ },
+ "261": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 261,
+  "name": "Naema Micro 30",
+  "type": "gaz_boiler"
+ },
+ "265": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 265,
+  "name": "Naema Micro 30 SP",
+  "type": "gaz_boiler"
+ },
+ "266": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 266,
+  "name": "Naema Micro 35 SP",
+  "type": "gaz_boiler"
+ },
+ "267": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 267,
+  "name": "Naema Duo 30",
+  "type": "gaz_boiler"
+ },
+ "269": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 269,
+  "name": "Naia Duo 35",
+  "type": "gaz_boiler"
+ },
+ "270": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 270,
+  "name": "Naema Duo 35 SP",
+  "type": "gaz_boiler"
+ },
+ "3": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 3,
+  "name": "Naema 20",
+  "type": "gaz_boiler"
  },
  "386": {
   "HVACModes": {
@@ -966,6 +1213,19 @@
   "name": "DURALIS CONNECT ACI HYB VM 200L 2200M",
   "type": "water_heater"
  },
+ "4": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 4,
+  "name": "Naema Micro 25",
+  "type": "gaz_boiler"
+ },
  "418": {
   "HVACModes": {
    "0": "off",
@@ -982,6 +1242,45 @@
   "name": "Atlantic Loria Duo 6006",
   "overrideModeAvailable": true,
   "type": "thermostat"
+ },
+ "5": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 5,
+  "name": "Naema Micro 35",
+  "type": "gaz_boiler"
+ },
+ "54": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 54,
+  "name": "Naema 2 12",
+  "type": "gaz_boiler"
+ },
+ "55": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 55,
+  "name": "Naema 2 20",
+  "type": "gaz_boiler"
  },
  "556": {
   "HVACModes": {
@@ -1339,6 +1638,19 @@
   "name": "Air Conditioner User Interface (#8)",
   "type": "ac_controller"
  },
+ "57": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 57,
+  "name": "Naema 2 Micro 30",
+  "type": "gaz_boiler"
+ },
  "570": {
   "HVACModes": {
    "0": "off"
@@ -1350,6 +1662,58 @@
   "modelId": 570,
   "name": "Air Conditioner User Interface (#9)",
   "type": "ac_controller"
+ },
+ "58": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 58,
+  "name": "Naema 2 Micro 35",
+  "type": "gaz_boiler"
+ },
+ "59": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 59,
+  "name": "Naia 2 12",
+  "type": "gaz_boiler"
+ },
+ "6": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 6,
+  "name": "Naema Duo 30",
+  "type": "gaz_boiler"
+ },
+ "60": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 60,
+  "name": "Naia 2 20",
+  "type": "gaz_boiler"
  },
  "61": {
   "HVACModes": {
@@ -1364,6 +1728,45 @@
   "name": "Naia 2 Micro 25",
   "type": "gaz_boiler"
  },
+ "62": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 62,
+  "name": "Naia 2 Micro 30",
+  "type": "gaz_boiler"
+ },
+ "63": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 63,
+  "name": "Naia 2 Micro 35",
+  "type": "gaz_boiler"
+ },
+ "64": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 64,
+  "name": "Naema 2 Duo 35",
+  "type": "gaz_boiler"
+ },
  "65": {
   "HVACModes": {
    "0": "off",
@@ -1375,6 +1778,71 @@
   ],
   "modelId": 65,
   "name": "Naema 2 Duo 25",
+  "type": "gaz_boiler"
+ },
+ "66": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 66,
+  "name": "Naia 2 Duo 35",
+  "type": "gaz_boiler"
+ },
+ "67": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 67,
+  "name": "Naia 2 Duo 25",
+  "type": "gaz_boiler"
+ },
+ "68": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 68,
+  "name": "Naema 2 Duo 30 HE",
+  "type": "gaz_boiler"
+ },
+ "69": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 69,
+  "name": "Naia 2 Duo 30 HE",
+  "type": "gaz_boiler"
+ },
+ "7": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 7,
+  "name": "Naema Duo 35",
   "type": "gaz_boiler"
  },
  "76": {
@@ -1395,6 +1863,32 @@
   "modelId": 76,
   "name": "Alfea Extensa Duo AI UE",
   "type": "heat_pump"
+ },
+ "8": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 8,
+  "name": "Naia 12",
+  "type": "gaz_boiler"
+ },
+ "9": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 9,
+  "name": "Naia Micro 25",
+  "type": "gaz_boiler"
  },
  "999999 zoneName=None deviceName=None": {
   "HVACModes": {

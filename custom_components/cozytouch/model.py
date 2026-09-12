@@ -73,6 +73,63 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
+# Boilers whose only source is the vendor's model catalogue: name, and the
+# `productId` of 1 that puts them in the same family as 56, 61 and 65. Kept as
+# a table rather than one branch each because the branch body is identical --
+# the ids differ by their commercial name and nothing else.
+#
+# Only the Naema and the Naia are taken from that family. The other ~165 ids
+# sharing `productId` 1 are Guillot collective boilers -- VARMAX, VARBLOK,
+# CONDENSINOX and the like -- which nobody has ever reported running through
+# this integration, and mapping a model is what *stops* the unknown-model
+# repair asking its owner for a dump. Naming a product line we have never seen
+# would trade the only signal that would tell us it exists.
+#
+# A commercial name is not unique: 257 and 260 are both "Naema Micro 25", 258
+# and 261 both "Naema Micro 30". They are separate model ids in the vendor's
+# own catalogue -- regional variants, most likely -- and are kept apart rather
+# than collapsed.
+NAEMA_NAIA_BOILERS = {
+    1: "Naema Micro 30",
+    2: "Naema 12",
+    3: "Naema 20",
+    4: "Naema Micro 25",
+    5: "Naema Micro 35",
+    6: "Naema Duo 30",
+    7: "Naema Duo 35",
+    8: "Naia 12",
+    9: "Naia Micro 25",
+    10: "Naia Micro 30",
+    11: "Naia Micro 35",
+    12: "Naia Duo 30",
+    54: "Naema 2 12",
+    55: "Naema 2 20",
+    57: "Naema 2 Micro 30",
+    58: "Naema 2 Micro 35",
+    59: "Naia 2 12",
+    60: "Naia 2 20",
+    62: "Naia 2 Micro 30",
+    63: "Naia 2 Micro 35",
+    64: "Naema 2 Duo 35",
+    66: "Naia 2 Duo 35",
+    67: "Naia 2 Duo 25",
+    68: "Naema 2 Duo 30 HE",
+    69: "Naia 2 Duo 30 HE",
+    253: "Naema 20 Sr",
+    254: "Naema 20 SP",
+    256: "Naema Micro 25 Cuerpo Caldera",
+    257: "Naema Micro 25",
+    258: "Naema Micro 30",
+    259: "Naema Micro 35",
+    260: "Naema Micro 25",
+    261: "Naema Micro 30",
+    265: "Naema Micro 30 SP",
+    266: "Naema Micro 35 SP",
+    267: "Naema Duo 30",
+    269: "Naia Duo 35",
+    270: "Naema Duo 35 SP",
+}
+
 
 def get_device_model_infos(
     devices: list[dict], dev: dict, zoneName: str | None = None
@@ -139,6 +196,25 @@ def get_model_infos(  # noqa: C901
         # model an off/heat pair, and that is what made a zone read as a
         # thermostat that could heat.
         modelInfos.HVACModes = {}
+
+    elif modelId in NAEMA_NAIA_BOILERS:
+        # The first-generation Naema and Naia, plus the two Naema 2 that sit
+        # beside the 56 below. Names are the vendor's own, read back from
+        # `GET /magellan/productmodels/models/{id}` -- see docs/decisions.md;
+        # `productId` is 1 on every one of them, which the app's own table
+        # calls PASS_APC_BOILER.
+        #
+        # Nothing but the name and the type: no capture exists for any of
+        # these, and the three boilers already mapped (56, 61, 65) declare
+        # exactly this and no flag. The fall-through already handed them
+        # {off, heat}, so this changes the name and the type and nothing a
+        # device does.
+        modelInfos.name = NAEMA_NAIA_BOILERS[modelId]
+        modelInfos.type = CozytouchDeviceType.GAZ_BOILER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
 
     elif modelId == 56:
         modelInfos.name = "Naema 2 Micro 25"

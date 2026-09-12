@@ -1024,3 +1024,43 @@ def test_the_hub_a_device_hangs_off_is_read_off_the_account():
         get_device_model_infos([room], room, "Billard R-1")["type"]
         is CozytouchDeviceType.AC
     )
+
+
+# ------------------------------------------------ the catalogue boilers
+
+
+@pytest.mark.parametrize(
+    ("modelId", "name"),
+    [
+        (1, "Naema Micro 30"),
+        (8, "Naia 12"),
+        (12, "Naia Duo 30"),
+        (54, "Naema 2 12"),
+        (55, "Naema 2 20"),
+    ],
+)
+def test_a_catalogue_boiler_is_named_and_typed(modelId, name):
+    """These come from the vendor's own model catalogue rather than a capture,
+    so they claim the least a boiler can claim: the name Atlantic gives them,
+    the type its `productId` of 1 implies, and the off/heat pair the
+    fall-through already handed them. No flag, because no dump.
+    """
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == name
+    assert infos["type"] is CozytouchDeviceType.GAZ_BOILER
+    assert infos["HVACModes"] == {0: HVACMode.OFF, 4: HVACMode.HEAT}
+    assert set(infos) == {
+        "modelId",
+        "HVACModesCapabilityId",
+        "name",
+        "type",
+        "HVACModes",
+    }
+
+
+def test_the_catalogue_boilers_do_not_shadow_a_mapped_model():
+    """56, 61 and 65 were mapped from reports and keep their own branches."""
+    assert get_model_infos(56)["name"] == "Naema 2 Micro 25"
+    assert get_model_infos(61)["name"] == "Naia 2 Micro 25"
+    assert get_model_infos(65)["name"] == "Naema 2 Duo 25"

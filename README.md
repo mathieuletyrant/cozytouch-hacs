@@ -43,12 +43,23 @@ tables below are the whole of what is mapped today.
 
 Most of these mappings were built from a single user's capture of their own
 unit. They say what that device reported -- not that every feature has been
-exercised on every variant.
+exercised on every variant. The *names* are cross-checked against Atlantic's
+own model catalogue where the id has been read back from it.
+
+**Some ids are slots, not products.** A gateway reports each room it drives
+under its own `modelId`, counting from the first : the vendor's catalogue calls
+them `ROOM_0`, `ROOM_1`, … and `UI_0`, `UI_1`, … An id in one of those ranges
+says *which room*, never what the hardware in it is -- so the same `modelId`
+is an air conditioner on one account and a radiator on another, and what tells
+them apart is the gateway it hangs off. Adding the gateway is what brings its
+rooms in.
 
 ### 🔥 Boilers / Chaudières
 
 | modelId | Model |
 | ------: | ----- |
+| 1-12, 253-270 | Naema / Naia (Micro 25-35, 12, 20, Duo 25-35) |
+| 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35) |
 | 56 | Naema 2 Micro 25 |
 | 61 | Naia 2 Micro 25 |
 | 65 | Naema 2 Duo 25 |
@@ -114,26 +125,23 @@ exercised on every variant.
 | 1595 | Doris étroit 1300W CARAT |
 | 1622 | Thermor Riva 5 |
 
-### 🔥 Radiators / Radiateurs
+### 🏠 Room slots / Emplacements de pièce
 
-Like the air conditioner room units below, these sit behind a gateway which
-reports each room under its own `modelId`. The ids are the *room's* index and
-overlap with the air conditioners'; what tells them apart is the gateway.
+These are the slot ranges, and what the gateway makes of them. `ROOM_0` to
+`ROOM_8` share one numbering split across two id blocks -- 557-561 for the
+first five rooms, 1734-1737 for the next four.
 
-| modelId | Model |
-| ------: | ----- |
-| 557-561, behind a CozyBox (2447) | Radiator (room unit) |
+| modelId | Slot | Behind | Mapped as |
+| ------: | ---- | ------ | --------- |
+| 557-561 | `ROOM_0`-`ROOM_4` | a CozyBox (2447) | Radiator |
+| 557-561 | `ROOM_0`-`ROOM_4` | a Naviclim (556) or Navizone (1681, 1758) | Air conditioner |
+| 1734-1737 | `ROOM_5`-`ROOM_8` | a HUB Cozytouch (1457) | Air conditioner |
+| 562-570 | `UI_0`-`UI_8` | any of the above | Air conditioner user interface |
 
-### ❄️ Air conditioning / Climatisation
-
-Room units do not talk to the cloud themselves : they sit behind a gateway,
-which reports each of them under its own `modelId`. Adding the gateway is what
-brings the rooms in.
-
-| modelId | Model |
-| ------: | ----- |
-| 557-561 (behind a Naviclim or Navizone), 1734-1737 | Air conditioner (room unit) |
-| 562-570 | Air conditioner user interface |
+A room slot behind a gateway this table does not know falls through to the air
+conditioner mapping, which is what the first five ids were read as before the
+radiators turned up. If yours is a radiator and arrives as an air conditioner,
+that is the bug -- send the diagnostics dump and say which gateway it sits on.
 
 ### 📡 Gateways / Passerelles
 
@@ -145,7 +153,7 @@ brings the rooms in.
 | 1681 | HUB Navizone |
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
-| 2447 | CozyBox |
+| 2447 | Hub IO Sauter (CozyBox) |
 
 ### ❓ My device is not listed
 
