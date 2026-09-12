@@ -270,6 +270,54 @@ whether the app exposes it. The `(#n)` numbering was left alone rather than
 made to read `#6` for 1734 : it would rename an existing model's fallback on
 the strength of one household's slot order.
 
+### Thirty-eight boilers named from the vendor's catalogue, and nothing else claimed
+
+`GET /magellan/productmodels/models/{modelId}` answers for any model id, not
+only the ones an account owns (`docs/api-surface.md`). It gives the vendor's
+`longName`, a `commercialReference`, and a `productId`. That is `model.py`'s
+first column, published -- and it is where ids 1-12, 54 and 55 come from.
+
+They are the Naema and Naia, both generations, filling in around the three
+ids (56, 61, 65) that were already mapped from real reports. All of them
+report `productId` 1, which the Android app's own `ProductType` table calls
+`PASS_APC_BOILER` -- and every one of the seventeen ids in that family this
+table already knew is mapped `GAZ_BOILER`, with no exception. Seventeen
+independent agreements is what the inference rests on.
+
+What they declare is deliberately the minimum: the name, the type, and the
+off/heat pair. No flag. There is no capture for any of them, and the three
+boilers mapped from real reports declare exactly this and nothing more, so
+copying that shape claims no more than the evidence does. The fall-through
+already gave these ids `{off, heat}`, so nothing a device *does* changes --
+what changes is the name (`Unknown product (1)` becomes `Naema Micro 30`), the
+type, and the repair that used to ask a reporter for a dump the catalogue
+already answers.
+
+They share one branch and a name table rather than one `elif` each, because
+the body is identical and only the commercial name differs. Two names repeat
+across ids (257/260, 258/261); they are distinct models in the vendor's
+catalogue and stay distinct here.
+
+**The other ~165 ids sharing `productId` 1 are deliberately left unmapped.**
+They are Guillot collective boilers -- VARMAX, VARBLOK, VARFREE, CONDENSINOX
+-- a product class nobody has ever reported running through this integration.
+The argument that makes the Naema safe (a family with seventeen confirmed
+members) does not reach them, and mapping a model is what *stops* the
+unknown-model repair asking its owner for a dump. Naming a line we have never
+seen would trade away the only signal that would tell us it exists.
+
+Limits. The catalogue gives a name; it says nothing about capabilities, modes
+or flags. A boiler here that turns out to need a flag will need a dump like
+any other. **The nine Alfea heat pumps the same sweep returned (25, 29, 32,
+34-39) were deliberately left out**: `CozytouchDeviceType.HEAT_PUMP` wires
+`currentTemperatureAvailableZ1` / `Z2`, `HeatingModes` and
+`exhaustTemperatureAvailable`, and every mapped heat pump got those from a
+capture. Naming them would mean guessing which zones they report, which is
+the one thing this table must not do.
+
+The sweep itself stopped at model id 56 (`research/fetch_model_catalogue.py`
+is resumable); the rest of the range is unread.
+
 ### A room slot is whatever its gateway drives, not an air conditioner (issue #172)
 
 `557-561` was read as "air conditioner room unit" from the accounts that had

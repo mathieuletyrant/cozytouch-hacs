@@ -5,7 +5,9 @@ asking "can we stop guessing?" starts from what was already ruled out rather
 than repeating it.
 
 The short answer to that question is **no for capabilities, partly for
-devices**. Details below.
+devices, and yes for model *names*** -- the last one found on 2026-09-12 and
+corrected below, where this document previously said no catalogue existed at
+all.
 
 ## How to probe
 
@@ -76,9 +78,38 @@ ruled out:
 `capabilities/123` and `capabilities/foo` answer 405 too. It is the generic
 reply for any sub-path of a collection, not evidence of a route.
 
+## There is a model catalogue, after all
+
+Not for capabilities -- the section below still holds -- but for the *models*.
+The vendor's Android app calls a namespace none of the ~90 probes reached,
+because they all went under `refs/` and `capabilities/`:
+
+| Route | What it answers |
+| ----- | --------------- |
+| `GET /magellan/productmodels/models/{modelId}` | 200 with `longName`, `name`, `commercialReference`, `productId`; 404 `Model Id 'N' not found.` otherwise |
+| `GET /magellan/productmodels/models/{modelId}/detailederrors` | 400 asking for `ParentErrorCode` and `ChildErrorCode`; not pursued |
+
+It is keyed on a *model* id rather than a device, and is not scoped to the
+account asking -- a model nobody on the account owns answers the same way.
+So the first column of `model.py` is checkable against the vendor's own
+naming, and `Unknown product (…)` is answerable without asking a reporter for
+anything.
+
+Two things it is not. It carries no capabilities, no modes and no flags, so a
+model named here still needs a dump before it can claim anything a device
+*does*. And it is a courtesy, not a bulk data source: read the ids you have a
+question about. Nothing here is worth turning into a crawl of somebody else's
+production API.
+
+Measured against ids 1-784: of the 46 mapped in that range, 28 carry the
+vendor's name character for character. The three that disagree are recorded in
+`docs/decisions.md`; the rest are the room and interface slots, whose internal
+`ROOM_n` / `UI_n` names this table deliberately does not use.
+
 ## There is no capability catalogue
 
-A capability item carries exactly three fields:
+The *capabilities* have none, and that has not changed. A capability item
+carries exactly three fields:
 
     {"capabilityId": 93, "modificationDate": 1786182322, "value": "1"}
 
@@ -178,6 +209,221 @@ rather than only on its gateway -- which is exactly why this PR puts those
 fields in the diagnostics dump instead of wiring them into `model.py`. Let the
 reports answer it.
 
+## The four routes the app calls and nobody had tried (12/09/2026)
+
+The 26 magellan paths in the decompiled Dart are the whole of what the vendor
+app calls. Four of them had never been probed, and `probe_api.py --devices`
+now does, against the real account. Three are dead; the fourth is the first
+route here to answer with a field `setupviewv2` does not have.
+
+| Route | Result |
+| ----- | ------ |
+| `GET /magellan/devices/{id}/details` | 200 on every device, a **strict subset** of the setup view's device block. The same dead end the collection was. |
+| `GET /magellan/devices?{filter}` | 200. Filters are `gatewayid`, `productid`, `zoneid`, `unattacheddevices`, `isremotemaintainable`. Fields are poorer still. No product description behind `productid`. |
+| `GET /magellan/gateways/ota-check-version` | **403** `API Subscription validation failed`. Our client id is not entitled to it. |
+| `GET /magellan/v3/gateways/{gatewayId}/compatible-rooms` | **200**, see below. |
+
+`gatewayid` takes the id from the setup view's top-level `gateways` array, not
+the gateway device's `deviceId`. Passing the latter answers `200` with an empty
+list on the filter and `404 No Gateway id '…' found for user id '…'` on the v3
+route -- a silence that reads exactly like "this route is empty".
+
+### compatible-rooms, and the 400 as a schema oracle
+
+`Where to look next` used to suggest that an out-of-range write might name its
+bounds in the rejection. It does, and it does not need a write: this route
+answers 400 **naming the parameter it wanted**, so it can be walked with GETs
+until it stops complaining. What that yielded:
+
+- `protocol` accepts **`ZIGBEE`** and **`IO`**, refuses `RADIO`, `WIFI`, `BLE`.
+  A rejected value answers `The value 'X' is not valid`, an accepted one moves
+  the complaint to the next parameter. `IO` is the Overkiz protocol name, on a
+  gateway whose account cannot open an Overkiz session at all.
+- `deviceType` is an **integer enum of exactly twelve values**: 0-11 pass
+  validation, 12 and up answer `The value '12' is invalid`. Every string was
+  refused, the vendor's own `ProductMainFamily` names included.
+
+The payload is the gateway's room slots:
+
+    [{"id": 0, "name": "Chambre parentale", "type": 1, "compatible": true},
+     {"id": 1, "name": "Bureau Julie",      "type": 1, "compatible": true},
+     {"id": 2, "name": "Chambre enfant",    "type": 1, "compatible": true}]
+
+Three slots on a gateway with three room units, ids counting from 0 like the
+`ROOM_n` names do, and named after the rooms rather than `ROOM_0`. `compatible`
+is **true only for `deviceType=2`**, on both protocols, and identical across
+the three rooms -- so it is a property of the gateway and the device type, not
+of the slot. On an `Air_Conditioning` gateway, device type 2 is what fits.
+
+What this does not do is answer gduteil/cozytouch#172. The flag describes what
+a gateway would accept, not what a slot currently holds, and reading it for
+somebody else's CozyBox would need their credentials. The gateway rule in
+`model.py` stands, now with one more reason: even the route that knows about
+device types only answers per gateway.
+
+`deviceType`'s twelve values, and `type: 1` on a room, are two more integer
+enums with no catalogue -- the same problem as capability ids, one level up.
+
+### The setup view's `gateways` array is not read
+
+Unrelated to the above and worth its own look: `setupviewv2` carries a
+top-level `gateways` array of `{id, isAlive, serialNumber, setupId, type}`, and
+nothing in the integration touches it. `isAlive` is a server-side liveness flag
+on the one device that actually has a radio, which is what capability 218 was
+mistaken for and could not deliver.
+
+## The Overkiz plane is reachable, and empty for us (12/09/2026)
+
+Atlantic runs several protocols, and `pyoverkiz` reaches "Atlantic Cozytouch"
+on a host this document had never probed: every route above lives on
+`apis.groupe-atlantic.com/magellan`, and pyoverkiz talks to
+`ha110-1.overkiz.com/enduser-mobile-web/enduserAPI/`. The credential is the
+same one -- our `COZYTOUCH_CLIENT_ID` is byte-identical to pyoverkiz's -- so
+the open question was whether our devices also appear over there, described by
+the `widget` / `uiClass` / `controllableName` vocabulary that makes the Overkiz
+integration need no model table at all.
+
+Measured on the real account (`research/probe_overkiz_plane.py`, one Navizone
+gateway, three room units, three thermal zones):
+
+| Step | Route | Result |
+| ---- | ----- | ------ |
+| 1 | `POST apis.groupe-atlantic.com/users/token` | 200, as always |
+| 2 | `GET apis.groupe-atlantic.com/magellan/accounts/jwt` | **200** — a real 3-segment JWT, 581 chars |
+| 3 | `POST ha110-1.overkiz.com/…/enduserAPI/login` (`jwt=`) | **401** |
+| 3 | `POST ha111-1.overkiz.com/…/enduserAPI/login` (`jwt=`) | **401** |
+| 3 | `POST std14-1.overkiz.com/…/enduserAPI/login` (`jwt=`) | **401** |
+
+So step 2 is a genuine addition to the route map -- a magellan route nobody
+had tried, and it mints an Overkiz JWT on demand. But step 3 refuses it on
+**every Overkiz host the app itself names**, so step 4 (`enduserAPI/setup`)
+was never reached.
+
+What that settles: **the two planes do not overlap for this hardware.** A
+Navizone gateway and its room units are magellan-only, there is no
+self-describing `widget` / `uiClass` mirror to fall back on, and `model.py`
+stays the source of truth rather than becoming an override layer.
+
+What it does not settle: whether a *different* Atlantic product -- one sold
+with a TaHoma-style box -- puts the same account on both planes, and what the
+JWT of step 2 is actually for, since something mints it. Neither is worth a
+further probe until somebody reports hardware that appears in both
+integrations at once.
+
+Two things checked before calling the 401 genuine, since the first two runs
+failed on this script being wrong rather than the server:
+
+- **The host is not the problem, and it took two passes to establish.** The
+  `haNNN-1` number is a shard, and for some brands it encodes a region (Somfy
+  Europe/America/Oceania are ha101-1 / ha401-1 / ha201-1). pyoverkiz points
+  Atlantic, Sauter *and* Thermor at ha110-1 and knows no other -- but the app
+  knows two more: `strings` on the Cozytouch executable yields `ha110-1`,
+  `ha111-1` and `std14-1`. All three were tried; all three answer 401. The
+  first write-up of this section concluded from ha110-1 alone that no other
+  host existed, which was wrong and is why the other two are named here.
+- **The login request is not missing anything.** pyoverkiz's `_post_login` is a
+  bare form POST to `{endpoint}login` carrying the single field `jwt`, with no
+  added header. That is byte for byte what was sent.
+
+Cost of the run, for the record: three login attempts, two of them wasted on
+this script's own bugs (pyoverkiz's `/token` where ours is `/users/token`, and
+a missing `scope=openid`). Match `account.py` exactly before pointing anything
+at a real account -- repeated failed logins are the one thing that locks one.
+
+## A second client hit the same wall (NicolasYDDER/homey-cozytouch)
+
+A Homey app for Cozytouch, JavaScript, dual-plane: Overkiz devices detected by
+`controllableName` / `widget` exactly as `pyoverkiz` does, and Magellan devices
+by a hand-maintained table of numeric capability ids. Independent confirmation
+that the split is real and that nothing self-describing exists on our side.
+
+It credits `gduteil/cozytouch` -- the upstream, not this fork -- and correctly:
+the entry it cross-references is modelId 390, which upstream's `model.py` has
+had all along. Nothing that originated here is in it.
+
+Two things it knows that this document did not.
+
+**The vendor validates capabilities per product, and says so on a write.** Two
+error shapes, quoted from its source:
+
+    {"code":36002008,"type":"NoCapabilityImplementationFound",
+     "message":"There is no implementation for capability Id 2 on product Id 7."}
+    {"code":36002005,"type":"UnknownCapabilityId",
+     "message":"Capability Id '10' not found."}
+
+So the server holds a per-`productId` registry of which capabilities exist, and
+distinguishes "no such capability anywhere" from "not on this product". That is
+the catalogue this document says does not exist -- reachable only as a
+rejection, and only through `writecapability`, which is a write. Worth knowing,
+not worth firing blind.
+
+**Capability ids are per product, not per model family.** Its water-heater
+table is overridden for `productId` 7 alone, where none of the usual ids exist
+and the setpoint sits at 105301/105304. Same lesson as 557-561 from the other
+end: `productId` and `modelId` index different things, and neither is the
+product.
+
+Treat its Magellan tables as leads rather than evidence. The towel-rack block
+matches ours id for id; its heater, climate and water-heater blocks use a low
+id space (1, 2, 3, 4, 8, 9) that no capture in `research/capability-corpus` has
+ever shown, with no dump cited -- its climate table reads capability 7 as the
+current temperature where every capture here has it as the HVAC mode.
+
+## What the rest of the internet has (12/09/2026)
+
+A sweep of GitHub code search, the forums and the blogs. The ecosystem splits
+cleanly in two, and almost everybody is on the other side:
+
+| Plane | Clients |
+| ----- | ------- |
+| Overkiz (`haNNN-1.overkiz.com`, JWT via `magellan/accounts/jwt`) | `iMicknl/python-overkiz-api`, `dubocr/overkiz-client`, `pzim-devdata/tahoma`, `phimage/swift-overkiz-api`, `jbilcke-hf/flutter_overkiz`, `oznetmaster/OverkizClient`, `MaGOs92/cozy-airbnb`, `niavok/cozytouch_peak_hours` |
+| Magellan (`apis.groupe-atlantic.com/magellan`) | `gduteil/cozytouch`, this fork, `NicolasYDDER/homey-cozytouch`, `Vntoni/HomeHub` |
+
+Four magellan clients exist in the world, and two of them are this project.
+
+### A second client credential exists
+
+`Vntoni/HomeHub` authenticates against the same `/users/token`, same
+`GA-PRIVATEPERSON/` prefix, same `scope=openid` -- with a **different client
+id and secret**, passed as a plain Basic pair rather than the pre-encoded blob
+everyone else copies:
+
+    shared Overkiz  Ct_1JVyTmILX8IefA7aUNBjFnZUa   (ours, and every client above)
+    HomeHub         e8D1nA3hvv1tnc1MpoA7G5uD46Aa
+
+This is worth following up on for one specific reason. `ota-check-version`
+answers `403 {"code":"900908", "description":"API Subscription validation
+failed."}` -- a WSO2 API-gateway message meaning *this client id is not
+subscribed to that API*, not that the route does not exist or that the account
+lacks rights. A different client id can carry different subscriptions, so some
+of what is ruled out above may be ruled out only for our credential.
+
+It also sends headers nothing here does: `User-Agent: cozytouch-ios-v3.25.0`,
+plus `appInstallNumber` and `uniqId`. Untested whether any route gates on them.
+
+### Its capability readings are wrong, and the app says so
+
+Useful as a warning about sniffed tables. `HomeHub` documents its ids as "found
+by sniffing", and three contradict this project's:
+
+| Id | HomeHub says | `id_to_name.json` (Atlantic's own name) | Corpus values |
+| -- | ------------ | --------------------------------------- | ------------- |
+| 73 | power state | `availableThermostatMode` | only 4 and 2 |
+| 152 | window detection | `homeAwayModeState` | 0, rarely 1/2 |
+| 153 | absence mode | `heatCoolOnGoing` | always 0 |
+
+The names come from the vendor's own enum, recovered from the app binary, so
+this is not a difference of opinion. A table built from watching one household
+reproduces whatever that household happened to do.
+
+### Rooting the hardware (Lafois, 2020)
+
+`lafois.com`'s five-part series roots a Cozytouch box (a Kizbox Mini): LuaJIT
+over DBus, a lighttpd REST API shipped disabled whose auth check can be patched
+out in Lua bytecode, serving `/enduser-mobile-web/1/enduserAPI/setup/devices`.
+That is the Overkiz local plane on Overkiz hardware. It says nothing about a
+Navizone or a CozyBox, which are not that box, and it needs physical access.
+
 ## Where to look next
 
 - **The mobile app, not the API.** A `refs/` namespace holding only `countries`
@@ -186,6 +432,15 @@ reports answer it.
   the place to look, and would be a far bigger prize than any endpoint here.
 - **Other product families.** Once a boiler or water-heater dump arrives with
   the fields this PR added, the table above can be finished.
-- **Error messages as a schema leak.** A `writecapability` with an
-  out-of-range value may name the accepted bounds in its rejection. That is a
-  write, so only against a device you own, and only one at a time.
+- **An account that lives on both planes.** The Overkiz probe above returned
+  401 for this household; a reporter whose hardware shows up in the `overkiz`
+  integration *and* in this one would be the case that reopens it.
+- **Error messages as a schema leak.** Confirmed, and it needs no write:
+  `compatible-rooms` answers 400 naming the parameter it wanted and whether the
+  value was valid, which is how `protocol` and `deviceType` were mapped above.
+  Any route taking parameters can be walked the same way. A `writecapability`
+  with an out-of-range value may name its bounds too -- that one *is* a write,
+  so only against a device you own, and only one at a time.
+- **The twelve device types.** `compatible-rooms` proves the enum exists and
+  that 2 is what an `Air_Conditioning` gateway takes. What the other eleven
+  mean is unknown, and a gateway of another family would say more.
