@@ -66,24 +66,14 @@ class CozytouchDeviceType(StrEnum):
 
 
 # What the API calls a zone of a ducted heat pump. The name is the signal
-# rather than the model id, because the ids look like they encode the zone's
-# index and not a product: a capture pairs 1505 with THZONE_0, 1506 with
-# THZONE_1, and so on, which means a bigger installation walks off the end of
-# any range guessed from one household. The API's own `name` field is checked,
-# not `customName` -- renaming the zone in the Cozytouch app is a thing people
-# do, and this has to survive it.
+# rather than the model id, and it is the API's `name` and not `customName`
+# -- see docs/decisions.md.
 ZONE_NAME_PREFIX = "THZONE"
 
-# Product lines whose ids are a grid the vendor fills in one figure at a time.
-# Each table below holds every id of one line that the catalogue names.
-#
-# `# catalogue only` on an entry means nobody has ever sent a capture of that
-# id: it is mapped because the vendor's catalogue lists it in a line whose
-# other cells were captured, in another volume, another badge or another
-# country. Two thirds of this table's ids carry it, so read a table without
-# the marker as the exception rather than the rule -- and a table whose whole
-# body is catalogue-sourced says so in its own comment instead of repeating
-# the marker on every line. See docs/decisions.md.
+# Each table below holds every id of one product line the catalogue names.
+# `# catalogue only` means no capture of that id exists, and a table whose
+# whole body is catalogue-sourced says so in its own comment rather than
+# repeating the marker. See docs/decisions.md.
 
 # 1368 and 754 are two listings of the 200L; 1367 is the 150L of the same line.
 CALYPSO_SPLIT_VM = {
@@ -282,22 +272,10 @@ TOWEL_RACK_VARIANTS = {
     1635: "Riva 5 étroit 1500W CARBONE",  # catalogue only
 }
 
-# Boilers whose only source is the vendor's model catalogue: name, and the
-# `productId` of 1 that puts them in the same family as 56, 61 and 65. Kept as
-# a table rather than one branch each because the branch body is identical --
-# the ids differ by their commercial name and nothing else.
-#
-# Only the Naema and the Naia are taken from that family. The other ~165 ids
-# sharing `productId` 1 are Guillot collective boilers -- VARMAX, VARBLOK,
-# CONDENSINOX and the like -- which nobody has ever reported running through
-# this integration, and mapping a model is what *stops* the unknown-model
-# repair asking its owner for a dump. Naming a product line we have never seen
-# would trade the only signal that would tell us it exists.
-#
-# A commercial name is not unique: 257 and 260 are both "Naema Micro 25", 258
-# and 261 both "Naema Micro 30". They are separate model ids in the vendor's
-# own catalogue -- regional variants, most likely -- and are kept apart rather
-# than collapsed.
+# Catalogue only, the whole table: name and the `productId` of 1 that puts
+# these in the same family as 56, 61 and 65. A commercial name is not unique
+# here -- 257 and 260 are both "Naema Micro 25" -- and the duplicates are
+# distinct ids in the vendor's catalogue. See docs/decisions.md.
 NAEMA_NAIA_BOILERS = {
     1: "Naema Micro 30",
     2: "Naema 12",
@@ -390,35 +368,19 @@ def get_model_infos(  # noqa: C901
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
     if deviceName is not None and deviceName.startswith(ZONE_NAME_PREFIX):
-        # A THZONE is one zone of a ducted heat pump, not a product. What it
-        # reports, in the one capture there is, is two capabilities -- 218
-        # reading "0" and 100014 reading "255" -- and no climate capability:
-        # no setpoint, nothing to drive.
-        #
-        # Mapping it buys a name and silence rather than entities. Unmapped it
-        # arrived as "Unknown product (1505)" *and* raised an unmapped-model
-        # repair per zone, six dialogs asking for a diagnostics dump about
-        # hardware working as designed. Reported upstream as
-        # gduteil/cozytouch#167.
+        # A zone of a ducted heat pump, not a product: it reports no climate
+        # capability, so mapping it buys a name and silence rather than
+        # entities. See docs/decisions.md.
         modelInfos.name = f"Zone ({zoneName})" if zoneName else deviceName
         modelInfos.type = CozytouchDeviceType.ZONE
-        # Claims nothing. The fall-through at the end hands every unmapped
-        # model an off/heat pair, and that is what made a zone read as a
-        # thermostat that could heat.
+        # Empty on purpose: the fall-through's off/heat pair is what made a
+        # zone read as a thermostat that could heat.
         modelInfos.HVACModes = {}
 
     elif modelId in NAEMA_NAIA_BOILERS:
         # The first-generation Naema and Naia, plus the two Naema 2 that sit
-        # beside the 56 below. Names are the vendor's own, read back from
-        # `GET /magellan/productmodels/models/{id}` -- see docs/decisions.md;
-        # `productId` is 1 on every one of them, which the app's own table
-        # calls PASS_APC_BOILER.
-        #
-        # Nothing but the name and the type: no capture exists for any of
-        # these, and the three boilers already mapped (56, 61, 65) declare
-        # exactly this and no flag. The fall-through already handed them
-        # {off, heat}, so this changes the name and the type and nothing a
-        # device does.
+        # beside the 56 below. Name and type only, no flag -- see
+        # docs/decisions.md.
         modelInfos.name = NAEMA_NAIA_BOILERS[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
         modelInfos.HVACModes = {
@@ -567,10 +529,9 @@ def get_model_infos(  # noqa: C901
         }
 
     elif masterModelId in COZYBOX_HUBS and 557 <= modelId <= 561:
-        # A room slot behind a hub, not a product: 557-561 is the room's index
-        # and says nothing about the hardware. Behind a CozyBox the slot is a
-        # connected electric radiator, behind a Naviclim or Navizone a room air
-        # conditioner unit -- same ids, same productIds, same ROOM_n name.
+        # A room slot behind a hub, not a product: 557-561 is the room's
+        # index and says nothing about the hardware, so the master's id is
+        # what tells a radiator from an air conditioner.
         # See docs/decisions.md.
         modelInfos.name = (
             "Radiator (" + zoneName + ")"
@@ -596,9 +557,8 @@ def get_model_infos(  # noqa: C901
         modelInfos.quietModeAvailable = True
         modelInfos.awayModeTemperatureAvailable = False
 
-        # The room units behind a Naviclim/Navizone hub report 100507, but the
-        # Cozytouch app offers no eco mode for them anywhere. 1734-1737 are
-        # left alone, no report either way on those -- see docs/decisions.md.
+        # 557-561 report 100507 and the app offers no eco mode for them;
+        # 1734-1737 are left alone -- see docs/decisions.md.
         if modelId <= 561:
             modelInfos.ecoModeAvailable = False
 
@@ -863,10 +823,8 @@ def get_model_infos(  # noqa: C901
         }
 
     else:
-        # The vendor names far more models than this table has branches
-        # for, and a name is what lets somebody recognise the device they
-        # own. The type stays UNKNOWN either way, so the repair asking for
-        # a dump is raised exactly as before.
+        # A catalogue name where there is one; the type stays UNKNOWN
+        # either way. See docs/decisions.md.
         modelInfos.name = MODEL_CATALOGUE.get(
             modelId, "Unknown product (" + str(modelId) + ")"
         )
