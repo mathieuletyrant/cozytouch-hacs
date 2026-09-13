@@ -982,6 +982,24 @@
   "name": "Atlantic Explorer V5 (270L)",
   "type": "water_heater"
  },
+ "1643": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1643,
+  "name": "Atlantic Explorer V5 (200L with coil)",
+  "type": "water_heater"
+ },
  "1644": {
   "HVACModes": {
    "0": "off",

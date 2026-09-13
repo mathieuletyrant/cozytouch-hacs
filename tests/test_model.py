@@ -1231,3 +1231,22 @@ def test_a_catalogue_aci_hyb_water_heater_joins_the_platform(modelId, name):
     assert infos["name"] == name
     assert infos["type"] is CozytouchDeviceType.WATER_HEATER
     assert infos["HeatingModes"] == get_model_infos(393)["HeatingModes"]
+
+
+def test_the_explorer_v5_coil_variant_reads_like_its_siblings():
+    """1643 is TD 200 VS ATE 1200M TYB V5S SERP -- the 200L of 1641 with the
+    coil of 1645, and the one id of the Atlantic badge left unmapped. The
+    catalogue is the whole of the evidence, so it claims what they claim.
+    """
+    infos = get_model_infos(1643)
+
+    assert infos["name"] == "Atlantic Explorer V5 (200L with coil)"
+    assert infos == {**get_model_infos(1641), "modelId": 1643, "name": infos["name"]}
+
+
+def test_the_other_badges_of_the_explorer_platform_stay_unmapped():
+    """Six brands share the platform and none has been reported. Mapping one
+    is what would stop its owner being asked for the dump that settles it.
+    """
+    for modelId in (1646, 1650, 1655, 1659, 1660, 1663):
+        assert get_model_infos(modelId)["type"] is CozytouchDeviceType.UNKNOWN

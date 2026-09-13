@@ -74,6 +74,25 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
+# The Explorer V5 platform under Atlantic's own badge. The catalogue codes it
+# TD <volume> VS <brand> <power>M TYB <platform>, with SERP for the tank that
+# carries a coil: 1641 is TD 200 VS ATE 1200M TYB V5S and 1645 the same in 270
+# with a coil. 1643 is the fifth cell of that grid, the 200L with a coil, and
+# was the only ATE id of the platform left unmapped -- read off the catalogue
+# rather than a report, where the other four came from captures.
+#
+# The badge is what the table stops at. TD 200 VS THE / AE / TH / SA / ATS /
+# NEU are the same platform under six other brands and are left alone: nobody
+# has reported one, and mapping a model is what stops the unmapped-model
+# repair asking its owner for the dump that would settle it.
+EXPLORER_V5 = {
+    1641: "Atlantic Explorer V5 (200L)",
+    1642: "Atlantic Explorer V5 (270L)",
+    1643: "Atlantic Explorer V5 (200L with coil)",
+    1644: "Atlantic Explorer V5 (240L)",
+    1645: "Atlantic Explorer V5 (270L with coil)",
+}
+
 # One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
 # VM 150L and VM 200L variants. Only the commercial name changes between the
 # ids, so they share a branch. Names are the catalogue's own string, verbatim,
@@ -620,50 +639,8 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1641:
-        modelInfos.name = "Atlantic Explorer V5 (200L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1642:
-        modelInfos.name = "Atlantic Explorer V5 (270L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1644:
-        modelInfos.name = "Atlantic Explorer V5 (240L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1645:
-        modelInfos.name = "Atlantic Explorer V5 (270L with coil)"
+    elif modelId in EXPLORER_V5:
+        modelInfos.name = EXPLORER_V5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,

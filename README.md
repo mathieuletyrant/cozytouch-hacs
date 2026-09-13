@@ -100,6 +100,7 @@ rooms in.
 | 1371, 1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
 | 1642 | Atlantic Explorer V5 (270L) |
+| 1643 | Atlantic Explorer V5 (200L with coil) |
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
 | 1656 | Aeromax 6 |
