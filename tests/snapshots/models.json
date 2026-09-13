@@ -869,6 +869,45 @@
   "name": "CozyBox",
   "type": "hub"
  },
+ "2448": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 2448,
+  "name": "CozyBox",
+  "type": "hub"
+ },
+ "2449": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 2449,
+  "name": "CozyBox",
+  "type": "hub"
+ },
+ "2450": {
+  "HVACModes": {
+   "0": "off"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "awayModeTemperatureAvailable": false,
+  "modelId": 2450,
+  "name": "CozyBox",
+  "type": "hub"
+ },
  "253": {
   "HVACModes": {
    "0": "off",

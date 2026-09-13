@@ -318,6 +318,39 @@ MODEL_GROUPS = [
         },
     ),
     (
+        2448,
+        {
+            "modelId": 2448,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "CozyBox",
+            "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
+        2449,
+        {
+            "modelId": 2449,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "CozyBox",
+            "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
+        2450,
+        {
+            "modelId": 2450,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "CozyBox",
+            "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
+            "HVACModes": {0: HVACMode.OFF},
+        },
+    ),
+    (
         2447,
         {
             "modelId": 2447,
@@ -991,14 +1024,17 @@ def test_a_mapped_model_ignores_the_catalogue():
 # --------------------------------------------------------- the room slots
 
 
+@pytest.mark.parametrize("masterModelId", [2447, 2448, 2449, 2450])
 @pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
-def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId):
+def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId, masterModelId):
     """557-561 is the room's index under a hub and says nothing about the
     hardware : the same ids, productIds and ROOM_n names arrive behind a
     Navizone driving air conditioners and behind a CozyBox driving connected
     electric radiators. gduteil/cozytouch#172 is the second case.
     """
-    infos = get_model_infos(modelId, "Billard R-1", f"ROOM_{modelId - 557}", 2447)
+    infos = get_model_infos(
+        modelId, "Billard R-1", f"ROOM_{modelId - 557}", masterModelId
+    )
 
     assert infos["type"] is CozytouchDeviceType.RADIATOR
     assert infos["name"] == "Radiator (Billard R-1)"
