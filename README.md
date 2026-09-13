@@ -68,79 +68,72 @@ rooms in.
 
 ### 🔥 Boilers / Chaudières
 
-| modelId | Model |
-| ------: | ----- |
-| 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
-| 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
-| 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
-| 227 | Naema 2 30 |
-| 1444-1446 | Naema 3 Micro 25, 30, 35 |
-| 1447, 1448 | Naema 3 Duo 25, 35 |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Naema / Naia | 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
+| Naema / Naia | 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
+| Naema 2 / Naia 2 | 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
+| Naema 2 / Naia 2 | 227 | Naema 2 30 |
+| Naema 3 | 1444-1446 | Naema 3 Micro 25, 30, 35 |
+| Naema 3 | 1447, 1448 | Naema 3 Duo 25, 35 |
 
 ### ♨️ Heat pumps / Pompes à chaleur
 
-| modelId | Model |
-| ------: | ----- |
-| 76 | Alfea Extensa Duo AI UE |
-| 211 | Alfea Extensa Duo A.I. 3 R32 |
-| 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Alfea | 76 | Alfea Extensa Duo AI UE |
+| Alfea | 211 | Alfea Extensa Duo A.I. 3 R32 |
+| Alfea | 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
 
 ### 🎛️ Thermostats
 
-| modelId | Model |
-| ------: | ----- |
-| 235 | Thermostat Navilink Connect |
-| 418 | Loria 3 Duo R32 |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Loria | 418 | Loria 3 Duo R32 |
+| Navilink | 235 | Thermostat Navilink Connect |
 
 ### 🚿 Water heaters / Chauffe-eau
 
-| modelId | Model |
-| ------: | ----- |
-| 236 | Sauter Phazy |
-| 386 | PHAZY VS 300L 3000M |
-| 387 | PHAZY VM 150L 2200M |
-| 388 | PHAZY VM 200L 2200M |
-| 389 | AQUEO ACI HYB VS 300L 3000M |
-| 390 | AQUEO ACI HYB VM 150L 2200M |
-| 391 | AQUEO ACI HYB VM 200L 2200M |
-| 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
-| 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
-| 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
-| 1364 | THE DURALIS CONNECT VM 150 2200M PE |
-| 1365 | THE DURALIS CONNECT VM 200 2200M PE |
-| 1366 | THE DURALIS CONNECT VS 300 3000M PE |
-| 754, 1368 | Calypso SPLIT VM 200L |
-| 1367 | Calypso SPLIT VM 150L |
-| 664, 1369, 1376 | Calypso Split |
-| 1370-1372 | Aeromax SPLIT 3 |
-| 1641 | Atlantic Explorer V5 (200L) |
-| 1642 | Atlantic Explorer V5 (270L) |
-| 1643 | Atlantic Explorer V5 (200L with coil) |
-| 1644 | Atlantic Explorer V5 (240L) |
-| 1645 | Atlantic Explorer V5 (270L with coil) |
-| 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
-| 2347-2352 | the Egeo platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
-| 1656 | Aeromax 6 |
-| 1669 | CV5 Aeromax Premium 100L |
-| 1670 | CV5 Aeromax Premium 150L |
-| 1657 | Calypso 200L |
-| 1658 | Calypso connecté |
-| 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
-| 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
-| 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
-| 957, 2345 | Egeo VS 200L |
-| 1010, 2346 | Egeo VS 250L |
-| 2374-2376 | Explorer EVO 3 (270L) |
+Grouped by product line, since Atlantic sells the same tank under several
+badges and volumes -- the line is what tells you whether a row is yours.
+
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Aeromax | 1370-1372 | Aeromax SPLIT 3 |
+| Aeromax | 1656 | Aeromax 6 |
+| Aeromax | 1669, 1670 | CV5 Aeromax Premium 100L, 150L |
+| Aqueo | 389 | AQUEO ACI HYB VS 300L 3000M |
+| Aqueo | 390, 391 | AQUEO ACI HYB VM 150L, 200L 2200M |
+| Calypso | 664, 1369, 1376 | Calypso Split |
+| Calypso | 1367 | Calypso SPLIT VM 150L |
+| Calypso | 754, 1368 | Calypso SPLIT VM 200L |
+| Calypso | 1657 | Calypso 200L |
+| Calypso | 1658 | Calypso connecté |
+| Duralis | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
+| Duralis | 393, 394 | DURALIS CONNECT ACI HYB VM 150L, 200L 2200M |
+| Duralis | 1364-1366 | THE DURALIS CONNECT VM 150, VM 200, VS 300 PE |
+| Egeo | 957, 2345 | Egeo VS 200L |
+| Egeo | 1010, 2346 | Egeo VS 250L |
+| Egeo | 2347-2352 | the same platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
+| Explorer | 1641-1645 | Atlantic Explorer V5 (200L, 270L, 200L with coil, 240L, 270L with coil) |
+| Explorer | 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
+| Explorer | 2374-2376 | Explorer EVO 3 (270L) |
+| Lineo | 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
+| Malicio | 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
+| Malicio | 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
+| Phazy | 236 | Sauter Phazy |
+| Phazy | 386 | PHAZY VS 300L 3000M |
+| Phazy | 387, 388 | PHAZY VM 150L, 200L 2200M |
 
 ### 🧖 Towel racks / Sèche-serviettes
 
-| modelId | Model |
-| ------: | ----- |
-| 1381 | KELUD 1750W BLC |
-| 1382 | KELUD 1750W Anthracite Standard |
-| 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
-| 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
-| 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Asama | 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
+| Doris | 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
+| Kelud | 1381 | KELUD 1750W BLC |
+| Kelud | 1382 | KELUD 1750W Anthracite Standard |
+| Riva | 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
 
 ### 🏠 Room slots / Emplacements de pièce
 
@@ -162,15 +155,14 @@ that is the bug -- send the diagnostics dump and say which gateway it sits on.
 
 ### 📡 Gateways / Passerelles
 
-| modelId | Model |
-| ------: | ----- |
-| 556 | Naviclim Hub |
-| 1353 | Calypso Split Interface |
-| 1457 | HUB Cozytouch |
-| 1681 | HUB Navizone |
-| 1758 | HUB Navizone |
-| 1763 | FLAT/S4 IOTHUB |
-| 2447-2450 | Hub IO, Sauter / Thermor / Atlantic / Inter (CozyBox) |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Calypso | 1353 | Calypso Split Interface |
+| CozyBox | 2447-2450 | Hub IO, Sauter / Thermor / Atlantic / Inter (CozyBox) |
+| Cozytouch | 1457 | HUB Cozytouch |
+| FLAT/S4 | 1763 | FLAT/S4 IOTHUB |
+| Naviclim | 556 | Naviclim Hub |
+| Navizone | 1681, 1758 | HUB Navizone |
 
 ### ❓ My device is not listed
 
