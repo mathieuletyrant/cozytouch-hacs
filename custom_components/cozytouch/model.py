@@ -75,15 +75,20 @@ class CozytouchDeviceType(StrEnum):
 ZONE_NAME_PREFIX = "THZONE"
 
 # Product lines whose ids are a grid the vendor fills in one figure at a time.
-# Each table below holds every id of one line that the catalogue names; the
-# ones that arrived from a capture are marked, and the rest are the catalogue's
-# own listing of the same line in another volume, another badge or another
-# country. See docs/decisions.md for what that evidence is worth.
+# Each table below holds every id of one line that the catalogue names.
+#
+# `# catalogue only` on an entry means nobody has ever sent a capture of that
+# id: it is mapped because the vendor's catalogue lists it in a line whose
+# other cells were captured, in another volume, another badge or another
+# country. Two thirds of this table's ids carry it, so read a table without
+# the marker as the exception rather than the rule -- and a table whose whole
+# body is catalogue-sourced says so in its own comment instead of repeating
+# the marker on every line. See docs/decisions.md.
 
 # 1368 and 754 are two listings of the 200L; 1367 is the 150L of the same line.
 CALYPSO_SPLIT_VM = {
-    754: "Calypso SPLIT VM 200L",
-    1367: "Calypso SPLIT VM 150L",
+    754: "Calypso SPLIT VM 200L",  # catalogue only
+    1367: "Calypso SPLIT VM 150L",  # catalogue only
     1368: "Calypso SPLIT VM 200L",
 }
 
@@ -92,29 +97,29 @@ CALYPSO_SPLIT_VM = {
 # products under both. ATL is Atlantic, TH Thermor, SA Sauter; the badges we
 # have no commercial name for keep the catalogue's string.
 EGEO_PLATFORM = {
-    957: "Egeo VS 200L",
-    1010: "Egeo VS 250L",
-    2345: "Egeo VS 200L",
+    957: "Egeo VS 200L",  # catalogue only
+    1010: "Egeo VS 250L",  # catalogue only
+    2345: "Egeo VS 200L",  # catalogue only
     2346: "Egeo VS 250L",
-    2347: "TD 200 VS TH 1800M TYB CA",
-    2348: "TD 250 VS TH 1800M TYB CA",
-    2349: "TD 200 VS SA 1800M TYB CA",
-    2350: "TD 250 VS SA 1800M TYB CA",
-    2351: "TD 250 VS ATE 1800M TYB CA SERP",
-    2352: "TD 250 VS THE 1800M TYB CA SERP",
+    2347: "TD 200 VS TH 1800M TYB CA",  # catalogue only
+    2348: "TD 250 VS TH 1800M TYB CA",  # catalogue only
+    2349: "TD 200 VS SA 1800M TYB CA",  # catalogue only
+    2350: "TD 250 VS SA 1800M TYB CA",  # catalogue only
+    2351: "TD 250 VS ATE 1800M TYB CA SERP",  # catalogue only
+    2352: "TD 250 VS THE 1800M TYB CA SERP",  # catalogue only
 }
 
 AEROMAX_PREMIUM_CV5 = {
     1669: "CV5 Aeromax Premium 100L",
-    1670: "CV5 Aeromax Premium 150L",
+    1670: "CV5 Aeromax Premium 150L",  # catalogue only
 }
 
 # 1957 came from a capture and declares no prog mode, which is why the others
 # do not either: they are the same appliance in another volume.
 LINEO_CONNECTE_MP = {
-    1954: "LINEO CONNECTE MP 040L 2250W",
-    1955: "LINEO CONNECTE MP 065L 2250W",
-    1956: "LINEO CONNECTE MP 080L 2250W",
+    1954: "LINEO CONNECTE MP 040L 2250W",  # catalogue only
+    1955: "LINEO CONNECTE MP 065L 2250W",  # catalogue only
+    1956: "LINEO CONNECTE MP 080L 2250W",  # catalogue only
     1957: "LINEO CONNECTE MP 100L 2250W",
 }
 
@@ -122,27 +127,27 @@ LINEO_CONNECTE_MP = {
 # the two captured ids already did -- except at 100L, where both exist and the
 # letter is the only thing telling them apart.
 MALICIO_3 = {
-    1961: "Thermor Malicio 3 40L",
+    1961: "Thermor Malicio 3 40L",  # catalogue only
     1962: "Thermor Malicio 3 65L",
-    1963: "Thermor Malicio 3 80L",
-    1964: "Thermor Malicio 3 MP 100L",
-    1965: "Thermor Malicio 3 VM 100L",
+    1963: "Thermor Malicio 3 80L",  # catalogue only
+    1964: "Thermor Malicio 3 MP 100L",  # catalogue only
+    1965: "Thermor Malicio 3 VM 100L",  # catalogue only
     1966: "Thermor Malicio 3 120L",
-    1967: "Thermor Malicio 3 150L",
+    1967: "Thermor Malicio 3 150L",  # catalogue only
 }
 
 NAEMA_3 = {
     1444: "Naema 3 Micro 25",
-    1445: "Naema 3 Micro 30",
-    1446: "Naema 3 Micro 35",
+    1445: "Naema 3 Micro 30",  # catalogue only
+    1446: "Naema 3 Micro 35",  # catalogue only
     1447: "Naema 3 Duo 25",
-    1448: "Naema 3 Duo 35",
+    1448: "Naema 3 Duo 35",  # catalogue only
 }
 
 # 219 is 211 under the Thermor badge, and the catalogue says so in the name.
 ALFEA_EXTENSA_DUO_AI_3 = {
     211: "Alfea Extensa Duo A.I. 3 R32",
-    219: "Alfea Extensa Duo A.I. 3 R32 Thermor",
+    219: "Alfea Extensa Duo A.I. 3 R32 Thermor",  # catalogue only
 }
 
 # One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
@@ -159,25 +164,25 @@ ALFEA_EXTENSA_DUO_AI_3 = {
 EXPLORER_V5 = {
     1641: "Atlantic Explorer V5 (200L)",
     1642: "Atlantic Explorer V5 (270L)",
-    1643: "Atlantic Explorer V5 (200L with coil)",
+    1643: "Atlantic Explorer V5 (200L with coil)",  # catalogue only
     1644: "Atlantic Explorer V5 (240L)",
     1645: "Atlantic Explorer V5 (270L with coil)",
-    1646: "TD 200 VS THE 1200M TYB V5S",
-    1647: "TD 270 VS THE 1200M TYB V5S",
-    1648: "TD 200 VS THE 1200M TYB V5S SERP",
-    1649: "TD 270 VS THE 1200M TYB V5S SERP",
-    1650: "TD 200 VS AE 1200M TYB V5S",
-    1651: "TD 270 VS AE 1200M TYB V5S",
-    1652: "TD 200 VS AE 1200M TYB V5S SERP",
-    1653: "TD 240 VS AE 1200M TYB V5S SERP",
-    1654: "TD 270 VS AE 1200M TYB V5S SERP",
-    1655: "TD 200 VS TH 1200M TYB V5S",
-    1659: "TD 270 VS SA 1200M TYB V5S",
-    1660: "TD 200 VS ATS 1200M TYB V5S SERP",
-    1661: "TD 240 VS ATS 1200M TYB V5S SERP",
-    1662: "TD 270 VS ATS 1200M TYB V5S SERP",
-    1663: "TD 200 VS NEU 1200M TYB V5S SERP",
-    1664: "TD 270 VS NEU 1200M TYB V5S SERP",
+    1646: "TD 200 VS THE 1200M TYB V5S",  # catalogue only
+    1647: "TD 270 VS THE 1200M TYB V5S",  # catalogue only
+    1648: "TD 200 VS THE 1200M TYB V5S SERP",  # catalogue only
+    1649: "TD 270 VS THE 1200M TYB V5S SERP",  # catalogue only
+    1650: "TD 200 VS AE 1200M TYB V5S",  # catalogue only
+    1651: "TD 270 VS AE 1200M TYB V5S",  # catalogue only
+    1652: "TD 200 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1653: "TD 240 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1654: "TD 270 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1655: "TD 200 VS TH 1200M TYB V5S",  # catalogue only
+    1659: "TD 270 VS SA 1200M TYB V5S",  # catalogue only
+    1660: "TD 200 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1661: "TD 240 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1662: "TD 270 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1663: "TD 200 VS NEU 1200M TYB V5S SERP",  # catalogue only
+    1664: "TD 270 VS NEU 1200M TYB V5S SERP",  # catalogue only
 }
 
 # One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
@@ -199,9 +204,9 @@ ACI_HYB_WATER_HEATERS = {
     392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
     393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
     394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
-    1364: "THE DURALIS CONNECT VM 150 2200M PE",
-    1365: "THE DURALIS CONNECT VM 200 2200M PE",
-    1366: "THE DURALIS CONNECT VS 300 3000M PE",
+    1364: "THE DURALIS CONNECT VM 150 2200M PE",  # catalogue only
+    1365: "THE DURALIS CONNECT VM 200 2200M PE",  # catalogue only
+    1366: "THE DURALIS CONNECT VS 300 3000M PE",  # catalogue only
 }
 
 # The connectivity box, under each of the brands it is sold as. The catalogue
@@ -210,6 +215,8 @@ ACI_HYB_WATER_HEATERS = {
 # than four branches because the branch below is not the whole of it -- a room
 # slot reads its master's id to tell a radiator from an air conditioner, and
 # an unmapped badge sent every one of them to the air conditioner branch.
+# 2448, 2449 and 2450 are catalogue only -- 2447 is the badge that was
+# captured.
 COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 
 # The three connected towel rack ranges, by model id. Every one of these is the
@@ -225,54 +232,54 @@ COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 # it renames the device of somebody who already has one.
 TOWEL_RACK_VARIANTS = {
     1388: "Doris étroit 1500W BLC",
-    1540: "Asama Connecté II 500W BLC",
-    1541: "Asama Connecté II 750W BLC",
-    1542: "Asama Connecté II 1500W BLC",
+    1540: "Asama Connecté II 500W BLC",  # catalogue only
+    1541: "Asama Connecté II 750W BLC",  # catalogue only
+    1542: "Asama Connecté II 1500W BLC",  # catalogue only
     1543: "Asama Connecté II 1750W Blanc",
-    1544: "Asama Connecté II 500W ANTH",
-    1545: "Asama Connecté II 750W ANTH",
+    1544: "Asama Connecté II 500W ANTH",  # catalogue only
+    1545: "Asama Connecté II 750W ANTH",  # catalogue only
     1546: "Asama Connecté II 1500W ANTH",
     1547: "Asama Connecté II 1750W ANTH",
-    1548: "Asama Connecté II 500W NOIR",
-    1549: "Asama Connecté II 750W NOIR",
-    1550: "Asama Connecté II 1500W NOIR",
+    1548: "Asama Connecté II 500W NOIR",  # catalogue only
+    1549: "Asama Connecté II 750W NOIR",  # catalogue only
+    1550: "Asama Connecté II 1500W NOIR",  # catalogue only
     1551: "Asama Connecté II 1750W Noir",
-    1552: "Asama Connecté II 500W CAPP",
-    1553: "Asama Connecté II 750W CAPP",
-    1554: "Asama Connecté II 1500W CAPP",
-    1555: "Asama Connecté II 1750W CAPP",
-    1562: "Doris étroit 300W BLC",
-    1563: "Doris étroit 500W BLC",
-    1564: "Riva 5 étroit 300W BLC",
-    1565: "Riva 5 étroit 500W BLC",
-    1587: "Doris étroit 1300W BLC",
+    1552: "Asama Connecté II 500W CAPP",  # catalogue only
+    1553: "Asama Connecté II 750W CAPP",  # catalogue only
+    1554: "Asama Connecté II 1500W CAPP",  # catalogue only
+    1555: "Asama Connecté II 1750W CAPP",  # catalogue only
+    1562: "Doris étroit 300W BLC",  # catalogue only
+    1563: "Doris étroit 500W BLC",  # catalogue only
+    1564: "Riva 5 étroit 300W BLC",  # catalogue only
+    1565: "Riva 5 étroit 500W BLC",  # catalogue only
+    1587: "Doris étroit 1300W BLC",  # catalogue only
     1588: "Doris étroit 1500W BLC",
-    1589: "Doris étroit 300W ANTH",
-    1590: "Doris étroit 500W ANTH",
-    1591: "Doris étroit 1300W ANTH",
-    1592: "Doris étroit 1500W ANTH",
-    1593: "Doris étroit 300W CARAT",
-    1594: "Doris étroit 500W CARAT",
+    1589: "Doris étroit 300W ANTH",  # catalogue only
+    1590: "Doris étroit 500W ANTH",  # catalogue only
+    1591: "Doris étroit 1300W ANTH",  # catalogue only
+    1592: "Doris étroit 1500W ANTH",  # catalogue only
+    1593: "Doris étroit 300W CARAT",  # catalogue only
+    1594: "Doris étroit 500W CARAT",  # catalogue only
     1595: "Doris étroit 1300W CARAT",
-    1596: "Doris étroit 1500W CARAT",
-    1597: "Doris étroit 300W NOIR",
-    1598: "Doris étroit 500W NOIR",
-    1599: "Doris étroit 1300W NOIR",
-    1600: "Doris étroit 1500W NOIR",
+    1596: "Doris étroit 1500W CARAT",  # catalogue only
+    1597: "Doris étroit 300W NOIR",  # catalogue only
+    1598: "Doris étroit 500W NOIR",  # catalogue only
+    1599: "Doris étroit 1300W NOIR",  # catalogue only
+    1600: "Doris étroit 1500W NOIR",  # catalogue only
     1622: "Riva 5 étroit 1300W BLC",
-    1623: "Riva 5 étroit 1500W BLC",
-    1624: "Riva 5 étroit 300W ARDOISE",
-    1625: "Riva 5 étroit 300W MENHIR",
-    1626: "Riva 5 étroit 500W MENHIR",
-    1627: "Riva 5 étroit 1300W MENHIR",
-    1628: "Riva 5 étroit 1500W MENHIR",
-    1629: "Riva 5 étroit 500W ARDOISE",
-    1630: "Riva 5 étroit 1300W ARDOISE",
-    1631: "Riva 5 étroit 1500W ARDOISE",
-    1632: "Riva 5 étroit 300W CARBONE",
-    1633: "Riva 5 étroit 500W CARBONE",
-    1634: "Riva 5 étroit 1300W CARBONE",
-    1635: "Riva 5 étroit 1500W CARBONE",
+    1623: "Riva 5 étroit 1500W BLC",  # catalogue only
+    1624: "Riva 5 étroit 300W ARDOISE",  # catalogue only
+    1625: "Riva 5 étroit 300W MENHIR",  # catalogue only
+    1626: "Riva 5 étroit 500W MENHIR",  # catalogue only
+    1627: "Riva 5 étroit 1300W MENHIR",  # catalogue only
+    1628: "Riva 5 étroit 1500W MENHIR",  # catalogue only
+    1629: "Riva 5 étroit 500W ARDOISE",  # catalogue only
+    1630: "Riva 5 étroit 1300W ARDOISE",  # catalogue only
+    1631: "Riva 5 étroit 1500W ARDOISE",  # catalogue only
+    1632: "Riva 5 étroit 300W CARBONE",  # catalogue only
+    1633: "Riva 5 étroit 500W CARBONE",  # catalogue only
+    1634: "Riva 5 étroit 1300W CARBONE",  # catalogue only
+    1635: "Riva 5 étroit 1500W CARBONE",  # catalogue only
 }
 
 # Boilers whose only source is the vendor's model catalogue: name, and the
@@ -659,6 +666,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
+    # 664 is catalogue only: the same string as 1369 in the vendor's older
+    # all-capitals listing.
     elif modelId in (1369, 1376, 664):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
@@ -673,6 +682,7 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
+    # 1370 is catalogue only: the 150L of a range captured in 200L and 270L.
     elif modelId in (1370, 1371, 1372):
         modelInfos.name = "Aeromax SPLIT 3"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
@@ -836,6 +846,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
+    # 2375 and 2376 are catalogue only: 2374 without the coil, and 2374 sold
+    # into Austria rather than Germany.
     elif modelId in (2374, 2375, 2376):
         modelInfos.name = "Explorer EVO 3 (270L)"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER

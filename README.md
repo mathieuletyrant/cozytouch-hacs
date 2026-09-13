@@ -41,10 +41,22 @@ Every Cozytouch device is identified by a numeric `modelId`, and each one needs
 its own mapping before its capabilities turn into Home Assistant entities. The
 tables below are the whole of what is mapped today.
 
-Most of these mappings were built from a single user's capture of their own
-unit. They say what that device reported -- not that every feature has been
-exercised on every variant. The *names* are cross-checked against Atlantic's
-own model catalogue where the id has been read back from it.
+These mappings come from two sources, and the difference matters when you read
+a table row.
+
+Some were built from a single user's capture of their own unit. They say what
+that device reported -- not that every feature has been exercised on every
+variant.
+
+The rest, and today that is most of them -- 131 of the 203 ids below -- were
+never captured at all. Atlantic's own model catalogue lists them in a product
+line whose other cells *were* captured: the same appliance in another volume,
+another finish, another brand badge or another country. Those take the answer
+their captured sibling gives and their own name, and nothing else; in
+`model.py` each one is marked `# catalogue only`. It is a good guess about
+hardware nobody here has seen, which is worth saying plainly: if one of them
+is yours and something reads wrong, that is the mapping and not your device --
+send the dump.
 
 **Some ids are slots, not products.** A gateway reports each room it drives
 under its own `modelId`, counting from the first : the vendor's catalogue calls
