@@ -61,8 +61,9 @@ rooms in.
 | 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
 | 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
 | 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
-| 1444 | Naema 3 Micro 25 |
-| 1447 | Naema 3 Duo 25 |
+| 227 | Naema 2 30 |
+| 1444-1446 | Naema 3 Micro 25, 30, 35 |
+| 1447, 1448 | Naema 3 Duo 25, 35 |
 
 ### ♨️ Heat pumps / Pompes à chaleur
 
@@ -70,6 +71,7 @@ rooms in.
 | ------: | ----- |
 | 76 | Alfea Extensa Duo AI UE |
 | 211 | Alfea Extensa Duo A.I. 3 R32 |
+| 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
 
 ### 🎛️ Thermostats
 
@@ -96,22 +98,27 @@ rooms in.
 | 1365 | THE DURALIS CONNECT VM 200 2200M PE |
 | 1366 | THE DURALIS CONNECT VS 300 3000M PE |
 | 754, 1368 | Calypso SPLIT VM 200L |
+| 1367 | Calypso SPLIT VM 150L |
 | 664, 1369, 1376 | Calypso Split |
-| 1371, 1372 | Aeromax SPLIT 3 |
+| 1370-1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
 | 1642 | Atlantic Explorer V5 (270L) |
 | 1643 | Atlantic Explorer V5 (200L with coil) |
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
+| 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
+| 2347-2352 | the Egeo platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
 | 1656 | Aeromax 6 |
 | 1669 | CV5 Aeromax Premium 100L |
+| 1670 | CV5 Aeromax Premium 150L |
 | 1657 | Calypso 200L |
 | 1658 | Calypso connecté |
-| 1957 | LINEO CONNECTE MP 100L 2250W |
-| 1962 | Thermor Malicio 3 65L |
-| 1966 | Thermor Malicio 3 120L |
+| 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
+| 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
+| 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
+| 957, 2345 | Egeo VS 200L |
 | 1010, 2346 | Egeo VS 250L |
-| 2374 | Explorer EVO 3 (270L) |
+| 2374-2376 | Explorer EVO 3 (270L) |
 
 ### 🧖 Towel racks / Sèche-serviettes
 

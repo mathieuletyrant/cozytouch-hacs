@@ -1244,9 +1244,68 @@ def test_the_explorer_v5_coil_variant_reads_like_its_siblings():
     assert infos == {**get_model_infos(1641), "modelId": 1643, "name": infos["name"]}
 
 
-def test_the_other_badges_of_the_explorer_platform_stay_unmapped():
-    """Six brands share the platform and none has been reported. Mapping one
-    is what would stop its owner being asked for the dump that settles it.
+@pytest.mark.parametrize("modelId", [1646, 1650, 1655, 1659, 1660, 1663])
+def test_another_badge_of_the_explorer_platform_is_still_a_water_heater(modelId):
+    """Eight brands share the platform and only Atlantic's has a commercial
+    name we know, so these keep the catalogue's string -- the same text they
+    already displayed. What they gain is the type, and the two entities that
+    read it: a resistance sensor rather than a pump, and a hot water mode
+    select with options in it.
     """
-    for modelId in (1646, 1650, 1655, 1659, 1660, 1663):
-        assert get_model_infos(modelId)["type"] is CozytouchDeviceType.UNKNOWN
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == MODEL_CATALOGUE[modelId]
+    assert infos["type"] is CozytouchDeviceType.WATER_HEATER
+    assert infos["HeatingModes"] == get_model_infos(1641)["HeatingModes"]
+
+
+# ------------------------------------------------ the catalogue line gaps
+
+
+@pytest.mark.parametrize(
+    ("modelId", "sibling", "name"),
+    [
+        (227, 54, "Naema 2 30"),
+        (1445, 1444, "Naema 3 Micro 30"),
+        (1446, 1444, "Naema 3 Micro 35"),
+        (1448, 1447, "Naema 3 Duo 35"),
+        (957, 1010, "Egeo VS 200L"),
+        (1367, 1368, "Calypso SPLIT VM 150L"),
+        (1670, 1669, "CV5 Aeromax Premium 150L"),
+        (1954, 1957, "LINEO CONNECTE MP 040L 2250W"),
+        (1961, 1962, "Thermor Malicio 3 40L"),
+        (1967, 1966, "Thermor Malicio 3 150L"),
+        (2345, 2346, "Egeo VS 200L"),
+        (2375, 2374, "Explorer EVO 3 (270L)"),
+        (219, 211, "Alfea Extensa Duo A.I. 3 R32 Thermor"),
+    ],
+)
+def test_a_line_gap_claims_exactly_what_its_sibling_claims(modelId, sibling, name):
+    """Another volume, another badge or another country of a line already
+    mapped. The catalogue is the whole of the evidence, so none of these may
+    claim anything its captured sibling does not -- only the name differs.
+    """
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == name
+    assert infos == {**get_model_infos(sibling), "modelId": modelId, "name": name}
+
+
+def test_the_two_hundred_litre_malicio_says_which_form_factor_it_is():
+    """MP and VM both exist at 100L and the captured names drop that letter.
+    Dropping it here would give two products one name.
+    """
+    assert get_model_infos(1964)["name"] == "Thermor Malicio 3 MP 100L"
+    assert get_model_infos(1965)["name"] == "Thermor Malicio 3 VM 100L"
+
+
+def test_the_lineo_volumes_inherit_the_missing_prog_mode():
+    """1957 came from a capture and declares no prog mode. The volumes beside
+    it are the same appliance, so copying the generic three would be inventing
+    a mode nobody has seen this range offer.
+    """
+    for modelId in (1954, 1955, 1956):
+        assert get_model_infos(modelId)["HeatingModes"] == {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+        }

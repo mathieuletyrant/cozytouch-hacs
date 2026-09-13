@@ -135,6 +135,24 @@
   "name": "THE DURALIS CONNECT VS 300 3000M PE",
   "type": "water_heater"
  },
+ "1367": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1367,
+  "name": "Calypso SPLIT VM 150L",
+  "type": "water_heater"
+ },
  "1368": {
   "HVACModes": {
    "0": "off",
@@ -169,6 +187,24 @@
   },
   "modelId": 1369,
   "name": "Calypso Split",
+  "type": "water_heater"
+ },
+ "1370": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1370,
+  "name": "Aeromax SPLIT 3",
   "type": "water_heater"
  },
  "1371": {
@@ -277,6 +313,32 @@
   "name": "Naema 3 Micro 25",
   "type": "gaz_boiler"
  },
+ "1445": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1445,
+  "name": "Naema 3 Micro 30",
+  "type": "gaz_boiler"
+ },
+ "1446": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1446,
+  "name": "Naema 3 Micro 35",
+  "type": "gaz_boiler"
+ },
  "1447": {
   "HVACModes": {
    "0": "off",
@@ -288,6 +350,19 @@
   ],
   "modelId": 1447,
   "name": "Naema 3 Duo 25",
+  "type": "gaz_boiler"
+ },
+ "1448": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1448,
+  "name": "Naema 3 Duo 35",
   "type": "gaz_boiler"
  },
  "1457": {
@@ -1036,6 +1111,186 @@
   "name": "Atlantic Explorer V5 (270L with coil)",
   "type": "water_heater"
  },
+ "1646": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1646,
+  "name": "TD 200 VS THE 1200M TYB V5S",
+  "type": "water_heater"
+ },
+ "1647": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1647,
+  "name": "TD 270 VS THE 1200M TYB V5S",
+  "type": "water_heater"
+ },
+ "1648": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1648,
+  "name": "TD 200 VS THE 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1649": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1649,
+  "name": "TD 270 VS THE 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1650": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1650,
+  "name": "TD 200 VS AE 1200M TYB V5S",
+  "type": "water_heater"
+ },
+ "1651": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1651,
+  "name": "TD 270 VS AE 1200M TYB V5S",
+  "type": "water_heater"
+ },
+ "1652": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1652,
+  "name": "TD 200 VS AE 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1653": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1653,
+  "name": "TD 240 VS AE 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1654": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1654,
+  "name": "TD 270 VS AE 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1655": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1655,
+  "name": "TD 200 VS TH 1200M TYB V5S",
+  "type": "water_heater"
+ },
  "1656": {
   "HVACModes": {
    "0": "off",
@@ -1090,6 +1345,114 @@
   "name": "Calypso connect\u00e9",
   "type": "water_heater"
  },
+ "1659": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1659,
+  "name": "TD 270 VS SA 1200M TYB V5S",
+  "type": "water_heater"
+ },
+ "1660": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1660,
+  "name": "TD 200 VS ATS 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1661": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1661,
+  "name": "TD 240 VS ATS 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1662": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1662,
+  "name": "TD 270 VS ATS 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1663": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1663,
+  "name": "TD 200 VS NEU 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
+ "1664": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1664,
+  "name": "TD 270 VS NEU 1200M TYB V5S SERP",
+  "type": "water_heater"
+ },
  "1669": {
   "HVACModes": {
    "0": "off",
@@ -1106,6 +1469,24 @@
   },
   "modelId": 1669,
   "name": "CV5 Aeromax Premium 100L",
+  "type": "water_heater"
+ },
+ "1670": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1670,
+  "name": "CV5 Aeromax Premium 150L",
   "type": "water_heater"
  },
  "1681": {
@@ -1326,6 +1707,57 @@
   "name": "FLAT/S4 IOTHUB",
   "type": "hub"
  },
+ "1954": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus"
+  },
+  "modelId": 1954,
+  "name": "LINEO CONNECTE MP 040L 2250W",
+  "type": "water_heater"
+ },
+ "1955": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus"
+  },
+  "modelId": 1955,
+  "name": "LINEO CONNECTE MP 065L 2250W",
+  "type": "water_heater"
+ },
+ "1956": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus"
+  },
+  "modelId": 1956,
+  "name": "LINEO CONNECTE MP 080L 2250W",
+  "type": "water_heater"
+ },
  "1957": {
   "HVACModes": {
    "0": "off",
@@ -1341,6 +1773,24 @@
   },
   "modelId": 1957,
   "name": "LINEO CONNECTE MP 100L 2250W",
+  "type": "water_heater"
+ },
+ "1961": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1961,
+  "name": "Thermor Malicio 3 40L",
   "type": "water_heater"
  },
  "1962": {
@@ -1361,6 +1811,60 @@
   "name": "Thermor Malicio 3 65L",
   "type": "water_heater"
  },
+ "1963": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1963,
+  "name": "Thermor Malicio 3 80L",
+  "type": "water_heater"
+ },
+ "1964": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1964,
+  "name": "Thermor Malicio 3 MP 100L",
+  "type": "water_heater"
+ },
+ "1965": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1965,
+  "name": "Thermor Malicio 3 VM 100L",
+  "type": "water_heater"
+ },
  "1966": {
   "HVACModes": {
    "0": "off",
@@ -1377,6 +1881,24 @@
   },
   "modelId": 1966,
   "name": "Thermor Malicio 3 120L",
+  "type": "water_heater"
+ },
+ "1967": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1967,
+  "name": "Thermor Malicio 3 150L",
   "type": "water_heater"
  },
  "2": {
@@ -1412,6 +1934,57 @@
   "name": "Alfea Extensa Duo A.I. 3 R32",
   "type": "heat_pump"
  },
+ "219": {
+  "HVACModes": {
+   "0": "off",
+   "1": "heat",
+   "2": "auto"
+  },
+  "HVACModesCapabilityId": [
+   1,
+   2
+  ],
+  "HeatingModes": {
+   "0": "manual"
+  },
+  "currentTemperatureAvailableZ1": true,
+  "currentTemperatureAvailableZ2": true,
+  "exhaustTemperatureAvailable": false,
+  "modelId": 219,
+  "name": "Alfea Extensa Duo A.I. 3 R32 Thermor",
+  "type": "heat_pump"
+ },
+ "227": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 227,
+  "name": "Naema 2 30",
+  "type": "gaz_boiler"
+ },
+ "2345": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2345,
+  "name": "Egeo VS 200L",
+  "type": "water_heater"
+ },
  "2346": {
   "HVACModes": {
    "0": "off",
@@ -1430,6 +2003,60 @@
   "name": "Egeo VS 250L",
   "type": "water_heater"
  },
+ "2347": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2347,
+  "name": "TD 200 VS TH 1800M TYB CA",
+  "type": "water_heater"
+ },
+ "2348": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2348,
+  "name": "TD 250 VS TH 1800M TYB CA",
+  "type": "water_heater"
+ },
+ "2349": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2349,
+  "name": "TD 200 VS SA 1800M TYB CA",
+  "type": "water_heater"
+ },
  "235": {
   "HVACModes": {
    "0": "off",
@@ -1442,6 +2069,60 @@
   "modelId": 235,
   "name": "Thermostat Navilink Connect",
   "type": "thermostat"
+ },
+ "2350": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2350,
+  "name": "TD 250 VS SA 1800M TYB CA",
+  "type": "water_heater"
+ },
+ "2351": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2351,
+  "name": "TD 250 VS ATE 1800M TYB CA SERP",
+  "type": "water_heater"
+ },
+ "2352": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2352,
+  "name": "TD 250 VS THE 1800M TYB CA SERP",
+  "type": "water_heater"
  },
  "236": {
   "HVACModes": {
@@ -1476,6 +2157,42 @@
    "4": "prog"
   },
   "modelId": 2374,
+  "name": "Explorer EVO 3 (270L)",
+  "type": "water_heater"
+ },
+ "2375": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2375,
+  "name": "Explorer EVO 3 (270L)",
+  "type": "water_heater"
+ },
+ "2376": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 2376,
   "name": "Explorer EVO 3 (270L)",
   "type": "water_heater"
  },
@@ -2587,6 +3304,24 @@
   "modelId": 9,
   "name": "Naia Micro 25",
   "type": "gaz_boiler"
+ },
+ "957": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 957,
+  "name": "Egeo VS 200L",
+  "type": "water_heater"
  },
  "999999 zoneName=None deviceName=None": {
   "HVACModes": {

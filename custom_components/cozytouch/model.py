@@ -74,23 +74,110 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
-# The Explorer V5 platform under Atlantic's own badge. The catalogue codes it
-# TD <volume> VS <brand> <power>M TYB <platform>, with SERP for the tank that
-# carries a coil: 1641 is TD 200 VS ATE 1200M TYB V5S and 1645 the same in 270
-# with a coil. 1643 is the fifth cell of that grid, the 200L with a coil, and
-# was the only ATE id of the platform left unmapped -- read off the catalogue
-# rather than a report, where the other four came from captures.
+# Product lines whose ids are a grid the vendor fills in one figure at a time.
+# Each table below holds every id of one line that the catalogue names; the
+# ones that arrived from a capture are marked, and the rest are the catalogue's
+# own listing of the same line in another volume, another badge or another
+# country. See docs/decisions.md for what that evidence is worth.
+
+# 1368 and 754 are two listings of the 200L; 1367 is the 150L of the same line.
+CALYPSO_SPLIT_VM = {
+    754: "Calypso SPLIT VM 200L",
+    1367: "Calypso SPLIT VM 150L",
+    1368: "Calypso SPLIT VM 200L",
+}
+
+# Two listings of one platform: EGEO VS <volume>L, and the internal code
+# TD <volume> VS <brand> 1800M TYB CA. 1010/2346 and 957/2345 are the same two
+# products under both. ATL is Atlantic, TH Thermor, SA Sauter; the badges we
+# have no commercial name for keep the catalogue's string.
+EGEO_PLATFORM = {
+    957: "Egeo VS 200L",
+    1010: "Egeo VS 250L",
+    2345: "Egeo VS 200L",
+    2346: "Egeo VS 250L",
+    2347: "TD 200 VS TH 1800M TYB CA",
+    2348: "TD 250 VS TH 1800M TYB CA",
+    2349: "TD 200 VS SA 1800M TYB CA",
+    2350: "TD 250 VS SA 1800M TYB CA",
+    2351: "TD 250 VS ATE 1800M TYB CA SERP",
+    2352: "TD 250 VS THE 1800M TYB CA SERP",
+}
+
+AEROMAX_PREMIUM_CV5 = {
+    1669: "CV5 Aeromax Premium 100L",
+    1670: "CV5 Aeromax Premium 150L",
+}
+
+# 1957 came from a capture and declares no prog mode, which is why the others
+# do not either: they are the same appliance in another volume.
+LINEO_CONNECTE_MP = {
+    1954: "LINEO CONNECTE MP 040L 2250W",
+    1955: "LINEO CONNECTE MP 065L 2250W",
+    1956: "LINEO CONNECTE MP 080L 2250W",
+    1957: "LINEO CONNECTE MP 100L 2250W",
+}
+
+# MP and VM are two form factors of one range. The names drop that letter, as
+# the two captured ids already did -- except at 100L, where both exist and the
+# letter is the only thing telling them apart.
+MALICIO_3 = {
+    1961: "Thermor Malicio 3 40L",
+    1962: "Thermor Malicio 3 65L",
+    1963: "Thermor Malicio 3 80L",
+    1964: "Thermor Malicio 3 MP 100L",
+    1965: "Thermor Malicio 3 VM 100L",
+    1966: "Thermor Malicio 3 120L",
+    1967: "Thermor Malicio 3 150L",
+}
+
+NAEMA_3 = {
+    1444: "Naema 3 Micro 25",
+    1445: "Naema 3 Micro 30",
+    1446: "Naema 3 Micro 35",
+    1447: "Naema 3 Duo 25",
+    1448: "Naema 3 Duo 35",
+}
+
+# 219 is 211 under the Thermor badge, and the catalogue says so in the name.
+ALFEA_EXTENSA_DUO_AI_3 = {
+    211: "Alfea Extensa Duo A.I. 3 R32",
+    219: "Alfea Extensa Duo A.I. 3 R32 Thermor",
+}
+
+# One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
+# with SERP for the tank that carries a coil. Eight brands share it and the
+# grid is volume x coil x brand.
 #
-# The badge is what the table stops at. TD 200 VS THE / AE / TH / SA / ATS /
-# NEU are the same platform under six other brands and are left alone: nobody
-# has reported one, and mapping a model is what stops the unmapped-model
-# repair asking its owner for the dump that would settle it.
+# Atlantic's own badge, ATE, is the only one with a commercial name we know,
+# so it is the only one whose ids read as Explorer V5; 1656 and 1657/1658 came
+# from captures under the Thermor and AT badges and keep the names their
+# reporters gave. The rest keep the catalogue's string, which is what they
+# already displayed -- what they gain is the water heater type, and with it a
+# resistance sensor that is not called a pump and a hot water mode select with
+# options in it.
 EXPLORER_V5 = {
     1641: "Atlantic Explorer V5 (200L)",
     1642: "Atlantic Explorer V5 (270L)",
     1643: "Atlantic Explorer V5 (200L with coil)",
     1644: "Atlantic Explorer V5 (240L)",
     1645: "Atlantic Explorer V5 (270L with coil)",
+    1646: "TD 200 VS THE 1200M TYB V5S",
+    1647: "TD 270 VS THE 1200M TYB V5S",
+    1648: "TD 200 VS THE 1200M TYB V5S SERP",
+    1649: "TD 270 VS THE 1200M TYB V5S SERP",
+    1650: "TD 200 VS AE 1200M TYB V5S",
+    1651: "TD 270 VS AE 1200M TYB V5S",
+    1652: "TD 200 VS AE 1200M TYB V5S SERP",
+    1653: "TD 240 VS AE 1200M TYB V5S SERP",
+    1654: "TD 270 VS AE 1200M TYB V5S SERP",
+    1655: "TD 200 VS TH 1200M TYB V5S",
+    1659: "TD 270 VS SA 1200M TYB V5S",
+    1660: "TD 200 VS ATS 1200M TYB V5S SERP",
+    1661: "TD 240 VS ATS 1200M TYB V5S SERP",
+    1662: "TD 270 VS ATS 1200M TYB V5S SERP",
+    1663: "TD 200 VS NEU 1200M TYB V5S SERP",
+    1664: "TD 270 VS NEU 1200M TYB V5S SERP",
 }
 
 # One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
@@ -219,6 +306,7 @@ NAEMA_NAIA_BOILERS = {
     12: "Naia Duo 30",
     54: "Naema 2 12",
     55: "Naema 2 20",
+    227: "Naema 2 30",
     57: "Naema 2 Micro 30",
     58: "Naema 2 Micro 35",
     59: "Naia 2 12",
@@ -371,8 +459,8 @@ def get_model_infos(  # noqa: C901
 
         modelInfos.exhaustTemperatureAvailable = False
 
-    elif modelId == 211:
-        modelInfos.name = "Alfea Extensa Duo A.I. 3 R32"
+    elif modelId in (211, 219):
+        modelInfos.name = ALFEA_EXTENSA_DUO_AI_3[modelId]
         modelInfos.type = CozytouchDeviceType.HEAT_PUMP
         modelInfos.currentTemperatureAvailableZ1 = True
         modelInfos.currentTemperatureAvailableZ2 = True
@@ -557,8 +645,8 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId in (1368, 754):
-        modelInfos.name = "Calypso SPLIT VM 200L"
+    elif modelId in CALYPSO_SPLIT_VM:
+        modelInfos.name = CALYPSO_SPLIT_VM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -585,7 +673,7 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId in (1371, 1372):
+    elif modelId in (1370, 1371, 1372):
         modelInfos.name = "Aeromax SPLIT 3"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
@@ -623,16 +711,8 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1444:
-        modelInfos.name = "Naema 3 Micro 25"
-        modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1447:
-        modelInfos.name = "Naema 3 Duo 25"
+    elif modelId in NAEMA_3:
+        modelInfos.name = NAEMA_3[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -667,8 +747,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1669:
-        modelInfos.name = "CV5 Aeromax Premium 100L"
+    elif modelId in AEROMAX_PREMIUM_CV5:
+        modelInfos.name = AEROMAX_PREMIUM_CV5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -716,8 +796,8 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId == 1962:
-        modelInfos.name = "Thermor Malicio 3 65L"
+    elif modelId in MALICIO_3:
+        modelInfos.name = MALICIO_3[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -730,8 +810,20 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1966:
-        modelInfos.name = "Thermor Malicio 3 120L"
+    elif modelId in LINEO_CONNECTE_MP:
+        modelInfos.name = LINEO_CONNECTE_MP[modelId]
+        modelInfos.type = CozytouchDeviceType.WATER_HEATER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos.HeatingModes = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+        }
+    elif modelId in EGEO_PLATFORM:
+        modelInfos.name = EGEO_PLATFORM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -744,33 +836,7 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1957:
-        modelInfos.name = "LINEO CONNECTE MP 100L 2250W"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-        }
-    elif modelId in (2346, 1010):
-        modelInfos.name = "Egeo VS 250L"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 2374:
+    elif modelId in (2374, 2375, 2376):
         modelInfos.name = "Explorer EVO 3 (270L)"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
