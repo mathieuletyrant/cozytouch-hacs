@@ -74,6 +74,30 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
+# One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
+# VM 150L and VM 200L variants. Only the commercial name changes between the
+# ids, so they share a branch. Names are the catalogue's own string, verbatim,
+# because on this platform the brand *is* the name.
+#
+# The last three are that fourth badge, and are read off the catalogue rather
+# than off a report: "THE DURALIS CONNECT VM 150 2200M PE" carries the product
+# line and the figures of 393 and differs in the listing prefix, the dropped
+# ACI HYB and a PE suffix. 386-394 came from captures; these three did not.
+ACI_HYB_WATER_HEATERS = {
+    386: "PHAZY VS 300L 3000M",
+    387: "PHAZY VM 150L 2200M",
+    388: "PHAZY VM 200L 2200M",
+    389: "AQUEO ACI HYB VS 300L 3000M",
+    390: "AQUEO ACI HYB VM 150L 2200M",
+    391: "AQUEO ACI HYB VM 200L 2200M",
+    392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
+    393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
+    394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
+    1364: "THE DURALIS CONNECT VM 150 2200M PE",
+    1365: "THE DURALIS CONNECT VM 200 2200M PE",
+    1366: "THE DURALIS CONNECT VS 300 3000M PE",
+}
+
 # The connectivity box, under each of the brands it is sold as. The catalogue
 # calls 2447 "Hub IO Sauter" and the next three "Hub IO Thermor", "Hub IO
 # Atlantic" and "Hub IO Inter": one box, four badges. This is a set rather
@@ -369,21 +393,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif 386 <= modelId <= 394:
-        # One ACI HYB hybrid water heater platform sold under three brands, in
-        # VS 300L, VM 150L and VM 200L variants. Only the commercial name
-        # changes between the nine ids, so they share a branch.
-        modelInfos.name = {
-            386: "PHAZY VS 300L 3000M",
-            387: "PHAZY VM 150L 2200M",
-            388: "PHAZY VM 200L 2200M",
-            389: "AQUEO ACI HYB VS 300L 3000M",
-            390: "AQUEO ACI HYB VM 150L 2200M",
-            391: "AQUEO ACI HYB VM 200L 2200M",
-            392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
-            393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
-            394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
-        }[modelId]
+    elif modelId in ACI_HYB_WATER_HEATERS:
+        modelInfos.name = ACI_HYB_WATER_HEATERS[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,

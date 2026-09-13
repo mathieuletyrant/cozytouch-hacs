@@ -1208,3 +1208,26 @@ def test_the_towel_rack_table_keeps_the_names_the_mapped_ids_had():
     assert get_model_infos(1388)["name"] == "Doris étroit 1500W BLC"
     assert get_model_infos(1588)["name"] == "Doris étroit 1500W BLC"
     assert get_model_infos(1622)["name"] == "Riva 5 étroit 1300W BLC"
+
+
+# ------------------------------------------------ the fourth ACI HYB badge
+
+
+@pytest.mark.parametrize(
+    ("modelId", "name"),
+    [
+        (1364, "THE DURALIS CONNECT VM 150 2200M PE"),
+        (1365, "THE DURALIS CONNECT VM 200 2200M PE"),
+        (1366, "THE DURALIS CONNECT VS 300 3000M PE"),
+    ],
+)
+def test_a_catalogue_aci_hyb_water_heater_joins_the_platform(modelId, name):
+    """The Duralis Connect under a fourth badge, read off the catalogue rather
+    than a report : same product line, same volume, same power as 392-394. It
+    claims what the nine captured ids claim and nothing more.
+    """
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == name
+    assert infos["type"] is CozytouchDeviceType.WATER_HEATER
+    assert infos["HeatingModes"] == get_model_infos(393)["HeatingModes"]

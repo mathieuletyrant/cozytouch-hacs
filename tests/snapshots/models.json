@@ -81,6 +81,60 @@
   "name": "Calypso Split Interface",
   "type": "hub"
  },
+ "1364": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1364,
+  "name": "THE DURALIS CONNECT VM 150 2200M PE",
+  "type": "water_heater"
+ },
+ "1365": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1365,
+  "name": "THE DURALIS CONNECT VM 200 2200M PE",
+  "type": "water_heater"
+ },
+ "1366": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "HeatingModes": {
+   "0": "manual",
+   "3": "eco_plus",
+   "4": "prog"
+  },
+  "modelId": 1366,
+  "name": "THE DURALIS CONNECT VS 300 3000M PE",
+  "type": "water_heater"
+ },
  "1368": {
   "HVACModes": {
    "0": "off",
