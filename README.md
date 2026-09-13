@@ -68,29 +68,29 @@ rooms in.
 
 ### 🔥 Boilers / Chaudières
 
-| modelId | Model |
-| ------: | ----- |
-| 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
-| 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
-| 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
-| 227 | Naema 2 30 |
-| 1444-1446 | Naema 3 Micro 25, 30, 35 |
-| 1447, 1448 | Naema 3 Duo 25, 35 |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Naema / Naia | 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
+| Naema / Naia | 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
+| Naema 2 / Naia 2 | 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
+| Naema 2 / Naia 2 | 227 | Naema 2 30 |
+| Naema 3 | 1444-1446 | Naema 3 Micro 25, 30, 35 |
+| Naema 3 | 1447, 1448 | Naema 3 Duo 25, 35 |
 
 ### ♨️ Heat pumps / Pompes à chaleur
 
-| modelId | Model |
-| ------: | ----- |
-| 76 | Alfea Extensa Duo AI UE |
-| 211 | Alfea Extensa Duo A.I. 3 R32 |
-| 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Alfea | 76 | Alfea Extensa Duo AI UE |
+| Alfea | 211 | Alfea Extensa Duo A.I. 3 R32 |
+| Alfea | 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
 
 ### 🎛️ Thermostats
 
-| modelId | Model |
-| ------: | ----- |
-| 235 | Thermostat Navilink Connect |
-| 418 | Loria 3 Duo R32 |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Loria | 418 | Loria 3 Duo R32 |
+| Navilink | 235 | Thermostat Navilink Connect |
 
 ### 🚿 Water heaters / Chauffe-eau
 
@@ -127,13 +127,13 @@ badges and volumes -- the line is what tells you whether a row is yours.
 
 ### 🧖 Towel racks / Sèche-serviettes
 
-| modelId | Model |
-| ------: | ----- |
-| 1381 | KELUD 1750W BLC |
-| 1382 | KELUD 1750W Anthracite Standard |
-| 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
-| 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
-| 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Asama | 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
+| Doris | 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
+| Kelud | 1381 | KELUD 1750W BLC |
+| Kelud | 1382 | KELUD 1750W Anthracite Standard |
+| Riva | 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
 
 ### 🏠 Room slots / Emplacements de pièce
 
@@ -155,15 +155,14 @@ that is the bug -- send the diagnostics dump and say which gateway it sits on.
 
 ### 📡 Gateways / Passerelles
 
-| modelId | Model |
-| ------: | ----- |
-| 556 | Naviclim Hub |
-| 1353 | Calypso Split Interface |
-| 1457 | HUB Cozytouch |
-| 1681 | HUB Navizone |
-| 1758 | HUB Navizone |
-| 1763 | FLAT/S4 IOTHUB |
-| 2447-2450 | Hub IO, Sauter / Thermor / Atlantic / Inter (CozyBox) |
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Calypso | 1353 | Calypso Split Interface |
+| CozyBox | 2447-2450 | Hub IO, Sauter / Thermor / Atlantic / Inter (CozyBox) |
+| Cozytouch | 1457 | HUB Cozytouch |
+| FLAT/S4 | 1763 | FLAT/S4 IOTHUB |
+| Naviclim | 556 | Naviclim Hub |
+| Navizone | 1681, 1758 | HUB Navizone |
 
 ### ❓ My device is not listed
 
