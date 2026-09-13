@@ -88,9 +88,9 @@ def test_a_zone_maps_to_nothing_at_all():
         ),
         ("ecoModeAvailable", AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),
-        ("currentTemperatureAvailableZ1", {76, 211, 418}),
-        ("currentTemperatureAvailableZ2", {76, 211, 418}),
-        ("exhaustTemperatureAvailable", {76, 211, 418}),
+        ("currentTemperatureAvailableZ1", {76, 211, 219, 418}),
+        ("currentTemperatureAvailableZ2", {76, 211, 219, 418}),
+        ("exhaustTemperatureAvailable", {76, 211, 219, 418}),
         # Documented in model.py and read in capability.py, but no model has ever
         # declared it. It only ever resolves to its default.
         ("currentTemperatureAvailable", set()),

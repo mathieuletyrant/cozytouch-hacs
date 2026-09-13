@@ -478,6 +478,47 @@ an existing install keeps an orphan number entity to delete by hand --
 same trade as every promotion, taken for the same reason: the old shape
 accepted writes the hardware never did.
 
+## What a catalogue name is worth as evidence
+
+### `# catalogue only`, and why two thirds of the table carries it
+
+`GET /magellan/productmodels/models/{id}` names roughly 1500 model ids, and
+`model_catalogue.py` is that scrape. It was added so an unmapped device would
+read as its own product rather than `Unknown product (1234)`, and it decided
+nothing else -- an id in it and nowhere else stayed typed UNKNOWN.
+
+Reading it a second way turned out to be worth more. A product line in that
+catalogue is a grid the vendor fills in one figure at a time: a volume, a
+coil, a finish, a brand badge, a country. `RIVA 5 ETROIT 0300W CARBONE` sits
+beside the `RIVA 5 ETROIT 1300W BLC` somebody captured; `TD 200 VS ATE 1200M
+TYB V5S SERP` is the tank of `TD 200 VS ATE 1200M TYB V5S` with a coil in it.
+Where the rest of a line was captured, the empty cells are the same appliance,
+and the branch body those captures produced is the answer for all of them.
+
+That is how 131 of the 203 mapped ids got here. Each is marked
+`# catalogue only` in `model.py`, or sits in a table whose own comment says
+the whole body is catalogue-sourced.
+
+**What the marker promises, and what it does not.** A catalogue name is
+evidence of identity, never of behaviour. So a marked id may claim exactly
+what its captured sibling claims -- the name, the type and the modes -- and a
+test asserts that field by field. It may not carry a flag of its own, because
+a flag is a statement about what hardware does and nothing here has watched
+this hardware do anything. Two cases where that line was drawn against the
+temptation: the Lineo volumes inherit 1957's heating modes with `prog`
+missing rather than the generic three, and `LORIA 3 DUO 2C R32` was left
+unmapped because `2C` is a second circuit and its sibling declares
+`currentTemperatureAvailableZ2 = False`.
+
+**What it costs.** Mapping a model is what stops the unmapped-model repair
+asking its owner for a diagnostics dump. Every id taken this way is a dump
+that will now never arrive. That trade is worth making for a finish or a
+badge, where the guess is nearly free and the alternative is a dialog
+nagging somebody about a radiator that works; it is not worth making across a
+generation or a power rating, which is why the `Alfea Extensa Duo AI UE`
+variants and `NAIA 2 micro 25 G20/G25` are still unmapped and a test pins
+them that way.
+
 ## The capability-only derivation (tried, and dropped)
 
 ### `derive.py` existed for one release, and the dump carries its inputs now

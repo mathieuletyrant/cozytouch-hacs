@@ -41,10 +41,22 @@ Every Cozytouch device is identified by a numeric `modelId`, and each one needs
 its own mapping before its capabilities turn into Home Assistant entities. The
 tables below are the whole of what is mapped today.
 
-Most of these mappings were built from a single user's capture of their own
-unit. They say what that device reported -- not that every feature has been
-exercised on every variant. The *names* are cross-checked against Atlantic's
-own model catalogue where the id has been read back from it.
+These mappings come from two sources, and the difference matters when you read
+a table row.
+
+Some were built from a single user's capture of their own unit. They say what
+that device reported -- not that every feature has been exercised on every
+variant.
+
+The rest, and today that is most of them -- 131 of the 203 ids below -- were
+never captured at all. Atlantic's own model catalogue lists them in a product
+line whose other cells *were* captured: the same appliance in another volume,
+another finish, another brand badge or another country. Those take the answer
+their captured sibling gives and their own name, and nothing else; in
+`model.py` each one is marked `# catalogue only`. It is a good guess about
+hardware nobody here has seen, which is worth saying plainly: if one of them
+is yours and something reads wrong, that is the mapping and not your device --
+send the dump.
 
 **Some ids are slots, not products.** A gateway reports each room it drives
 under its own `modelId`, counting from the first : the vendor's catalogue calls
@@ -61,8 +73,9 @@ rooms in.
 | 1-12 | Naema / Naia (12, 20, Micro 25-35, Duo 30-35) |
 | 54-69 | Naema 2 / Naia 2 (12, 20, Micro 25-35, Duo 25-35 HE) |
 | 253-254, 256-261, 265-267, 269-270 | Naema / Naia variants (Sr, SP, Cuerpo Caldera) |
-| 1444 | Naema 3 Micro 25 |
-| 1447 | Naema 3 Duo 25 |
+| 227 | Naema 2 30 |
+| 1444-1446 | Naema 3 Micro 25, 30, 35 |
+| 1447, 1448 | Naema 3 Duo 25, 35 |
 
 ### ♨️ Heat pumps / Pompes à chaleur
 
@@ -70,6 +83,7 @@ rooms in.
 | ------: | ----- |
 | 76 | Alfea Extensa Duo AI UE |
 | 211 | Alfea Extensa Duo A.I. 3 R32 |
+| 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
 
 ### 🎛️ Thermostats
 
@@ -92,22 +106,31 @@ rooms in.
 | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
 | 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
 | 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
+| 1364 | THE DURALIS CONNECT VM 150 2200M PE |
+| 1365 | THE DURALIS CONNECT VM 200 2200M PE |
+| 1366 | THE DURALIS CONNECT VS 300 3000M PE |
 | 754, 1368 | Calypso SPLIT VM 200L |
+| 1367 | Calypso SPLIT VM 150L |
 | 664, 1369, 1376 | Calypso Split |
-| 1371, 1372 | Aeromax SPLIT 3 |
+| 1370-1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
 | 1642 | Atlantic Explorer V5 (270L) |
+| 1643 | Atlantic Explorer V5 (200L with coil) |
 | 1644 | Atlantic Explorer V5 (240L) |
 | 1645 | Atlantic Explorer V5 (270L with coil) |
+| 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
+| 2347-2352 | the Egeo platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
 | 1656 | Aeromax 6 |
 | 1669 | CV5 Aeromax Premium 100L |
+| 1670 | CV5 Aeromax Premium 150L |
 | 1657 | Calypso 200L |
 | 1658 | Calypso connecté |
-| 1957 | LINEO CONNECTE MP 100L 2250W |
-| 1962 | Thermor Malicio 3 65L |
-| 1966 | Thermor Malicio 3 120L |
+| 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
+| 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
+| 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
+| 957, 2345 | Egeo VS 200L |
 | 1010, 2346 | Egeo VS 250L |
-| 2374 | Explorer EVO 3 (270L) |
+| 2374-2376 | Explorer EVO 3 (270L) |
 
 ### 🧖 Towel racks / Sèche-serviettes
 

@@ -74,12 +74,149 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
+# Product lines whose ids are a grid the vendor fills in one figure at a time.
+# Each table below holds every id of one line that the catalogue names.
+#
+# `# catalogue only` on an entry means nobody has ever sent a capture of that
+# id: it is mapped because the vendor's catalogue lists it in a line whose
+# other cells were captured, in another volume, another badge or another
+# country. Two thirds of this table's ids carry it, so read a table without
+# the marker as the exception rather than the rule -- and a table whose whole
+# body is catalogue-sourced says so in its own comment instead of repeating
+# the marker on every line. See docs/decisions.md.
+
+# 1368 and 754 are two listings of the 200L; 1367 is the 150L of the same line.
+CALYPSO_SPLIT_VM = {
+    754: "Calypso SPLIT VM 200L",  # catalogue only
+    1367: "Calypso SPLIT VM 150L",  # catalogue only
+    1368: "Calypso SPLIT VM 200L",
+}
+
+# Two listings of one platform: EGEO VS <volume>L, and the internal code
+# TD <volume> VS <brand> 1800M TYB CA. 1010/2346 and 957/2345 are the same two
+# products under both. ATL is Atlantic, TH Thermor, SA Sauter; the badges we
+# have no commercial name for keep the catalogue's string.
+EGEO_PLATFORM = {
+    957: "Egeo VS 200L",  # catalogue only
+    1010: "Egeo VS 250L",  # catalogue only
+    2345: "Egeo VS 200L",  # catalogue only
+    2346: "Egeo VS 250L",
+    2347: "TD 200 VS TH 1800M TYB CA",  # catalogue only
+    2348: "TD 250 VS TH 1800M TYB CA",  # catalogue only
+    2349: "TD 200 VS SA 1800M TYB CA",  # catalogue only
+    2350: "TD 250 VS SA 1800M TYB CA",  # catalogue only
+    2351: "TD 250 VS ATE 1800M TYB CA SERP",  # catalogue only
+    2352: "TD 250 VS THE 1800M TYB CA SERP",  # catalogue only
+}
+
+AEROMAX_PREMIUM_CV5 = {
+    1669: "CV5 Aeromax Premium 100L",
+    1670: "CV5 Aeromax Premium 150L",  # catalogue only
+}
+
+# 1957 came from a capture and declares no prog mode, which is why the others
+# do not either: they are the same appliance in another volume.
+LINEO_CONNECTE_MP = {
+    1954: "LINEO CONNECTE MP 040L 2250W",  # catalogue only
+    1955: "LINEO CONNECTE MP 065L 2250W",  # catalogue only
+    1956: "LINEO CONNECTE MP 080L 2250W",  # catalogue only
+    1957: "LINEO CONNECTE MP 100L 2250W",
+}
+
+# MP and VM are two form factors of one range. The names drop that letter, as
+# the two captured ids already did -- except at 100L, where both exist and the
+# letter is the only thing telling them apart.
+MALICIO_3 = {
+    1961: "Thermor Malicio 3 40L",  # catalogue only
+    1962: "Thermor Malicio 3 65L",
+    1963: "Thermor Malicio 3 80L",  # catalogue only
+    1964: "Thermor Malicio 3 MP 100L",  # catalogue only
+    1965: "Thermor Malicio 3 VM 100L",  # catalogue only
+    1966: "Thermor Malicio 3 120L",
+    1967: "Thermor Malicio 3 150L",  # catalogue only
+}
+
+NAEMA_3 = {
+    1444: "Naema 3 Micro 25",
+    1445: "Naema 3 Micro 30",  # catalogue only
+    1446: "Naema 3 Micro 35",  # catalogue only
+    1447: "Naema 3 Duo 25",
+    1448: "Naema 3 Duo 35",  # catalogue only
+}
+
+# 219 is 211 under the Thermor badge, and the catalogue says so in the name.
+ALFEA_EXTENSA_DUO_AI_3 = {
+    211: "Alfea Extensa Duo A.I. 3 R32",
+    219: "Alfea Extensa Duo A.I. 3 R32 Thermor",  # catalogue only
+}
+
+# One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
+# with SERP for the tank that carries a coil. Eight brands share it and the
+# grid is volume x coil x brand.
+#
+# Atlantic's own badge, ATE, is the only one with a commercial name we know,
+# so it is the only one whose ids read as Explorer V5; 1656 and 1657/1658 came
+# from captures under the Thermor and AT badges and keep the names their
+# reporters gave. The rest keep the catalogue's string, which is what they
+# already displayed -- what they gain is the water heater type, and with it a
+# resistance sensor that is not called a pump and a hot water mode select with
+# options in it.
+EXPLORER_V5 = {
+    1641: "Atlantic Explorer V5 (200L)",
+    1642: "Atlantic Explorer V5 (270L)",
+    1643: "Atlantic Explorer V5 (200L with coil)",  # catalogue only
+    1644: "Atlantic Explorer V5 (240L)",
+    1645: "Atlantic Explorer V5 (270L with coil)",
+    1646: "TD 200 VS THE 1200M TYB V5S",  # catalogue only
+    1647: "TD 270 VS THE 1200M TYB V5S",  # catalogue only
+    1648: "TD 200 VS THE 1200M TYB V5S SERP",  # catalogue only
+    1649: "TD 270 VS THE 1200M TYB V5S SERP",  # catalogue only
+    1650: "TD 200 VS AE 1200M TYB V5S",  # catalogue only
+    1651: "TD 270 VS AE 1200M TYB V5S",  # catalogue only
+    1652: "TD 200 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1653: "TD 240 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1654: "TD 270 VS AE 1200M TYB V5S SERP",  # catalogue only
+    1655: "TD 200 VS TH 1200M TYB V5S",  # catalogue only
+    1659: "TD 270 VS SA 1200M TYB V5S",  # catalogue only
+    1660: "TD 200 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1661: "TD 240 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1662: "TD 270 VS ATS 1200M TYB V5S SERP",  # catalogue only
+    1663: "TD 200 VS NEU 1200M TYB V5S SERP",  # catalogue only
+    1664: "TD 270 VS NEU 1200M TYB V5S SERP",  # catalogue only
+}
+
+# One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
+# VM 150L and VM 200L variants. Only the commercial name changes between the
+# ids, so they share a branch. Names are the catalogue's own string, verbatim,
+# because on this platform the brand *is* the name.
+#
+# The last three are that fourth badge, and are read off the catalogue rather
+# than off a report: "THE DURALIS CONNECT VM 150 2200M PE" carries the product
+# line and the figures of 393 and differs in the listing prefix, the dropped
+# ACI HYB and a PE suffix. 386-394 came from captures; these three did not.
+ACI_HYB_WATER_HEATERS = {
+    386: "PHAZY VS 300L 3000M",
+    387: "PHAZY VM 150L 2200M",
+    388: "PHAZY VM 200L 2200M",
+    389: "AQUEO ACI HYB VS 300L 3000M",
+    390: "AQUEO ACI HYB VM 150L 2200M",
+    391: "AQUEO ACI HYB VM 200L 2200M",
+    392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
+    393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
+    394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
+    1364: "THE DURALIS CONNECT VM 150 2200M PE",  # catalogue only
+    1365: "THE DURALIS CONNECT VM 200 2200M PE",  # catalogue only
+    1366: "THE DURALIS CONNECT VS 300 3000M PE",  # catalogue only
+}
+
 # The connectivity box, under each of the brands it is sold as. The catalogue
 # calls 2447 "Hub IO Sauter" and the next three "Hub IO Thermor", "Hub IO
 # Atlantic" and "Hub IO Inter": one box, four badges. This is a set rather
 # than four branches because the branch below is not the whole of it -- a room
 # slot reads its master's id to tell a radiator from an air conditioner, and
 # an unmapped badge sent every one of them to the air conditioner branch.
+# 2448, 2449 and 2450 are catalogue only -- 2447 is the badge that was
+# captured.
 COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 
 # The three connected towel rack ranges, by model id. Every one of these is the
@@ -95,54 +232,54 @@ COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 # it renames the device of somebody who already has one.
 TOWEL_RACK_VARIANTS = {
     1388: "Doris étroit 1500W BLC",
-    1540: "Asama Connecté II 500W BLC",
-    1541: "Asama Connecté II 750W BLC",
-    1542: "Asama Connecté II 1500W BLC",
+    1540: "Asama Connecté II 500W BLC",  # catalogue only
+    1541: "Asama Connecté II 750W BLC",  # catalogue only
+    1542: "Asama Connecté II 1500W BLC",  # catalogue only
     1543: "Asama Connecté II 1750W Blanc",
-    1544: "Asama Connecté II 500W ANTH",
-    1545: "Asama Connecté II 750W ANTH",
+    1544: "Asama Connecté II 500W ANTH",  # catalogue only
+    1545: "Asama Connecté II 750W ANTH",  # catalogue only
     1546: "Asama Connecté II 1500W ANTH",
     1547: "Asama Connecté II 1750W ANTH",
-    1548: "Asama Connecté II 500W NOIR",
-    1549: "Asama Connecté II 750W NOIR",
-    1550: "Asama Connecté II 1500W NOIR",
+    1548: "Asama Connecté II 500W NOIR",  # catalogue only
+    1549: "Asama Connecté II 750W NOIR",  # catalogue only
+    1550: "Asama Connecté II 1500W NOIR",  # catalogue only
     1551: "Asama Connecté II 1750W Noir",
-    1552: "Asama Connecté II 500W CAPP",
-    1553: "Asama Connecté II 750W CAPP",
-    1554: "Asama Connecté II 1500W CAPP",
-    1555: "Asama Connecté II 1750W CAPP",
-    1562: "Doris étroit 300W BLC",
-    1563: "Doris étroit 500W BLC",
-    1564: "Riva 5 étroit 300W BLC",
-    1565: "Riva 5 étroit 500W BLC",
-    1587: "Doris étroit 1300W BLC",
+    1552: "Asama Connecté II 500W CAPP",  # catalogue only
+    1553: "Asama Connecté II 750W CAPP",  # catalogue only
+    1554: "Asama Connecté II 1500W CAPP",  # catalogue only
+    1555: "Asama Connecté II 1750W CAPP",  # catalogue only
+    1562: "Doris étroit 300W BLC",  # catalogue only
+    1563: "Doris étroit 500W BLC",  # catalogue only
+    1564: "Riva 5 étroit 300W BLC",  # catalogue only
+    1565: "Riva 5 étroit 500W BLC",  # catalogue only
+    1587: "Doris étroit 1300W BLC",  # catalogue only
     1588: "Doris étroit 1500W BLC",
-    1589: "Doris étroit 300W ANTH",
-    1590: "Doris étroit 500W ANTH",
-    1591: "Doris étroit 1300W ANTH",
-    1592: "Doris étroit 1500W ANTH",
-    1593: "Doris étroit 300W CARAT",
-    1594: "Doris étroit 500W CARAT",
+    1589: "Doris étroit 300W ANTH",  # catalogue only
+    1590: "Doris étroit 500W ANTH",  # catalogue only
+    1591: "Doris étroit 1300W ANTH",  # catalogue only
+    1592: "Doris étroit 1500W ANTH",  # catalogue only
+    1593: "Doris étroit 300W CARAT",  # catalogue only
+    1594: "Doris étroit 500W CARAT",  # catalogue only
     1595: "Doris étroit 1300W CARAT",
-    1596: "Doris étroit 1500W CARAT",
-    1597: "Doris étroit 300W NOIR",
-    1598: "Doris étroit 500W NOIR",
-    1599: "Doris étroit 1300W NOIR",
-    1600: "Doris étroit 1500W NOIR",
+    1596: "Doris étroit 1500W CARAT",  # catalogue only
+    1597: "Doris étroit 300W NOIR",  # catalogue only
+    1598: "Doris étroit 500W NOIR",  # catalogue only
+    1599: "Doris étroit 1300W NOIR",  # catalogue only
+    1600: "Doris étroit 1500W NOIR",  # catalogue only
     1622: "Riva 5 étroit 1300W BLC",
-    1623: "Riva 5 étroit 1500W BLC",
-    1624: "Riva 5 étroit 300W ARDOISE",
-    1625: "Riva 5 étroit 300W MENHIR",
-    1626: "Riva 5 étroit 500W MENHIR",
-    1627: "Riva 5 étroit 1300W MENHIR",
-    1628: "Riva 5 étroit 1500W MENHIR",
-    1629: "Riva 5 étroit 500W ARDOISE",
-    1630: "Riva 5 étroit 1300W ARDOISE",
-    1631: "Riva 5 étroit 1500W ARDOISE",
-    1632: "Riva 5 étroit 300W CARBONE",
-    1633: "Riva 5 étroit 500W CARBONE",
-    1634: "Riva 5 étroit 1300W CARBONE",
-    1635: "Riva 5 étroit 1500W CARBONE",
+    1623: "Riva 5 étroit 1500W BLC",  # catalogue only
+    1624: "Riva 5 étroit 300W ARDOISE",  # catalogue only
+    1625: "Riva 5 étroit 300W MENHIR",  # catalogue only
+    1626: "Riva 5 étroit 500W MENHIR",  # catalogue only
+    1627: "Riva 5 étroit 1300W MENHIR",  # catalogue only
+    1628: "Riva 5 étroit 1500W MENHIR",  # catalogue only
+    1629: "Riva 5 étroit 500W ARDOISE",  # catalogue only
+    1630: "Riva 5 étroit 1300W ARDOISE",  # catalogue only
+    1631: "Riva 5 étroit 1500W ARDOISE",  # catalogue only
+    1632: "Riva 5 étroit 300W CARBONE",  # catalogue only
+    1633: "Riva 5 étroit 500W CARBONE",  # catalogue only
+    1634: "Riva 5 étroit 1300W CARBONE",  # catalogue only
+    1635: "Riva 5 étroit 1500W CARBONE",  # catalogue only
 }
 
 # Boilers whose only source is the vendor's model catalogue: name, and the
@@ -176,6 +313,7 @@ NAEMA_NAIA_BOILERS = {
     12: "Naia Duo 30",
     54: "Naema 2 12",
     55: "Naema 2 20",
+    227: "Naema 2 30",
     57: "Naema 2 Micro 30",
     58: "Naema 2 Micro 35",
     59: "Naia 2 12",
@@ -328,8 +466,8 @@ def get_model_infos(  # noqa: C901
 
         modelInfos.exhaustTemperatureAvailable = False
 
-    elif modelId == 211:
-        modelInfos.name = "Alfea Extensa Duo A.I. 3 R32"
+    elif modelId in (211, 219):
+        modelInfos.name = ALFEA_EXTENSA_DUO_AI_3[modelId]
         modelInfos.type = CozytouchDeviceType.HEAT_PUMP
         modelInfos.currentTemperatureAvailableZ1 = True
         modelInfos.currentTemperatureAvailableZ2 = True
@@ -369,21 +507,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif 386 <= modelId <= 394:
-        # One ACI HYB hybrid water heater platform sold under three brands, in
-        # VS 300L, VM 150L and VM 200L variants. Only the commercial name
-        # changes between the nine ids, so they share a branch.
-        modelInfos.name = {
-            386: "PHAZY VS 300L 3000M",
-            387: "PHAZY VM 150L 2200M",
-            388: "PHAZY VM 200L 2200M",
-            389: "AQUEO ACI HYB VS 300L 3000M",
-            390: "AQUEO ACI HYB VM 150L 2200M",
-            391: "AQUEO ACI HYB VM 200L 2200M",
-            392: "DURALIS CONNECT ACI HYB VS 300L 3000M",
-            393: "DURALIS CONNECT ACI HYB VM 150L 2200M",
-            394: "DURALIS CONNECT ACI HYB VM 200L 2200M",
-        }[modelId]
+    elif modelId in ACI_HYB_WATER_HEATERS:
+        modelInfos.name = ACI_HYB_WATER_HEATERS[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -527,8 +652,8 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId in (1368, 754):
-        modelInfos.name = "Calypso SPLIT VM 200L"
+    elif modelId in CALYPSO_SPLIT_VM:
+        modelInfos.name = CALYPSO_SPLIT_VM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -541,6 +666,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
+    # 664 is catalogue only: the same string as 1369 in the vendor's older
+    # all-capitals listing.
     elif modelId in (1369, 1376, 664):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
@@ -555,7 +682,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId in (1371, 1372):
+    # 1370 is catalogue only: the 150L of a range captured in 200L and 270L.
+    elif modelId in (1370, 1371, 1372):
         modelInfos.name = "Aeromax SPLIT 3"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
@@ -593,66 +721,16 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1444:
-        modelInfos.name = "Naema 3 Micro 25"
+    elif modelId in NAEMA_3:
+        modelInfos.name = NAEMA_3[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
             4: HVACMode.HEAT,
         }
 
-    elif modelId == 1447:
-        modelInfos.name = "Naema 3 Duo 25"
-        modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1641:
-        modelInfos.name = "Atlantic Explorer V5 (200L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1642:
-        modelInfos.name = "Atlantic Explorer V5 (270L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1644:
-        modelInfos.name = "Atlantic Explorer V5 (240L)"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 1645:
-        modelInfos.name = "Atlantic Explorer V5 (270L with coil)"
+    elif modelId in EXPLORER_V5:
+        modelInfos.name = EXPLORER_V5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -679,8 +757,8 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1669:
-        modelInfos.name = "CV5 Aeromax Premium 100L"
+    elif modelId in AEROMAX_PREMIUM_CV5:
+        modelInfos.name = AEROMAX_PREMIUM_CV5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -728,8 +806,8 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId == 1962:
-        modelInfos.name = "Thermor Malicio 3 65L"
+    elif modelId in MALICIO_3:
+        modelInfos.name = MALICIO_3[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -742,8 +820,20 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1966:
-        modelInfos.name = "Thermor Malicio 3 120L"
+    elif modelId in LINEO_CONNECTE_MP:
+        modelInfos.name = LINEO_CONNECTE_MP[modelId]
+        modelInfos.type = CozytouchDeviceType.WATER_HEATER
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            4: HVACMode.HEAT,
+        }
+
+        modelInfos.HeatingModes = {
+            0: HEATING_MODE_MANUAL,
+            3: HEATING_MODE_ECO_PLUS,
+        }
+    elif modelId in EGEO_PLATFORM:
+        modelInfos.name = EGEO_PLATFORM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -756,33 +846,9 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId == 1957:
-        modelInfos.name = "LINEO CONNECTE MP 100L 2250W"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-        }
-    elif modelId in (2346, 1010):
-        modelInfos.name = "Egeo VS 250L"
-        modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
-
-    elif modelId == 2374:
+    # 2375 and 2376 are catalogue only: 2374 without the coil, and 2374 sold
+    # into Austria rather than Germany.
+    elif modelId in (2374, 2375, 2376):
         modelInfos.name = "Explorer EVO 3 (270L)"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
