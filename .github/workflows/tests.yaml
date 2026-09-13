@@ -61,7 +61,7 @@ jobs:
             homeassistant: "2026.8.3"
             requirements: "requirements_test.txt"
           - python: "3.13.7"
-            homeassistant: "2025.4.0"
+            homeassistant: "2025.12.0"
             requirements: "requirements_test_min.txt"
     steps:
       - uses: "actions/checkout@v4"

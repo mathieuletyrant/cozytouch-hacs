@@ -23,13 +23,11 @@ from homeassistant.const import (
     UnitOfVolume,
 )
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .capability import describe_capability_value, read_setpoint
 from .const import DOMAIN, CozytouchCapabilityVariableType
-from .hub import CozytouchConfigEntry, Hub, device_info_for
+from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
 from .infos import CapabilityCategory, CapabilityType
 
 _LOGGER = logging.getLogger(__name__)
@@ -337,7 +335,7 @@ async def async_setup_entry(
             async_add_entities(sensors, True, config_subentry_id=subentry_id)
 
 
-class CozytouchSensor(SensorEntity, CoordinatorEntity):
+class CozytouchSensor(SensorEntity, CozytouchDeviceEntity):
     """Common class for sensors."""
 
     _attr_has_entity_name = True
@@ -448,11 +446,6 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
             return value
 
         return value
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @property
     def native_value(self):
@@ -920,7 +913,7 @@ class CozytouchErrorCodeSensor(CozytouchSensor):
         return decode_error_code(value)
 
 
-class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):
+class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
     """When the device last changed any of the values it reports.
 
     Every capability item carries a `modificationDate` alongside its value, and
@@ -953,11 +946,6 @@ class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_device_update"
 
     @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
-
-    @property
     def native_value(self) -> datetime.datetime | None:
         """The newest date the device reports, as an aware datetime.
 
@@ -978,7 +966,7 @@ class CozytouchLastUpdateSensor(CoordinatorEntity, SensorEntity):
         self.async_write_ha_state()
 
 
-class CozytouchLastPollSensor(CoordinatorEntity, SensorEntity):
+class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     """When the integration last fetched the account from the API.
 
     The other half of the question `CozytouchLastUpdateSensor` answers : that
@@ -1007,11 +995,6 @@ class CozytouchLastPollSensor(CoordinatorEntity, SensorEntity):
         # Like its sibling above : not keyed on a capability id, and
         # `last_poll` is a name capability.py can never produce.
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_poll"
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @property
     def available(self) -> bool:

@@ -14,9 +14,12 @@ subentries, and neither needs a coordinator.
 
 from types import SimpleNamespace
 
-from custom_components.cozytouch import _register_devices
+import pytest
+
+from custom_components.cozytouch import _register_devices, hub as hub_module
+from custom_components.cozytouch.binary_sensor import CloudConnectivity
 from custom_components.cozytouch.const import DOMAIN
-from custom_components.cozytouch.hub import Hub
+from custom_components.cozytouch.hub import Hub, device_info_for, via_device_info
 from custom_components.cozytouch.model import CozytouchDeviceType
 
 GATEWAY_ID = 27906640
@@ -107,6 +110,39 @@ def test_an_unknown_device_id_is_not_linked_to_anything():
 # what these pin. See docs/decisions.md.
 
 
+class FakeDeviceRegistry:
+    """Just the lookup `via_device_info` makes, over a fixed registry."""
+
+    def __init__(self, devices):
+        self._devices = devices
+
+    def async_get_device(self, identifiers):
+        ((_, subentry_id),) = identifiers
+        if subentry_id not in self._devices:
+            return None
+        return SimpleNamespace(id=self._devices[subentry_id])
+
+
+class FakeHass:
+    """A hass whose only job is to hand back a device registry."""
+
+    def __init__(self, devices=None):
+        if devices is None:
+            devices = {"abc123": "registry-id-of-abc123"}
+        self.data = {"device_registry": FakeDeviceRegistry(devices)}
+
+
+@pytest.fixture(autouse=True)
+def registry_lookup(monkeypatch):
+    """The stand-in carries its own registry, and says which key it wants --
+    so these read the same at the floor and at the pin.
+    """
+    monkeypatch.setattr(
+        hub_module.dr, "async_get", lambda hass: hass.data["device_registry"]
+    )
+    monkeypatch.setattr(hub_module, "_VIA_DEVICE_ID_SUPPORTED", True)
+
+
 class FakeRegistry:
     """Records what setup declares, in the order it declares it."""
 
@@ -117,9 +153,10 @@ class FakeRegistry:
         self.created.append(kwargs)
 
 
-def registering_hub(via_device):
+def registering_hub(via_device, hass=None):
     """A stand-in exposing what device_info_for reads."""
     return SimpleNamespace(
+        hass=hass,
         get_model_infos=lambda: SimpleNamespace(name="Air Conditioner"),
         get_serial_number=lambda: "3022-2624-0400",
         get_software_version=lambda: None,
@@ -133,7 +170,7 @@ def test_the_gateway_is_registered_before_the_children_that_name_it():
     """
     registry = FakeRegistry()
     hubs = {
-        "def456": registering_hub((DOMAIN, "abc123")),  # the child first
+        "def456": registering_hub((DOMAIN, "abc123"), FakeHass()),  # the child first
         "abc123": registering_hub(None),
     }
 
@@ -150,7 +187,7 @@ def test_the_device_registered_up_front_is_the_one_the_entities_describe():
     the device setup created, not create a second one next to it.
     """
     registry = FakeRegistry()
-    hubs = {"def456": registering_hub((DOMAIN, "abc123"))}
+    hubs = {"def456": registering_hub((DOMAIN, "abc123"), FakeHass())}
 
     _register_devices(registry, SimpleNamespace(entry_id="entry123"), hubs)
 
@@ -158,7 +195,7 @@ def test_the_device_registered_up_front_is_the_one_the_entities_describe():
     assert created["config_entry_id"] == "entry123"
     assert created["config_subentry_id"] == "def456"
     assert created["identifiers"] == {(DOMAIN, "def456")}
-    assert created["via_device"] == (DOMAIN, "abc123")
+    assert created["via_device_id"] == "registry-id-of-abc123"
 
 
 def test_a_gateway_is_registered_without_a_link():
@@ -174,6 +211,32 @@ def test_a_gateway_is_registered_without_a_link():
     )
 
     assert "via_device" not in registry.created[0]
+    assert "via_device_id" not in registry.created[0]
+
+
+# --- which key the link is declared under (docs/decisions.md) --------------
+
+
+def test_the_link_names_the_gateways_registry_id():
+    """Not its identifiers: that is the deprecated spelling."""
+    info = via_device_info(FakeHass(), (DOMAIN, "abc123"))
+
+    assert info == {"via_device_id": "registry-id-of-abc123"}
+    assert "via_device" not in info
+
+
+def test_no_link_is_declared_for_a_gateway_the_registry_does_not_hold():
+    """A `via_device_id` naming nothing raises; this has to stay silent."""
+    assert via_device_info(FakeHass(devices={}), (DOMAIN, "abc123")) == {}
+
+
+def test_the_floor_still_gets_the_only_key_it_knows(monkeypatch):
+    """DeviceInfo has no `via_device_id` before 2026.8; the floor is below it."""
+    monkeypatch.setattr(hub_module, "_VIA_DEVICE_ID_SUPPORTED", False)
+
+    assert via_device_info(FakeHass(), (DOMAIN, "abc123")) == {
+        "via_device": (DOMAIN, "abc123")
+    }
 
 
 # --- the zone half of the same payload -------------------------------------
@@ -240,3 +303,27 @@ def test_a_zone_the_account_has_not_named_keeps_the_name_the_app_shows():
     hub._account.zones = []
 
     assert Hub.get_model_infos(hub)["name"] == "THZONE_0"
+
+
+# --- what an entity declares -----------------------------------------------
+
+
+def test_an_entitys_device_info_never_carries_the_deprecated_key():
+    """One function serves every platform, so this covers all of them."""
+    info = device_info_for(registering_hub((DOMAIN, "abc123"), FakeHass()), "def456")
+
+    assert info["via_device_id"] == "registry-id-of-abc123"
+    assert "via_device" not in info
+
+
+def test_the_cloud_sensor_describes_the_same_device_as_everything_else():
+    """Its own copy of this is how it was the one platform that broke."""
+    hub = registering_hub((DOMAIN, "abc123"), FakeHass())
+    sensor = object.__new__(CloudConnectivity)
+    sensor.coordinator = hub
+    sensor._title = "Cozytouch"
+    sensor._device_uniq_id = "def456"
+
+    expected = device_info_for(hub, "def456") | {"name": "Cozytouch"}
+
+    assert sensor.device_info == expected

@@ -721,6 +721,64 @@ is a subentry of the same entry -- was always right; what it could not see is
 *when* the gateway's device would appear. Registration order is the other
 half, and `tests/test_topology.py` pins both.
 
+### The gateway link is declared by registry id, not by identifiers
+
+`via_device` names the gateway by its identifiers and lets the registry
+resolve them; `via_device_id` names the registry id outright. The first is
+deprecated, and on a current Home Assistant it does more than warn. The
+deprecation report walks the stack for an integration frame to attribute
+itself to; called from an entity's `device_info` there is none -- the call
+comes from `entity_platform`, core code -- so the report raises a RuntimeError
+instead of logging, and `_async_add_entity` dies with it.
+
+Three hours of debug logging on a live install (2026-09-13, HA 2026.9) show
+what that costs: `Error adding entity None for domain binary_sensor with
+platform cozytouch`, once per room unit, every setup and every retry. Every
+room unit's cloud-connectivity sensor was silently missing. Only
+`binary_sensor` appears in the log because it was the only platform that
+carried its *own* copy of the description -- the rest go through
+`device_info_for`, whose device the registry already held from setup, so
+their `async_get_or_create` came back with nothing to update and never
+reached the report. One copy of a description is not tidiness here; it is the
+difference between one platform failing and all of them.
+
+So `device_info_for` resolves the gateway and declares `via_device_id`, and
+the copy in `binary_sensor.py` is gone -- it now calls `device_info_for` and
+overrides `name` alone, which was the only field it ever said differently.
+
+The resolution is a registry lookup, which is why it is not a straight swap.
+`via_device_id` naming a device the registry does not hold raises outright,
+where the deprecated key merely warned; `via_device_info` answers with no link
+at all in that case. Setup registering gateways first (above) is what makes
+the lookup find something, so the two halves are one mechanism.
+
+`DeviceInfo` gained `via_device_id` in **2026.8.0** -- bisected over the PyPI
+wheels, since the field is a TypedDict key and no release note names it: 2026.7.0
+does not have it, 2026.8.0 does. The declared floor is well below that, so both
+spellings have to be reachable; `_VIA_DEVICE_ID_SUPPORTED` reads `DeviceInfo.__annotations__`
+rather than comparing versions, and it is the only compatibility branch in the
+integration. It goes when the floor passes 2026.8.0, which is not a floor worth
+having for it -- Home Assistant removes `via_device` in 2027.8 and the branch
+expires on its own.
+
+`tests/test_topology.py` pins both spellings on whichever release the job
+installed, rather than asserting whatever the installed `DeviceInfo` happens to
+declare: a test that says one thing at the floor and another at the pin proves
+neither.
+
+### A timeout that stringifies to nothing named nothing
+
+The same log carries `Error requesting Cozytouch_27906640 data: Network error
+reading the setup view: , forcing reconnect`. The message is not truncated:
+`asyncio.TimeoutError` -- what aiohttp raises past `REQUEST_TIMEOUT`, and the
+commonest failure on this API -- carries no args, so `f"{err}"` is the empty
+string. The one line that exists to name the cause named nothing, and the
+traceback that does name it is behind a debug level nobody has on.
+
+`account.why(err)` is `str(err) or type(err).__name__`, used at the five sites
+that format a network error. A fallback, not a replacement: an error that says
+something keeps saying it.
+
 ### The per-day program sensors give way to the calendar (issue #42)
 
 A device that reports a whole program block gets a calendar for it, and the
@@ -815,6 +873,91 @@ The hot-water block (237-243) reports 50, 54, 60, 62 and 65 in the corpus:
 real tank setpoints, all above the threshold. Applying the rule there would
 turn a 65 °C tank into 0 °C, which is why `parse_slots` takes the
 capability id and does nothing without one.
+
+## `custom_components/cozytouch/number.py`
+
+### Four classes that were one
+
+`TemperatureAdjustmentNumber`, `TemperaturePercentAdjustmentNumber`,
+`HoursAdjustmentNumber` and `MinutesAdjustmentNumber` differed in three
+things -- what they declare about themselves, how an API value becomes a
+displayed one, how a displayed one goes back -- and were copies of each other
+in the hundred lines around those three. The bound alone, four lines of
+`if value < min ... elif value > max`, was written eight times: once per read
+and once per write in each class.
+
+They are now one base class and four subclasses carrying `_from_api`,
+`_to_api` and their own declarations, which is 134 lines less. The four names
+survive because `async_setup_entry` dispatches on them, and every one of them
+claims the same unique id it always did (`..._number_<capabilityId>`), so no
+install wakes up with a renamed entity. That is what made the merge safe, and
+`tests/test_number.py` pins it -- along with what each one reads and writes,
+which nothing tested at all before.
+
+### Setting a value now asks for a refresh whatever the unit
+
+Hours and minutes called `async_request_refresh()` after a write; the two
+temperature entities did not. Nothing distinguishes them -- the same
+capability write, the same cloud, the same wait -- so a setpoint typed into a
+temperature box sat unreflected until the next account poll, up to
+`DEFAULT_POLL_INTERVAL` later, while a duration updated at once. It reads as
+an omission rather than a decision, and the base class now refreshes for all
+four.
+
+### A ceiling reported as 0 collapses the range, and is left alone
+
+`TemperatureAdjustmentNumber` re-reads its bounds from the device on every
+update, through `lowestValueCapabilityId` and `highestValueCapabilityId`. The
+guard is `if highestValue:` on the string the API sends, so `None` is ignored
+but `"0"` is taken -- and a ceiling of 0 leaves a number entity that cannot be
+set to anything.
+
+That is almost certainly wrong, and it is pinned as it stands
+(`test_a_bound_reported_as_zero_collapses_the_range`). Nothing in any capture
+says whether a device reports 0 for a bound it has not been configured with,
+and the suite here is characterisation: changing the reading on a guess would
+be inventing behaviour for hardware nobody has looked at. It changes when a
+dump shows one.
+
+### The device description is declared once
+
+Five classes carried the same three-line `device_info` property and a sixth
+carried its own copy of the whole description -- which is the one that broke
+(above). `CozytouchDeviceEntity` in `hub.py` carries it now; a platform class
+inherits it and says nothing. `CloudConnectivity` still overrides `name`,
+which was always the one field it meant to say differently.
+
+## The declared floor
+
+### 2025.12.0, and what raising it did not buy
+
+The floor was 2025.4.0, and it was found by running the suite against
+candidates rather than by reading changelogs. Config subentries -- one entry
+per account, one subentry per device, the shape this integration is built on --
+are absent from 2025.2.0: `ConfigSubentryFlow` does not import, and
+`tests/test_floor.py` says so. The whole 2025.3.x line, which does have them,
+cannot be installed at all: it pins `aiohttp==3.11.13`, which PyPI has since
+yanked for a regression. A floor nobody can install is a claim nobody can test.
+
+It was raised to 2025.12.0 -- the first of the last 2025 line -- in September 2026,
+for no reason stronger than age: nothing in the integration needed an API from
+it, and supporting an April 2025 release from late 2026 costs a matrix
+combination somebody has to keep green and buys nobody anything.
+
+What it did **not** buy is worth writing down, because it was the reason the
+raise was proposed. `via_device_id` arrives in 2026.8.0, not in 2025.12, so
+`_VIA_DEVICE_ID_SUPPORTED` survives the raise untouched. Measuring that before
+editing anything is what kept the change honest about its own value.
+
+The candidate was validated by running the whole suite against it, which is
+also how the one surprise surfaced: `pycares<5`. Home Assistant pins aiodns,
+aiodns does not pin pycares, and pycares 5 renamed the result types aiodns
+annotates with -- so `import aiodns` raises `AttributeError: module 'pycares'
+has no attribute 'ares_query_a_result'` and all twenty-one test files fail to
+collect, with nothing in the error naming pycares. A real install never sees
+it; it is an artefact of resolving an old release's dependencies fresh today.
+The pin lives in `requirements_test_min.txt` and nowhere else, since the
+current release resolves it correctly on its own.
 
 ## `.github/workflows/release.yaml`
 

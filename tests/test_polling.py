@@ -96,6 +96,16 @@ class FakeResponse:
         return False
 
 
+class FakeTimeout:
+    """A request that never answers: TimeoutError, and no message with it."""
+
+    async def __aenter__(self):
+        raise TimeoutError
+
+    async def __aexit__(self, *exc):
+        return False
+
+
 class FakeSession:
     """An aiohttp session answering from a script, and counting the calls."""
 
@@ -243,6 +253,24 @@ def test_a_failed_poll_takes_every_device_with_it(monkeypatch):
         asyncio.run(coordinator_over(account, hubs)._async_update_data())
 
     assert [len(hub.errors) for hub in hubs.values()] == [1, 1]
+
+
+def test_a_timed_out_poll_says_what_timed_out(monkeypatch):
+    """This logged "...setup view: , forcing reconnect" for three hours."""
+    account, session = connected(monkeypatch)
+    session._answers["setupviewv2"] = FakeTimeout()
+
+    with pytest.raises(UpdateFailed) as raised:
+        asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert "TimeoutError" in str(raised.value)
+    assert ": ," not in str(raised.value)
+
+
+def test_a_message_that_is_there_is_the_one_that_is_printed(monkeypatch):
+    """`why` is a fallback, not a replacement."""
+    assert account_module.why(TimeoutError("took too long")) == "took too long"
+    assert account_module.why(TimeoutError()) == "TimeoutError"
 
 
 def test_a_poll_that_finds_the_password_refused_raises_for_reauth(monkeypatch):

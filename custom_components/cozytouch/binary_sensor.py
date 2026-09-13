@@ -11,11 +11,9 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub
-from .sensor import device_info_for
+from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub, device_info_for
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,7 +40,7 @@ async def async_setup_entry(
         )
 
 
-class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
+class CloudConnectivity(CozytouchDeviceEntity, BinarySensorEntity):
     """Cloud connectivity to the Atlantic Cozytouch integration."""
 
     _attr_has_entity_name = True
@@ -55,31 +53,13 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self._title = title
         self._attr_unique_id = f"{DOMAIN}_{uniq_id}_cloud_connectivity"
-        self._device_uniq_id = uniq_id if uniq_id is not None else "yaml_legacy"
+        self._device_uniq_id = uniq_id
 
     @property
     def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        modelInfos = self.coordinator.get_model_infos()
-        info = DeviceInfo(
-            identifiers={(DOMAIN, self._device_uniq_id)},
-            manufacturer="Atlantic",
-            name=self._title,
-            model=modelInfos.name,
-            serial_number=self.coordinator.get_serial_number(),
-            # The firmware the device reports (capability 121). It is worth
-            # having on the device rather than only as a diagnostic entity:
-            # "which version is this box on" is the first line of a bug
-            # report, and None here just leaves the field empty.
-            sw_version=self.coordinator.get_software_version(),
-        )
-        # Hang the device under its gateway when that is set up too, instead
-        # of leaving every room unit at the top of the list. via_device is
-        # deprecated for via_device_id, which needs a registry lookup and a
-        # newer HA than this integration asks for.
-        via_device = self.coordinator.get_via_device()
-        if via_device is not None:
-            info["via_device"] = via_device
+        """Return the device info, under the entry title rather than the model."""
+        info = device_info_for(self.coordinator, self._device_uniq_id)
+        info["name"] = self._title
         return info
 
     @callback
@@ -89,7 +69,7 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
         self.async_write_ha_state()
 
 
-class DeviceAvailability(CoordinatorEntity, BinarySensorEntity):
+class DeviceAvailability(CozytouchDeviceEntity, BinarySensorEntity):
     """Whether the cloud reports this device as reachable (`isAvailable`).
 
     Distinct from CloudConnectivity : that one is the account's session to the
@@ -113,11 +93,6 @@ class DeviceAvailability(CoordinatorEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self._attr_unique_id = f"{DOMAIN}_{uniq_id}_device_availability"
         self._device_uniq_id = uniq_id
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @callback
     def _handle_coordinator_update(self) -> None:

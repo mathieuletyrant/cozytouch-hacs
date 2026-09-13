@@ -8,8 +8,13 @@ import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 from homeassistant.util import dt as dt_util
 
 from .account import (
@@ -843,6 +848,25 @@ class Hub(DataUpdateCoordinator):
         self._timestamp_away_mode_last_change = None
 
 
+# see docs/decisions.md
+_VIA_DEVICE_ID_SUPPORTED = "via_device_id" in DeviceInfo.__annotations__
+
+
+def via_device_info(hass: HomeAssistant, via_device: tuple[str, str]) -> DeviceInfo:
+    """The gateway link, keyed the way the running Home Assistant wants it.
+
+    Empty when the registry does not hold the gateway. See docs/decisions.md.
+    """
+    if not _VIA_DEVICE_ID_SUPPORTED:
+        return DeviceInfo(via_device=via_device)
+
+    gateway = dr.async_get(hass).async_get_device(identifiers={via_device})
+    if gateway is None:
+        return DeviceInfo()
+
+    return DeviceInfo(via_device_id=gateway.id)
+
+
 def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
     """The device every entity of one subentry belongs to.
 
@@ -864,12 +888,23 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
         # report, and None here just leaves the field empty.
         sw_version=coordinator.get_software_version(),
     )
-    # Hang the device under its gateway when that is set up too, instead
-    # of leaving every room unit at the top of the list. via_device is
-    # deprecated for via_device_id, which needs a registry lookup and a
-    # newer HA than this integration asks for.
     via_device = coordinator.get_via_device()
     if via_device is not None:
-        info["via_device"] = via_device
+        info.update(via_device_info(coordinator.hass, via_device))
 
     return info
+
+
+class CozytouchDeviceEntity(CoordinatorEntity):
+    """A coordinator entity that belongs to one subentry's device.
+
+    Carried by every platform, so the description is declared once. The copy
+    that was not is in docs/decisions.md.
+    """
+
+    _device_uniq_id: str
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return device_info_for(self.coordinator, self._device_uniq_id)
