@@ -92,8 +92,8 @@ rooms in.
 | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
 | 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
 | 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
-| 1368 | Calypso SPLIT VM 200L |
-| 1369, 1376 | Calypso Split |
+| 754, 1368 | Calypso SPLIT VM 200L |
+| 664, 1369, 1376 | Calypso Split |
 | 1371, 1372 | Aeromax SPLIT 3 |
 | 1641 | Atlantic Explorer V5 (200L) |
 | 1642 | Atlantic Explorer V5 (270L) |
@@ -106,7 +106,7 @@ rooms in.
 | 1957 | LINEO CONNECTE MP 100L 2250W |
 | 1962 | Thermor Malicio 3 65L |
 | 1966 | Thermor Malicio 3 120L |
-| 2346 | Egeo VS 250L |
+| 1010, 2346 | Egeo VS 250L |
 | 2374 | Explorer EVO 3 (270L) |
 
 ### 🧖 Towel racks / Sèche-serviettes

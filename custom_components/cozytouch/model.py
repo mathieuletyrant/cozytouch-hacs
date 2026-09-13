@@ -464,7 +464,7 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId == 1368:
+    elif modelId in (1368, 754):
         modelInfos.name = "Calypso SPLIT VM 200L"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
@@ -478,7 +478,7 @@ def get_model_infos(  # noqa: C901
             4: HEATING_MODE_PROG,
         }
 
-    elif modelId in (1369, 1376):
+    elif modelId in (1369, 1376, 664):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
@@ -752,7 +752,7 @@ def get_model_infos(  # noqa: C901
             0: HEATING_MODE_MANUAL,
             3: HEATING_MODE_ECO_PLUS,
         }
-    elif modelId == 2346:
+    elif modelId in (2346, 1010):
         modelInfos.name = "Egeo VS 250L"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = {
