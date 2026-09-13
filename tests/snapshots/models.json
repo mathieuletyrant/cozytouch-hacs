@@ -268,6 +268,45 @@
   "name": "Zone (Salon)",
   "type": "zone"
  },
+ "1540": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1540,
+  "name": "Asama Connect\u00e9 II 500W BLC",
+  "type": "towel_rack"
+ },
+ "1541": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1541,
+  "name": "Asama Connect\u00e9 II 750W BLC",
+  "type": "towel_rack"
+ },
+ "1542": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1542,
+  "name": "Asama Connect\u00e9 II 1500W BLC",
+  "type": "towel_rack"
+ },
  "1543": {
   "HVACModes": {
    "0": "off",
@@ -279,6 +318,32 @@
   ],
   "modelId": 1543,
   "name": "Asama Connect\u00e9 II 1750W Blanc",
+  "type": "towel_rack"
+ },
+ "1544": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1544,
+  "name": "Asama Connect\u00e9 II 500W ANTH",
+  "type": "towel_rack"
+ },
+ "1545": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1545,
+  "name": "Asama Connect\u00e9 II 750W ANTH",
   "type": "towel_rack"
  },
  "1546": {
@@ -307,6 +372,45 @@
   "name": "Asama Connect\u00e9 II 1750W ANTH",
   "type": "towel_rack"
  },
+ "1548": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1548,
+  "name": "Asama Connect\u00e9 II 500W NOIR",
+  "type": "towel_rack"
+ },
+ "1549": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1549,
+  "name": "Asama Connect\u00e9 II 750W NOIR",
+  "type": "towel_rack"
+ },
+ "1550": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1550,
+  "name": "Asama Connect\u00e9 II 1500W NOIR",
+  "type": "towel_rack"
+ },
  "1551": {
   "HVACModes": {
    "0": "off",
@@ -318,6 +422,123 @@
   ],
   "modelId": 1551,
   "name": "Asama Connect\u00e9 II 1750W Noir",
+  "type": "towel_rack"
+ },
+ "1552": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1552,
+  "name": "Asama Connect\u00e9 II 500W CAPP",
+  "type": "towel_rack"
+ },
+ "1553": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1553,
+  "name": "Asama Connect\u00e9 II 750W CAPP",
+  "type": "towel_rack"
+ },
+ "1554": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1554,
+  "name": "Asama Connect\u00e9 II 1500W CAPP",
+  "type": "towel_rack"
+ },
+ "1555": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1555,
+  "name": "Asama Connect\u00e9 II 1750W CAPP",
+  "type": "towel_rack"
+ },
+ "1562": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1562,
+  "name": "Doris \u00e9troit 300W BLC",
+  "type": "towel_rack"
+ },
+ "1563": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1563,
+  "name": "Doris \u00e9troit 500W BLC",
+  "type": "towel_rack"
+ },
+ "1564": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1564,
+  "name": "Riva 5 \u00e9troit 300W BLC",
+  "type": "towel_rack"
+ },
+ "1565": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1565,
+  "name": "Riva 5 \u00e9troit 500W BLC",
+  "type": "towel_rack"
+ },
+ "1587": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1587,
+  "name": "Doris \u00e9troit 1300W BLC",
   "type": "towel_rack"
  },
  "1588": {
@@ -333,6 +554,84 @@
   "name": "Doris \u00e9troit 1500W BLC",
   "type": "towel_rack"
  },
+ "1589": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1589,
+  "name": "Doris \u00e9troit 300W ANTH",
+  "type": "towel_rack"
+ },
+ "1590": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1590,
+  "name": "Doris \u00e9troit 500W ANTH",
+  "type": "towel_rack"
+ },
+ "1591": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1591,
+  "name": "Doris \u00e9troit 1300W ANTH",
+  "type": "towel_rack"
+ },
+ "1592": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1592,
+  "name": "Doris \u00e9troit 1500W ANTH",
+  "type": "towel_rack"
+ },
+ "1593": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1593,
+  "name": "Doris \u00e9troit 300W CARAT",
+  "type": "towel_rack"
+ },
+ "1594": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1594,
+  "name": "Doris \u00e9troit 500W CARAT",
+  "type": "towel_rack"
+ },
  "1595": {
   "HVACModes": {
    "0": "off",
@@ -346,6 +645,71 @@
   "name": "Doris \u00e9troit 1300W CARAT",
   "type": "towel_rack"
  },
+ "1596": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1596,
+  "name": "Doris \u00e9troit 1500W CARAT",
+  "type": "towel_rack"
+ },
+ "1597": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1597,
+  "name": "Doris \u00e9troit 300W NOIR",
+  "type": "towel_rack"
+ },
+ "1598": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1598,
+  "name": "Doris \u00e9troit 500W NOIR",
+  "type": "towel_rack"
+ },
+ "1599": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1599,
+  "name": "Doris \u00e9troit 1300W NOIR",
+  "type": "towel_rack"
+ },
+ "1600": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1600,
+  "name": "Doris \u00e9troit 1500W NOIR",
+  "type": "towel_rack"
+ },
  "1622": {
   "HVACModes": {
    "0": "off",
@@ -357,6 +721,175 @@
   ],
   "modelId": 1622,
   "name": "Riva 5 \u00e9troit 1300W BLC",
+  "type": "towel_rack"
+ },
+ "1623": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1623,
+  "name": "Riva 5 \u00e9troit 1500W BLC",
+  "type": "towel_rack"
+ },
+ "1624": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1624,
+  "name": "Riva 5 \u00e9troit 300W ARDOISE",
+  "type": "towel_rack"
+ },
+ "1625": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1625,
+  "name": "Riva 5 \u00e9troit 300W MENHIR",
+  "type": "towel_rack"
+ },
+ "1626": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1626,
+  "name": "Riva 5 \u00e9troit 500W MENHIR",
+  "type": "towel_rack"
+ },
+ "1627": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1627,
+  "name": "Riva 5 \u00e9troit 1300W MENHIR",
+  "type": "towel_rack"
+ },
+ "1628": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1628,
+  "name": "Riva 5 \u00e9troit 1500W MENHIR",
+  "type": "towel_rack"
+ },
+ "1629": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1629,
+  "name": "Riva 5 \u00e9troit 500W ARDOISE",
+  "type": "towel_rack"
+ },
+ "1630": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1630,
+  "name": "Riva 5 \u00e9troit 1300W ARDOISE",
+  "type": "towel_rack"
+ },
+ "1631": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1631,
+  "name": "Riva 5 \u00e9troit 1500W ARDOISE",
+  "type": "towel_rack"
+ },
+ "1632": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1632,
+  "name": "Riva 5 \u00e9troit 300W CARBONE",
+  "type": "towel_rack"
+ },
+ "1633": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1633,
+  "name": "Riva 5 \u00e9troit 500W CARBONE",
+  "type": "towel_rack"
+ },
+ "1634": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1634,
+  "name": "Riva 5 \u00e9troit 1300W CARBONE",
+  "type": "towel_rack"
+ },
+ "1635": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1635,
+  "name": "Riva 5 \u00e9troit 1500W CARBONE",
   "type": "towel_rack"
  },
  "1641": {
