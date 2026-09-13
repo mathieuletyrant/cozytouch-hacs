@@ -874,6 +874,38 @@ real tank setpoints, all above the threshold. Applying the rule there would
 turn a 65 °C tank into 0 °C, which is why `parse_slots` takes the
 capability id and does nothing without one.
 
+## The declared floor
+
+### 2025.12.0, and what raising it did not buy
+
+The floor was 2025.4.0, and it was found by running the suite against
+candidates rather than by reading changelogs. Config subentries -- one entry
+per account, one subentry per device, the shape this integration is built on --
+are absent from 2025.2.0: `ConfigSubentryFlow` does not import, and
+`tests/test_floor.py` says so. The whole 2025.3.x line, which does have them,
+cannot be installed at all: it pins `aiohttp==3.11.13`, which PyPI has since
+yanked for a regression. A floor nobody can install is a claim nobody can test.
+
+It was raised to 2025.12.0 -- the first of the last 2025 line -- in September 2026,
+for no reason stronger than age: nothing in the integration needed an API from
+it, and supporting an April 2025 release from late 2026 costs a matrix
+combination somebody has to keep green and buys nobody anything.
+
+What it did **not** buy is worth writing down, because it was the reason the
+raise was proposed. `via_device_id` arrives in 2026.8.0, not in 2025.12, so
+`_VIA_DEVICE_ID_SUPPORTED` survives the raise untouched. Measuring that before
+editing anything is what kept the change honest about its own value.
+
+The candidate was validated by running the whole suite against it, which is
+also how the one surprise surfaced: `pycares<5`. Home Assistant pins aiodns,
+aiodns does not pin pycares, and pycares 5 renamed the result types aiodns
+annotates with -- so `import aiodns` raises `AttributeError: module 'pycares'
+has no attribute 'ares_query_a_result'` and all twenty-one test files fail to
+collect, with nothing in the error naming pycares. A real install never sees
+it; it is an artefact of resolving an old release's dependencies fresh today.
+The pin lives in `requirements_test_min.txt` and nowhere else, since the
+current release resolves it correctly on its own.
+
 ## `.github/workflows/release.yaml`
 
 ### It installs with pip, where tests.yaml uses uv
