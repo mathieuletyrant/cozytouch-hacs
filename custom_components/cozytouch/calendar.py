@@ -210,12 +210,11 @@ class CozytouchProgramCalendar(CoordinatorEntity, CalendarEntity):
         and an event list built on that assumption without checking would put
         an evening setpoint in charge of the morning.
         """
-        stored = self.coordinator.get_capability_value(
-            self._first_capability + weekday, None
-        )
+        capabilityId = self._first_capability + weekday
+        stored = self.coordinator.get_capability_value(capabilityId, None)
 
         slots = []
-        for slot in parse_slots(stored):
+        for slot in parse_slots(stored, capabilityId):
             try:
                 hours, minutes = (int(part) for part in slot["time"].split(":"))
                 slots.append(

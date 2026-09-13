@@ -19,6 +19,7 @@ from homeassistant.core import (
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, entity_registry as er
 
+from .capability import read_setpoint
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -139,7 +140,7 @@ def _build_matrix(slots: list[dict]) -> str:
     return json.dumps(matrix, separators=(",", ":"))
 
 
-def parse_slots(value: str | None) -> list[dict]:
+def parse_slots(value: str | None, capabilityId: int | None = None) -> list[dict]:
     """Read a stored program back into the slots set_schedule takes.
 
     Public because calendar.py reads programs through it too: one reading of
@@ -164,7 +165,7 @@ def parse_slots(value: str | None) -> list[dict]:
         if not isinstance(entry, list) or len(entry) < 2:
             continue
 
-        minute, temperature = entry[0], entry[1]
+        minute, temperature = entry[0], read_setpoint(capabilityId, entry[1])
         if minute == 0 and temperature == 0:
             break
 
@@ -283,7 +284,7 @@ def async_register_services(hass: HomeAssistant) -> None:
                 # not have this program tellable from one whose day is empty.
                 value = hub.get_capability_value(first + index, None)
                 if value is not None:
-                    days[day] = parse_slots(value)
+                    days[day] = parse_slots(value, first + index)
 
             if not days:
                 raise ServiceValidationError(
