@@ -94,43 +94,36 @@ rooms in.
 
 ### 🚿 Water heaters / Chauffe-eau
 
-| modelId | Model |
-| ------: | ----- |
-| 236 | Sauter Phazy |
-| 386 | PHAZY VS 300L 3000M |
-| 387 | PHAZY VM 150L 2200M |
-| 388 | PHAZY VM 200L 2200M |
-| 389 | AQUEO ACI HYB VS 300L 3000M |
-| 390 | AQUEO ACI HYB VM 150L 2200M |
-| 391 | AQUEO ACI HYB VM 200L 2200M |
-| 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
-| 393 | DURALIS CONNECT ACI HYB VM 150L 2200M |
-| 394 | DURALIS CONNECT ACI HYB VM 200L 2200M |
-| 1364 | THE DURALIS CONNECT VM 150 2200M PE |
-| 1365 | THE DURALIS CONNECT VM 200 2200M PE |
-| 1366 | THE DURALIS CONNECT VS 300 3000M PE |
-| 754, 1368 | Calypso SPLIT VM 200L |
-| 1367 | Calypso SPLIT VM 150L |
-| 664, 1369, 1376 | Calypso Split |
-| 1370-1372 | Aeromax SPLIT 3 |
-| 1641 | Atlantic Explorer V5 (200L) |
-| 1642 | Atlantic Explorer V5 (270L) |
-| 1643 | Atlantic Explorer V5 (200L with coil) |
-| 1644 | Atlantic Explorer V5 (240L) |
-| 1645 | Atlantic Explorer V5 (270L with coil) |
-| 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
-| 2347-2352 | the Egeo platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
-| 1656 | Aeromax 6 |
-| 1669 | CV5 Aeromax Premium 100L |
-| 1670 | CV5 Aeromax Premium 150L |
-| 1657 | Calypso 200L |
-| 1658 | Calypso connecté |
-| 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
-| 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
-| 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
-| 957, 2345 | Egeo VS 200L |
-| 1010, 2346 | Egeo VS 250L |
-| 2374-2376 | Explorer EVO 3 (270L) |
+Grouped by product line, since Atlantic sells the same tank under several
+badges and volumes -- the line is what tells you whether a row is yours.
+
+| Range | modelId | Model |
+| ----- | ------: | ----- |
+| Aeromax | 1370-1372 | Aeromax SPLIT 3 |
+| Aeromax | 1656 | Aeromax 6 |
+| Aeromax | 1669, 1670 | CV5 Aeromax Premium 100L, 150L |
+| Aqueo | 389 | AQUEO ACI HYB VS 300L 3000M |
+| Aqueo | 390, 391 | AQUEO ACI HYB VM 150L, 200L 2200M |
+| Calypso | 664, 1369, 1376 | Calypso Split |
+| Calypso | 1367 | Calypso SPLIT VM 150L |
+| Calypso | 754, 1368 | Calypso SPLIT VM 200L |
+| Calypso | 1657 | Calypso 200L |
+| Calypso | 1658 | Calypso connecté |
+| Duralis | 392 | DURALIS CONNECT ACI HYB VS 300L 3000M |
+| Duralis | 393, 394 | DURALIS CONNECT ACI HYB VM 150L, 200L 2200M |
+| Duralis | 1364-1366 | THE DURALIS CONNECT VM 150, VM 200, VS 300 PE |
+| Egeo | 957, 2345 | Egeo VS 200L |
+| Egeo | 1010, 2346 | Egeo VS 250L |
+| Egeo | 2347-2352 | the same platform under the TH / SA / ATE / THE badges, named as the catalogue names it (`TD … VS … 1800M TYB CA`) |
+| Explorer | 1641-1645 | Atlantic Explorer V5 (200L, 270L, 200L with coil, 240L, 270L with coil) |
+| Explorer | 1646-1655, 1659-1664 | the same platform under the THE / AE / TH / SA / ATS / NEU badges, named as the catalogue names it (`TD … VS … 1200M TYB V5S`) |
+| Explorer | 2374-2376 | Explorer EVO 3 (270L) |
+| Lineo | 1954-1957 | LINEO CONNECTE MP 040L, 065L, 080L, 100L 2250W |
+| Malicio | 1961-1964 | Thermor Malicio 3 MP 40L, 65L, 80L, 100L |
+| Malicio | 1965-1967 | Thermor Malicio 3 VM 100L, 120L, 150L |
+| Phazy | 236 | Sauter Phazy |
+| Phazy | 386 | PHAZY VS 300L 3000M |
+| Phazy | 387, 388 | PHAZY VM 150L, 200L 2200M |
 
 ### 🧖 Towel racks / Sèche-serviettes
 
