@@ -74,6 +74,14 @@ class CozytouchDeviceType(StrEnum):
 # do, and this has to survive it.
 ZONE_NAME_PREFIX = "THZONE"
 
+# The connectivity box, under each of the brands it is sold as. The catalogue
+# calls 2447 "Hub IO Sauter" and the next three "Hub IO Thermor", "Hub IO
+# Atlantic" and "Hub IO Inter": one box, four badges. This is a set rather
+# than four branches because the branch below is not the whole of it -- a room
+# slot reads its master's id to tell a radiator from an air conditioner, and
+# an unmapped badge sent every one of them to the air conditioner branch.
+COZYBOX_HUBS = {2447, 2448, 2449, 2450}
+
 # Boilers whose only source is the vendor's model catalogue: name, and the
 # `productId` of 1 that puts them in the same family as 56, 61 and 65. Kept as
 # a table rather than one branch each because the branch body is identical --
@@ -361,7 +369,7 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif modelId == 2447:
+    elif modelId in COZYBOX_HUBS:
         # Connectivity box, seen driving 557-560 room units like the hubs above
         modelInfos.name = "CozyBox"
         modelInfos.type = CozytouchDeviceType.HUB
@@ -370,7 +378,7 @@ def get_model_infos(  # noqa: C901
             0: HVACMode.OFF,
         }
 
-    elif masterModelId == 2447 and 557 <= modelId <= 561:
+    elif masterModelId in COZYBOX_HUBS and 557 <= modelId <= 561:
         # A room slot behind a hub, not a product: 557-561 is the room's index
         # and says nothing about the hardware. Behind a CozyBox the slot is a
         # connected electric radiator, behind a Naviclim or Navizone a room air

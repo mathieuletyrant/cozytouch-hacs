@@ -131,7 +131,7 @@ first five rooms, 1734-1737 for the next four.
 
 | modelId | Slot | Behind | Mapped as |
 | ------: | ---- | ------ | --------- |
-| 557-561 | `ROOM_0`-`ROOM_4` | a CozyBox (2447) | Radiator |
+| 557-561 | `ROOM_0`-`ROOM_4` | a CozyBox (2447-2450) | Radiator |
 | 557-561 | `ROOM_0`-`ROOM_4` | a Naviclim (556) or Navizone (1681, 1758) | Air conditioner |
 | 1734-1737 | `ROOM_5`-`ROOM_8` | a HUB Cozytouch (1457) | Air conditioner |
 | 562-570 | `UI_0`-`UI_8` | any of the above | Air conditioner user interface |
@@ -151,7 +151,7 @@ that is the bug -- send the diagnostics dump and say which gateway it sits on.
 | 1681 | HUB Navizone |
 | 1758 | HUB Navizone |
 | 1763 | FLAT/S4 IOTHUB |
-| 2447 | Hub IO Sauter (CozyBox) |
+| 2447-2450 | Hub IO, Sauter / Thermor / Atlantic / Inter (CozyBox) |
 
 ### ❓ My device is not listed
 
