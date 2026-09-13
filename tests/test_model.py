@@ -1161,3 +1161,50 @@ def test_the_catalogue_boilers_do_not_shadow_a_mapped_model():
     assert get_model_infos(56)["name"] == "Naema 2 Micro 25"
     assert get_model_infos(61)["name"] == "Naia 2 Micro 25"
     assert get_model_infos(65)["name"] == "Naema 2 Duo 25"
+
+
+# ------------------------------------------------ the towel rack variants
+
+
+@pytest.mark.parametrize(
+    ("modelId", "name"),
+    [
+        (1540, "Asama Connecté II 500W BLC"),
+        (1555, "Asama Connecté II 1750W CAPP"),
+        (1562, "Doris étroit 300W BLC"),
+        (1600, "Doris étroit 1500W NOIR"),
+        (1623, "Riva 5 étroit 1500W BLC"),
+        (1635, "Riva 5 étroit 1500W CARBONE"),
+    ],
+)
+def test_a_towel_rack_variant_is_named_and_typed(modelId, name):
+    """A wattage or a finish of a range already mapped. The name is the house
+    spelling of the catalogue's, and the claim is the least a towel rack can
+    make -- the same one its mapped siblings were already making.
+    """
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == name
+    assert infos["type"] is CozytouchDeviceType.TOWEL_RACK
+    assert infos["HVACModes"] == {0: HVACMode.OFF, 4: HVACMode.HEAT}
+    assert set(infos) == {
+        "modelId",
+        "HVACModesCapabilityId",
+        "name",
+        "type",
+        "HVACModes",
+    }
+
+
+def test_the_towel_rack_table_keeps_the_names_the_mapped_ids_had():
+    """Eight of these were mapped one branch at a time and reach the device
+    registry under those names, inconsistencies included. Folding them into a
+    table must not rename somebody's radiator.
+    """
+    assert get_model_infos(1543)["name"] == "Asama Connecté II 1750W Blanc"
+    assert get_model_infos(1551)["name"] == "Asama Connecté II 1750W Noir"
+    assert get_model_infos(1546)["name"] == "Asama Connecté II 1500W ANTH"
+    assert get_model_infos(1595)["name"] == "Doris étroit 1300W CARAT"
+    assert get_model_infos(1388)["name"] == "Doris étroit 1500W BLC"
+    assert get_model_infos(1588)["name"] == "Doris étroit 1500W BLC"
+    assert get_model_infos(1622)["name"] == "Riva 5 étroit 1300W BLC"

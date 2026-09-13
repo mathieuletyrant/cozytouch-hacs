@@ -115,13 +115,9 @@ rooms in.
 | ------: | ----- |
 | 1381 | KELUD 1750W BLC |
 | 1382 | KELUD 1750W Anthracite Standard |
-| 1388, 1588 | Doris étroit 1500W BLC |
-| 1543 | Asama Connecté II 1750W Blanc |
-| 1546 | Asama Connecté II 1500W ANTH |
-| 1547 | Asama Connecté II 1750W ANTH |
-| 1551 | Asama Connecté II 1750W Noir |
-| 1595 | Doris étroit 1300W CARAT |
-| 1622 | Riva 5 étroit 1300W BLC |
+| 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
+| 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
+| 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
 
 ### 🏠 Room slots / Emplacements de pièce
 

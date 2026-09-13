@@ -82,6 +82,69 @@ ZONE_NAME_PREFIX = "THZONE"
 # an unmapped badge sent every one of them to the air conditioner branch.
 COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 
+# The three connected towel rack ranges, by model id. Every one of these is the
+# same product in another wattage or another finish -- the catalogue lists them
+# as RIVA 5 ETROIT 0300W CARBONE beside RIVA 5 ETROIT 1300W BLC -- and the
+# branch body was already identical for the eight that were mapped one at a
+# time: a name, the towel rack type, and off/heat.
+#
+# The names are the house spelling of the catalogue's own string, minus the
+# BRI suffix and the leading zero on a wattage. The eight that were already
+# mapped keep the name they had, inconsistencies included ("1750W Blanc" next
+# to "1500W ANTH"), because the name reaches the device registry and rewriting
+# it renames the device of somebody who already has one.
+TOWEL_RACK_VARIANTS = {
+    1388: "Doris étroit 1500W BLC",
+    1540: "Asama Connecté II 500W BLC",
+    1541: "Asama Connecté II 750W BLC",
+    1542: "Asama Connecté II 1500W BLC",
+    1543: "Asama Connecté II 1750W Blanc",
+    1544: "Asama Connecté II 500W ANTH",
+    1545: "Asama Connecté II 750W ANTH",
+    1546: "Asama Connecté II 1500W ANTH",
+    1547: "Asama Connecté II 1750W ANTH",
+    1548: "Asama Connecté II 500W NOIR",
+    1549: "Asama Connecté II 750W NOIR",
+    1550: "Asama Connecté II 1500W NOIR",
+    1551: "Asama Connecté II 1750W Noir",
+    1552: "Asama Connecté II 500W CAPP",
+    1553: "Asama Connecté II 750W CAPP",
+    1554: "Asama Connecté II 1500W CAPP",
+    1555: "Asama Connecté II 1750W CAPP",
+    1562: "Doris étroit 300W BLC",
+    1563: "Doris étroit 500W BLC",
+    1564: "Riva 5 étroit 300W BLC",
+    1565: "Riva 5 étroit 500W BLC",
+    1587: "Doris étroit 1300W BLC",
+    1588: "Doris étroit 1500W BLC",
+    1589: "Doris étroit 300W ANTH",
+    1590: "Doris étroit 500W ANTH",
+    1591: "Doris étroit 1300W ANTH",
+    1592: "Doris étroit 1500W ANTH",
+    1593: "Doris étroit 300W CARAT",
+    1594: "Doris étroit 500W CARAT",
+    1595: "Doris étroit 1300W CARAT",
+    1596: "Doris étroit 1500W CARAT",
+    1597: "Doris étroit 300W NOIR",
+    1598: "Doris étroit 500W NOIR",
+    1599: "Doris étroit 1300W NOIR",
+    1600: "Doris étroit 1500W NOIR",
+    1622: "Riva 5 étroit 1300W BLC",
+    1623: "Riva 5 étroit 1500W BLC",
+    1624: "Riva 5 étroit 300W ARDOISE",
+    1625: "Riva 5 étroit 300W MENHIR",
+    1626: "Riva 5 étroit 500W MENHIR",
+    1627: "Riva 5 étroit 1300W MENHIR",
+    1628: "Riva 5 étroit 1500W MENHIR",
+    1629: "Riva 5 étroit 500W ARDOISE",
+    1630: "Riva 5 étroit 1300W ARDOISE",
+    1631: "Riva 5 étroit 1500W ARDOISE",
+    1632: "Riva 5 étroit 300W CARBONE",
+    1633: "Riva 5 étroit 500W CARBONE",
+    1634: "Riva 5 étroit 1300W CARBONE",
+    1635: "Riva 5 étroit 1500W CARBONE",
+}
+
 # Boilers whose only source is the vendor's model catalogue: name, and the
 # `productId` of 1 that puts them in the same family as 56, 61 and 65. Kept as
 # a table rather than one branch each because the branch body is identical --
@@ -522,16 +585,8 @@ def get_model_infos(  # noqa: C901
             4: HVACMode.HEAT,
         }
 
-    elif modelId in (1388, 1588):
-        modelInfos.name = "Doris étroit 1500W BLC"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1595:
-        modelInfos.name = "Doris étroit 1300W CARAT"
+    elif modelId in TOWEL_RACK_VARIANTS:
+        modelInfos.name = TOWEL_RACK_VARIANTS[modelId]
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
@@ -549,45 +604,6 @@ def get_model_infos(  # noqa: C901
     elif modelId == 1447:
         modelInfos.name = "Naema 3 Duo 25"
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1543:
-        modelInfos.name = "Asama Connecté II 1750W Blanc"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-    elif modelId == 1546:  # Asama Connecté II 1500W
-        modelInfos.name = "Asama Connecté II 1500W ANTH"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1547:  # Asama Connecté II 1750W
-        modelInfos.name = "Asama Connecté II 1750W ANTH"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1551:
-        modelInfos.name = "Asama Connecté II 1750W Noir"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-
-    elif modelId == 1622:
-        modelInfos.name = "Riva 5 étroit 1300W BLC"
-        modelInfos.type = CozytouchDeviceType.TOWEL_RACK
         modelInfos.HVACModes = {
             0: HVACMode.OFF,
             4: HVACMode.HEAT,
