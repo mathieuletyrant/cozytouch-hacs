@@ -721,6 +721,64 @@ is a subentry of the same entry -- was always right; what it could not see is
 *when* the gateway's device would appear. Registration order is the other
 half, and `tests/test_topology.py` pins both.
 
+### The gateway link is declared by registry id, not by identifiers
+
+`via_device` names the gateway by its identifiers and lets the registry
+resolve them; `via_device_id` names the registry id outright. The first is
+deprecated, and on a current Home Assistant it does more than warn. The
+deprecation report walks the stack for an integration frame to attribute
+itself to; called from an entity's `device_info` there is none -- the call
+comes from `entity_platform`, core code -- so the report raises a RuntimeError
+instead of logging, and `_async_add_entity` dies with it.
+
+Three hours of debug logging on a live install (2026-09-13, HA 2026.9) show
+what that costs: `Error adding entity None for domain binary_sensor with
+platform cozytouch`, once per room unit, every setup and every retry. Every
+room unit's cloud-connectivity sensor was silently missing. Only
+`binary_sensor` appears in the log because it was the only platform that
+carried its *own* copy of the description -- the rest go through
+`device_info_for`, whose device the registry already held from setup, so
+their `async_get_or_create` came back with nothing to update and never
+reached the report. One copy of a description is not tidiness here; it is the
+difference between one platform failing and all of them.
+
+So `device_info_for` resolves the gateway and declares `via_device_id`, and
+the copy in `binary_sensor.py` is gone -- it now calls `device_info_for` and
+overrides `name` alone, which was the only field it ever said differently.
+
+The resolution is a registry lookup, which is why it is not a straight swap.
+`via_device_id` naming a device the registry does not hold raises outright,
+where the deprecated key merely warned; `via_device_info` answers with no link
+at all in that case. Setup registering gateways first (above) is what makes
+the lookup find something, so the two halves are one mechanism.
+
+`DeviceInfo` gained `via_device_id` in **2026.8.0** -- bisected over the PyPI
+wheels, since the field is a TypedDict key and no release note names it: 2026.7.0
+does not have it, 2026.8.0 does. The declared floor is well below that, so both
+spellings have to be reachable; `_VIA_DEVICE_ID_SUPPORTED` reads `DeviceInfo.__annotations__`
+rather than comparing versions, and it is the only compatibility branch in the
+integration. It goes when the floor passes 2026.8.0, which is not a floor worth
+having for it -- Home Assistant removes `via_device` in 2027.8 and the branch
+expires on its own.
+
+`tests/test_topology.py` pins both spellings on whichever release the job
+installed, rather than asserting whatever the installed `DeviceInfo` happens to
+declare: a test that says one thing at the floor and another at the pin proves
+neither.
+
+### A timeout that stringifies to nothing named nothing
+
+The same log carries `Error requesting Cozytouch_27906640 data: Network error
+reading the setup view: , forcing reconnect`. The message is not truncated:
+`asyncio.TimeoutError` -- what aiohttp raises past `REQUEST_TIMEOUT`, and the
+commonest failure on this API -- carries no args, so `f"{err}"` is the empty
+string. The one line that exists to name the cause named nothing, and the
+traceback that does name it is behind a debug level nobody has on.
+
+`account.why(err)` is `str(err) or type(err).__name__`, used at the five sites
+that format a network error. A fallback, not a replacement: an error that says
+something keeps saying it.
+
 ### The per-day program sensors give way to the calendar (issue #42)
 
 A device that reports a whole program block gets a calendar for it, and the

@@ -115,6 +115,14 @@ SETUP_WRITABLE_FIELDS = (
 )
 
 
+
+def why(err: BaseException) -> str:
+    """What to print for an exception that may carry no message.
+
+    `asyncio.TimeoutError` stringifies to "". See docs/decisions.md.
+    """
+    return str(err) or type(err).__name__
+
 class CozytouchAccount:
     """One Atlantic account, and the only thing that talks to its API."""
 
@@ -269,7 +277,7 @@ class CozytouchAccount:
                 # keeps the next caller from spending another one.
                 self.online = False
             except (TimeoutError, ClientError) as err:
-                _LOGGER.warning("connect: network error: %s", err)
+                _LOGGER.warning("connect: network error: %s", why(err))
                 self.online = False
 
         return self.online
@@ -401,7 +409,7 @@ class CozytouchAccount:
         except (TimeoutError, ClientError) as err:
             self.online = False
             raise CozytouchApiError(
-                f"Network error reading the setup view: {err}, forcing reconnect"
+                f"Network error reading the setup view: {why(err)}, forcing reconnect"
             ) from err
 
     def check_token(self) -> None:
@@ -559,7 +567,7 @@ class CozytouchAccount:
             self.online = False
             raise CozytouchApiError(
                 "Network error fetching capabilities for device"
-                f" {deviceId}: {err}, forcing reconnect"
+                f" {deviceId}: {why(err)}, forcing reconnect"
             ) from err
 
     def store_capabilities(self, deviceId: int, capabilities: list) -> None:
@@ -649,7 +657,7 @@ class CozytouchAccount:
                         _LOGGER.info("Execution_state error")
                         return False
             except (TimeoutError, ClientError) as err:
-                _LOGGER.warning("Network error polling execution: %s", err)
+                _LOGGER.warning("Network error polling execution: %s", why(err))
                 return False
 
             nbRetry += 1
@@ -696,7 +704,7 @@ class CozytouchAccount:
                     str(response.request_info),
                 )
         except (TimeoutError, ClientError) as err:
-            _LOGGER.warning("Network error writing the absence window: %s", err)
+            _LOGGER.warning("Network error writing the absence window: %s", why(err))
 
         return False
 
