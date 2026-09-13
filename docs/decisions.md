@@ -450,6 +450,31 @@ reports separates the two. The corpus was checked id by id --
 *One account.* Four rooms behind one CozyBox is the whole of the evidence,
 and the commands were never tested -- the reporter said as much.
 
+### A zone of a ducted heat pump is matched on its name, not its model id
+
+The API reports the zones of a ducted heat pump as devices of their own. The
+ids look like they encode the zone's index rather than a product: one capture
+pairs 1505 with `THZONE_0`, 1506 with `THZONE_1`, and so on up. A range
+guessed from one household is therefore a range a bigger installation walks
+off the end of, which is why the branch matches the `THZONE` prefix on the
+device's name instead. It reads the API's own `name` field and not
+`customName` -- renaming a zone in the Cozytouch app is a thing people do, and
+this has to survive it.
+
+What a zone reports, in that one capture, is two capabilities -- 218 reading
+`"0"` and 100014 reading `"255"` -- and no climate capability at all: no
+setpoint, nothing to drive. So the branch claims a name, the `ZONE` type, and
+an empty `HVACModes`. That last one is the point of mapping it: the
+fall-through at the end of `get_model_infos` hands every unmapped model an
+`{off, heat}` pair, and that is what made a zone read as a thermostat that
+could heat.
+
+The rest is silence. Unmapped, six zones arrived as `Unknown product (1505)`
+*and* raised an unmapped-model repair each -- six dialogs asking for a
+diagnostics dump about hardware working as designed. `Hub.get_diagnostics`
+drops zones from the dump for the same reason. Reported upstream as
+gduteil/cozytouch#167.
+
 ## `custom_components/cozytouch/select.py`
 
 ### The air-circulation duration is a select on the device's own grid

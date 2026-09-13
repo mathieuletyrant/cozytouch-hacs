@@ -66,12 +66,8 @@ class CozytouchDeviceType(StrEnum):
 
 
 # What the API calls a zone of a ducted heat pump. The name is the signal
-# rather than the model id, because the ids look like they encode the zone's
-# index and not a product: a capture pairs 1505 with THZONE_0, 1506 with
-# THZONE_1, and so on, which means a bigger installation walks off the end of
-# any range guessed from one household. The API's own `name` field is checked,
-# not `customName` -- renaming the zone in the Cozytouch app is a thing people
-# do, and this has to survive it.
+# rather than the model id, and it is the API's `name` and not `customName`
+# -- see docs/decisions.md.
 ZONE_NAME_PREFIX = "THZONE"
 
 # Each table below holds every id of one product line the catalogue names.
@@ -372,21 +368,13 @@ def get_model_infos(  # noqa: C901
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
     if deviceName is not None and deviceName.startswith(ZONE_NAME_PREFIX):
-        # A THZONE is one zone of a ducted heat pump, not a product. What it
-        # reports, in the one capture there is, is two capabilities -- 218
-        # reading "0" and 100014 reading "255" -- and no climate capability:
-        # no setpoint, nothing to drive.
-        #
-        # Mapping it buys a name and silence rather than entities. Unmapped it
-        # arrived as "Unknown product (1505)" *and* raised an unmapped-model
-        # repair per zone, six dialogs asking for a diagnostics dump about
-        # hardware working as designed. Reported upstream as
-        # gduteil/cozytouch#167.
+        # A zone of a ducted heat pump, not a product: it reports no climate
+        # capability, so mapping it buys a name and silence rather than
+        # entities. See docs/decisions.md.
         modelInfos.name = f"Zone ({zoneName})" if zoneName else deviceName
         modelInfos.type = CozytouchDeviceType.ZONE
-        # Claims nothing. The fall-through at the end hands every unmapped
-        # model an off/heat pair, and that is what made a zone read as a
-        # thermostat that could heat.
+        # Empty on purpose: the fall-through's off/heat pair is what made a
+        # zone read as a thermostat that could heat.
         modelInfos.HVACModes = {}
 
     elif modelId in NAEMA_NAIA_BOILERS:
