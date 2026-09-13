@@ -485,11 +485,41 @@ MODEL_GROUPS = [
         },
     ),
     (
+        754,
+        {
+            "modelId": 754,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Calypso SPLIT VM 200L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
         1368,
         {
             "modelId": 1368,
             "HVACModesCapabilityId": {7, 8},
             "name": "Calypso SPLIT VM 200L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
+        },
+    ),
+    (
+        664,
+        {
+            "modelId": 664,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Calypso Split",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -848,6 +878,21 @@ MODEL_GROUPS = [
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {0: HEATING_MODE_MANUAL, 3: HEATING_MODE_ECO_PLUS},
+        },
+    ),
+    (
+        1010,
+        {
+            "modelId": 1010,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Egeo VS 250L",
+            "type": CozytouchDeviceType.WATER_HEATER,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "HeatingModes": {
+                0: HEATING_MODE_MANUAL,
+                3: HEATING_MODE_ECO_PLUS,
+                4: HEATING_MODE_PROG,
+            },
         },
     ),
     (
