@@ -874,6 +874,59 @@ real tank setpoints, all above the threshold. Applying the rule there would
 turn a 65 °C tank into 0 °C, which is why `parse_slots` takes the
 capability id and does nothing without one.
 
+## `custom_components/cozytouch/number.py`
+
+### Four classes that were one
+
+`TemperatureAdjustmentNumber`, `TemperaturePercentAdjustmentNumber`,
+`HoursAdjustmentNumber` and `MinutesAdjustmentNumber` differed in three
+things -- what they declare about themselves, how an API value becomes a
+displayed one, how a displayed one goes back -- and were copies of each other
+in the hundred lines around those three. The bound alone, four lines of
+`if value < min ... elif value > max`, was written eight times: once per read
+and once per write in each class.
+
+They are now one base class and four subclasses carrying `_from_api`,
+`_to_api` and their own declarations, which is 134 lines less. The four names
+survive because `async_setup_entry` dispatches on them, and every one of them
+claims the same unique id it always did (`..._number_<capabilityId>`), so no
+install wakes up with a renamed entity. That is what made the merge safe, and
+`tests/test_number.py` pins it -- along with what each one reads and writes,
+which nothing tested at all before.
+
+### Setting a value now asks for a refresh whatever the unit
+
+Hours and minutes called `async_request_refresh()` after a write; the two
+temperature entities did not. Nothing distinguishes them -- the same
+capability write, the same cloud, the same wait -- so a setpoint typed into a
+temperature box sat unreflected until the next account poll, up to
+`DEFAULT_POLL_INTERVAL` later, while a duration updated at once. It reads as
+an omission rather than a decision, and the base class now refreshes for all
+four.
+
+### A ceiling reported as 0 collapses the range, and is left alone
+
+`TemperatureAdjustmentNumber` re-reads its bounds from the device on every
+update, through `lowestValueCapabilityId` and `highestValueCapabilityId`. The
+guard is `if highestValue:` on the string the API sends, so `None` is ignored
+but `"0"` is taken -- and a ceiling of 0 leaves a number entity that cannot be
+set to anything.
+
+That is almost certainly wrong, and it is pinned as it stands
+(`test_a_bound_reported_as_zero_collapses_the_range`). Nothing in any capture
+says whether a device reports 0 for a bound it has not been configured with,
+and the suite here is characterisation: changing the reading on a guess would
+be inventing behaviour for hardware nobody has looked at. It changes when a
+dump shows one.
+
+### The device description is declared once
+
+Five classes carried the same three-line `device_info` property and a sixth
+carried its own copy of the whole description -- which is the one that broke
+(above). `CozytouchDeviceEntity` in `hub.py` carries it now; a platform class
+inherits it and says nothing. `CloudConnectivity` still overrides `name`,
+which was always the one field it meant to say differently.
+
 ## The declared floor
 
 ### 2025.12.0, and what raising it did not buy

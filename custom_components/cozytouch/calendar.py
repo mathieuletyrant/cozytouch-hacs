@@ -7,13 +7,11 @@ import logging
 
 from homeassistant.components.calendar import CalendarEntity, CalendarEvent
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, PROGRAM_BLOCKS
-from .hub import CozytouchConfigEntry, Hub, device_info_for
+from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
 from .services import DAYS, parse_slots
 
 _LOGGER = logging.getLogger(__name__)
@@ -66,7 +64,7 @@ def _reports_the_whole_block(hub: Hub, first: int) -> bool:
     )
 
 
-class CozytouchProgramCalendar(CoordinatorEntity, CalendarEntity):
+class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
     """A weekly program, as the week it actually is.
 
     The program is what these devices are scheduled by -- it keeps running when
@@ -106,11 +104,6 @@ class CozytouchProgramCalendar(CoordinatorEntity, CalendarEntity):
         # both cool and heat, so nothing here decides it either.
         self._attr_translation_key = f"{program}_program"
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{program}_program"
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @property
     def event(self) -> CalendarEvent | None:

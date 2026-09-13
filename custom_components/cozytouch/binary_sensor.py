@@ -11,11 +11,9 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub
-from .sensor import device_info_for
+from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub, device_info_for
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -42,7 +40,7 @@ async def async_setup_entry(
         )
 
 
-class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
+class CloudConnectivity(CozytouchDeviceEntity, BinarySensorEntity):
     """Cloud connectivity to the Atlantic Cozytouch integration."""
 
     _attr_has_entity_name = True
@@ -55,7 +53,7 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self._title = title
         self._attr_unique_id = f"{DOMAIN}_{uniq_id}_cloud_connectivity"
-        self._device_uniq_id = uniq_id if uniq_id is not None else "yaml_legacy"
+        self._device_uniq_id = uniq_id
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -71,7 +69,7 @@ class CloudConnectivity(CoordinatorEntity, BinarySensorEntity):
         self.async_write_ha_state()
 
 
-class DeviceAvailability(CoordinatorEntity, BinarySensorEntity):
+class DeviceAvailability(CozytouchDeviceEntity, BinarySensorEntity):
     """Whether the cloud reports this device as reachable (`isAvailable`).
 
     Distinct from CloudConnectivity : that one is the account's session to the
@@ -95,11 +93,6 @@ class DeviceAvailability(CoordinatorEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self._attr_unique_id = f"{DOMAIN}_{uniq_id}_device_availability"
         self._device_uniq_id = uniq_id
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return device_info_for(self.coordinator, self._device_uniq_id)
 
     @callback
     def _handle_coordinator_update(self) -> None:

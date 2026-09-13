@@ -10,7 +10,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 from homeassistant.util import dt as dt_util
 
 from .account import (
@@ -889,3 +893,18 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
         info.update(via_device_info(coordinator.hass, via_device))
 
     return info
+
+
+class CozytouchDeviceEntity(CoordinatorEntity):
+    """A coordinator entity that belongs to one subentry's device.
+
+    Carried by every platform, so the description is declared once. The copy
+    that was not is in docs/decisions.md.
+    """
+
+    _device_uniq_id: str
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the device info."""
+        return device_info_for(self.coordinator, self._device_uniq_id)
