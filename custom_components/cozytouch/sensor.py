@@ -27,6 +27,7 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from .capability import describe_capability_value, read_setpoint
 from .const import DOMAIN, CozytouchCapabilityVariableType
 from .hub import CozytouchConfigEntry, Hub, device_info_for
 from .infos import CapabilityCategory, CapabilityType
@@ -361,6 +362,7 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
         self._config_title = config_title
         self._config_uniq_id = config_uniq_id
         self._last_value: str | None = None
+        self._raw_value: str | None = None
         self._device_uniq_id = config_uniq_id
 
         # Only set _attr_name when there is a name to set. Assigning None here
@@ -424,7 +426,18 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
                 self._capability.capabilityId
             )
             if value is None:
+                self._raw_value = None
                 return None
+            described = describe_capability_value(
+                self._capability.capabilityId, value
+            )
+            if described is not None:
+                # The number stays available as an attribute: these entities are
+                # here to investigate hardware, and a reader chasing a bit the
+                # tables do not name needs what the device actually said.
+                self._raw_value = value
+                return described
+            self._raw_value = None
             if self._value_type == CozytouchCapabilityVariableType.BOOL:
                 return bool(value)
             if self._value_type == CozytouchCapabilityVariableType.FLOAT:
@@ -445,6 +458,13 @@ class CozytouchSensor(SensorEntity, CoordinatorEntity):
     def native_value(self):
         """Value of the sensor."""
         return self._last_value
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """The value as the device sent it, when this sensor decoded one."""
+        if self._raw_value is None:
+            return None
+        return {"raw": self._raw_value}
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -798,7 +818,8 @@ class CozytouchProgSensor(CozytouchSensor):
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability.capabilityId)
+        capabilityId = self._capability.capabilityId
+        value = self.coordinator.get_capability_value(capabilityId)
         if value is not None:
             progList = json.loads(value)
 
@@ -813,7 +834,9 @@ class CozytouchProgSensor(CozytouchSensor):
                     strValue += f"{hours:02d}:{minutes:02d} "
                     # int() rather than the value itself: the setpoint arrives
                     # from JSON and can be a float, which %d used to truncate.
-                    strValue += f" {int(prog[1])}°C"
+                    strValue += (
+                        f" {int(read_setpoint(capabilityId, prog[1]))}°C"
+                    )
 
             return strValue
 

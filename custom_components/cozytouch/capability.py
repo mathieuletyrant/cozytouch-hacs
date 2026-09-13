@@ -111,6 +111,214 @@ SELF_DESCRIBING_CAPABILITIES = {
 }
 
 
+_HVAC_MODE_BITS = (
+    (1, "off"),
+    (6, "auto"),
+    (8, "cool"),
+    (16, "heat"),
+    (128, "fan"),
+    (256, "dry"),
+)
+
+_CONTROL_MODE_BITS = (
+    (1, "basic"),
+    (2, "prog"),
+    (4, "lifestyle_prog"),
+    (8, "heating_anticipation"),
+    (16, "unexpected_events"),
+    (32, "auto"),
+    (256, "energy_saving"),
+    (1024, "absence"),
+    (2048, "scheduled_absence"),
+)
+
+_DHW_MODE_BITS = (
+    (1, "manual"),
+    (2, "eco_comfort_schedule"),
+    (4, "auto"),
+    (8, "prog"),
+    (256, "boost"),
+    (512, "scheduled_boost"),
+    (1024, "absence"),
+    (2048, "scheduled_absence"),
+    (4096, "antilegionella"),
+    (8192, "smart_grid"),
+    (16384, "on_off"),
+)
+
+_DHW_HEATING_TYPE_BITS = (
+    (1, "heat"),
+    (2, "scheduled_heat"),
+    (4, "off_peak_heat"),
+    (8, "self_consumption_heat"),
+)
+
+_AIR_CIRCULATION_MODE_BITS = (
+    (1, "off"),
+    (2, "auto_temperature"),
+    (4, "auto_season"),
+    (8, "cool"),
+    (16, "heat"),
+    (128, "fan"),
+    (256, "dry"),
+)
+
+# The speed selectors name a whole set rather than one speed, so each value
+# spells its set out.
+_SPEED_SETS = {
+    "0": "low, medium, high",
+    "1": "low, high",
+    "2": "low, medium, high, auto",
+    "3": "low, high, auto",
+    "4": "on, auto",
+}
+
+# What the numbers in the table above mean. The ventilation control and option
+# masks the app also carries are deliberately absent: on the captures a tenth
+# of their readings set a bit past the last member the app names (128 on
+# 100004/100021, 104 on 100002, and 124 on 224's single-bit mask), so either
+# those ids are not what the app calls them or the enum read out of it is
+# partial. Naming the low bits of a mask whose top bits are unexplained is how
+# a wrong reading gets believed.
+# The vendor's Android app decodes
+# them in plain Kotlin, and every entry here was read off it and then checked
+# against the capture corpus -- see docs/decisions.md. A member can claim
+# several bits at once, which is how the app reads them: it matches on any bit
+# of the member's mask, not on the whole of it.
+CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
+    164: (
+        (1, "gas_heating"),
+        (2, "electricity_heating"),
+        (4, "electricity_cooling"),
+        (8, "gas_dhw"),
+        (16, "electricity_dhw"),
+        (32, "fuel_heating"),
+        (64, "fuel_dhw"),
+        (256, "heating_production"),
+        (512, "cooling_production"),
+    ),
+    166: _HVAC_MODE_BITS,
+    168: _DHW_MODE_BITS,
+    188: (
+        (1, "thermal_comfort"),
+        (2, "dhw"),
+        (4, "ventilation"),
+        (8, "light"),
+    ),
+    217: _CONTROL_MODE_BITS,
+    223: _DHW_HEATING_TYPE_BITS,
+    336: (
+        (1, "v40_state_of_charge"),
+        (2, "main_setpoint_cursor"),
+        (4, "secondary_setpoint_cursor"),
+        (8, "data_inside"),
+    ),
+    100013: ((1, "on_off"),),
+    100022: _HVAC_MODE_BITS,
+    100023: _CONTROL_MODE_BITS,
+    102005: _AIR_CIRCULATION_MODE_BITS,
+    105012: _DHW_HEATING_TYPE_BITS,
+}
+
+# The same, for the ids whose value is one member rather than a set of them.
+CAPABILITY_VALUE_SPACES: dict[int, dict[str, str]] = {
+    73: {
+        "0": "cooling_only",
+        "1": "cooling_with_reheat",
+        "2": "heating_only",
+        "3": "heating_with_reheat",
+        "4": "cooling_and_heating",
+        "5": "cooling_and_heating_with_reheat",
+    },
+    230: {
+        "0": "heat",
+        "1": "scheduled_heat",
+        "2": "off_peak_heat",
+    },
+    337: {
+        "0": "nothing",
+        "1": "away",
+        "2": "boost",
+        "3": "photovoltaic",
+        "4": "smart_grid",
+        "5": "antilegionella",
+        "6": "water_setpoint",
+    },
+    338: {
+        "0": "nothing",
+        "1": "eco",
+        "2": "water_setpoint",
+    },
+    339: {
+        "0": "nothing",
+        "1": "v40_state_of_charge",
+        "2": "water_setpoint",
+    },
+    350: _SPEED_SETS,
+    100800: _SPEED_SETS,
+}
+
+
+def describe_capability_value(capabilityId: int, value) -> str | None:
+    """Read a descriptor capability as what it says, or None if nothing does.
+
+    Bits nothing names are kept as a count rather than dropped: these entities
+    exist to investigate hardware nobody here owns, and a bit the tables do not
+    cover is exactly what such a reader is after.
+    """
+    space = CAPABILITY_VALUE_SPACES.get(capabilityId)
+    if space is not None:
+        return space.get(str(value).strip())
+
+    bits = CAPABILITY_BIT_FIELDS.get(capabilityId)
+    if bits is None:
+        return None
+
+    try:
+        mask = int(str(value).strip())
+    except (TypeError, ValueError):
+        return None
+
+    if mask == 0:
+        return "none"
+
+    named = [label for bit, label in bits if mask & bit]
+
+    known = 0
+    for bit, _ in bits:
+        known |= bit
+    leftover = mask & ~known
+    if leftover:
+        named.append(f"unknown ({leftover})")
+
+    return ", ".join(named) if named else None
+
+
+# The program blocks whose slots hold a room temperature. The hot-water block
+# (237-243) is deliberately out: its slots really do carry 50-65 °C, so the
+# hundredths rule below would read a 65 °C tank as 0.65 °C.
+THERMOSTAT_PROG_IDS = frozenset(range(196, 210)) | frozenset(range(100320, 100334))
+
+
+def read_setpoint(capabilityId: int | None, value):
+    """Read a program slot's target temperature.
+
+    Some firmwares store it in hundredths -- the vendor app divides anything
+    above 40 by 100 and shows the result, so a slot reading 1950 is 19.5 °C
+    and not a device asking for 1950 °C. No capture here has ever shown one,
+    so this is the app's rule and nothing more; see docs/decisions.md.
+    """
+    if capabilityId not in THERMOSTAT_PROG_IDS:
+        return value
+
+    try:
+        setpoint = float(value)
+    except (TypeError, ValueError):
+        return value
+
+    return setpoint / 100 if setpoint > 40 else setpoint
+
+
 def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
     """Whether the device reports all seven days of the program block at `first`.
 

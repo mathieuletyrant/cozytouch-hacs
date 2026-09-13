@@ -560,15 +560,21 @@ set — and the heating-only boilers and heat pumps (1382, 1444) read `17`
 (bits 0,4) against their {0 off, 4 heat}. Two independent matches, no
 counter-example seen.
 
-Limits : bit 2 appears on the wire (285, 415, 21) and no capture has named
-it, so the derivation reports it as unknown rather than guessing. And 166
-(`systemOperatingMode`) carries masks in the same space that *shrink* while
-100022 holds steady — one capture reads `166 = 9` {off, cool} on a unit
-whose 100022 says {off, 2?, cool, heat, dry}, mid-summer, so 166 is
-suspected to be the modes *currently permitted* (a seasonal lock) against
-100022's *supported*. The derivation reads only 100022 ; if the vendor app
-turns out to grey modes by 166, reflecting that is a climate-entity
-question, not a mapping one.
+166 (`systemOperatingMode`) carries masks in the same space that *shrink*
+while 100022 holds steady — one capture reads `166 = 9` {off, cool} on a
+unit whose 100022 says {off, cool, heat, dry, auto}, mid-summer, so 166 is
+the modes *currently permitted* (a seasonal lock) against 100022's
+*supported*. The derivation read only 100022 ; if the vendor app turns out
+to grey modes by 166, reflecting that is a climate-entity question, not a
+mapping one.
+
+**Bit 2 was the open question and is now answered: it is part of `auto`.**
+The vendor's Android app gives its HVAC enum a mask of **6** for `auto` —
+bits 1 and 2 — and matches a member when *any* bit of its mask is set. So
+411 and 415 are the same set of modes, 285 has no unexplained bit, and
+nothing on the wire needs a name it does not have. The masks in
+`CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
+decodes with no bit left over.
 
 ### `FAN_MODES` / `SWING_MODES` : global vocabularies, not model data
 
@@ -724,6 +730,66 @@ no capture has ever shown one, and a wall of unknown-valued sensors is not a
 view worth keeping enabled for that case. The milestone blocks
 (100320-100333) and the time ranges (245-251) have no calendar and stay
 enabled; `tests/test_prog_visibility.py` pins all of it.
+
+## `capability.py` : reading the descriptor capabilities
+
+### Where the tables come from, and what they are not
+
+The `supported_*` / `available_*` capabilities are bitmasks, and the ids
+around them are small enumerations. Neither the API nor the iOS app says so
+in any readable form -- three passes over the iOS binary logged the DHW
+masks (168, 336, 105012) as unresolved. The **Android** app settles it: its
+capability layer is Kotlin rather than compiled Swift, so the enums, their
+masks and their API values are readable as source. `CAPABILITY_BIT_FIELDS`
+and `CAPABILITY_VALUE_SPACES` are that reading.
+
+Two properties of it matter when editing them.
+
+**A member can own several bits.** The app tests `mask & value != 0`, not
+`mask & value == mask`, which is what lets `auto` claim bits 1 and 2 at
+once. A table written as one-bit-per-member would read 415 and 411 as
+different mode sets, and they are not.
+
+**The two mode spaces are different enums.** 166 and 100022 are the HVAC
+space (off / auto / cool / heat / fan / dry, plus emergency heat,
+pre-cooling and sleep which are values but never appear in a mask). 217 and
+100023 are the control space (basic, prog, lifestyle prog, heating
+anticipation, unexpected events, auto, energy saving, absence, scheduled
+absence). They carry numbers of similar size -- 411 against 3331 -- and
+reading one with the other's table produces plausible nonsense. Across the
+whole capture corpus, split this way, **neither space leaves a single bit
+unaccounted for**.
+
+### What was left out, and why
+
+The app also carries ventilation control and option masks that would fit
+100002 / 100004 / 100021 / 100024, and a single-bit mask for 224. They are
+not in the tables: on the captures, 10 of 38 readings of 100004 and 100021
+set bit 7, which is past the last member the app names, and 13 of 15
+readings of 224 set bits its one member cannot explain. Either those ids
+are not what the app calls them, or the enum read out of it is partial.
+Naming the low bits of a mask whose top bits are unexplained is how a wrong
+reading gets believed, so they stay raw.
+
+Where a mask *is* decoded and a bit is still unclaimed -- 164 bit 10, 188
+bit 8, both seen on real accounts -- the reading says so (`unknown (1024)`)
+rather than dropping it. These entities exist to investigate hardware
+nobody here owns, so the bit nothing names is the interesting part. The
+number the device sent stays on the entity as a `raw` attribute for the
+same reason.
+
+### `read_setpoint` : hundredths, but not for hot water
+
+The app divides a program slot's target temperature by 100 when it reads
+above 40, so a slot storing 1950 shows as 19.5 °C. No capture here has ever
+shown one -- this is the app's rule, carried because a device that did it
+would otherwise put 1950 on a dashboard.
+
+It is scoped to the thermostat blocks (196-209, 100320-100333) on purpose.
+The hot-water block (237-243) reports 50, 54, 60, 62 and 65 in the corpus:
+real tank setpoints, all above the threshold. Applying the rule there would
+turn a 65 °C tank into 0 °C, which is why `parse_slots` takes the
+capability id and does nothing without one.
 
 ## `.github/workflows/release.yaml`
 
