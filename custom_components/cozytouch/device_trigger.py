@@ -51,14 +51,13 @@ from homeassistant.helpers.trigger import TriggerActionType, TriggerInfo
 from homeassistant.helpers.typing import ConfigType
 
 from .climate import PRESET_BASIC, PRESET_OVERRIDE, PRESET_PROG
-from .const import DOMAIN
-from .services import DAYS, PROGRAM_FIRST_CAPABILITY
+from .const import DOMAIN, WRITABLE_PROGRAM_BLOCKS, program_block
 
 # One per program the schedule services know, so the trigger list and the
 # services stay in step: a program nothing can read back is not one an
 # automation should be told changed.
 SCHEDULE_TRIGGER_TYPES = {
-    f"{program}_schedule_changed": program for program in PROGRAM_FIRST_CAPABILITY
+    f"{program}_schedule_changed": program for program in WRITABLE_PROGRAM_BLOCKS
 }
 
 # The three presets that say what the device is doing about its own program:
@@ -114,12 +113,6 @@ def _capability_id(unique_id: str | None) -> int | None:
         return None
 
 
-def _program_block(program: str) -> range:
-    """The seven consecutive capability ids one program is stored in."""
-    first = PROGRAM_FIRST_CAPABILITY[program]
-    return range(first, first + len(DAYS))
-
-
 def _schedule_entity_ids(
     hass: HomeAssistant, device_id: str, program: str
 ) -> list[str]:
@@ -128,7 +121,7 @@ def _schedule_entity_ids(
     Registry ids rather than entity ids: an entity that gets renamed keeps the
     former and changes the latter, and an automation should survive a rename.
     """
-    block = _program_block(program)
+    block = program_block(WRITABLE_PROGRAM_BLOCKS[program])
 
     registry = er.async_get(hass)
     return [
@@ -182,7 +175,7 @@ async def async_get_triggers(
     triggers += [
         {**base_trigger, CONF_TYPE: trigger_type}
         for trigger_type, program in SCHEDULE_TRIGGER_TYPES.items()
-        if not capabilityIds.isdisjoint(_program_block(program))
+        if not capabilityIds.isdisjoint(program_block(WRITABLE_PROGRAM_BLOCKS[program]))
     ]
 
     return triggers

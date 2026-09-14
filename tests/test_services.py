@@ -20,6 +20,7 @@ import pytest
 import voluptuous as vol
 
 from custom_components.cozytouch import services
+from custom_components.cozytouch.const import PROGRAM_DAYS
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import SupportsResponse
 from homeassistant.exceptions import ServiceValidationError
@@ -228,8 +229,8 @@ def test_a_single_slot_sent_as_a_mapping_is_still_a_list():
 @pytest.mark.parametrize(
     ("group", "expected"),
     [
-        ("all", services.DAYS),
-        ("weekdays", services.DAYS[:5]),
+        ("all", list(PROGRAM_DAYS)),
+        ("weekdays", list(PROGRAM_DAYS[:5])),
         ("weekend", ["saturday", "sunday"]),
     ],
 )
@@ -443,7 +444,7 @@ def test_reading_a_week_is_keyed_by_the_entity_it_came_from(monkeypatch):
 
     assert list(response) == ["climate.salon"]
     assert response["climate.salon"]["program"] == "heating"
-    assert list(response["climate.salon"]["days"]) == services.DAYS
+    assert list(response["climate.salon"]["days"]) == list(PROGRAM_DAYS)
     assert response["climate.salon"]["days"]["monday"][1]["time"] == "06:30"
 
 
