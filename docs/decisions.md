@@ -950,6 +950,21 @@ available pair is kept in the names because the app keeps it.
 102020 reads 3, which is not one bit of that table and not obviously one
 member either, so it stays raw.
 
+### The chain reads in ascending id order
+
+119 branches on disjoint ids, so nothing but reading order depends on where a
+branch sits -- which is why it drifted. Ids were landing wherever the commit
+that added them happened to be editing: 303 between 184 and 196, 150 and 290
+after 102024, 312 after 105907, 100320 after 100507. Looking an id up meant
+grepping for it instead of scrolling to it.
+
+The rule is ascending by the branch's lowest id, range branches sorting on
+their low bound, and `test_the_mapping_reads_in_ascending_id_order` is what
+keeps it rather than anyone remembering. A new branch goes where its number
+goes.
+
+The reorder itself is provable: `tests/snapshots/` did not move a byte.
+
 ### The enum is not the catalogue
 
 Worth recording, because it is the question this walk was meant to answer.
