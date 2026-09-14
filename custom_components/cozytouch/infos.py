@@ -1,17 +1,9 @@
 """Typed attribute access over the mappings the two tables answer with.
 
-get_model_infos and get_capability_infos answer with plain mappings, and
-everything downstream -- the platforms, the hub, the diagnostics dump, the
-tests -- reads them with dict syntax. These classes keep that contract: they
-*are* dicts, equal to the literals the tests pin. What they change is the
-builder's side: fields are declared once, with their types, and written as
-`infos.name = ...`, so the IDE completes and checks them and a typo'd field
-raises instead of landing as a silent new key.
-
-A field is a key only when a branch sets it -- the declarations say what a
-field is, never that it is present. Optional model flags keep defaulting in
-their reader (`infos.get("flag", default)`), because which models declare a
-flag is itself pinned behaviour; see tests/test_capability.py.
+These classes *are* dicts, equal to the literals the tests pin ; what they add
+is a declared field list, so a typo'd field raises instead of landing as a
+silent new key. A field is a key only when a branch sets it -- the declarations
+say what a field is, never that it is present.
 """
 
 from enum import StrEnum

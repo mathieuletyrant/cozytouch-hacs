@@ -1,25 +1,8 @@
 """Device triggers for the Atlantic Cozytouch integration.
 
-Home Assistant already builds device triggers out of the entity domains a
-device happens to have : the connectivity binary sensor gives "connected" and
-"disconnected", the away-mode switch gives "turned on", the climate entity
-gives "HVAC mode changed". Nothing there reaches the weekly program, and the
-program is what these devices are scheduled by -- it keeps running when Home
-Assistant is off, which is the whole reason the two schedule services exist.
-
-Two gaps, then, and this module fills those and nothing else :
-
-- the program itself is seven diagnostic sensors, one per day, that no entity
-  groups, so "the heating program changed" has no entity to be triggered on ;
-- `climate.device_trigger` offers `hvac_mode_changed` and the two current-value
-  triggers, and no preset trigger at all -- and the preset is where prog,
-  override and basic are reported.
-
-There is deliberately no `device_condition.py` and no `device_action.py`. The
-`climate` domain already ships both for presets : "Cozytouch is set to prog" is
-a condition Home Assistant writes itself, and setting one is a climate device
-action. Adding ours would put two entries with the same meaning in the same
-picker.
+Two gaps Home Assistant's own device triggers leave : the weekly program, which
+no entity groups, and the climate preset, which `climate.device_trigger` does
+not offer. Nothing else, and no conditions or actions. See docs/decisions.md.
 """
 
 from __future__ import annotations
@@ -53,33 +36,27 @@ from homeassistant.helpers.typing import ConfigType
 from .climate import PRESET_BASIC, PRESET_OVERRIDE, PRESET_PROG
 from .const import DOMAIN, WRITABLE_PROGRAM_BLOCKS, program_block
 
-# One per program the schedule services know, so the trigger list and the
-# services stay in step: a program nothing can read back is not one an
-# automation should be told changed.
+# One per program the schedule services know, so the two stay in step.
 SCHEDULE_TRIGGER_TYPES = {
     f"{program}_schedule_changed": program for program in WRITABLE_PROGRAM_BLOCKS
 }
 
-# The three presets that say what the device is doing about its own program:
-# following it, running a temporary override of it, or ignoring it for a
-# manual setpoint. capability.py wires all three from capability 184 and 157.
+# What the device is doing about its own program : following it, overriding
+# it, or ignoring it. capability.py wires all three from 184 and 157.
 PRESET_TRIGGER_TYPES = {
     "schedule_resumed": PRESET_PROG,
     "schedule_overridden": PRESET_OVERRIDE,
     "schedule_stopped": PRESET_BASIC,
 }
 
-# A day sensor that is merely unreachable has not been reprogrammed, so the
-# trip through unavailable and back is not a change. Ruling both ends out also
-# turns the trigger into a state-value one: with no `to` or `from` at all, the
-# state trigger fires on attribute changes too, and a renamed entity would
-# read as an edited program.
+# Unreachable is not reprogrammed, and ruling both ends out is also what keeps
+# this a state-value trigger. See docs/decisions.md.
 NOT_A_PROGRAM = [STATE_UNAVAILABLE, STATE_UNKNOWN]
 
 _SCHEDULE_TRIGGER_SCHEMA = DEVICE_TRIGGER_BASE_SCHEMA.extend(
     {
-        # No entity_id: a program is seven sensors, and which seven is a
-        # question about the device rather than about any one of them.
+        # No entity_id : a program is seven sensors, and which seven is a
+        # question about the device. See docs/decisions.md.
         vol.Required(CONF_TYPE): vol.In(SCHEDULE_TRIGGER_TYPES),
     }
 )
@@ -98,11 +75,7 @@ TRIGGER_SCHEMA = vol.Any(_SCHEDULE_TRIGGER_SCHEMA, _PRESET_TRIGGER_SCHEMA)
 def _capability_id(unique_id: str | None) -> int | None:
     """The capability id a sensor's unique id ends with.
 
-    Sensors are keyed `cozytouch_{subentry_id}_{capabilityId}` -- a device is
-    a subentry of its account -- and a subentry id carries no underscore, so
-    the tail is the capability. The two away-mode timestamps are the exception,
-    `{subentry_id}_0` and `{subentry_id}_1`, and 0 and 1 fall outside every
-    program block, so they rule themselves out.
+    See docs/decisions.md.
     """
     if not unique_id:
         return None
@@ -118,8 +91,7 @@ def _schedule_entity_ids(
 ) -> list[str]:
     """The registry ids of the seven day sensors of one program.
 
-    Registry ids rather than entity ids: an entity that gets renamed keeps the
-    former and changes the latter, and an automation should survive a rename.
+    Registry ids, so an automation survives a rename.
     """
     block = program_block(WRITABLE_PROGRAM_BLOCKS[program])
 
@@ -136,9 +108,7 @@ async def async_get_triggers(
 ) -> list[dict[str, str]]:
     """List the triggers this device actually has.
 
-    Both kinds are offered only when the device reports what they read : a
-    water heater with no cooling program does not get a cooling trigger, and a
-    device whose climate entity has no prog preset gets none of the three.
+    Only the ones the device reports what to read for. See docs/decisions.md.
     """
     registry = er.async_get(hass)
     base_trigger = {
@@ -160,9 +130,7 @@ async def async_get_triggers(
         if entry.domain != CLIMATE_DOMAIN:
             continue
 
-        # Which presets exist is on the entity, not in the registry, so a
-        # climate entity with no state yet answers for none of them. That is
-        # the read climate.device_trigger makes for its own two as well.
+        # On the entity, not in the registry. See docs/decisions.md.
         state = hass.states.get(entry.entity_id)
         presets = state.attributes.get(ATTR_PRESET_MODES) or () if state else ()
 
@@ -194,8 +162,7 @@ async def async_attach_trigger(
         state_config = {
             CONF_PLATFORM: "state",
             CONF_ENTITY_ID: config[CONF_ENTITY_ID],
-            # On the attribute, not on the state: the state of a climate
-            # entity is its HVAC mode, and a setpoint change would fire this.
+            # On the attribute, not the state, which is the HVAC mode.
             CONF_ATTRIBUTE: ATTR_PRESET_MODE,
             state_trigger.CONF_TO: PRESET_TRIGGER_TYPES[trigger_type],
         }
@@ -232,8 +199,7 @@ async def async_get_trigger_capabilities(
 ) -> dict[str, vol.Schema]:
     """Offer `for` on the preset triggers, and nothing on the others.
 
-    "Overridden for two hours" is a thing to automate on; "changed for two
-    hours" is not, since a program that changed does not change back.
+    A program that changed does not change back. See docs/decisions.md.
     """
     if config[CONF_TYPE] not in PRESET_TRIGGER_TYPES:
         return {}

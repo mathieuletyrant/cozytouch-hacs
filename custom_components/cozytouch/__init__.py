@@ -9,7 +9,7 @@ from homeassistant.helpers import device_registry as dr, entity_registry as er
 import homeassistant.helpers.config_validation as cv
 
 from .account import CozytouchAccount
-from .const import DOMAIN, PROGRAM_BLOCKS
+from .const import DOMAIN, PROGRAM_BLOCKS, program_block
 from .hub import (
     AccountCoordinator,
     CozytouchConfigEntry,
@@ -64,17 +64,16 @@ def _covered_prog_unique_ids(
 ) -> set[str]:
     """The per-day program sensors whose whole block is in the registry.
 
-    What is in the registry mirrors what the device reported when the entities
-    were built, so the calendar's whole-block condition can be checked without
-    the API: a complete block has a calendar and its per-day sensors are
-    duplicates, a partial one has no calendar and they stay its only view.
+    What is in the registry mirrors what the device reported, so the calendar's
+    whole-block condition can be checked without the API. See
+    docs/decisions.md.
     """
     covered: set[str] = set()
     for subentry_id in subentry_ids:
         for first in PROGRAM_BLOCKS.values():
             block = {
                 f"{DOMAIN}_{subentry_id}_{capabilityId}"
-                for capabilityId in range(first, first + 7)
+                for capabilityId in program_block(first)
             }
             if block <= existing_unique_ids:
                 covered |= block
@@ -85,15 +84,9 @@ def _covered_prog_unique_ids(
 async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Bring a stored entry up to the current minor version.
 
-    A version 1 entry keeps landing in MIGRATION_ERROR, as it always has:
-    its one-entry-per-device shape is not understood and asking for the
-    device to be added again is the migration. See config_flow.VERSION.
-
-    2.2 disables the per-day program sensors a calendar makes redundant.
-    Once, not per start: enabled_by_default only speaks at first
-    registration, and somebody who re-enables a sensor afterwards must
-    never find it disabled again. INTEGRATION and not USER, so the UI says
-    who did it -- and a sensor the user already disabled keeps saying USER.
+    A version 1 entry keeps landing in MIGRATION_ERROR, as it always has. 2.2
+    disables the per-day program sensors a calendar makes redundant, once and
+    not per start. See docs/decisions.md.
     """
     if entry.version != 2:
         return False
@@ -122,9 +115,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def _async_entry_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload so new options -- or a device added or removed -- are picked up.
 
-    Home Assistant fires the update listeners for a subentry change as well as
-    for an options change, which is what builds the hub for a device somebody
-    just added without asking them to reload by hand.
+    HA fires these listeners for a subentry change too, which is what builds
+    the hub for a device somebody just added.
     """
     await hass.config_entries.async_reload(entry.entry_id)
 
@@ -137,10 +129,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
     async_register_services(hass)
 
-    # ConfigEntryNotReady tells HA to retry with exponential backoff until the
-    # network is back; a refused password comes out of here as
-    # ConfigEntryAuthFailed instead, which asks for a new one rather than
-    # retrying the old one until somebody goes looking.
+    # Retried with backoff until the network is back ; a refused password
+    # comes out as ConfigEntryAuthFailed instead. See docs/decisions.md.
     if not await account.connect_or_auth_failed():
         raise ConfigEntryNotReady("Cannot connect to Atlantic Cozytouch API")
 
@@ -160,25 +150,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     coordinator = AccountCoordinator(hass, account, entry, hubs)
     entry.runtime_data = CozytouchRuntimeData(account, hubs, coordinator)
 
-    # One refresh for the account where there used to be one per device, and
-    # the setup view `connect()` just read has already filled in a capability
-    # list for every one of them -- so this publishes what is there rather than
-    # fetching it again.
-    #
-    # async_refresh, not async_config_entry_first_refresh : the entities are
-    # built from those capabilities, so a poll that fails leaves values stale
-    # instead of failing a setup that already has what it needs.
+    # async_refresh, not async_config_entry_first_refresh : connect() has
+    # already read the capabilities, so a failing poll must not fail a setup
+    # that has what it needs. See docs/decisions.md.
     await coordinator.async_refresh()
 
-    # Before the platforms, not as a side effect of their first entity: a
-    # child's via_device has to name a device that already exists, and the
-    # platforms run concurrently. See docs/decisions.md.
+    # Before the platforms, not as a side effect of their first entity. See
+    # docs/decisions.md.
     _register_devices(dr.async_get(hass), entry, hubs)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    # Once the devices are loaded, and only for a setup that got this far:
-    # an unmapped model is worth a word to the user, a failed setup is not.
+    # Only for a setup that got this far : a failed one is not worth a word.
     async_check_model_mapping(hass, entry)
 
     return True

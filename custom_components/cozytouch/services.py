@@ -128,14 +128,9 @@ def _build_matrix(slots: list[dict]) -> str:
 def parse_slots(value: str | None, capabilityId: int | None = None) -> list[dict]:
     """Read a stored program back into the slots set_schedule takes.
 
-    Public because calendar.py reads programs through it too: one reading of
-    the stored matrix, so a calendar and `get_schedule` cannot disagree about
-    what a day holds.
-
-    The device pads the unused slots with [0,0], and padding runs to the end of
-    the matrix, so a pair of zeroes ends the day. A real slot at midnight
-    carries a target temperature, never 0 °C, which is what tells the two apart
-    -- the same rule the prog sensors already read by.
+    Public because calendar.py reads programs through it too, so the two cannot
+    disagree about what a day holds. A pair of zeroes ends the day : a real
+    midnight slot carries a target temperature, never 0 °C.
     """
     try:
         entries = json.loads(value)

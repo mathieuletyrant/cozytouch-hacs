@@ -107,12 +107,8 @@ class CozytouchSelect(SelectEntity, CozytouchSensor):
 class CozytouchDurationSelect(SelectEntity, CozytouchSensor):
     """A duration in minutes, offered on the grid the device declares.
 
-    The vendor app shows this setting as a picker over whole steps, and a
-    number entity cannot promise that grid: Home Assistant validates a typed
-    value against the bounds but not against the step. The options are built
-    from the bounds and step the device itself reports -- the sibling
-    capabilities the mapping names -- with the mapping's own values as the
-    fallback for a device that reports the duration without its grid.
+    A number entity cannot promise a step, which is why this is a select. See
+    docs/decisions.md.
     """
 
     def __init__(

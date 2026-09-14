@@ -37,20 +37,13 @@ AIR_CIRCULATION_SPEED_MEDIUM = "medium"
 AIR_CIRCULATION_SPEED_HIGH = "high"
 
 
-# The three weekly programs these devices hold, by the first capability of each
-# seven-day run: heating and cooling on a boiler or an air conditioner, hot
-# water on a water heater. A device gets a calendar per block it reports in
-# full, which in practice means one or two of them.
-#
-# Here rather than in calendar.py, which built it: the blocks a calendar
-# covers are also the blocks whose per-day sensors arrive disabled, and the
-# migration in __init__.py that disables existing ones reads the same table.
+# The three weekly programs these devices hold, by the first capability of
+# each seven-day run. Read by the calendar, by the per-day sensors it disables
+# and by the migration that disables them. See docs/decisions.md.
 PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
 
-# A block is seven consecutive capabilities, one per day, monday first. The
-# tuple is the order the device stores them in, so an index into it is an
-# offset from the block's first id -- which is what `program_block` below
-# returns, and what the per-day sensor names are built from.
+# A block is seven consecutive capabilities, one per day, monday first, so an
+# index into this tuple is an offset from the block's first id.
 PROGRAM_DAYS = (
     "monday",
     "tuesday",
@@ -61,11 +54,8 @@ PROGRAM_DAYS = (
     "sunday",
 )
 
-# Writing is narrower than reading, and deliberately: what the second member
-# of a hot-water slot means has never been confirmed against a capture, and
-# writing a block on that basis could leave a water heater running a program
-# it never had. `set_schedule` refuses the block until one says otherwise,
-# while the calendar and the prog sensors read it happily.
+# Writing is narrower than reading, deliberately : set_schedule refuses the
+# hot-water block until a capture confirms it. See docs/decisions.md.
 WRITABLE_PROGRAM_BLOCKS = {
     program: first
     for program, first in PROGRAM_BLOCKS.items()

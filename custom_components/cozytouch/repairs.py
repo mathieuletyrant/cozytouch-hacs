@@ -1,12 +1,7 @@
 """Repair issues the integration raises about itself.
 
-A device the model table does not know still gets entities -- the generic
-capabilities work -- but the specifics are missing and its name reads
-`Unknown product (…)`. The user has no reason to connect that string to
-anything they can do about it, so the fix has always depended on someone
-thinking to open an issue and attach a diagnostics dump. This asks for it
-instead, at the one moment it is obvious the mapping is missing, and hands
-over a report that is already written.
+A model the table does not know is asked about at the one moment it is obvious
+the mapping is missing, with the report already written. See docs/decisions.md.
 """
 
 from __future__ import annotations
@@ -30,30 +25,23 @@ ISSUE_FORM = "unmapped_model.yml"
 
 UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
 
-# Where the acknowledgement is kept. Written by the fix flow, read on every
-# setup: the model stays unmapped until a release maps it, so without this the
-# issue would come back at each restart at someone who already did their part.
+# Where the acknowledgement is kept, so the issue does not come back at each
+# restart at someone who already did their part. See docs/decisions.md.
 REPORTED_MODELS = "reported_models"
 
 
 def _account_report(entry: ConfigEntry) -> dict[int, list[int]]:
     """Every unmapped model on the account, with the ids nothing names for it.
 
-    One entry per account, so this reads one account rather than scanning the
-    entry store. It also no longer depends on which devices somebody added :
-    the setup view carries a capability list for every device on the account
-    and the account keeps all of them, so an unmapped model contributes its
-    capability ids whether it has a subentry or not. That used to be the half
-    of a report that was missing exactly when it mattered -- hardware nobody
-    has mapped is hardware nobody has added yet.
+    Covers devices nobody added, which is most unmapped hardware. See
+    docs/decisions.md.
     """
     runtime = entry.runtime_data
     report: dict[int, list[int]] = {
         modelId: [] for modelId in runtime.account.get_unmapped_models()
     }
 
-    # Any hub answers for any device on its account : the mapping is keyed on
-    # the model, and the capabilities it reads are the account's.
+    # Any hub answers for any device on its account.
     hub = next(iter(runtime.hubs.values()), None)
     if hub is None:
         return report
@@ -64,8 +52,7 @@ def _account_report(entry: ConfigEntry) -> dict[int, list[int]]:
             continue
 
         _, unnamed = hub.get_capability_names(device["deviceId"])
-        # Several devices can share one unmapped model; a silent one must not
-        # overwrite what a talkative sibling reported.
+        # A silent device must not overwrite a talkative sibling's report.
         if unnamed:
             report[modelId] = unnamed
 
@@ -75,19 +62,14 @@ def _account_report(entry: ConfigEntry) -> dict[int, list[int]]:
 def _report_url(report: dict[int, list[int]]) -> str:
     """A new-issue link with the report already filled in.
 
-    Deliberately only the model ids and the capability ids nothing names :
-    those are what a mapping is built from, and they say nothing about the
-    household. Values stay out -- among them are the wifi SSID (219) and the
-    gateway serial -- and so does the device name, which people call after a
-    room or a child. A URL is clicked without being read. The dump the form
-    asks for carries all of that, stripped, and is attached knowingly.
+    Ids only : a URL is clicked without being read, so nothing about the
+    household goes in one. See docs/decisions.md.
     """
     models = sorted(report)
     query = urlencode(
         {
-            # The keys after `template` are the ids of that form's fields, which
-            # is how GitHub fills them in. Renaming one there breaks the link
-            # quietly -- it just arrives empty -- so the two move together.
+            # The keys below are that form's own field ids. See
+            # docs/decisions.md.
             "template": ISSUE_FORM,
             "title": "Unmapped model" + ("s " if len(models) > 1 else " ")
             + ", ".join(str(modelId) for modelId in models),
@@ -107,11 +89,7 @@ def _report_url(report: dict[int, list[int]]) -> str:
 
 
 def _already_reported(hass: HomeAssistant) -> set[int]:
-    """Models somebody has already sent a report for.
-
-    Read across every entry, because one report speaks for the whole account :
-    answering the dialog on one device has to settle the devices it covered.
-    """
+    """Models somebody has already sent a report for, across every entry."""
     reported: set[int] = set()
     for entry in hass.config_entries.async_entries(DOMAIN):
         reported.update(entry.options.get(REPORTED_MODELS, []))
@@ -123,27 +101,12 @@ def _already_reported(hass: HomeAssistant) -> set[int]:
 def async_check_model_mapping(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Raise, or clear, the "this model is not mapped" issue for an account.
 
-    Keyed on the model id rather than on the device, so a pair of identical
-    towel racks asks once. Cleared on the way through as well as raised: a
-    release that adds the mapping is the expected end of this issue, and the
-    setup that follows the update is where that shows.
-
-    Every device the entry has a subentry for is considered, which is what the
-    account holds a hub for.
-
-    Everything the table does not know is asked about, including the thermal
-    zones the API returns as if they were devices. Nothing separates one of
-    those from a real device that nobody has mapped yet : the gateway's id
-    sits in masterDeviceId on both, and modelFamily is null on both. Any rule
-    would be a guess, and the two ways of being wrong do not cost the same --
-    a zone reported is an issue closed in seconds, a real device silenced is
-    someone never finding out why their hardware is half-supported.
+    Keyed on the model id rather than on the device, and cleared as well as
+    raised. See docs/decisions.md.
     """
     reported = _already_reported(hass)
-    # One ask per model, and every device of the account is walked, so a pair
-    # of identical towel racks has to be recognised here rather than left to
-    # the issue registry to overwrite -- the second one would replace the
-    # first one's device name and ask about the same mapping twice.
+    # One ask per model, recognised here rather than left to the registry to
+    # overwrite. See docs/decisions.md.
     asked: set[int] = set()
 
     for subentry_id, hub in entry.runtime_data.hubs.items():
@@ -211,12 +174,7 @@ class UnknownModelRepairFlow(RepairsFlow):
         )
 
     def _report(self) -> dict[int, list[int]]:
-        """What this dialog speaks for.
-
-        Read when the dialog opens rather than stored on the issue : a device
-        that gained a capability, or an entry added since, belongs in the
-        report someone is about to send.
-        """
+        """What this dialog speaks for, read as it opens rather than stored."""
         entry = self.hass.config_entries.async_get_entry(self._entry_id)
         if entry is None or getattr(entry, "runtime_data", None) is None:
             return {}
@@ -225,12 +183,7 @@ class UnknownModelRepairFlow(RepairsFlow):
 
     @callback
     def _async_remember_it_was_reported(self, report: dict[int, list[int]]) -> None:
-        """Take everything the report covered off the list of things to ask.
-
-        Written to the entry the dialog was opened from, and read back across
-        every entry : an unmapped model is a gap in the table, so a report for
-        it answers for whoever else owns the same hardware.
-        """
+        """Take everything the report covered off the list of things to ask."""
         entry = self.hass.config_entries.async_get_entry(self._entry_id)
         if entry is None:
             return
@@ -247,11 +200,9 @@ class UnknownModelRepairFlow(RepairsFlow):
 
     @callback
     def _async_drop_the_other_issues(self, report: dict[int, list[int]]) -> None:
-        """Close the repairs raised for the other devices in the report.
+        """Close the repairs raised for the other models in the report.
 
-        One issue was sent for all of them, so leaving their dialogs standing
-        would ask the same person for the same file again. The one this flow
-        belongs to is deleted by Home Assistant when the flow finishes.
+        The one this flow belongs to is deleted by Home Assistant.
         """
         for modelId in report:
             if modelId != self._modelId:
