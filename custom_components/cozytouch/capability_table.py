@@ -22,94 +22,6 @@ from .model import CozytouchDeviceType
 
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
-# Capabilities the device uses to describe itself : the name, and what the
-# value is. STRING means the encoding is unverified, which is most of them --
-# the typed ones are the subset the vendor app's readers settle.
-#
-# A shorthand, not a second table : every one becomes a row of CAPABILITIES at
-# the bottom of this file, diag and switched off by default. Writing that out
-# per row would be seventy-seven repetitions of the same two lines, and one of
-# them would eventually be wrong. See docs/decisions.md.
-SELF_DESCRIBING_CAPABILITIES = {
-    73: ("available_thermostat_modes", CapabilityType.STRING),
-    93: ("zones_count", CapabilityType.STRING),
-    120: ("boiler_or_heat_pump", CapabilityType.STRING),
-    157: ("override_setpoint_activation", CapabilityType.BINARY),
-    164: ("energy_consumption_supported", CapabilityType.STRING),
-    166: ("system_operating_mode", CapabilityType.STRING),
-    168: ("available_dhw_modes", CapabilityType.STRING),
-    188: ("home_services", CapabilityType.STRING),
-    217: ("system_setpoint_mode", CapabilityType.STRING),
-    223: ("dhw_system_operating_mode", CapabilityType.STRING),
-    224: ("dhw_estimation_supported", CapabilityType.STRING),
-    230: ("dhw_operating_mode", CapabilityType.STRING),
-    236: ("max_dhw_schedule_slots_per_day", CapabilityType.STRING),
-    244: ("max_schedule_ranges_per_day", CapabilityType.STRING),
-    294: ("target_temperature_step", CapabilityType.STRING),
-    295: ("schedule_time_step", CapabilityType.STRING),
-    296: ("schedule_minimum_interval", CapabilityType.TIME),
-    306: ("max_schedule_slots_per_day", CapabilityType.STRING),
-    307: ("heating_period_min_duration", CapabilityType.TIME),
-    329: ("min_schedule_ranges_per_day", CapabilityType.STRING),
-    330: ("schedule_range_step", CapabilityType.STRING),
-    331: ("schedule_range_max_duration", CapabilityType.TIME),
-    332: ("schedule_range_min_duration", CapabilityType.TIME),
-    333: ("heating_period_max_duration", CapabilityType.TIME),
-    336: ("dhw_panel_capabilities", CapabilityType.STRING),
-    337: ("main_cursor_information", CapabilityType.STRING),
-    338: ("secondary_cursor_information", CapabilityType.STRING),
-    339: ("dhw_panel_data", CapabilityType.STRING),
-    340: ("water_setpoint_step", CapabilityType.STRING),
-    344: ("linked_interfaces_count", CapabilityType.STRING),
-    352: ("absence_day_heating_temperature", CapabilityType.TEMPERATURE),
-    353: ("presence_day_heating_temperature", CapabilityType.TEMPERATURE),
-    354: ("presence_night_heating_temperature", CapabilityType.TEMPERATURE),
-    355: ("absence_day_cooling_temperature", CapabilityType.TEMPERATURE),
-    356: ("presence_day_cooling_temperature", CapabilityType.TEMPERATURE),
-    357: ("presence_night_cooling_temperature", CapabilityType.TEMPERATURE),
-    350: ("air_circulation_supported_speeds", CapabilityType.STRING),
-    351: ("connectivity_display_capabilities", CapabilityType.STRING),
-    358: ("air_circulation_scope", CapabilityType.STRING),
-    381: ("ble_pairing_compatibility", CapabilityType.BINARY),
-    100000: ("thermal_zones_count", CapabilityType.STRING),
-    100002: ("supported_estimation_modes", CapabilityType.STRING),
-    100004: ("available_control_modes", CapabilityType.STRING),
-    100013: ("available_schedule_types", CapabilityType.STRING),
-    100021: ("supported_control_modes", CapabilityType.STRING),
-    100022: ("supported_system_operating_modes", CapabilityType.STRING),
-    100023: ("supported_system_modes", CapabilityType.STRING),
-    100024: ("available_estimation_modes", CapabilityType.STRING),
-    100078: ("identify_supported", CapabilityType.BINARY),
-    100102: ("adaptive_planning", CapabilityType.BINARY),
-    100103: ("unexpected_events", CapabilityType.BINARY),
-    100196: ("absence_schedule", CapabilityType.STRING),
-    100197: ("night_target_temperature", CapabilityType.STRING),
-    100198: ("presence_target_temperature", CapabilityType.STRING),
-    100300: ("schedule_start_day", CapabilityType.STRING),
-    100301: ("max_schedule_slots_per_week", CapabilityType.STRING),
-    100334: ("new_schedule_monday", CapabilityType.STRING),
-    100335: ("new_schedule_tuesday", CapabilityType.STRING),
-    100336: ("new_schedule_wednesday", CapabilityType.STRING),
-    100337: ("new_schedule_thursday", CapabilityType.STRING),
-    100338: ("new_schedule_friday", CapabilityType.STRING),
-    100339: ("new_schedule_saturday", CapabilityType.STRING),
-    100341: ("new_schedule_sunday", CapabilityType.STRING),
-    100503: ("wifi_fw", CapabilityType.STRING),
-    100800: ("available_fan_speeds", CapabilityType.STRING),
-    102006: ("air_circulation_available_modes", CapabilityType.STRING),
-    102020: ("air_circulation_current_mode", CapabilityType.STRING),
-    103034: ("room_controls_capabilities", CapabilityType.STRING),
-    103150: ("ambient_temperature_available", CapabilityType.BINARY),
-    103199: ("antifrost_temperature", CapabilityType.TEMPERATURE),
-    103450: ("schedule_anticipation_state", CapabilityType.STRING),
-    104050: ("open_window_detection", CapabilityType.BINARY),
-    104051: ("open_window_state", CapabilityType.BINARY),
-    105011: ("supported_dhw_modes", CapabilityType.STRING),
-    105012: ("supported_dhw_system_operating_modes", CapabilityType.STRING),
-    105122: ("dhw_boost_end_timestamp", CapabilityType.STRING),
-    105636: ("dhw_comfort_mode", CapabilityType.STRING),
-}
-
 _HVAC_MODE_BITS = (
     (1, "off"),
     (6, "auto"),
@@ -322,6 +234,10 @@ class Entity:
     name    the entity name and its translation key, so a new one needs an
             entry in strings.json and in every file under translations/.
     type    the platform that builds it. Only claim one whose unit is known.
+    enabled_by_default
+            has no default on purpose : every row states it, so whether an
+            entity shows up on a device page is answered by reading the row
+            rather than by knowing what the field falls back to.
     extra   the remaining keys a platform reads off a capability -- the bounds
             of a number, a step, a modelList. Spelled out rather than given
             fields of their own, because each is read by one platform only.
@@ -344,7 +260,7 @@ class Entity:
     type: CapabilityType
     category: CapabilityCategory = CapabilityCategory.SENSOR
     icon: str | None = None
-    enabled_by_default: bool = True
+    enabled_by_default: bool
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
@@ -396,10 +312,12 @@ CAPABILITIES: dict[int, Entity] = {
     19: Entity(
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     22: Entity(
         name="target_temperature_dhw",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
         per_model={
             2374: {
@@ -412,30 +330,35 @@ CAPABILITIES: dict[int, Entity] = {
     25: Entity(
         name="number_of_starts_ch_pump",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:water-pump",
     ),
     26: Entity(
         name="number_of_starts_dhw_pump",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:water-pump",
     ),
     28: Entity(
         name="number_of_hours_ch_pump",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:water-pump",
     ),
     29: Entity(
         name="number_of_hours_dhw_pump",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:water-pump",
     ),
     40: Entity(
         name="target_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "lowestValueCapabilityId": 160,
             "highestValueCapabilityId": 161,
@@ -444,6 +367,7 @@ CAPABILITIES: dict[int, Entity] = {
     41: Entity(
         name="target_temperature_eco_z1",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "lowestValueCapabilityId": 160,
             "highestValueCapabilityId": 161,
@@ -452,6 +376,7 @@ CAPABILITIES: dict[int, Entity] = {
     42: Entity(
         name="target_temperature_eco_z2",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "lowestValueCapabilityId": 160,
             "highestValueCapabilityId": 161,
@@ -460,6 +385,7 @@ CAPABILITIES: dict[int, Entity] = {
     44: Entity(
         name="ch_power_consumption",
         type=CapabilityType.ENERGY,
+        enabled_by_default=True,
         icon="mdi:radiator",
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
@@ -468,6 +394,7 @@ CAPABILITIES: dict[int, Entity] = {
     45: Entity(
         name="dhw_power_consumption",
         type=CapabilityType.ENERGY,
+        enabled_by_default=True,
         icon="mdi:faucet",
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
@@ -476,6 +403,7 @@ CAPABILITIES: dict[int, Entity] = {
     46: Entity(
         name="total_power_consumption",
         type=CapabilityType.ENERGY,
+        enabled_by_default=True,
         icon="mdi:water-boiler",
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
@@ -484,6 +412,7 @@ CAPABILITIES: dict[int, Entity] = {
     57: Entity(
         name="power_consumption",
         type=CapabilityType.ENERGY,
+        enabled_by_default=True,
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
         },
@@ -491,18 +420,27 @@ CAPABILITIES: dict[int, Entity] = {
     59: Entity(
         name="power_consumption",
         type=CapabilityType.ENERGY,
+        enabled_by_default=True,
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
         },
     ),
+    73: Entity(
+        name="available_thermostat_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     86: Entity(
         name="domestic_hot_water",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:faucet",
     ),
     87: Entity(
         name="domestic_hot_water_mode",
         type=CapabilityType.SELECT,
+        enabled_by_default=True,
         icon="mdi:water-boiler",
         extra={
             "modelList": "HeatingModes",
@@ -511,24 +449,34 @@ CAPABILITIES: dict[int, Entity] = {
     88: Entity(
         name="model_name",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
+    ),
+    93: Entity(
+        name="zones_count",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     94: Entity(
         name="product_number",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
     98: Entity(
         name="product_number",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
     99: Entity(
         name="dhw_pump",
         type=CapabilityType.BINARY,
+        enabled_by_default=True,
         icon="mdi:faucet",
         per_type={
             CozytouchDeviceType.WATER_HEATER: {
@@ -540,6 +488,7 @@ CAPABILITIES: dict[int, Entity] = {
     100: Entity(
         name="water_pressure",
         type=CapabilityType.PRESSURE,
+        enabled_by_default=True,
         icon="mdi:gauge",
         extra={
             "displayed_unit_of_measurement": UnitOfPressure.BAR,
@@ -548,65 +497,84 @@ CAPABILITIES: dict[int, Entity] = {
     101: Entity(
         name="Capability_101",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
     ),
     102: Entity(
         name="Capability_102",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
     ),
     103: Entity(
         name="Capability_103",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
     ),
     104: Entity(
         name="Capability_104",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
     ),
     109: Entity(
         name="boiler_water_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     111: Entity(
         name="dhw_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     116: Entity(
         name="exhaust_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         needs_flag="exhaustTemperatureAvailable",
     ),
     117: Entity(
         name="thermostat_temperature_z1",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     118: Entity(
         name="thermostat_temperature_z2",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     119: Entity(
         # Atlantic sends -327.68 rather than nothing when there is no probe.
         name="outside_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         valid_above=-327.68,
+    ),
+    120: Entity(
+        name="boiler_or_heat_pump",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     121: Entity(
         name="version",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
     150: Entity(
         name="home_error_code",
         type=CapabilityType.ERROR_CODE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
     ),
     152: Entity(
         name="away_mode",
         type=CapabilityType.AWAY_MODE_SWITCH,
+        enabled_by_default=True,
         icon="mdi:airplane",
         extra={
             "value_off": "0",
@@ -618,6 +586,7 @@ CAPABILITIES: dict[int, Entity] = {
     153: Entity(
         name="flame",
         type=CapabilityType.BINARY,
+        enabled_by_default=True,
         icon="mdi:fire",
         per_type={
             deviceType: {"name": "resistance", "icon": "mdi:radiator"}
@@ -627,18 +596,27 @@ CAPABILITIES: dict[int, Entity] = {
     154: Entity(
         name="zone_1",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:home-floor-1",
     ),
     155: Entity(
         name="zone_2",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:home-floor-2",
+    ),
+    157: Entity(
+        name="override_setpoint_activation",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     158: Entity(
         name="override_total_time_z1",
         type=CapabilityType.HOURS_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         icon="mdi:clock-outline",
         extra={"lowest_value": 1, "highest_value": 24},
         per_type={
@@ -649,6 +627,7 @@ CAPABILITIES: dict[int, Entity] = {
     159: Entity(
         name="override_remain_time_z1",
         type=CapabilityType.TIME,
+        enabled_by_default=True,
         icon="mdi:clock-outline",
         per_type={
             deviceType: {"name": "override_remain_time"}
@@ -658,12 +637,14 @@ CAPABILITIES: dict[int, Entity] = {
     160: Entity(
         name="temperature_adjustment_min",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:thermometer-chevron-down",
     ),
     161: Entity(
         name="temperature_adjustment_max",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:thermometer-chevron-up",
         extra={
@@ -688,18 +669,38 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    164: Entity(
+        name="energy_consumption_supported",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     165: Entity(
         # water-boiler icon: a domestic-hot-water boost, not the generic boost.
         name="domestic_hot_water_boost",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:water-boiler",
         per_type={
             CozytouchDeviceType.HEAT_PUMP: {"value_off": "false", "value_on": "true"}
         },
     ),
+    166: Entity(
+        name="system_operating_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    168: Entity(
+        name="available_dhw_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     169: Entity(
         name="radio_signal",
         type=CapabilityType.PERCENTAGE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:radio-tower",
     ),
@@ -721,109 +722,139 @@ CAPABILITIES: dict[int, Entity] = {
         # even offer on this hardware.
         name="away_mode_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         needs_flag="awayModeTemperatureAvailable",
         extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
     ),
     177: Entity(
         name="target_cool_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         absent_on=(CozytouchDeviceType.GAZ_BOILER,),
         extra={"lowestValueCapabilityId": 162, "highestValueCapabilityId": 163},
     ),
     179: Entity(
         name="wifi_signal",
         type=CapabilityType.SIGNAL,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
     ),
     184: Entity(
         name="prog_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:clock-outline",
+    ),
+    188: Entity(
+        name="home_services",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     196: Entity(
         name="prog_01_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_monday"}},
     ),
     197: Entity(
         name="prog_02_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_tuesday"}},
     ),
     198: Entity(
         name="prog_03_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_wednesday"}},
     ),
     199: Entity(
         name="prog_04_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_thursday"}},
     ),
     200: Entity(
         name="prog_05_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_friday"}},
     ),
     201: Entity(
         name="prog_06_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_saturday"}},
     ),
     202: Entity(
         name="prog_07_z1",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_heating_sunday"}},
     ),
     203: Entity(
         name="prog_08_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_monday"}},
     ),
     204: Entity(
         name="prog_09_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_tuesday"}},
     ),
     205: Entity(
         name="prog_10_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_wednesday"}},
     ),
     206: Entity(
         name="prog_11_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_thursday"}},
     ),
     207: Entity(
         name="prog_12_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_friday"}},
     ),
     208: Entity(
         name="prog_13_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_saturday"}},
     ),
     209: Entity(
         name="prog_14_z2",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_sunday"}},
+    ),
+    217: Entity(
+        name="system_setpoint_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     218: Entity(
         # `wifiConnected` by name, but never the boolean it looks like : shown
@@ -839,21 +870,36 @@ CAPABILITIES: dict[int, Entity] = {
     219: Entity(
         name="wifi_ssid",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
     ),
     222: Entity(
         name="away_mode",
         type=CapabilityType.AWAY_MODE_TIMESTAMPS,
+        enabled_by_default=True,
         extra={
             "timestamps": AWAY_MODE_TIMESTAMPS,
             "timezoneCapabilityId": 315,
             "capabilityDuplicate": 226,
         },
     ),
+    223: Entity(
+        name="dhw_system_operating_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    224: Entity(
+        name="dhw_estimation_supported",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     226: Entity(
         name="away_mode",
         type=CapabilityType.AWAY_MODE_TIMESTAMPS,
+        enabled_by_default=True,
         extra={
             "timestamps": AWAY_MODE_TIMESTAMPS,
             "timezoneCapabilityId": 315,
@@ -863,6 +909,7 @@ CAPABILITIES: dict[int, Entity] = {
     227: Entity(
         name="away_mode",
         type=CapabilityType.AWAY_MODE_SWITCH,
+        enabled_by_default=True,
         icon="mdi:airplane",
         extra={
             "value_off": "0",
@@ -874,11 +921,19 @@ CAPABILITIES: dict[int, Entity] = {
     228: Entity(
         name="absence_dhw_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
+    ),
+    230: Entity(
+        name="dhw_operating_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     231: Entity(
         name="target_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "lowestValueCapabilityId": 105301,
             "highestValueCapabilityId": 105304,
@@ -894,165 +949,240 @@ CAPABILITIES: dict[int, Entity] = {
     232: Entity(
         name="boost_total_time",
         type=CapabilityType.TIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
     ),
     233: Entity(
         name="boost_remaining_time",
         type=CapabilityType.TIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
+    ),
+    236: Entity(
+        name="max_dhw_schedule_slots_per_day",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     237: Entity(
         name="dhw_prog_monday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     238: Entity(
         name="dhw_prog_tuesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     239: Entity(
         name="dhw_prog_wednesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     240: Entity(
         name="dhw_prog_thursday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     241: Entity(
         name="dhw_prog_friday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     242: Entity(
         name="dhw_prog_saturday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     243: Entity(
         name="dhw_prog_sunday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
+    ),
+    244: Entity(
+        name="max_schedule_ranges_per_day",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     245: Entity(
         name="prog_01",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     246: Entity(
         name="prog_02",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     247: Entity(
         name="prog_03",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     248: Entity(
         name="prog_04",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     249: Entity(
         name="prog_05",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     250: Entity(
         name="prog_06",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     251: Entity(
         name="prog_07",
         type=CapabilityType.PROGTIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     252: Entity(
         name="target_temperature_max",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     253: Entity(
         name="target_temperature_min",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     258: Entity(
         name="tank_capacity",
         type=CapabilityType.VOLUME,
+        enabled_by_default=True,
     ),
     264: Entity(
         name="condenser_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     265: Entity(
         name="tank_middle_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     266: Entity(
         name="tank_top_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     267: Entity(
         name="tank_bottom_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
     ),
     268: Entity(
         name="v40_water_available",
         type=CapabilityType.VOLUME,
+        enabled_by_default=True,
         icon="mdi:water-thermometer",
     ),
     269: Entity(
         name="water_consumption",
         type=CapabilityType.WATER_CONSUMPTION,
+        enabled_by_default=True,
         icon="mdi:water-pump",
     ),
     270: Entity(
         name="v40_water_capacity",
         type=CapabilityType.VOLUME,
+        enabled_by_default=True,
         icon="mdi:water-thermometer",
     ),
     271: Entity(
         name="hot_water_available",
         type=CapabilityType.PERCENTAGE,
+        enabled_by_default=True,
     ),
     280: Entity(
         name="cold_water_temperature",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         icon="mdi:coolant-temperature",
     ),
     283: Entity(
         name="off_peak_hours",
         type=CapabilityType.BINARY,
+        enabled_by_default=True,
         icon="mdi:clock-outline",
     ),
     290: Entity(
         name="dhw_error_code",
         type=CapabilityType.ERROR_CODE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
     ),
     292: Entity(
         name="hot_water_showers_expected",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         icon="mdi:water-plus",
     ),
     293: Entity(
         name="hot_water_showers_remaining",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         icon="mdi:water-check",
+    ),
+    294: Entity(
+        name="target_temperature_step",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    295: Entity(
+        name="schedule_time_step",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    296: Entity(
+        name="schedule_minimum_interval",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     303: Entity(
         name="error_code",
         type=CapabilityType.ERROR_CODE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
+    ),
+    306: Entity(
+        name="max_schedule_slots_per_day",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    307: Entity(
+        name="heating_period_min_duration",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     312: Entity(
         # Atlantic calls this one currentControlTarget, which matches the
@@ -1062,120 +1192,413 @@ CAPABILITIES: dict[int, Entity] = {
         # capture settles it.
         name="Temp_312",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
     ),
     315: Entity(
         name="timezone",
         type=CapabilityType.TIMEZONE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:map-clock-outline",
     ),
     316: Entity(
         name="interface_fw",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
+    ),
+    329: Entity(
+        name="min_schedule_ranges_per_day",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    330: Entity(
+        name="schedule_range_step",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    331: Entity(
+        name="schedule_range_max_duration",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    332: Entity(
+        name="schedule_range_min_duration",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    333: Entity(
+        name="heating_period_max_duration",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     335: Entity(
         name="serial_number",
         type=CapabilityType.STRING,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
+    ),
+    336: Entity(
+        name="dhw_panel_capabilities",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    337: Entity(
+        name="main_cursor_information",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    338: Entity(
+        name="secondary_cursor_information",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    339: Entity(
+        name="dhw_panel_data",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    340: Entity(
+        name="water_setpoint_step",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    344: Entity(
+        name="linked_interfaces_count",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    350: Entity(
+        name="air_circulation_supported_speeds",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    351: Entity(
+        name="connectivity_display_capabilities",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    352: Entity(
+        name="absence_day_heating_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    353: Entity(
+        name="presence_day_heating_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    354: Entity(
+        name="presence_night_heating_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    355: Entity(
+        name="absence_day_cooling_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    356: Entity(
+        name="presence_day_cooling_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    357: Entity(
+        name="presence_night_cooling_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    358: Entity(
+        name="air_circulation_scope",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    381: Entity(
+        name="ble_pairing_compatibility",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100000: Entity(
+        name="thermal_zones_count",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100002: Entity(
+        name="supported_estimation_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100004: Entity(
+        name="available_control_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100013: Entity(
+        name="available_schedule_types",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100021: Entity(
+        name="supported_control_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100022: Entity(
+        name="supported_system_operating_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100023: Entity(
+        name="supported_system_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100024: Entity(
+        name="available_estimation_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100078: Entity(
+        name="identify_supported",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100102: Entity(
+        name="adaptive_planning",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100103: Entity(
+        name="unexpected_events",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100196: Entity(
+        name="absence_schedule",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100197: Entity(
+        name="night_target_temperature",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100198: Entity(
+        name="presence_target_temperature",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     100261: Entity(
         name="away_mode",
         type=CapabilityType.BINARY,
+        enabled_by_default=True,
         icon="mdi:airplane",
+    ),
+    100300: Entity(
+        name="schedule_start_day",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100301: Entity(
+        name="max_schedule_slots_per_week",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     100320: Entity(
         name="prog_heat_monday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100321: Entity(
         name="prog_heat_tuesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100322: Entity(
         name="prog_heat_wednesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100323: Entity(
         name="prog_heat_thursday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100324: Entity(
         name="prog_heat_friday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100325: Entity(
         name="prog_heat_saturday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100326: Entity(
         name="prog_heat_sunday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100327: Entity(
         name="prog_cool_monday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100328: Entity(
         name="prog_cool_tuesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100329: Entity(
         name="prog_cool_wednesday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100330: Entity(
         name="prog_cool_thursday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100331: Entity(
         name="prog_cool_friday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100332: Entity(
         name="prog_cool_saturday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     100333: Entity(
         name="prog_cool_sunday",
         type=CapabilityType.PROG,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
+    ),
+    100334: Entity(
+        name="new_schedule_monday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100335: Entity(
+        name="new_schedule_tuesday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100336: Entity(
+        name="new_schedule_wednesday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100337: Entity(
+        name="new_schedule_thursday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100338: Entity(
+        name="new_schedule_friday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100339: Entity(
+        name="new_schedule_saturday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    100341: Entity(
+        name="new_schedule_sunday",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     100402: Entity(
         name="number_of_hours_burner",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:fire",
     ),
     100406: Entity(
         name="number_of_starts_burner",
         type=CapabilityType.INT,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:fire",
     ),
     100450: Entity(
         name="schedule_anticipation",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:clock-fast",
+    ),
+    100503: Entity(
+        name="wifi_fw",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     100505: Entity(
         name="powerful_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:wind-power",
     ),
     100506: Entity(
@@ -1184,6 +1607,7 @@ CAPABILITIES: dict[int, Entity] = {
         # presence detection.
         name="presence_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:account",
         absent_on=(CozytouchDeviceType.TOWEL_RACK,),
     ),
@@ -1193,22 +1617,32 @@ CAPABILITIES: dict[int, Entity] = {
         # supported, so let the model table decide.
         name="eco_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:flower-outline",
         needs_flag="ecoModeAvailable",
+    ),
+    100800: Entity(
+        name="available_fan_speeds",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     100802: Entity(
         name="quiet_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:fan-minus",
     ),
     100804: Entity(
         name="swing_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:arrow-oscillating",
     ),
     102004: Entity(
         name="air_circulation_speed",
         type=CapabilityType.SELECT,
+        enabled_by_default=True,
         icon="mdi:fan",
         extra={
             "modelList": "AirCirculationSpeeds",
@@ -1221,9 +1655,22 @@ CAPABILITIES: dict[int, Entity] = {
         icon="mdi:fan",
         enabled_by_default=False,
     ),
+    102006: Entity(
+        name="air_circulation_available_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    102020: Entity(
+        name="air_circulation_current_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     102021: Entity(
         name="air_circulation_total_time",
         type=CapabilityType.DURATION_SELECT,
+        enabled_by_default=True,
         icon="mdi:fan-clock",
         extra={
             "lowestValueCapabilityId": 102025,
@@ -1244,12 +1691,14 @@ CAPABILITIES: dict[int, Entity] = {
     102023: Entity(
         name="air_circulation_remaining_time",
         type=CapabilityType.TIME,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan-clock",
     ),
     102024: Entity(
         name="air_circulation",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:fan",
     ),
     102025: Entity(
@@ -1266,14 +1715,40 @@ CAPABILITIES: dict[int, Entity] = {
         icon="mdi:fan-clock",
         enabled_by_default=False,
     ),
+    103034: Entity(
+        name="room_controls_capabilities",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    103150: Entity(
+        name="ambient_temperature_available",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    103199: Entity(
+        name="antifrost_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    103450: Entity(
+        name="schedule_anticipation_state",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     104044: Entity(
         name="boost_mode",
         type=CapabilityType.SWITCH,
+        enabled_by_default=True,
         icon="mdi:heat-wave",
     ),
     104047: Entity(
         name="boost_timeout_max",
         type=CapabilityType.MINUTES_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
         extra={
@@ -1282,19 +1757,58 @@ CAPABILITIES: dict[int, Entity] = {
             "step": 5,
         },
     ),
+    104050: Entity(
+        name="open_window_detection",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    104051: Entity(
+        name="open_window_state",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    105011: Entity(
+        name="supported_dhw_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    105012: Entity(
+        name="supported_dhw_system_operating_modes",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    105122: Entity(
+        name="dhw_boost_end_timestamp",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     105300: Entity(
         name="water_temperature_limit",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
     105304: Entity(
         name="max_target_temperature_derogation",
         type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
         category=CapabilityCategory.DIAG,
+    ),
+    105636: Entity(
+        name="dhw_comfort_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     105906: Entity(
         name="v40_applied_setpoint",
         type=CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "temperatureMin": 15.0,
             "temperatureMax": 65.0,
@@ -1303,24 +1817,10 @@ CAPABILITIES: dict[int, Entity] = {
     105907: Entity(
         name="v40_setpoint_filled_by_user",
         type=CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
         extra={
             "temperatureMin": 15.0,
             "temperatureMax": 65.0,
         },
     ),
-}
-
-
-# The ids spelled out above, before the descriptors join them. An id in both
-# would be silently overwritten here, so a test checks the two are disjoint.
-SPELLED_OUT_CAPABILITIES = frozenset(CAPABILITIES)
-
-CAPABILITIES |= {
-    capabilityId: Entity(
-        name=name,
-        type=capabilityType,
-        category=CapabilityCategory.DIAG,
-        enabled_by_default=False,
-    )
-    for capabilityId, (name, capabilityType) in SELF_DESCRIBING_CAPABILITIES.items()
 }

@@ -25,7 +25,8 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from custom_components.cozytouch.capability import get_capability_infos
-from custom_components.cozytouch.capability_table import SELF_DESCRIBING_CAPABILITIES
+from custom_components.cozytouch.capability_table import CAPABILITIES
+from custom_components.cozytouch.infos import CapabilityCategory
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 # One model per device type, so a branch that keys off the type is reached.
@@ -225,7 +226,12 @@ def main():
             print(f"| {', '.join(owners)} | {cell(sig)} |")
         print()
 
-    print(f"## The {len(SELF_DESCRIBING_CAPABILITIES)} self-describing ids")
+    descriptors = {
+        capabilityId: row.name
+        for capabilityId, row in CAPABILITIES.items()
+        if not row.enabled_by_default and row.category is CapabilityCategory.DIAG
+    }
+    print(f"## The {len(descriptors)} ids that arrive switched off")
     print()
     print(
         "Named from the vendor's own capability list, which gives an identifier\n"
@@ -237,7 +243,7 @@ def main():
     print()
     print("| id | name |")
     print("| ---: | --- |")
-    for capabilityId, (name, _) in sorted(SELF_DESCRIBING_CAPABILITIES.items()):
+    for capabilityId, name in sorted(descriptors.items()):
         print(f"| {capabilityId} | `{name}` |")
 
 

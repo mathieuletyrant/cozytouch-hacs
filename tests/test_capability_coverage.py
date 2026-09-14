@@ -18,6 +18,7 @@ The checks walk every id the mapping answers for, so a capability added later is
 covered without anyone remembering to cover it.
 """
 
+import ast
 import itertools
 import json
 import pathlib
@@ -25,13 +26,13 @@ import re
 
 import pytest
 
+from custom_components.cozytouch import capability_table
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.capability_table import (
+    CAPABILITIES,
     CAPABILITY_BIT_FIELDS,
     CAPABILITY_SPEED_SETS,
     CAPABILITY_VALUE_SPACES,
-    SELF_DESCRIBING_CAPABILITIES,
-    SPELLED_OUT_CAPABILITIES,
 )
 from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
@@ -177,16 +178,26 @@ def test_every_switch_key_is_also_a_sensor_key(path):
     assert not missing, f"{path} sensor section has no name for {sorted(missing)}"
 
 
-@pytest.mark.parametrize("capabilityId", sorted(SELF_DESCRIBING_CAPABILITIES))
-def test_a_self_describing_capability_arrives_switched_off(capabilityId):
-    """A device reports dozens of these; on by default they bury the rest."""
+@pytest.mark.parametrize(
+    "capabilityId",
+    sorted(
+        capabilityId
+        for capabilityId, row in CAPABILITIES.items()
+        if not row.enabled_by_default
+    ),
+)
+def test_a_row_that_says_off_arrives_off(capabilityId):
+    """A device reports dozens of descriptors; on by default they bury the rest."""
     infos = get_model_infos(557)
 
     result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
 
+    if not result:
+        # The row exists but this product has no such entity -- absent_on or a
+        # model flag. Nothing to be switched off.
+        return
+
     assert result["enabled_by_default"] is False
-    assert result["name"] == SELF_DESCRIBING_CAPABILITIES[capabilityId][0]
-    assert result["category"] == "diag"
 
 
 @pytest.mark.parametrize(
@@ -262,25 +273,45 @@ def test_a_decoded_id_is_one_the_mapping_produces(capabilityId):
     assert get_capability_infos(infos, capabilityId, "0", {capabilityId}) is not None
 
 
-def test_a_descriptor_does_not_shadow_a_spelled_out_row():
-    """The descriptors are merged in last, so an id in both would lose its row.
+def test_no_capability_id_is_written_twice():
+    """Two rows for one id is the later one, silently: a dict literal says nothing.
 
-    Nothing would say so: the merge keeps the descriptor, the row disappears,
-    and the entity turns into a raw string switched off by default.
+    Reading CAPABILITIES back cannot see it -- the duplicate is already gone --
+    so this counts the keys in the source instead. Two hundred rows in numeric
+    order is exactly where a paste lands on a neighbour.
     """
-    shared = SPELLED_OUT_CAPABILITIES & SELF_DESCRIBING_CAPABILITIES.keys()
+    source = pathlib.Path(capability_table.__file__).read_text()
+    table = next(
+        node
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.AnnAssign)
+        and getattr(node.target, "id", None) == "CAPABILITIES"
+    )
+    keys = [key.value for key in table.value.keys if isinstance(key, ast.Constant)]
 
-    assert not shared, f"{sorted(shared)} is both spelled out and a descriptor"
+    assert len(keys) == len(set(keys)), (
+        f"written twice: {sorted({key for key in keys if keys.count(key) > 1})}"
+    )
 
 
-def test_a_descriptor_reaches_the_mapping_under_its_own_name():
-    """The shorthand expands into rows; this is what those rows resolve to."""
+def test_every_row_resolves_under_its_own_name():
+    """What the table says an id is, is what the mapping answers for it."""
     infos = get_model_infos(557)
 
-    for capabilityId, (name, _) in SELF_DESCRIBING_CAPABILITIES.items():
+    for capabilityId, row in CAPABILITIES.items():
         result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
-        assert result["name"] == name, (
-            f"{capabilityId} resolves to {result['name']!r}, not {name!r}"
+        if not result:
+            continue
+
+        # A per_type row answers one of several names, which is the whole point
+        # of the field; any of them is the row answering for itself.
+        names = {row.name} | {
+            str(override["name"])
+            for override in (row.per_type or {}).values()
+            if "name" in override
+        }
+        assert result["name"] in names, (
+            f"{capabilityId} resolves to {result['name']!r}, not one of {sorted(names)}"
         )
 
 
