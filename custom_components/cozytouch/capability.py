@@ -322,6 +322,627 @@ def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
     )
 
 
+def _by_id(table: dict) -> dict[int, dict]:
+    """One entry per capability id, from a table whose keys may name several."""
+    return {
+        capabilityId: fields
+        for key, fields in table.items()
+        for capabilityId in (key if isinstance(key, tuple) else (key,))
+    }
+
+
+# Every capability whose whole mapping is a set of fixed fields: a name, a
+# type, a category, and sometimes an icon or a bound. Ninety-eight of the
+# hundred and twenty ids this module knows are one of those, which is why they
+# are a table rather than a hundred branches. What is left in
+# get_capability_infos below is the twenty-odd whose answer depends on the
+# model, on the device's other capabilities, or on the value itself.
+#
+# A key naming several ids gives every one of them the same fields.
+SIMPLE_CAPABILITIES: dict[int, dict] = _by_id({
+    19: {
+        "name": "temperature_setpoint",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    25: {
+        "name": "number_of_starts_ch_pump",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:water-pump",
+    },
+    26: {
+        "name": "number_of_starts_dhw_pump",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:water-pump",
+    },
+    28: {
+        "name": "number_of_hours_ch_pump",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:water-pump",
+    },
+    29: {
+        "name": "number_of_hours_dhw_pump",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:water-pump",
+    },
+    40: {
+        "name": "target_temperature",
+        "type": CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.SENSOR,
+        "lowestValueCapabilityId": 160,
+        "highestValueCapabilityId": 161,
+    },
+    41: {
+        "name": "target_temperature_eco_z1",
+        "type": CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.SENSOR,
+        "lowestValueCapabilityId": 160,
+        "highestValueCapabilityId": 161,
+    },
+    42: {
+        "name": "target_temperature_eco_z2",
+        "type": CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.SENSOR,
+        "lowestValueCapabilityId": 160,
+        "highestValueCapabilityId": 161,
+    },
+    44: {
+        "name": "ch_power_consumption",
+        "type": CapabilityType.ENERGY,
+        "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:radiator",
+    },
+    45: {
+        "name": "dhw_power_consumption",
+        "type": CapabilityType.ENERGY,
+        "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:faucet",
+    },
+    46: {
+        "name": "total_power_consumption",
+        "type": CapabilityType.ENERGY,
+        "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-boiler",
+    },
+    (57, 59): {
+        "name": "power_consumption",
+        "type": CapabilityType.ENERGY,
+        "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
+        "category": CapabilityCategory.SENSOR,
+    },
+    86: {
+        "name": "domestic_hot_water",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:faucet",
+    },
+    # water-boiler icon: this is the domestic-hot-water mode, not heating.
+    87: {
+        "name": "domestic_hot_water_mode",
+        "type": CapabilityType.SELECT,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-boiler",
+        "modelList": "HeatingModes",
+    },
+    88: {
+        "name": "model_name",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:tag",
+    },
+    (94, 98): {
+        "name": "product_number",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:tag",
+    },
+    100: {
+        "name": "water_pressure",
+        "type": CapabilityType.PRESSURE,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:gauge",
+        "displayed_unit_of_measurement": UnitOfPressure.BAR,
+    },
+    109: {
+        "name": "boiler_water_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    111: {
+        "name": "dhw_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    117: {
+        "name": "thermostat_temperature_z1",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    118: {
+        "name": "thermostat_temperature_z2",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    121: {
+        "name": "version",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:tag",
+    },
+    154: {
+        "name": "zone_1",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:home-floor-1",
+    },
+    155: {
+        "name": "zone_2",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:home-floor-2",
+    },
+    # Target temperature adjustment min limit
+    160: {
+        "name": "temperature_adjustment_min",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:thermometer-chevron-down",
+    },
+    # Target temperature adjustment max limit
+    161: {
+        "name": "temperature_adjustment_max",
+        "type": CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:thermometer-chevron-up",
+        "lowest_value": 19,
+        "highest_value": 28,
+        "step": 0.5,
+    },
+    169: {
+        "name": "radio_signal",
+        "type": CapabilityType.PERCENTAGE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:radio-tower",
+    },
+    179: {
+        "name": "wifi_signal",
+        "type": CapabilityType.SIGNAL,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:wifi",
+    },
+    # Ignore, same as heat sensor (7, 8)
+    184: {
+        "name": "prog_mode",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:clock-outline",
+    },
+    # Room fault code: a matrix of [system, majorCode, minorCode, level]
+    # rows, all-zero when healthy. The type decodes it to a code list;
+    # see sensor.py and docs/decisions.md for the format and its limits.
+    303: {
+        "name": "error_code",
+        "type": CapabilityType.ERROR_CODE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:alert-circle-outline",
+    },
+    219: {
+        "name": "wifi_ssid",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:wifi",
+    },
+    228: {
+        "name": "absence_dhw_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+    },
+    232: {
+        "name": "boost_total_time",
+        "type": CapabilityType.TIME,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:clock-outline",
+    },
+    233: {
+        "name": "boost_remaining_time",
+        "type": CapabilityType.TIME,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:clock-outline",
+    },
+    245: {
+        "name": "prog_01",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    246: {
+        "name": "prog_02",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    247: {
+        "name": "prog_03",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    248: {
+        "name": "prog_04",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    249: {
+        "name": "prog_05",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    250: {
+        "name": "prog_06",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    251: {
+        "name": "prog_07",
+        "type": CapabilityType.PROGTIME,
+        "category": CapabilityCategory.DIAG,
+    },
+    252: {
+        "name": "target_temperature_max",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+    },
+    253: {
+        "name": "target_temperature_min",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+    },
+    258: {
+        "name": "tank_capacity",
+        "type": CapabilityType.VOLUME,
+        "category": CapabilityCategory.SENSOR,
+    },
+    264: {
+        "name": "condenser_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    265: {
+        "name": "tank_middle_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    266: {
+        "name": "tank_top_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    267: {
+        "name": "tank_bottom_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    268: {
+        "name": "v40_water_available",
+        "type": CapabilityType.VOLUME,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-thermometer",
+    },
+    269: {
+        "name": "water_consumption",
+        "type": CapabilityType.WATER_CONSUMPTION,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-pump",
+    },
+    270: {
+        "name": "v40_water_capacity",
+        "type": CapabilityType.VOLUME,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-thermometer",
+    },
+    271: {
+        "name": "hot_water_available",
+        "type": CapabilityType.PERCENTAGE,
+        "category": CapabilityCategory.SENSOR,
+    },
+    280: {
+        "name": "cold_water_temperature",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:coolant-temperature",
+    },
+    283: {
+        "name": "off_peak_hours",
+        "type": CapabilityType.BINARY,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:clock-outline",
+    },
+    # Not a level: the app counts showers. Atlantic water heaters display a
+    # number of expected/remaining showers rather than a percentage.
+    292: {
+        "name": "hot_water_showers_expected",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-plus",
+    },
+    # Remaining showers, the counterpart of 292 -- see the note there.
+    293: {
+        "name": "hot_water_showers_remaining",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:water-check",
+    },
+    315: {
+        "name": "timezone",
+        "type": CapabilityType.TIMEZONE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:map-clock-outline",
+    },
+    316: {
+        "name": "interface_fw",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:tag",
+    },
+    335: {
+        "name": "serial_number",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:tag",
+    },
+    # Per-room mirror of the hub's away mode flag (152). The room units carry
+    # it alongside the absence window in 100260, which stays unmapped: the
+    # window is written for the whole setup from the hub, not room by room.
+    100261: {
+        "name": "away_mode",
+        "type": CapabilityType.BINARY,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:airplane",
+    },
+    100402: {
+        "name": "number_of_hours_burner",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fire",
+    },
+    100406: {
+        "name": "number_of_starts_burner",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fire",
+    },
+    # The vendor app's "Anticipation de chauffe"; 0/1 encoding verified on
+    # a live toggle -- see docs/decisions.md.
+    100450: {
+        "name": "schedule_anticipation",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:clock-fast",
+    },
+    100505: {
+        "name": "powerful_mode",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:wind-power",
+    },
+    100320: {
+        "name": "prog_heat_monday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100321: {
+        "name": "prog_heat_tuesday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100322: {
+        "name": "prog_heat_wednesday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100323: {
+        "name": "prog_heat_thursday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100324: {
+        "name": "prog_heat_friday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100325: {
+        "name": "prog_heat_saturday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100326: {
+        "name": "prog_heat_sunday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100327: {
+        "name": "prog_cool_monday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100328: {
+        "name": "prog_cool_tuesday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100329: {
+        "name": "prog_cool_wednesday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100330: {
+        "name": "prog_cool_thursday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100331: {
+        "name": "prog_cool_friday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100332: {
+        "name": "prog_cool_saturday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100333: {
+        "name": "prog_cool_sunday",
+        "type": CapabilityType.PROG,
+        "category": CapabilityCategory.DIAG,
+    },
+    100802: {
+        "name": "quiet_mode",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:fan-minus",
+    },
+    100804: {
+        "name": "swing_mode",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:arrow-oscillating",
+    },
+    102004: {
+        "name": "air_circulation_speed",
+        "type": CapabilityType.SELECT,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:fan",
+        "modelList": "AirCirculationSpeeds",
+    },
+    # Air circulation runs for a set number of minutes, and the app offers
+    # the duration as a picker on a grid the device itself declares --
+    # 102025 the minimum, 102026 the maximum, 102022 the step. A select
+    # built from those rather than a free number; see docs/decisions.md.
+    # The grid capabilities stay exposed as their own diag entities below.
+    # The corpus values, for a device reporting the duration without its
+    # grid.
+    102021: {
+        "name": "air_circulation_total_time",
+        "type": CapabilityType.DURATION_SELECT,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:fan-clock",
+        "lowestValueCapabilityId": 102025,
+        "highestValueCapabilityId": 102026,
+        "stepCapabilityId": 102022,
+        "lowest_value": 15,
+        "highest_value": 300,
+        "step": 15,
+    },
+    102023: {
+        "name": "air_circulation_remaining_time",
+        "type": CapabilityType.TIME,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fan-clock",
+    },
+    102024: {
+        "name": "air_circulation",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:fan",
+    },
+    # Home-level fault code, sibling of the room (303) and DHW (290) codes,
+    # same matrix shape and decoding.
+    150: {
+        "name": "home_error_code",
+        "type": CapabilityType.ERROR_CODE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:alert-circle-outline",
+    },
+    # DHW fault code, same matrix shape and decoding as the room code (303).
+    290: {
+        "name": "dhw_error_code",
+        "type": CapabilityType.ERROR_CODE,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:alert-circle-outline",
+    },
+    # The set of air-circulation modes this device supports -- a static
+    # descriptor bitmask, not a control. Off by default like every other
+    # supported_*/available_* descriptor (which reach that state through
+    # SELF_DESCRIBING_CAPABILITIES); this one has its own branch and was
+    # the lone one left visible.
+    102005: {
+        "name": "air_circulation_supported_modes",
+        "type": CapabilityType.STRING,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fan",
+        "enabled_by_default": False,
+    },
+    # Step for the air-circulation duration (102021).
+    102022: {
+        "name": "air_circulation_time_step",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fan-clock",
+        "enabled_by_default": False,
+    },
+    # Minimum air-circulation duration; the lower bound of 102021.
+    102025: {
+        "name": "air_circulation_time_min",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fan-clock",
+        "enabled_by_default": False,
+    },
+    # Maximum air-circulation duration; the upper bound of 102021.
+    102026: {
+        "name": "air_circulation_time_max",
+        "type": CapabilityType.INT,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:fan-clock",
+        "enabled_by_default": False,
+    },
+    104044: {
+        "name": "boost_mode",
+        "type": CapabilityType.SWITCH,
+        "category": CapabilityCategory.SENSOR,
+        "icon": "mdi:heat-wave",
+    },
+    # Boost timeout max. in minutes
+    104047: {
+        "name": "boost_timeout_max",
+        "type": CapabilityType.MINUTES_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.DIAG,
+        "icon": "mdi:clock-outline",
+        "lowest_value": 5,
+        "highest_value": 60,
+        "step": 5,
+    },
+    105300: {
+        "name": "water_temperature_limit",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+    },
+    105304: {
+        "name": "max_target_temperature_derogation",
+        "type": CapabilityType.TEMPERATURE,
+        "category": CapabilityCategory.DIAG,
+    },
+    105906: {
+        "name": "Target 105906",
+        "type": CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.SENSOR,
+        "temperatureMin": 15.0,
+        "temperatureMax": 65.0,
+    },
+    105907: {
+        "name": "Target 105907",
+        "type": CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER,
+        "category": CapabilityCategory.SENSOR,
+        "temperatureMin": 15.0,
+        "temperatureMax": 65.0,
+    },
+})
+
+
 def get_capability_infos(  # noqa: C901
     modelInfos: ModelInfos,
     capabilityId: int,
@@ -338,6 +959,10 @@ def get_capability_infos(  # noqa: C901
     modelId = modelInfos.modelId
 
     capability = CapabilityInfos(modelId=modelId, capabilityId=capabilityId)
+
+    if capabilityId in SIMPLE_CAPABILITIES:
+        capability.update(SIMPLE_CAPABILITIES[capabilityId])
+        return capability
 
     if (
         capabilityId in (1, 2, 7, 8)
@@ -454,11 +1079,6 @@ def get_capability_infos(  # noqa: C901
             if 100804 in availableCapabilityIds:
                 capability.swingOnCapabilityId = 100804
 
-    elif capabilityId == 19:
-        capability.name = "temperature_setpoint"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
     elif capabilityId == 22:
         capability.name = "target_temperature_dhw"
         capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
@@ -471,104 +1091,6 @@ def get_capability_infos(  # noqa: C901
             capability.lowestValueCapabilityId = 160
             capability.highestValueCapabilityId = 161
 
-    elif capabilityId == 25:
-        capability.name = "number_of_starts_ch_pump"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:water-pump"
-
-    elif capabilityId == 26:
-        capability.name = "number_of_starts_dhw_pump"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:water-pump"
-
-    elif capabilityId == 28:
-        capability.name = "number_of_hours_ch_pump"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:water-pump"
-
-    elif capabilityId == 29:
-        capability.name = "number_of_hours_dhw_pump"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:water-pump"
-
-    elif capabilityId == 40:
-        capability.name = "target_temperature"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.lowestValueCapabilityId = 160
-        capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 41:
-        capability.name = "target_temperature_eco_z1"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.lowestValueCapabilityId = 160
-        capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 42:
-        capability.name = "target_temperature_eco_z2"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.lowestValueCapabilityId = 160
-        capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 44:
-        capability.name = "ch_power_consumption"
-        capability.type = CapabilityType.ENERGY
-        capability.displayed_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:radiator"
-
-    elif capabilityId == 45:
-        capability.name = "dhw_power_consumption"
-        capability.type = CapabilityType.ENERGY
-        capability.displayed_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:faucet"
-
-    elif capabilityId == 46:
-        capability.name = "total_power_consumption"
-        capability.type = CapabilityType.ENERGY
-        capability.displayed_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-boiler"
-
-    elif capabilityId in (57, 59):
-        capability.name = "power_consumption"
-        capability.type = CapabilityType.ENERGY
-        capability.displayed_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 86:
-        capability.name = "domestic_hot_water"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:faucet"
-
-    elif capabilityId == 87:
-        # water-boiler icon: this is the domestic-hot-water mode, not heating.
-        capability.name = "domestic_hot_water_mode"
-        capability.type = CapabilityType.SELECT
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-boiler"
-        capability.modelList = "HeatingModes"
-
-    elif capabilityId == 88:
-        capability.name = "model_name"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:tag"
-
-    elif capabilityId in (94, 98):
-        capability.name = "product_number"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:tag"
-
     elif capabilityId == 99:
         if modelInfos.type == CozytouchDeviceType.WATER_HEATER:
             capability.name = "resistance"
@@ -580,27 +1102,10 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.BINARY
         capability.category = CapabilityCategory.SENSOR
 
-    elif capabilityId == 100:
-        capability.name = "water_pressure"
-        capability.type = CapabilityType.PRESSURE
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:gauge"
-        capability.displayed_unit_of_measurement = UnitOfPressure.BAR
-
     elif capabilityId in (101, 102, 103, 104):
         capability.name = "Capability_" + str(capabilityId)
         capability.type = CapabilityType.STRING
         capability.value_type = CozytouchCapabilityVariableType.ARRAY
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 109:
-        capability.name = "boiler_water_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 111:
-        capability.name = "dhw_temperature"
-        capability.type = CapabilityType.TEMPERATURE
         capability.category = CapabilityCategory.SENSOR
 
     elif capabilityId == 116:
@@ -611,16 +1116,6 @@ def get_capability_infos(  # noqa: C901
         else:
             return CapabilityInfos()
 
-    elif capabilityId == 117:
-        capability.name = "thermostat_temperature_z1"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 118:
-        capability.name = "thermostat_temperature_z2"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
     elif capabilityId == 119:
         # Outside temperature is invalid when value is -327.68
         if float(capabilityValue) > -327.68:
@@ -629,12 +1124,6 @@ def get_capability_infos(  # noqa: C901
             capability.category = CapabilityCategory.SENSOR
         else:
             return CapabilityInfos()
-
-    elif capabilityId == 121:
-        capability.name = "version"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:tag"
 
     elif capabilityId in (152, 227):
         capability.name = "away_mode"
@@ -660,22 +1149,6 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.BINARY
         capability.category = CapabilityCategory.SENSOR
 
-    elif capabilityId == 154:
-        capability.name = "zone_1"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:home-floor-1"
-
-    elif capabilityId == 155:
-        capability.name = "zone_2"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:home-floor-2"
-
-    # elif capabilityId == 157:
-    #    # Prog override flag
-    #    return CapabilityInfos()
-
     elif capabilityId == 158:
         if modelInfos.type in ELECTRIC_HEATERS:
             capability.name = "override_total_time"
@@ -697,23 +1170,6 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.TIME
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:clock-outline"
-
-    elif capabilityId == 160:
-        # Target temperature adjustment min limit
-        capability.name = "temperature_adjustment_min"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:thermometer-chevron-down"
-
-    elif capabilityId == 161:
-        # Target temperature adjustment max limit
-        capability.name = "temperature_adjustment_max"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:thermometer-chevron-up"
-        capability.lowest_value = 19
-        capability.highest_value = 28
-        capability.step = 0.5
 
     elif capabilityId in (162, 163):
         # The cooling counterpart of the 160/161 heating bounds. Two independent
@@ -739,12 +1195,6 @@ def get_capability_infos(  # noqa: C901
         if modelInfos.type == CozytouchDeviceType.HEAT_PUMP:
             capability.value_off = "false"
             capability.value_on = "true"
-
-    elif capabilityId == 169:
-        capability.name = "radio_signal"
-        capability.type = CapabilityType.PERCENTAGE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:radio-tower"
 
     elif capabilityId == 171:
         # The cooling half of the absence setpoint, 172 being the heating one.
@@ -785,30 +1235,9 @@ def get_capability_infos(  # noqa: C901
         capability.lowestValueCapabilityId = 162
         capability.highestValueCapabilityId = 163
 
-    elif capabilityId == 179:
-        capability.name = "wifi_signal"
-        capability.type = CapabilityType.SIGNAL
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:wifi"
-
     elif capabilityId == 181:
         # Ignore, same as heat sensor (7, 8)
         return CapabilityInfos()
-
-    elif capabilityId == 184:
-        capability.name = "prog_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-outline"
-
-    elif capabilityId == 303:
-        # Room fault code: a matrix of [system, majorCode, minorCode, level]
-        # rows, all-zero when healthy. The type decodes it to a code list;
-        # see sensor.py and docs/decisions.md for the format and its limits.
-        capability.name = "error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
 
     elif 196 <= capabilityId <= 209:
         # Weekly program: two blocks of seven capabilities, monday first. On an
@@ -847,12 +1276,6 @@ def get_capability_infos(  # noqa: C901
         capability.icon = "mdi:wifi"
         capability.enabled_by_default = False
 
-    elif capabilityId == 219:
-        capability.name = "wifi_ssid"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:wifi"
-
     elif capabilityId in (222, 226):
         capability.name = "away_mode"
         capability.type = CapabilityType.AWAY_MODE_TIMESTAMPS
@@ -867,11 +1290,6 @@ def get_capability_infos(  # noqa: C901
         else:
             capability.capabilityDuplicate = 222
 
-    elif capabilityId == 228:
-        capability.name = "absence_dhw_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-
     elif capabilityId == 231:
         capability.name = "target_temperature"
         capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
@@ -883,191 +1301,6 @@ def get_capability_infos(  # noqa: C901
         else:
             capability.lowestValueCapabilityId = 105301
             capability.highestValueCapabilityId = 105304
-
-    elif capabilityId == 232:
-        capability.name = "boost_total_time"
-        capability.type = CapabilityType.TIME
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:clock-outline"
-
-    elif capabilityId == 233:
-        capability.name = "boost_remaining_time"
-        capability.type = CapabilityType.TIME
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:clock-outline"
-
-    elif capabilityId == 245:
-        capability.name = "prog_01"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 246:
-        capability.name = "prog_02"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 247:
-        capability.name = "prog_03"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 248:
-        capability.name = "prog_04"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 249:
-        capability.name = "prog_05"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 250:
-        capability.name = "prog_06"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 251:
-        capability.name = "prog_07"
-        capability.type = CapabilityType.PROGTIME
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 252:
-        capability.name = "target_temperature_max"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 253:
-        capability.name = "target_temperature_min"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 258:
-        capability.name = "tank_capacity"
-        capability.type = CapabilityType.VOLUME
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 264:
-        capability.name = "condenser_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 265:
-        capability.name = "tank_middle_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 266:
-        capability.name = "tank_top_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 267:
-        capability.name = "tank_bottom_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 268:
-        capability.name = "v40_water_available"
-        capability.type = CapabilityType.VOLUME
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-thermometer"
-
-    elif capabilityId == 269:
-        capability.name = "water_consumption"
-        capability.type = CapabilityType.WATER_CONSUMPTION
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-pump"
-
-    elif capabilityId == 270:
-        capability.name = "v40_water_capacity"
-        capability.type = CapabilityType.VOLUME
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-thermometer"
-
-    elif capabilityId == 271:
-        capability.name = "hot_water_available"
-        capability.type = CapabilityType.PERCENTAGE
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 280:
-        capability.name = "cold_water_temperature"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:coolant-temperature"
-
-    elif capabilityId == 283:
-        capability.name = "off_peak_hours"
-        capability.type = CapabilityType.BINARY
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-outline"
-
-    elif capabilityId == 292:
-        # Not a level: the app counts showers. Atlantic water heaters display a
-        # number of expected/remaining showers rather than a percentage.
-        capability.name = "hot_water_showers_expected"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-plus"
-
-    elif capabilityId == 293:
-        # Remaining showers, the counterpart of 292 -- see the note there.
-        capability.name = "hot_water_showers_remaining"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-check"
-
-    elif capabilityId == 315:
-        capability.name = "timezone"
-        capability.type = CapabilityType.TIMEZONE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:map-clock-outline"
-
-    elif capabilityId == 316:
-        capability.name = "interface_fw"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:tag"
-
-    elif capabilityId == 335:
-        capability.name = "serial_number"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:tag"
-
-    elif capabilityId == 100261:
-        # Per-room mirror of the hub's away mode flag (152). The room units carry
-        # it alongside the absence window in 100260, which stays unmapped: the
-        # window is written for the whole setup from the hub, not room by room.
-        capability.name = "away_mode"
-        capability.type = CapabilityType.BINARY
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:airplane"
-
-    elif capabilityId == 100402:
-        capability.name = "number_of_hours_burner"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fire"
-
-    elif capabilityId == 100406:
-        capability.name = "number_of_starts_burner"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fire"
-
-    elif capabilityId == 100450:
-        # The vendor app's "Anticipation de chauffe"; 0/1 encoding verified on
-        # a live toggle -- see docs/decisions.md.
-        capability.name = "schedule_anticipation"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-fast"
-
-    elif capabilityId == 100505:
-        capability.name = "powerful_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:wind-power"
 
     elif capabilityId == 100506:
         # Towel dryers only: no capture has one reporting it, and the branch
@@ -1093,134 +1326,6 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:flower-outline"
 
-    elif capabilityId == 100320:
-        capability.name = "prog_heat_monday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100321:
-        capability.name = "prog_heat_tuesday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100322:
-        capability.name = "prog_heat_wednesday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100323:
-        capability.name = "prog_heat_thursday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100324:
-        capability.name = "prog_heat_friday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100325:
-        capability.name = "prog_heat_saturday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100326:
-        capability.name = "prog_heat_sunday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100327:
-        capability.name = "prog_cool_monday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100328:
-        capability.name = "prog_cool_tuesday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100329:
-        capability.name = "prog_cool_wednesday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100330:
-        capability.name = "prog_cool_thursday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100331:
-        capability.name = "prog_cool_friday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100332:
-        capability.name = "prog_cool_saturday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100333:
-        capability.name = "prog_cool_sunday"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 100802:
-        capability.name = "quiet_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:fan-minus"
-
-    elif capabilityId == 100804:
-        capability.name = "swing_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:arrow-oscillating"
-
-    elif capabilityId == 102004:
-        capability.name = "air_circulation_speed"
-        capability.type = CapabilityType.SELECT
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:fan"
-        capability.modelList = "AirCirculationSpeeds"
-
-    elif capabilityId == 102021:
-        # Air circulation runs for a set number of minutes, and the app offers
-        # the duration as a picker on a grid the device itself declares --
-        # 102025 the minimum, 102026 the maximum, 102022 the step. A select
-        # built from those rather than a free number; see docs/decisions.md.
-        # The grid capabilities stay exposed as their own diag entities below.
-        capability.name = "air_circulation_total_time"
-        capability.type = CapabilityType.DURATION_SELECT
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:fan-clock"
-        capability.lowestValueCapabilityId = 102025
-        capability.highestValueCapabilityId = 102026
-        capability.stepCapabilityId = 102022
-        # The corpus values, for a device reporting the duration without its
-        # grid.
-        capability.lowest_value = 15
-        capability.highest_value = 300
-        capability.step = 15
-
-    elif capabilityId == 102023:
-        capability.name = "air_circulation_remaining_time"
-        capability.type = CapabilityType.TIME
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan-clock"
-
-    elif capabilityId == 102024:
-        capability.name = "air_circulation"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:fan"
-
-    elif capabilityId == 150:
-        # Home-level fault code, sibling of the room (303) and DHW (290) codes,
-        # same matrix shape and decoding.
-        capability.name = "home_error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
-
     elif 237 <= capabilityId <= 243:
         # Domestic-hot-water weekly program, one capability per day, monday first.
         capability.name = f"dhw_prog_{PROGRAM_DAYS[capabilityId - 237]}"
@@ -1228,89 +1333,6 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.DIAG
         if _whole_block_reported(237, availableCapabilityIds):
             capability.enabled_by_default = False
-
-    elif capabilityId == 290:
-        # DHW fault code, same matrix shape and decoding as the room code (303).
-        capability.name = "dhw_error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
-
-    elif capabilityId == 102005:
-        # The set of air-circulation modes this device supports -- a static
-        # descriptor bitmask, not a control. Off by default like every other
-        # supported_*/available_* descriptor (which reach that state through
-        # SELF_DESCRIBING_CAPABILITIES); this one has its own branch and was
-        # the lone one left visible.
-        capability.name = "air_circulation_supported_modes"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan"
-        capability.enabled_by_default = False
-
-    elif capabilityId == 102022:
-        # Step for the air-circulation duration (102021).
-        capability.name = "air_circulation_time_step"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan-clock"
-        capability.enabled_by_default = False
-
-    elif capabilityId == 102025:
-        # Minimum air-circulation duration; the lower bound of 102021.
-        capability.name = "air_circulation_time_min"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan-clock"
-        capability.enabled_by_default = False
-
-    elif capabilityId == 102026:
-        # Maximum air-circulation duration; the upper bound of 102021.
-        capability.name = "air_circulation_time_max"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan-clock"
-        capability.enabled_by_default = False
-
-    elif capabilityId == 104044:
-        capability.name = "boost_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:heat-wave"
-
-    elif capabilityId == 104047:
-        # Boost timeout max. in minutes
-        capability.name = "boost_timeout_max"
-        capability.type = CapabilityType.MINUTES_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:clock-outline"
-        capability.lowest_value = 5
-        capability.highest_value = 60
-        capability.step = 5
-
-    elif capabilityId == 105300:
-        capability.name = "water_temperature_limit"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 105304:
-        capability.name = "max_target_temperature_derogation"
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-
-    elif capabilityId == 105906:
-        capability.name = "Target 105906"
-        capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.temperatureMin = 15.0
-        capability.temperatureMax = 65.0
-
-    elif capabilityId == 105907:
-        capability.name = "Target 105907"
-        capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.temperatureMin = 15.0
-        capability.temperatureMax = 65.0
 
     # For test
     elif capabilityId == 312:
