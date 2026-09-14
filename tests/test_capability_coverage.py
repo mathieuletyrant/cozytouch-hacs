@@ -181,7 +181,7 @@ def test_a_self_describing_capability_arrives_switched_off(capabilityId):
     result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
 
     assert result["enabled_by_default"] is False
-    assert result["name"] == SELF_DESCRIBING_CAPABILITIES[capabilityId]
+    assert result["name"] == SELF_DESCRIBING_CAPABILITIES[capabilityId][0]
     assert result["category"] == "diag"
 
 
@@ -227,7 +227,7 @@ def test_the_self_describing_table_does_not_shadow_a_real_mapping():
     """An id in the table that another branch claims first would never be read."""
     infos = get_model_infos(557)
 
-    for capabilityId, name in SELF_DESCRIBING_CAPABILITIES.items():
+    for capabilityId, (name, _) in SELF_DESCRIBING_CAPABILITIES.items():
         result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
         assert result["name"] == name, (
             f"{capabilityId} resolves to {result['name']!r}, not {name!r}"

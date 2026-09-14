@@ -603,13 +603,31 @@ decodes with no bit left over.
 
 ### Twenty descriptors read as what they are, and the ones left alone
 
-`SELF_DESCRIBING_CAPABILITIES` says "the name is everything we know". For
-twenty ids that stopped being true once the vendor app's readers were read
-(`research/data/android_capability_types.tsv`), so `DESCRIBING_CAPABILITY_TYPES`
-carries the type beside the name. They stay diag and stay **off by
-default**: knowing the encoding is not a reason to put twenty more
-entities on everybody's device page, and the flag is what makes the
-descriptor family cost nothing.
+`SELF_DESCRIBING_CAPABILITIES` used to say "the name is everything we
+know", one name per id. For twenty ids that stopped being true once the
+vendor app's readers were read (`research/data/android_capability_types.tsv`),
+so the table has a second column and `STRING` is what most rows still say.
+They stay diag and stay **off by default**: knowing the encoding is not a
+reason to put twenty more entities on everybody's device page, and the
+flag is what makes the descriptor family cost nothing.
+
+The type lives in that table and not in the `elif` chain on purpose. A
+branch would have to restate the name, the category and the flag for each
+of the twenty, and the coverage test that walks this table and asserts
+"arrives switched off" would stop reaching them -- twenty diagnostic
+entities silently turning themselves on breaks no test. A second dict
+keyed by the same ids was the first shape and was worse: two rows to keep
+in step for one fact.
+
+The three decoding tables -- `CAPABILITY_BIT_FIELDS`,
+`CAPABILITY_VALUE_SPACES`, `CAPABILITY_SPEED_SETS` -- do **not** merge
+into it, for a reason that is not taste. They are read by
+`describe_capability_value` at every poll, with the value; this table is
+read once at setup, without it. Capability 166 is why that matters: its
+mask shrinks with the season, so a decoding settled at setup would show
+last winter's modes until Home Assistant restarts. Merging the three into
+one column would also mean one column holding three shapes plus a tag
+saying which -- the dict a row sits in is that tag already.
 
 - **Minutes** (296, 307, 331, 332, 333): the app reads them with
   `toIntOrNull` in its prog-in-range feature, and 331 reads 1440 on eleven

@@ -239,7 +239,7 @@ def main():
     print()
     print("| id | name |")
     print("| ---: | --- |")
-    for capabilityId, name in sorted(SELF_DESCRIBING_CAPABILITIES.items()):
+    for capabilityId, (name, _) in sorted(SELF_DESCRIBING_CAPABILITIES.items()):
         print(f"| {capabilityId} | `{name}` |")
 
 
