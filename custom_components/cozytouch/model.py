@@ -70,6 +70,39 @@ class CozytouchDeviceType(StrEnum):
 # -- see docs/decisions.md.
 ZONE_NAME_PREFIX = "THZONE"
 
+# The mode tables most of the branches below share, named once rather than
+# spelled out per model. Twenty-seven of the thirty-six HVACModes tables in
+# this file are OFF_HEAT and seven more are OFF_ONLY; thirteen of the sixteen
+# HeatingModes tables are MANUAL_ECO_PROG. A branch that still declares a
+# literal is a branch whose hardware really does differ, which is the thing
+# worth seeing.
+#
+# Shared objects, and read-only by fact rather than by type: nothing mutates a
+# mode table, every reader copies (`list(...values())`) or looks up. Plain
+# dicts and not MappingProxyType because these travel into the diagnostics
+# dump and into the snapshot, both of which serialise as JSON.
+OFF_HEAT = {
+    0: HVACMode.OFF,
+    4: HVACMode.HEAT,
+}
+
+# The hubs and the Naviclim box: they report a mode capability and offer
+# nothing to switch it to, so an off/heat pair would be a claim about hardware
+# that cannot heat.
+OFF_ONLY = {
+    0: HVACMode.OFF,
+}
+
+MANUAL_ECO_PROG = {
+    0: HEATING_MODE_MANUAL,
+    3: HEATING_MODE_ECO_PLUS,
+    4: HEATING_MODE_PROG,
+}
+
+MANUAL_ONLY = {
+    0: HEATING_MODE_MANUAL,
+}
+
 # Each table below holds every id of one product line the catalogue names.
 # `# catalogue only` means no capture of that id exists, and a table whose
 # whole body is catalogue-sourced says so in its own comment rather than
@@ -383,48 +416,31 @@ def get_model_infos(  # noqa: C901
         # docs/decisions.md.
         modelInfos.name = NAEMA_NAIA_BOILERS[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 56:
         modelInfos.name = "Naema 2 Micro 25"
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 61:
         modelInfos.name = "Naia 2 Micro 25"
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 65:
         modelInfos.name = "Naema 2 Duo 25"
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 76:
         modelInfos.name = "Alfea Extensa Duo AI UE"
         modelInfos.type = CozytouchDeviceType.HEAT_PUMP
         modelInfos.currentTemperatureAvailableZ1 = False
         modelInfos.currentTemperatureAvailableZ2 = True
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-        }
+        modelInfos.HeatingModes = MANUAL_ONLY
 
         modelInfos.exhaustTemperatureAvailable = False
 
@@ -442,45 +458,26 @@ def get_model_infos(  # noqa: C901
             2: HVACMode.AUTO,
         }
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-        }
+        modelInfos.HeatingModes = MANUAL_ONLY
 
         modelInfos.exhaustTemperatureAvailable = False
 
     elif modelId == 235:
         modelInfos.name = "Thermostat Navilink Connect"
         modelInfos.type = CozytouchDeviceType.THERMOSTAT
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 236:
         modelInfos.name = "Sauter Phazy"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HVACModes = OFF_HEAT
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId in ACI_HYB_WATER_HEATERS:
         modelInfos.name = ACI_HYB_WATER_HEATERS[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HVACModes = OFF_HEAT
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 418:
         modelInfos.name = "Loria 3 Duo R32"
@@ -490,43 +487,32 @@ def get_model_infos(  # noqa: C901
         modelInfos.currentTemperatureAvailableZ2 = False
         modelInfos.overrideModeAvailable = True
 
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 556:
         modelInfos.name = "Naviclim Hub"
         modelInfos.type = CozytouchDeviceType.HUB
         modelInfos.awayModeTemperatureAvailable = False
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId == 1457:
         modelInfos.name = "HUB Cozytouch"
         modelInfos.type = CozytouchDeviceType.HUB
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId in (1681, 1758):
         # AC gateway, drives the same 557-561 units as the 556 Naviclim hub
         modelInfos.name = "HUB Navizone"
         modelInfos.type = CozytouchDeviceType.HUB
         modelInfos.awayModeTemperatureAvailable = False
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId in COZYBOX_HUBS:
         # Connectivity box, seen driving 557-560 room units like the hubs above
         modelInfos.name = "CozyBox"
         modelInfos.type = CozytouchDeviceType.HUB
         modelInfos.awayModeTemperatureAvailable = False
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif masterModelId in COZYBOX_HUBS and 557 <= modelId <= 561:
         # A room slot behind a hub, not a product: 557-561 is the room's
@@ -539,10 +525,7 @@ def get_model_infos(  # noqa: C901
             else "Radiator (#" + str(modelId - 556) + ")"
         )
         modelInfos.type = CozytouchDeviceType.RADIATOR
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
         name = "Air Conditioner "
@@ -601,192 +584,108 @@ def get_model_infos(  # noqa: C901
             modelInfos.name = name + "(#" + str(modelId - 561) + ")"
 
         modelInfos.type = CozytouchDeviceType.AC_CONTROLLER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId == 1353:
         modelInfos.name = "Calypso Split Interface"
         modelInfos.type = CozytouchDeviceType.HUB
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId in CALYPSO_SPLIT_VM:
         modelInfos.name = CALYPSO_SPLIT_VM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     # 664 is catalogue only: the same string as 1369 in the vendor's older
     # all-capitals listing.
     elif modelId in (1369, 1376, 664):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     # 1370 is catalogue only: the 150L of a range captured in 200L and 270L.
     elif modelId in (1370, 1371, 1372):
         modelInfos.name = "Aeromax SPLIT 3"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 1381:
         modelInfos.name = "KELUD 1750W BLC"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId == 1382:
         modelInfos.name = "KELUD 1750W Anthracite Standard"
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId in TOWEL_RACK_VARIANTS:
         modelInfos.name = TOWEL_RACK_VARIANTS[modelId]
         modelInfos.type = CozytouchDeviceType.TOWEL_RACK
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId in NAEMA_3:
         modelInfos.name = NAEMA_3[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     elif modelId in EXPLORER_V5:
         modelInfos.name = EXPLORER_V5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 1656:
         modelInfos.name = "Aeromax 6"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId in AEROMAX_PREMIUM_CV5:
         modelInfos.name = AEROMAX_PREMIUM_CV5[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 1657:
         modelInfos.name = "Calypso 200L"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 1658:
         modelInfos.name = "Calypso connecté"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId == 1763:
         modelInfos.name = "FLAT/S4 IOTHUB"
         modelInfos.type = CozytouchDeviceType.HUB
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-        }
+        modelInfos.HVACModes = OFF_ONLY
 
     elif modelId in MALICIO_3:
         modelInfos.name = MALICIO_3[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     elif modelId in LINEO_CONNECTE_MP:
         modelInfos.name = LINEO_CONNECTE_MP[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
         modelInfos.HeatingModes = {
             0: HEATING_MODE_MANUAL,
@@ -795,32 +694,18 @@ def get_model_infos(  # noqa: C901
     elif modelId in EGEO_PLATFORM:
         modelInfos.name = EGEO_PLATFORM[modelId]
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     # 2375 and 2376 are catalogue only: 2374 without the coil, and 2374 sold
     # into Austria rather than Germany.
     elif modelId in (2374, 2375, 2376):
         modelInfos.name = "Explorer EVO 3 (270L)"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
-        modelInfos.HeatingModes = {
-            0: HEATING_MODE_MANUAL,
-            3: HEATING_MODE_ECO_PLUS,
-            4: HEATING_MODE_PROG,
-        }
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     else:
         # A catalogue name where there is one; the type stays UNKNOWN
@@ -829,9 +714,6 @@ def get_model_infos(  # noqa: C901
             modelId, "Unknown product (" + str(modelId) + ")"
         )
         modelInfos.type = CozytouchDeviceType.UNKNOWN
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = OFF_HEAT
 
     return modelInfos
