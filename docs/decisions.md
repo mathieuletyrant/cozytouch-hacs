@@ -902,6 +902,66 @@ Every id here is hot-water, and no device on hand reports one. The evidence
 is the app's own enum and nothing else -- which is stronger than a guess and
 weaker than a capture.
 
+### Twelve more ids the enum names and the corpus confirms
+
+Walking the whole of `capability_id_to_name_android.tsv` against the mapping,
+rather than only the ids the fork happened to touch, left 14 named by the app
+and mapped nowhere here. Eleven are taken. `9812 DEBUG` and `106 POWER` are
+not, because a name that vague buys an entity nobody can read, and `100014
+ROOM_TYPE` is not either: it is one of the two ids a thermal zone reports,
+and a zone deliberately resolves to no entity at all. Naming it is what
+`test_a_zone_maps_to_nothing_at_all` exists to catch, and it caught it.
+
+What makes these better evidence than the five above is that
+`research/capability-corpus/by-capability.md` holds values for most of them:
+
+| id | The app's name | Here | The corpus reads |
+| -- | -------------- | ---- | ---------------- |
+| 352 | `ABSENCE_DAY_HEATING` | `absence_day_heating_temperature` | 18, on 10 models |
+| 353 | `PRESENCE_DAY_HEATING` | `presence_day_heating_temperature` | 19, on 10 models |
+| 354 | `PRESENCE_NIGHT_HEATING` | `presence_night_heating_temperature` | 18, on 10 models |
+| 355 | `ABSENCE_DAY_COOLING` | `absence_day_cooling_temperature` | 26, on 10 models |
+| 356 | `PRESENCE_DAY_COOLING` | `presence_day_cooling_temperature` | 24, on 10 models |
+| 357 | `PRESENCE_NIGHT_COOLING` | `presence_night_cooling_temperature` | 26, on 10 models |
+| 100000 | `THERMAL_ZONE_NUMBER` | `thermal_zones_count` | 1, 2, 3 |
+| 100196 | `PROG_ABSENCE` | `absence_schedule` | nothing |
+| 102006 | `AIR_MIXING_MODES_AVAILABLE` | `air_circulation_available_modes` | 285, on 3 models |
+| 102020 | `AIR_MIXING_ACTUAL_MODE` | `air_circulation_current_mode` | 3, on 3 models |
+| 105636 | `DHW_COMFORT_MODE` | `dhw_comfort_mode` | 0 and 1 |
+
+The six 352-357 are the find. Ten distinct models report them, fifteen
+readings each, and every reading is the same number: 18/19/18 in heating and
+26/24/26 in cooling. Those are °C, and they line up as a comfort grid --
+absence colder than presence in heating and warmer in cooling, night
+following day. The name and the number agree, which neither does alone.
+
+They are named the way 100197 and 100198 already are (`*_temperature`, raw
+string, off by default) rather than typed as temperatures. The corpus shows
+what they read, not whether anything writes them, and nothing here has ever
+seen one move.
+
+102006 is the one the corpus actually decodes: 285 is
+1|4|8|16|256 against `_AIR_CIRCULATION_MODE_BITS` -- off, auto season, cool,
+heat, dry -- with no bit left over. So it is a line in `CAPABILITY_BIT_FIELDS`
+pointing at the table 102005 already uses. 102005 is
+`AIR_MIXING_MODES_SUPPORTED` and 102006 is `..._AVAILABLE`; the supported /
+available pair is kept in the names because the app keeps it.
+
+102020 reads 3, which is not one bit of that table and not obviously one
+member either, so it stays raw.
+
+### The enum is not the catalogue
+
+Worth recording, because it is the question this walk was meant to answer.
+The app names 187 ids; the mapping now claims 206. **46 of ours are absent
+from the enum**, including 1, 2 and 8 -- the base HVAC modes, which every
+device on every account reports.
+
+So the Android enum is not the capability catalogue `docs/api-surface.md`
+says does not exist. It is what the *app* knows how to display, which is a
+different and smaller thing. Recouping it against the corpus is worth doing
+again when the app ships a new version; treating it as exhaustive is not.
+
 ### `read_setpoint` : hundredths, but not for hot water
 
 The app divides a program slot's target temperature by 100 when it reads

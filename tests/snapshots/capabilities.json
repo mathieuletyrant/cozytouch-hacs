@@ -13,6 +13,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -91,6 +99,14 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -394,6 +410,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -571,6 +603,14 @@
     "modelId": 1381,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -1559,6 +1599,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -1761,6 +1849,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -1839,6 +1935,14 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -2149,6 +2253,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -2326,6 +2446,14 @@
     "modelId": 1457,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -3314,6 +3442,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -3512,6 +3688,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -3590,6 +3774,14 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -3900,6 +4092,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -4077,6 +4285,14 @@
     "modelId": 1505,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -5057,6 +5273,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -5255,6 +5519,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -5333,6 +5605,14 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -5643,6 +5923,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -5820,6 +6116,14 @@
     "modelId": 1641,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -6808,6 +7112,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -7006,6 +7358,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -7084,6 +7444,14 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -7394,6 +7762,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -7571,6 +7955,14 @@
     "modelId": 1734,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -8544,6 +8936,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -8781,6 +9221,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -8859,6 +9307,14 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -9169,6 +9625,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -9346,6 +9818,14 @@
     "modelId": 211,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -10347,6 +10827,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -10509,6 +11037,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -10587,6 +11123,14 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -10897,6 +11441,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -11074,6 +11634,14 @@
     "modelId": 2374,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -12064,6 +12632,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -12262,6 +12878,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -12340,6 +12964,14 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -12650,6 +13282,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -12827,6 +13475,14 @@
     "modelId": 418,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -13815,6 +14471,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -14013,6 +14717,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -14091,6 +14803,14 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -14394,6 +15114,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -14571,6 +15307,14 @@
     "modelId": 557,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -15544,6 +16288,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -15762,6 +16554,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -15840,6 +16640,14 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -16150,6 +16958,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -16327,6 +17151,14 @@
     "modelId": 56,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -17307,6 +18139,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -17507,6 +18387,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -17585,6 +18473,14 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -17895,6 +18791,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -18072,6 +18984,14 @@
     "modelId": 562,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -19060,6 +19980,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -19258,6 +20226,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -19336,6 +20312,14 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -19646,6 +20630,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -19823,6 +20823,14 @@
     "modelId": 76,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -20807,6 +21815,54 @@
     "name": "connectivity_display_capabilities",
     "type": "string"
    },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "presence_night_cooling_temperature",
+    "type": "string"
+   },
    "358": {
     "capabilityId": 358,
     "category": "diag",
@@ -21003,6 +22059,14 @@
     "name": "water_pressure",
     "type": "pressure"
    },
+   "100000": {
+    "capabilityId": 100000,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "thermal_zones_count",
+    "type": "string"
+   },
    "100002": {
     "capabilityId": 100002,
     "category": "diag",
@@ -21081,6 +22145,14 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "unexpected_events",
+    "type": "string"
+   },
+   "100196": {
+    "capabilityId": 100196,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "absence_schedule",
     "type": "string"
    },
    "100197": {
@@ -21391,6 +22463,22 @@
     "name": "air_circulation_supported_modes",
     "type": "string"
    },
+   "102006": {
+    "capabilityId": 102006,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "air_circulation_available_modes",
+    "type": "string"
+   },
+   "102020": {
+    "capabilityId": 102020,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "air_circulation_current_mode",
+    "type": "string"
+   },
    "102021": {
     "capabilityId": 102021,
     "category": "sensor",
@@ -21568,6 +22656,14 @@
     "modelId": 999999,
     "name": "max_target_temperature_derogation",
     "type": "temperature"
+   },
+   "105636": {
+    "capabilityId": 105636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_comfort_mode",
+    "type": "string"
    },
    "105906": {
     "capabilityId": 105906,
@@ -22554,6 +23650,54 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "connectivity_display_capabilities",
+    "type": "string"
+   },
+   "352": {
+    "capabilityId": 352,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "absence_day_heating_temperature",
+    "type": "string"
+   },
+   "353": {
+    "capabilityId": 353,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "presence_day_heating_temperature",
+    "type": "string"
+   },
+   "354": {
+    "capabilityId": 354,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "presence_night_heating_temperature",
+    "type": "string"
+   },
+   "355": {
+    "capabilityId": 355,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "absence_day_cooling_temperature",
+    "type": "string"
+   },
+   "356": {
+    "capabilityId": 356,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "presence_day_cooling_temperature",
+    "type": "string"
+   },
+   "357": {
+    "capabilityId": 357,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "presence_night_cooling_temperature",
     "type": "string"
    },
    "358": {
