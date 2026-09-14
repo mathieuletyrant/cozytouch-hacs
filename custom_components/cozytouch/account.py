@@ -1,20 +1,8 @@
 """The Atlantic Cozytouch account a config entry is built on.
 
-One account, one login, one setup view. Everything a Cozytouch account
-declares -- the token, the household, the zones, the list of devices -- is the
-same answer whatever device is asking, because `setupviewv2` describes the
-whole account and not the device that fetched it.
-
-This lived on `Hub`, which meant one config entry per device also bought one
-session, one `POST /users/token` and one `GET setupviewv2` per device : a
-gateway plus four units cost five logins for four copies of the same payload.
-Worse, the state it filled in sat on the `Hub` *class* for a while, so the
-hubs overwrote each other and the last one to connect won --
-`tests/test_regressions.py` still pins the fix. The state was always shared;
-owning it in one object says so, and lets the shape be checked.
-
-The per-device half stays on `Hub` : which capability ids that device reports,
-what they mean for its model, and the targeted fetch that confirms a write.
+One account, one login, one setup view : `setupviewv2` describes the whole
+account and not the device that fetched it. The per-device half stays on `Hub`.
+See docs/decisions.md.
 """
 
 from __future__ import annotations
@@ -41,19 +29,12 @@ _LOGGER = logging.getLogger(__name__)
 # will stall a poll forever, blocking every subsequent one.
 REQUEST_TIMEOUT = ClientTimeout(total=30)
 
-# How long to stop asking after a 429 that does not say. Atlantic has never
-# been observed sending one -- nothing in the integration used to recognise it
-# -- so this is a guess, deliberately long: the cost of waiting five minutes
-# too long is stale values, the cost of waiting too little is being throttled
-# for good.
+# How long to stop asking after a 429 that does not say. A guess, deliberately
+# long -- see docs/decisions.md.
 RATE_LIMIT_BACKOFF = 300.0
 
-# What a throttling proxy puts in front of its answer. WSO2 API Manager, which
-# docs/api-surface.md identifies as the gateway, is the likely source of a 429
-# here, and these are the headers that would say what the limit actually is --
-# which is the one thing no capture has ever established about `rateLimit`.
-# Logged rather than parsed: a reading that comes from a real 429 beats one
-# guessed from a number in the setup view.
+# What a throttling proxy puts in front of its answer, logged rather than
+# parsed. See docs/decisions.md.
 RATE_LIMIT_HEADERS = (
     "Retry-After",
     "X-RateLimit-Limit",
@@ -62,14 +43,8 @@ RATE_LIMIT_HEADERS = (
 )
 
 # What the API declares about a device on top of the fields that drive
-# behaviour. Nothing reads these to decide anything: they are carried because a
-# diagnostics dump is what a mapping gets built from, and the vendor's own name
-# and family for a model the table does not know is the first thing worth
-# having. On the one account these were read from, only the gateway carries a
-# real longName and a modelFamily -- its children report an internal name or a
-# literal "---", and the name the user actually typed is customName -- so what
-# other product families put here is still open. docs/api-surface.md has the
-# detail.
+# behaviour. Carried to the diagnostics dump, read by nothing. See
+# docs/decisions.md.
 API_DECLARED_FIELDS = (
     "customName",
     "longName",
@@ -91,16 +66,13 @@ SETUP_FIELDS = (
     "name",
     "numberOfPersons",
     "numberOfRooms",
-    # The account's own declared rate limit. Units unknown -- no catalogue
-    # decodes it -- so it is carried to the dump rather than acted on; the poll
-    # interval is fixed at 60s, comfortably under it on any reading of "30".
+    # Units unknown ; carried to the dump rather than acted on.
     "rateLimit",
     "setupBuildingDate",
     "type",
 )
 
-# The subset the away-mode PUT has to send back. `absence` is what the call is
-# for and `id` addresses the resource, so neither belongs in the body.
+# The subset the away-mode PUT has to send back. See docs/decisions.md.
 SETUP_WRITABLE_FIELDS = (
     "address",
     "area",
@@ -129,18 +101,14 @@ class CozytouchAccount:
     def __init__(self, hass: HomeAssistant, username: str, password: str) -> None:
         """Init the account."""
         self._hass = hass
-        # Home Assistant's own session, not one of ours: it is closed when
-        # Home Assistant stops, so there is nothing left to leak when a setup
-        # fails and the account it built is discarded.
+        # Home Assistant's own session, so a discarded account leaks nothing.
         self._session = async_get_clientsession(hass)
         self._username = username
         self._password = password
 
         self._access_token = ""
         self._token_expiry: float = 0  # Unix timestamp; 0 = unknown/expired
-        # A reconnect is asked for by whoever sees the account offline -- the
-        # account poll, or a hub confirming a write -- and the lock is what
-        # turns several of them arriving at once into one login.
+        # Turns several reconnects arriving at once into one login.
         self._connect_lock = asyncio.Lock()
         # Set by a 429, and honoured by every caller before it spends a
         # request. 0 = not throttled.
@@ -150,10 +118,8 @@ class CozytouchAccount:
         self.setup: dict = {}
         self.zones: list | dict = []
         self.devices: list = []
-        # When the setup view last answered. One request refreshes the whole
-        # account, so this one date is the age of everything above it. Only a
-        # success moves it: a skipped or failed poll leaves it standing, which
-        # is what makes it readable as "how old is what the entities show".
+        # When the setup view last answered, which is the age of everything
+        # above. Only a success moves it. See docs/decisions.md.
         self.last_poll: datetime | None = None
 
         self._dump_json = False
@@ -178,9 +144,8 @@ class CozytouchAccount:
     def rate_limit(self) -> int | None:
         """What the account declares its own limit to be, if it said.
 
-        The units are still unknown -- docs/api-surface.md has the detail --
-        so this is read as requests per minute and only ever as a ceiling,
-        which is the most conservative reading the evidence does not contradict.
+        Units unknown ; read as requests per minute and only as a ceiling. See
+        docs/decisions.md.
         """
         rateLimit = self.setup.get("rateLimit")
         return rateLimit if isinstance(rateLimit, int) else None
@@ -193,30 +158,20 @@ class CozytouchAccount:
     def _note_rate_limited(self, response, what: str) -> float:
         """Stop asking for a while, and write down everything the 429 said.
 
-        Deliberately does **not** touch `online`. Every other failure here
-        drops the connection so the next poll re-authenticates, which for a 429
-        is exactly backwards : the token is fine, and reconnecting spends a
-        `POST /users/token` and a `GET setupviewv2` on an account that just
-        asked for *fewer* requests. Repeated failed logins are also the one
-        thing that can lock an account out (docs/api-surface.md), so answering
-        a throttle with a login loop is the worst move available.
+        Deliberately does **not** touch `online`. See docs/decisions.md.
         """
         retry_after = RATE_LIMIT_BACKOFF
         header = response.headers.get("Retry-After")
         if header:
             try:
-                # Seconds, per RFC 9110. It also allows an HTTP-date, which no
-                # gateway seen here sends; a value that is not a number falls
-                # back to the default rather than throwing inside a poll.
+                # Seconds, per RFC 9110. See docs/decisions.md.
                 retry_after = max(0.0, float(header.strip()))
             except ValueError:
                 _LOGGER.debug("Unparsed Retry-After: %s", header)
 
         self._backoff_until = datetime.now(UTC).timestamp() + retry_after
 
-        # At warning level on purpose. Nobody has ever captured a 429 from
-        # Atlantic, so the first person to see one is holding the only evidence
-        # that would say what `rateLimit: 30` actually counts.
+        # At warning level on purpose. See docs/decisions.md.
         _LOGGER.warning(
             "Rate limited by Atlantic on %s ; backing off %.0fs. Headers: %s",
             what,
@@ -233,27 +188,13 @@ class CozytouchAccount:
     async def connect(self) -> bool:
         """Log in and read the setup view, unless somebody already did.
 
-        Idempotent on purpose : `online` is the whole reconnect mechanism, and
-        every hub on the account flips it and calls this. Re-checking it once
-        the lock is held is what keeps a *successful* reconnect from costing
-        one login per device -- five coordinators on one beat make one request.
-
-        It does not collapse a failing one : a failure leaves `online` False,
-        so each waiter in turn takes the lock, sees that, and tries again.
-        That is deliberate for a network failure -- retrying is the answer --
-        and wrong for a refused password, which no number of attempts fixes
-        and which repeated *failed* logins could get an account locked out
-        for (docs/api-surface.md). So `InvalidAuth` is the one exception this
-        does **not** fold into `online = False`: it propagates, and
-        `connect_or_auth_failed` turns it into the signal that stops the
-        retrying rather than scheduling more of it.
+        Idempotent, and `InvalidAuth` propagates rather than folding into
+        `online = False`. See docs/decisions.md.
         """
         if self.online:
             return True
 
-        # Checked before the lock and before the login : a reconnect is two
-        # requests, one of them the kind that locks accounts out, and an
-        # account that has just been throttled is the last one to spend them.
+        # Before the lock and before the login. See docs/decisions.md.
         if self.backoff_remaining:
             _LOGGER.debug(
                 "Not reconnecting for another %.0fs, rate limited",
@@ -272,9 +213,7 @@ class CozytouchAccount:
             except CannotConnect:
                 self.online = False
             except CozytouchRateLimited:
-                # The token was spent and the setup view refused. Nothing to
-                # retry now -- the backoff `_note_rate_limited` armed is what
-                # keeps the next caller from spending another one.
+                # The backoff armed above is what stops the next caller.
                 self.online = False
             except (TimeoutError, ClientError) as err:
                 _LOGGER.warning("connect: network error: %s", why(err))
@@ -285,14 +224,8 @@ class CozytouchAccount:
     async def connect_or_auth_failed(self) -> bool:
         """connect(), with a refused password raised rather than returned.
 
-        `ConfigEntryAuthFailed` is what Home Assistant acts on : it opens the
-        reauth dialog, and `_async_refresh` stops rescheduling the coordinator
-        that raised it -- which is what turns "retry the rejected password
-        every minute for as long as the installation runs" into "ask once".
-
-        The two callers -- setup and the poll -- differ only in what they make
-        of a plain False, so the translation that has to be identical lives
-        here and the retry semantics stay with them.
+        `ConfigEntryAuthFailed` is what opens the reauth dialog and stops the
+        coordinator rescheduling. See docs/decisions.md.
         """
         try:
             return await self.connect()
@@ -321,11 +254,8 @@ class CozytouchAccount:
         ) as response:
             token = await response.json()
 
-            # The one answer that means the credentials are wrong. OAuth2
-            # spells it invalid_grant and Atlantic uses the standard spelling.
-            # Anything else malformed is a bad response, not a bad password:
-            # telling somebody their password is wrong because the gateway
-            # hiccuped sends them off to reset a password that was fine.
+            # The one answer that means the credentials are wrong ; anything
+            # else malformed is a bad response. See docs/decisions.md.
             if token.get("error") == "invalid_grant":
                 raise InvalidAuth
 
@@ -347,9 +277,8 @@ class CozytouchAccount:
             headers=self._headers(),
             timeout=REQUEST_TIMEOUT,
         ) as response:
-            # Not CannotConnect, which `connect()` and `refresh_setup` both
-            # answer by dropping `online` -- the very reconnect a 429 must not
-            # provoke. It has to stay distinguishable all the way up.
+            # Not CannotConnect, whose answer is the reconnect a 429 must not
+            # provoke. See docs/decisions.md.
             if response.status == 429:
                 retry_after = self._note_rate_limited(response, "the setup view")
                 raise CozytouchRateLimited(
@@ -381,20 +310,7 @@ class CozytouchAccount:
     async def refresh_setup(self) -> None:
         """Re-read the setup view, which is the poll.
 
-        The same request `connect()` makes, called on a beat rather than once :
-        it carries a capability list for **every** device on the account
-        (`update_devices_from_json_data` keeps all of them), so one request
-        refreshes the whole account where the per-device route refreshes one
-        device. It also carries `absence`, which lives nowhere else -- an away
-        window set in the Cozytouch app used to wait for a reconnect to be
-        seen.
-
-        What it does not carry is proof of being as fresh as
-        `/magellan/capabilities/`. The two are the same three fields
-        (docs/api-surface.md) and the integration has always built its entities
-        from this payload at startup, but nobody has compared their latency.
-        `modificationDate` is in both and read by neither, so the measurement
-        is there to be made -- `scripts/probe_api.py --cadence` makes it.
+        One request refreshes the whole account. See docs/decisions.md.
         """
         if self.backoff_remaining:
             raise CozytouchRateLimited(
@@ -415,9 +331,7 @@ class CozytouchAccount:
     def check_token(self) -> None:
         """Drop the connection when the token is spent, so the next poll re-auths.
 
-        There is no separate retry loop anywhere : flipping `online` is how
-        every failure path here asks for a reconnect, and an expiry is just
-        another one, seen a minute early.
+        Flipping `online` is how every failure path here asks for a reconnect.
         """
         if self.online and datetime.now(UTC).timestamp() >= self._token_expiry:
             _LOGGER.info("Token expired or about to expire, re-authenticating")
@@ -432,8 +346,8 @@ class CozytouchAccount:
                 json_object = json.dumps(json_data, indent=4)
                 outfile.write(json_object)
 
-        # Refreshed on every setup view, not just the first: renaming a zone in
-        # the Cozytouch app has to reach the entity names it feeds.
+        # Refreshed on every setup view, not just the first : a zone renamed
+        # in the app has to reach the entity names it feeds.
         if "zones" in json_data[0]:
             self.zones = copy.deepcopy(json_data[0]["zones"])
 
@@ -474,35 +388,22 @@ class CozytouchAccount:
                 self.devices.append(device)
                 deviceIndex = len(self.devices) - 1
 
-            # Refreshed on every setup view rather than set once at creation:
-            # isAvailable moves as a device drops off the gateway, and a device
-            # renamed in the app should not keep its old longName.
+            # Refreshed rather than set once at creation : isAvailable moves.
             for field in API_DECLARED_FIELDS:
                 self.devices[deviceIndex][field] = remote_device.get(field)
 
-            # Every device, not just the one that asked. The setup view carries
-            # capabilities for all of them and this used to drop all but one,
-            # which cost the account a per-device poll before its entities could
-            # be built -- and left a diagnostics dump describing the hardware
-            # nobody has mapped yet without the capability ids that are the
-            # whole point of the dump.
+            # Every device, not just the one that asked. See
+            # docs/decisions.md.
             if "capabilities" in remote_device:
                 self.devices[deviceIndex]["capabilities"] = copy.deepcopy(
                     remote_device["capabilities"]
                 )
 
     async def fetch_capabilities(self, deviceId: int) -> list:
-        """GET the capability list of one device.
+        """GET the capability list of one device, to confirm a write.
 
-        No longer the beat -- `refresh_setup` is, and it covers every device at
-        once. This is what confirms a write on the device that was written to,
-        where re-reading the whole household to check one setpoint would be
-        absurd.
-
-        Raises rather than returning a sentinel : the caller is a coordinator,
-        and an empty list is a legitimate answer that must not read as a
-        failure. Every failure but a 429 also drops `online`, which is what
-        asks for the reconnect.
+        Raises rather than returning a sentinel, since an empty list is a
+        legitimate answer. See docs/decisions.md.
         """
         if self.backoff_remaining:
             raise CozytouchRateLimited(
@@ -525,8 +426,7 @@ class CozytouchAccount:
                     )
 
                 # Before the generic branch below, and without dropping the
-                # session : a 429 is the one status that must not be answered
-                # with a reconnect.
+                # session. See docs/decisions.md.
                 if response.status == 429:
                     retry_after = self._note_rate_limited(response, "the capabilities")
                     raise CozytouchRateLimited(
@@ -582,17 +482,8 @@ class CozytouchAccount:
     ) -> bool:
         """Write one capability, and wait for the execution to complete.
 
-        A write is not fire-and-forget : the POST answers with an execution id,
-        and the state of that execution is polled -- once immediately, then up
-        to five more times a second apart -- until it reports 3. Returning
-        False means the local value must stay as it was, and the next poll will
-        say what actually happened.
-
-        Attempted even while the account is backing off from a 429, unlike the
-        polls : somebody just pressed a button, and refusing to send it because
-        a *reader* was throttled would be a worse answer than letting the
-        server refuse it. A 429 here still arms the backoff, so the readers
-        learn from a write's rejection.
+        Attempted even while the account is backing off, unlike the polls. See
+        docs/decisions.md.
         """
         try:
             async with self._session.post(
@@ -631,10 +522,8 @@ class CozytouchAccount:
                     headers=self._headers(),
                     timeout=REQUEST_TIMEOUT,
                 ) as response:
-                    # This loop is the burstiest thing the integration does --
-                    # up to six requests in five seconds for one button press
-                    # -- so it is the likeliest place to meet the limit, and
-                    # the last place to keep hammering after meeting it.
+                    # The burstiest loop here, so the last place to keep
+                    # hammering after a 429. See docs/decisions.md.
                     if response.status == 429:
                         self._note_rate_limited(response, "an execution poll")
                         return False
@@ -667,12 +556,7 @@ class CozytouchAccount:
             await asyncio.sleep(1)
 
     async def set_absence(self, timestampStart, timestampEnd) -> bool:
-        """PUT the absence window on the setup.
-
-        Away mode is the one feature that is not a capability write alone : the
-        window lives on the setup, a resource of the account rather than of a
-        device, which is why it is here and not on the hub.
-        """
+        """PUT the absence window on the setup, which is the account's."""
         json_data = {
             key: copy.deepcopy(self.setup[key])
             for key in SETUP_WRITABLE_FIELDS
@@ -711,18 +595,7 @@ class CozytouchAccount:
     def device_summaries(self) -> list[dict]:
         """The devices worth offering to somebody adding this integration.
 
-        Zones are left out. A THZONE is one zone of a ducted heat pump, not
-        hardware: it reports no climate capability, no setpoint, and two ids
-        that resolve to nothing, so adding it would create a device with an
-        empty page behind it. Ignoring it outright is the honest answer --
-        there is nothing to drive and nothing to read.
-
-        The model comes from the table rather than from the `modelInfos` filled
-        in when a device first appeared: the same lookup every other caller
-        makes, and the name a zone is recognised *by* can change under a cached
-        one. The raw setup view still holds the zones, and the `dump_json`
-        option writes it out, which is the way back if anybody needs to see
-        what one reports.
+        Zones are left out. See docs/decisions.md.
         """
         summaries = []
         for dev in self.devices:
@@ -743,11 +616,7 @@ class CozytouchAccount:
     def get_zone_name(self, zoneId: int | None) -> str | None:
         """What the account calls a zone, or None when it does not name it.
 
-        None rather than the id as a string, which is what this used to answer.
-        Every caller puts the result in front of somebody -- a device name, a
-        line in a diagnostics dump -- and "Zone (1030104)" is a worse name than
-        no name at all: the id is ours to join on, not a room anybody
-        recognises. The callers decide what to show instead.
+        None rather than the id as a string. See docs/decisions.md.
         """
         for zone in self.zones:
             if "id" in zone and zone["id"] == zoneId:
@@ -758,16 +627,12 @@ class CozytouchAccount:
     def get_unmapped_models(self) -> list[int]:
         """Every model id on the account the table has no branch for.
 
-        The whole account rather than one device : the setup view lists them
-        all, and one report that covers everything is one issue for the person
-        who has to write it, instead of one per device.
+        The whole account rather than one device, and through the name-aware
+        lookup so a zone is not reported. See docs/decisions.md.
         """
         unmapped = {
             dev["modelId"]
             for dev in self.devices
-            # The name, because a zone is recognised by it rather than by an
-            # id: without it a THZONE reads as an unknown product and the
-            # repair asks for a dump about it, once per zone.
             if get_device_model_infos(self.devices, dev).type
             is CozytouchDeviceType.UNKNOWN
         }
@@ -780,12 +645,7 @@ class CannotConnect(exceptions.HomeAssistantError):
 
 
 class InvalidAuth(exceptions.HomeAssistantError):
-    """Error to indicate the account refused the username and password.
-
-    Distinct from CannotConnect because the two want opposite handling:
-    CannotConnect is retried until the network comes back, InvalidAuth never
-    resolves without somebody typing a new password.
-    """
+    """Error to indicate the account refused the username and password."""
 
 
 class CozytouchApiError(exceptions.HomeAssistantError):
@@ -795,11 +655,8 @@ class CozytouchApiError(exceptions.HomeAssistantError):
 class CozytouchRateLimited(CozytouchApiError):
     """Error to indicate Atlantic asked for fewer requests, not for none.
 
-    A subclass, so a caller that only cares that the call failed keeps
-    working. What it adds is `retry_after` and, more importantly, what it does
-    *not* do : unlike every other failure here it leaves `online` alone,
-    because the session is fine and reconnecting would spend two more requests
-    answering a complaint about spending requests.
+    Leaves `online` alone, unlike every other failure here. See
+    docs/decisions.md.
     """
 
     def __init__(self, message: str, retry_after: float) -> None:

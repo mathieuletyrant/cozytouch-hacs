@@ -1,9 +1,7 @@
 """Config flow for Atlantic Cozytouch integration.
 
-One entry per Atlantic account, one subentry per device on it. The account is
-what the credentials buy -- one login, one setup view -- and the devices are
-what somebody actually wants entities for, added at setup time or later from
-the integration page.
+One entry per Atlantic account, one subentry per device on it. See
+docs/decisions.md.
 """
 from __future__ import annotations
 
@@ -48,13 +46,8 @@ SUBENTRY_TYPE = "device"
 async def validate_input(hass: HomeAssistant, data: dict) -> CozytouchAccount:
     """Validate the user input allows us to connect.
 
-    Data has the keys from DATA_SCHEMA with values provided by the user.
-
-    Raises InvalidAuth when the account refused the credentials -- it comes
-    straight out of `connect()`, which is the one failure it does not swallow
-    -- and CannotConnect when the account could not be asked. The caller shows
-    a different message for each, since "check your password" is unhelpful
-    advice during an outage.
+    InvalidAuth for a refused password, CannotConnect for an account that could
+    not be asked ; the caller says something different for each.
     """
     account = CozytouchAccount(hass, data["username"], data["password"])
     if not await account.connect():
@@ -68,10 +61,7 @@ def _device_options(
 ) -> list[selector.SelectOptionDict]:
     """The devices left to add, as a picker lists them.
 
-    Only the device id travels in the option value. It used to be a whole dict
-    -- credentials included -- serialised with `str()` and read back with
-    `ast.literal_eval`, which put the account password in the form the browser
-    posts.
+    Only the device id travels in the option value. See docs/decisions.md.
     """
     return [
         selector.SelectOptionDict(
@@ -226,10 +216,7 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Start over from a password Atlantic no longer accepts.
 
-        Home Assistant calls this when setup or a poll raises
-        ConfigEntryAuthFailed. Before that path existed, a changed Cozytouch
-        password left the account retrying the old one for as long as the
-        installation ran, saying only that it could not connect.
+        Called when setup or a poll raises ConfigEntryAuthFailed.
         """
         return await self.async_step_reauth_confirm()
 
@@ -238,10 +225,8 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Ask for the password again, and check it before storing it.
 
-        One entry per account, so this is one dialog and one write. It is also
-        why there is no loop over sibling entries here: the credentials exist
-        in exactly one place, and reloading that entry brings every device on
-        the account back with it.
+        One entry per account, so one dialog and one write. See
+        docs/decisions.md.
         """
         entry = self._get_reauth_entry()
         errors: dict[str, str] = {}
@@ -289,10 +274,7 @@ class DeviceSubentryFlowHandler(ConfigSubentryFlow):
         """Pick a device the account has and this entry does not."""
         entry = self._get_entry()
 
-        # Read once, on the way in, and remember it across the submit : the
-        # step is re-entered to answer the form, and logging in again to
-        # resolve the id somebody just picked would double the cost of adding
-        # a device for nothing.
+        # Read once and kept across the submit. See docs/decisions.md.
         if self._devices is None:
             try:
                 account = await validate_input(self.hass, dict(entry.data))
@@ -340,12 +322,7 @@ class DeviceSubentryFlowHandler(ConfigSubentryFlow):
 class OptionsFlowHandler(OptionsFlow):
     """Handles the options of a Cozytouch account.
 
-    All three are account-wide. `dump_json` always was -- there is one
-    `Cozytouch.json` -- `create_unknown` follows it rather than earning a
-    reconfigure flow per device for a setting used to work out what a value
-    means, and `poll_interval` has to be : there is one poll for the account
-    now, so a per-device interval would describe something that does not
-    exist.
+    All three are account-wide. See docs/decisions.md.
     """
 
     def _current(self, key: str, default: Any = False) -> Any:

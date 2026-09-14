@@ -19,20 +19,9 @@ from .model import CozytouchDeviceType
 # one place they part is 100506, below.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
-# Capabilities the device uses to describe itself: what it supports, what its
-# scheduler allows, which controls exist. The name below is everything that is
-# known about each one, it was not read off this hardware, and any of them can
-# turn out to be wrong: none says what the unit is, how the value is encoded, or
-# how to read a bitmask.
-#
-# So they are surfaced as raw strings under a real name and switched off by
-# default: there for anyone investigating their own hardware, invisible to
-# everyone else. A device reports dozens of these, and turning them all on for
-# every user would bury the handful of entities that mean something.
-#
-# Promoting one to a typed entity takes someone watching it change against the
-# Cozytouch app and reporting what it does. Until then, the honest thing is to
-# show the value and not claim to know what it is.
+# Capabilities the device uses to describe itself. The name is everything that
+# is known about each one, so they are surfaced as raw strings and switched off
+# by default. See docs/decisions.md.
 SELF_DESCRIBING_CAPABILITIES = {
     73: "available_thermostat_modes",
     93: "zones_count",
@@ -162,18 +151,10 @@ _SPEED_SETS = {
     "4": "on, auto",
 }
 
-# What the numbers in the table above mean. The ventilation control and option
-# masks the app also carries are deliberately absent: on the captures a tenth
-# of their readings set a bit past the last member the app names (128 on
-# 100004/100021, 104 on 100002, and 124 on 224's single-bit mask), so either
-# those ids are not what the app calls them or the enum read out of it is
-# partial. Naming the low bits of a mask whose top bits are unexplained is how
-# a wrong reading gets believed.
-# The vendor's Android app decodes
-# them in plain Kotlin, and every entry here was read off it and then checked
-# against the capture corpus -- see docs/decisions.md. A member can claim
-# several bits at once, which is how the app reads them: it matches on any bit
-# of the member's mask, not on the whole of it.
+# What the numbers in the table above mean, read off the vendor's Android app
+# and checked against the capture corpus. A member can claim several bits at
+# once, and the app matches on any bit of the member's mask. Which masks were
+# deliberately left out, and why, is in docs/decisions.md.
 CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
     164: (
         (1, "gas_heating"),
@@ -827,17 +808,9 @@ def get_capability_infos(  # noqa: C901
             capability.enabled_by_default = False
 
     elif capabilityId == 218:
-        # `wifiConnected` by name, but not the boolean it looks like. Every
-        # capture reads "0" (occasionally "4") and never "1", so the connected
-        # sensor -- is_on is value == "1" -- sat permanently at "disconnected"
-        # on hardware that was plainly online, and every unit behind a gateway
-        # reported it too though only the gateway has a radio. The app does not
-        # surface it: it reads a device's `isAvailable` for connectivity. The
-        # 0/4 encoding is unknown (see docs/decisions.md), so it is shown raw
-        # and off by default rather than as a flag that is always wrong.
-        #
-        # A zone still gets nothing at all: it has no readings, and the
-        # fall-through would give it a lone disabled sensor.
+        # `wifiConnected` by name, but never the boolean it looks like : shown
+        # raw and off by default. See docs/decisions.md. A zone gets nothing at
+        # all, having no readings to go with it.
         if modelInfos.type is CozytouchDeviceType.ZONE:
             return CapabilityInfos()
 

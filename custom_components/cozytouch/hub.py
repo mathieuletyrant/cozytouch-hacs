@@ -31,25 +31,9 @@ from .model import CozytouchDeviceType, get_device_model_infos, get_model_infos
 
 _LOGGER = logging.getLogger(__name__)
 
-# How often the account asks Atlantic for the setup view.
-#
-# 30 seconds where every version of this integration has said 60, and it costs
-# *less* : the setup view carries every device, so this is two requests a
-# minute whatever the account holds, where the per-device poll it replaces was
-# one per device per minute -- five for the gateway-plus-four-units account in
-# docs/api-surface.md. Anything from three devices up is now both cheaper and
-# twice as fresh.
-#
-# 30 is also what the account's own `rateLimit` says, which is the one reading
-# of that field nothing contradicts. That is a coincidence worth naming and
-# not evidence: `rate_limit` is used as a ceiling below, never as the source
-# of this number.
+# How often the account asks Atlantic for the setup view, and the bounds the
+# option is held between. See docs/decisions.md.
 DEFAULT_POLL_INTERVAL = 30
-
-# Below this, the requests stop buying anything : Atlantic's cloud learns from
-# the hardware on its own schedule, and no amount of asking makes a radiator
-# report sooner. Kept as a floor on the option rather than as advice in a
-# docstring nobody reads while typing 5.
 MIN_POLL_INTERVAL = 15
 MAX_POLL_INTERVAL = 600
 
@@ -58,38 +42,24 @@ POLL_INTERVAL_OPTION = "poll_interval"
 
 @dataclass
 class CozytouchRuntimeData:
-    """What a loaded config entry carries.
-
-    One account -- one login, one setup view, one poll -- and one hub per
-    device, keyed by the subentry that device was added as. The subentry id is
-    also the identity every entity of that device is registered under, so this
-    mapping is what turns "which entity" into "which device" everywhere else.
-    """
+    """One account, and one hub per device, keyed by the device's subentry."""
 
     account: CozytouchAccount
     hubs: dict[str, Hub]
     coordinator: AccountCoordinator
 
-# The capability carrying the firmware version, named `version` by
-# capability.py. Read by id here because the device registry wants a string on
-# the device, not an entity somewhere in the list.
+# The firmware version, which the device registry wants as a string on the
+# device rather than as an entity somewhere in the list.
 SOFTWARE_VERSION_CAPABILITY_ID = 121
 
-
-# A config entry that carries its account and hubs, so platforms can read them
-# off the entry instead of looking them up in hass.data by id.
 type CozytouchConfigEntry = ConfigEntry[CozytouchRuntimeData]
 
 
 def poll_interval(entry: ConfigEntry, rate_limit: int | None) -> timedelta:
     """How often to poll, from the option and what the account will allow.
 
-    The ceiling is `rateLimit` read as requests per minute. Nobody knows that
-    is what it counts -- docs/api-surface.md says so plainly -- but of the
-    readings that a working 60-second-per-device poll does not already
-    disprove, it is the strictest, and a ceiling wants the strictest. On the
-    one account ever captured it is 30, which permits everything down to the
-    floor and so never bites; on an account that declares 1, it does.
+    The ceiling is `rateLimit` read as requests per minute. See
+    docs/decisions.md.
     """
     seconds = entry.options.get(
         POLL_INTERVAL_OPTION,
@@ -123,17 +93,8 @@ def poll_interval(entry: ConfigEntry, rate_limit: int | None) -> timedelta:
 class AccountCoordinator(DataUpdateCoordinator):
     """The one thing on a beat : re-read the setup view, tell every hub.
 
-    This used to be a coordinator per device, each fetching
-    `/magellan/capabilities/?deviceId=` for its own -- N requests a minute for
-    N devices. But the setup view answers for the whole account in one request
-    (`account.refresh_setup`), which is why that shape was worth changing : the
-    same budget buys N times the frequency, and the cost stops growing with the
-    number of devices somebody ticked at setup.
-
-    The hubs stay coordinators, with no schedule of their own. They are pushed
-    to from here, which keeps every entity a `CoordinatorEntity` of its own
-    device -- one device failing still shows as that device failing -- and
-    leaves `async_request_refresh()` after a write working as it did.
+    The hubs stay coordinators with no schedule of their own, and are pushed to
+    from here. See docs/decisions.md.
     """
 
     def __init__(
@@ -143,18 +104,11 @@ class AccountCoordinator(DataUpdateCoordinator):
         config_entry: ConfigEntry,
         hubs: dict[str, Hub],
     ) -> None:
-        """Init the account coordinator.
-
-        The hubs are a constructor argument rather than something attached
-        afterwards : a coordinator that polls before it knows who to tell would
-        spend a request and drop the answer, and there is no moment in setup
-        where that state is useful.
-        """
+        """Init the account coordinator."""
         super().__init__(
             hass,
             _LOGGER,
-            # Not the username, which is the obvious id and an email address :
-            # this name reaches every debug line the coordinator writes.
+            # Not the username : this name reaches every debug line written.
             config_entry=config_entry,
             name="Cozytouch_" + config_entry.entry_id,
             update_interval=poll_interval(config_entry, account.rate_limit),
@@ -162,11 +116,8 @@ class AccountCoordinator(DataUpdateCoordinator):
         self._account = account
         self._hubs = hubs
 
-        # Subscribed to itself, because nothing else ever is : every entity
-        # listens to its hub, and Home Assistant books a coordinator's next
-        # refresh only while it has at least one listener. Without this the
-        # interval above is dead letter -- setup's one refresh runs and no
-        # poll ever follows it.
+        # Without a listener of its own, this coordinator never reschedules
+        # and no poll follows setup's first one. See docs/decisions.md.
         self.async_add_listener(lambda: None)
 
     async def _async_update_data(self) -> None:
@@ -174,10 +125,6 @@ class AccountCoordinator(DataUpdateCoordinator):
         self._account.check_token()
 
         if not self._account.online:
-            # ConfigEntryAuthFailed passes straight through the coordinator,
-            # which answers it by opening a reauth dialog and by not
-            # rescheduling itself. UpdateFailed would only book another attempt
-            # with the same rejected password.
             if not await self._account.connect_or_auth_failed():
                 self._publish_error(UpdateFailed("Cannot connect to Atlantic"))
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
@@ -189,11 +136,7 @@ class AccountCoordinator(DataUpdateCoordinator):
         try:
             await self._account.refresh_setup()
         except CozytouchRateLimited as err:
-            # Not an UpdateFailed : being asked to slow down is not the same as
-            # having failed, and marking every entity unavailable because the
-            # account is a few seconds ahead of its budget would be a worse lie
-            # than a value that is one poll old. The values stand, and the next
-            # tick will find the backoff still holding and skip in turn.
+            # Not an UpdateFailed : see docs/decisions.md.
             _LOGGER.debug("Poll skipped, backing off : %s", err)
             return
         except CozytouchApiError as err:
@@ -208,24 +151,15 @@ class AccountCoordinator(DataUpdateCoordinator):
             await hub.async_account_updated()
 
     def _publish_error(self, err: Exception) -> None:
-        """Mark every device unavailable, since the account they share failed.
-
-        The failure belongs to the account, so it reaches the entities through
-        the hub each of them listens to rather than through a coordinator none
-        of them has.
-        """
+        """Mark every device unavailable, since the account they share failed."""
         for hub in self._hubs.values():
             hub.async_set_update_error(err)
 
 def as_epoch(value) -> int | None:
     """A modificationDate as an int, or None when it says nothing.
 
-    Anything missing, unparsable or at or below zero comes back None rather
-    than as a date in 1970. The field is undocumented -- there is no catalogue
-    to check it against, docs/api-surface.md says so -- so what it holds on
-    hardware nobody has captured is a guess, and a wrong timestamp on a
-    dashboard is worse than an empty one. A string is tolerated because `value`
-    arrives from this API as one, which makes a stringified date unsurprising.
+    Missing, unparsable or at or below zero all read as None rather than as a
+    date in 1970. See docs/decisions.md.
     """
     try:
         epoch = int(float(value))
@@ -251,18 +185,11 @@ def device_of(hub, deviceId: int | None = None) -> dict | None:
 class Hub(DataUpdateCoordinator):
     """One device of an Atlantic Cozytouch account.
 
-    The account -- the session, the token, the setup view, the list of devices,
-    and now the poll -- lives in `account.py` and is shared. What is left here
-    is per device: which capability ids this one reports, what its model makes
-    of them, and the away-mode window staged before it is committed.
-
-    Still a coordinator, and deliberately so : every entity is a
-    `CoordinatorEntity` of the device it belongs to, so a device can be
-    unavailable on its own. What it no longer has is a schedule.
-    `update_interval=None` means it never fires by itself; it is pushed to by
-    `AccountCoordinator`, and it fetches on its own only when something asks --
-    `async_request_refresh()` after a write, which is what makes a setpoint
-    appear without waiting for the account's next tick.
+    The session, the token, the setup view and the poll are the account's and
+    live in `account.py`. What is left here is per device : which capability
+    ids it reports, what its model makes of them, and the away-mode window
+    staged before it is committed. A coordinator with `update_interval=None`,
+    pushed to by `AccountCoordinator`. See docs/decisions.md.
     """
 
     manufacturer = "Atlantic Group"
@@ -290,9 +217,8 @@ class Hub(DataUpdateCoordinator):
         self._deviceId = deviceId
         self._create_unknown = False
 
-        # Staged rather than sent : editing the start or the end of the away
-        # window stamps the change, and _async_update_data commits it once the
-        # stamp is more than 20 seconds old, so both ends can be set first.
+        # Staged rather than sent, so both ends can be set before either is
+        # committed. See docs/decisions.md.
         self._timestamp_away_mode_last_change = None
         self._timestamp_away_mode_start = None
         self._timestamp_away_mode_end = None
@@ -305,11 +231,7 @@ class Hub(DataUpdateCoordinator):
 
     @property
     def subentry_id(self) -> str | None:
-        """The subentry this device was added as.
-
-        It is the identity of the device everywhere it is visible : the device
-        registry entry, and the unique id of every entity built from it.
-        """
+        """The subentry this device was added as, and so the device's identity."""
         return self._subentry_id
 
     @property
@@ -328,10 +250,7 @@ class Hub(DataUpdateCoordinator):
     async def async_account_updated(self) -> None:
         """The account has a fresh setup view; publish it as this device's data.
 
-        Called by `AccountCoordinator` rather than by a clock. The setup view
-        it just read carries this device's capability list along with every
-        other one, so there is nothing left to fetch -- the values are already
-        on `account.devices` and what remains is to tell the entities.
+        Nothing left to fetch : the values are already on `account.devices`.
         """
         await self._commit_staged_away_mode()
         self.async_set_updated_data(None)
@@ -339,10 +258,8 @@ class Hub(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Fetch this one device, for a refresh that could not wait.
 
-        No longer the beat -- `AccountCoordinator` is -- so this runs when
-        `async_request_refresh()` asks, which is after a write. Re-reading the
-        whole account to confirm one setpoint would be the wrong trade at this
-        one moment, which is why the per-device route survives its demotion.
+        Runs when `async_request_refresh()` asks, which is after a write. See
+        docs/decisions.md.
         """
         _LOGGER.debug("_async_update_data %d", self._deviceId)
 
@@ -350,24 +267,17 @@ class Hub(DataUpdateCoordinator):
         self._account.check_token()
 
         if not self._account.online:
-            # ConfigEntryAuthFailed passes straight through the coordinator,
-            # which answers it by opening a reauth dialog and by not
-            # rescheduling itself. UpdateFailed would only book another attempt
-            # with the same rejected password.
             if not await self._account.connect_or_auth_failed():
                 raise UpdateFailed("Cannot connect to Atlantic Cozytouch API")
 
-            # A reconnect re-reads the setup view, which carries the capability
-            # list of every device, so this round has nothing left to fetch.
+            # A reconnect re-reads the setup view, so this round is done.
             await self._commit_staged_away_mode()
             return
 
         try:
             capabilities = await self._account.fetch_capabilities(self._deviceId)
         except CozytouchRateLimited:
-            # Keep the values and stay available : the account is throttled,
-            # not broken, and the next account poll will bring this device
-            # along with the others once the backoff lifts.
+            # Throttled, not broken : keep the values and stay available.
             return
         except CozytouchApiError as err:
             raise UpdateFailed(str(err)) from err
@@ -378,14 +288,8 @@ class Hub(DataUpdateCoordinator):
     async def _commit_staged_away_mode(self) -> None:
         """Send the away window once both ends have stopped moving.
 
-        Editing the start or the end stages the value and stamps it; this
-        commits it when that stamp is more than 20 seconds old, so somebody can
-        set both ends before either is sent. It used to hang off this hub's own
-        60-second poll, which no longer exists -- so it runs on every path that
-        now stands in for it, the account's tick and a post-write refresh
-        alike. Hanging it off one of them would have made the delay depend on
-        which, and hanging it off neither would have made a staged window sit
-        there for good.
+        Called from every path that can refresh this device, so the delay does
+        not depend on which. See docs/decisions.md.
         """
         if (
             self._timestamp_away_mode_last_change is None
@@ -439,11 +343,7 @@ class Hub(DataUpdateCoordinator):
         )
 
     def get_model_id(self, deviceId: int | None = None) -> int | None:
-        """The model id the API reports, which is what the mapping is keyed on.
-
-        get_model_infos answers what the table made of it; this answers what
-        the device said, which is what a bug report has to carry.
-        """
+        """The model id the API reports, which is what the mapping is keyed on."""
         dev = device_of(self, deviceId)
         return dev["modelId"] if dev else None
 
@@ -455,24 +355,16 @@ class Hub(DataUpdateCoordinator):
     def get_software_version(self) -> str | None:
         """The firmware version the device reports about itself, if it does.
 
-        Only for the device this entry drives: capabilities are kept for that
-        one alone. Devices that do not report 121 -- the gateways among them --
-        get None, which leaves the registry field empty rather than filling it
-        with a guess.
+        None for a device that does not report 121, the gateways among them,
+        which leaves the registry field empty rather than guessing.
         """
         return self.get_capability_value(SOFTWARE_VERSION_CAPABILITY_ID, None)
 
     def get_via_device(self, deviceId: int | None = None) -> tuple[str, str] | None:
         """Identifiers of the gateway this device hangs off, when HA has it.
 
-        The API declares the topology itself: every room unit and thermal zone
-        on the account carries the gateway's id in masterDeviceId. Home
-        Assistant can only draw the link if the gateway was added too, since a
-        device here is registered under the subentry it was added as -- so this
-        returns None for a gateway, and for a child whose gateway nobody added.
-
-        None rather than a guess matters: HA logs a warning when via_device
-        names a device that is not in the registry.
+        None for a gateway, and for a child whose gateway nobody added. See
+        docs/decisions.md.
         """
         dev = device_of(self, deviceId)
         masterDeviceId = dev.get("masterDeviceId") if dev else None
@@ -533,9 +425,8 @@ class Hub(DataUpdateCoordinator):
         """Split what a device reports into what the mapping names and what it
         does not.
 
-        The second half is what a bug report about an unmapped model is made
-        of, and it is read both by the diagnostics dump and by the repair that
-        asks for one -- so the rule for "named" lives here rather than in each.
+        Read by the diagnostics dump and by the repair that asks for one, so
+        the rule for "named" lives here rather than in each.
         """
         dev = device_of(self, deviceId)
         if dev is None:
@@ -562,22 +453,9 @@ class Hub(DataUpdateCoordinator):
     def get_diagnostics(self) -> dict:
         """Describe the account as the API reports it, for a diagnostics dump.
 
-        Every device the setup returns is listed, whether or not somebody
-        added it, because what a mapping needs first is the model ids a user
-        actually owns -- and with the capability ids to go with them, since the
-        setup view carries a capability list for every device on the account
-        and the account keeps all of them.
-
-        Those lists are all as fresh as each other now that the setup view is
-        the poll : a device nobody added is refreshed on the same tick as one
-        somebody did, where it used to hold whatever the last reconnect said.
-        Unmapped hardware is exactly what a dump is read for, so it is the half
-        that gained the most.
-
-        `isConfiguredHere` therefore says which devices have entities, and no
-        longer implies anything about freshness. It is a property of the
-        account and not of the hub that happened to be asked : any of them
-        describes the whole thing, and one dump per account is the point.
+        Every device the setup returns, whether or not somebody added it :
+        unmapped hardware is what a dump is read for. A property of the account
+        and not of the hub that happened to be asked. See docs/decisions.md.
         """
         configured = {
             subentry.data.get("deviceId")
@@ -587,10 +465,7 @@ class Hub(DataUpdateCoordinator):
         devices = []
         for dev in self._account.devices:
             modelInfos = get_device_model_infos(self._account.devices, dev)
-            # Zones are not hardware anybody has to map, and a dump is read to
-            # find hardware that is. Listing them put two capability ids that
-            # resolve to nothing -- one of them declined on purpose -- in front
-            # of whoever reads it, which reads exactly like work to do.
+            # Not hardware anybody has to map. See docs/decisions.md.
             if modelInfos.type is CozytouchDeviceType.ZONE:
                 continue
 
@@ -606,9 +481,8 @@ class Hub(DataUpdateCoordinator):
                     "zoneName": self.get_zone_name(dev["zoneId"]),
                     "tags": dev["tags"],
                     "isConfiguredHere": dev["deviceId"] in configured,
-                    # Straight from the API, under the API's own names, so a
-                    # report can be compared against docs/api-surface.md
-                    # without a translation step.
+                    # Under the API's own names, so a report can be compared
+                    # against docs/api-surface.md without a translation step.
                     **{field: dev.get(field) for field in API_DECLARED_FIELDS},
                     "model": {
                         "name": modelInfos.name,
@@ -628,12 +502,9 @@ class Hub(DataUpdateCoordinator):
                             cap["capabilityId"]: cap["value"]
                             for cap in dev["capabilities"]
                         },
-                        # The API's own third field, under the API's own name.
-                        # The values say what a capability holds; these say
-                        # when the device last changed it, which is what tells
-                        # a value that is wrong from an id the hardware never
-                        # feeds at all -- the question every
-                        # unmapped-capability report runs into.
+                        # When the device last changed each value, which is
+                        # what tells a wrong value from an id the hardware
+                        # never feeds at all.
                         "modificationDates": {
                             cap["capabilityId"]: as_epoch(
                                 cap.get("modificationDate")
@@ -665,13 +536,7 @@ class Hub(DataUpdateCoordinator):
         return defaultIfNotExist
 
     def get_capability_modification_date(self, capabilityId: int) -> int | None:
-        """When the device last changed one capability, as the API says.
-
-        `modificationDate` is the third field of every capability item and the
-        one nothing has ever read -- docs/api-surface.md records it as
-        available and unused. It is already here: the poll copies each item
-        whole, so this costs no request.
-        """
+        """When the device last changed one capability, as the API says."""
         dev = device_of(self)
         if dev is None:
             return None
@@ -688,14 +553,8 @@ class Hub(DataUpdateCoordinator):
     def get_last_modification_date(self) -> int | None:
         """The newest modification date this device reports, if it reports one.
 
-        The whole device rather than one capability, because the question this
-        answers is whether the hardware is still talking to Atlantic's cloud --
-        and one capability can legitimately sit unchanged for hours, so the
-        newest of all of them is the only honest reading of "still reporting".
-
-        None means nothing on the device carries a usable date, which is why
-        the sensor built from this is not created at all in that case rather
-        than sitting there empty.
+        The whole device rather than one capability : any one of them can sit
+        unchanged for hours. See docs/decisions.md.
         """
         dev = device_of(self)
         if dev is None:
@@ -711,27 +570,18 @@ class Hub(DataUpdateCoordinator):
     def get_last_poll(self) -> datetime | None:
         """When the integration last heard from the API, as an aware datetime.
 
-        The account's date, not this device's : one setup-view request
-        refreshes every device at once, so every device on the account answers
-        the same. It moves on every successful poll, where
-        `get_last_modification_date` moves only when the hardware changed a
-        value -- the pair is what separates "nothing changed" from "nobody
-        asked".
+        The account's date, not this device's. Paired with
+        `get_last_modification_date`, it separates "nothing changed" from
+        "nobody asked".
         """
         return self._account.last_poll
 
     def get_is_available(self, deviceId: int | None = None) -> bool | None:
         """The cloud's own reachability flag for this device (`isAvailable`).
 
-        Distinct from `online`, which is the account's session: the session can
-        be working while a single device is unavailable, and this is the finer
-        signal. Read raw from the setup view -- the cloud already reflects a
-        child dropping off its gateway here, so no derivation is done on top.
-
-        None when the field is absent (old captures, never a live account), so
-        a missing reading is unknown rather than a guessed connected state. It
-        is not cleared when the session drops : the last value stands, and the
-        cloud-connectivity sensor is what says whether it is still fresh.
+        Finer than `online`, which is the account's session. None when the
+        field is absent, so a missing reading is unknown rather than a guessed
+        connected state, and not cleared when the session drops.
         """
         dev = device_of(self, deviceId)
         return dev.get("isAvailable") if dev else None
@@ -752,9 +602,7 @@ class Hub(DataUpdateCoordinator):
             if capabilityId != capability["capabilityId"]:
                 continue
 
-            # Only on a completed execution : a write that never lands has to
-            # leave the local value alone, and let the next poll say what the
-            # device really did.
+            # Only on a completed execution. See docs/decisions.md.
             if await self._account.write_capability(
                 self._deviceId, capabilityId, value
             ):
@@ -852,10 +700,9 @@ def via_device_info(hass: HomeAssistant, via_device: tuple[str, str]) -> DeviceI
 def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
     """The device every entity of one subentry belongs to.
 
-    One function rather than a copy per entity class, and here rather than on
-    the sensor platform: setup registers every device from this before any
-    platform runs (see docs/decisions.md), so what the registry holds and what
-    the entities later declare are the same description.
+    Setup registers every device from this before any platform runs, so what
+    the registry holds and what the entities declare are the same description.
+    See docs/decisions.md.
     """
     model_name = coordinator.get_model_infos().name
     info = DeviceInfo(
@@ -864,10 +711,8 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
         name=model_name,
         model=model_name,
         serial_number=coordinator.get_serial_number(),
-        # The firmware the device reports (capability 121). It is worth
-        # having on the device rather than only as a diagnostic entity:
-        # "which version is this box on" is the first line of a bug
-        # report, and None here just leaves the field empty.
+        # On the device and not only as a diagnostic entity : "which version
+        # is this box on" is the first line of a bug report.
         sw_version=coordinator.get_software_version(),
     )
     via_device = coordinator.get_via_device()
@@ -878,11 +723,7 @@ def device_info_for(coordinator: Hub, device_uniq_id: str) -> DeviceInfo:
 
 
 class CozytouchDeviceEntity(CoordinatorEntity):
-    """A coordinator entity that belongs to one subentry's device.
-
-    Carried by every platform, so the description is declared once. The copy
-    that was not is in docs/decisions.md.
-    """
+    """A coordinator entity that belongs to one subentry's device."""
 
     _device_uniq_id: str
 
@@ -899,14 +740,9 @@ def add_capability_entities(
 ) -> None:
     """Build one platform's entities from the capabilities each device reports.
 
-    `builders` maps a capability type to what to make of it. A builder is
-    called with the four arguments every entity here takes, and returns either
-    one entity or several -- the away-mode window is one capability and two
-    entities. A capability whose type is not in the map belongs to another
-    platform and is skipped.
-
-    Entities are registered under the subentry their device was added as,
-    which is the identity every unique id is built from.
+    `builders` maps a capability type to what to make of it, called with the
+    four arguments every entity here takes and returning one entity or several.
+    A type absent from the map belongs to another platform.
     """
     for subentry_id, subentry in config_entry.subentries.items():
         hub = config_entry.runtime_data.hubs[subentry_id]

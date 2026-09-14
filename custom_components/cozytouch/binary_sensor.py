@@ -25,9 +25,8 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ):
     """Set up entry."""
-    # One connectivity sensor per device rather than per account : it is the
-    # device page it shows up on, and what it reports -- whether the account
-    # reached the Cozytouch cloud -- is the same answer for all of them.
+    # Per device rather than per account : it is the device page it shows up
+    # on. See docs/decisions.md.
     for subentry_id, subentry in config_entry.subentries.items():
         hub = config_entry.runtime_data.hubs[subentry_id]
         async_add_entities(
@@ -72,15 +71,9 @@ class CloudConnectivity(CozytouchDeviceEntity, BinarySensorEntity):
 class DeviceAvailability(CozytouchDeviceEntity, BinarySensorEntity):
     """Whether the cloud reports this device as reachable (`isAvailable`).
 
-    Distinct from CloudConnectivity : that one is the account's session to the
-    cloud, the same answer on every device, while this is the cloud's own
-    per-device flag. A device can be unavailable while the session -- and every
-    other device on it -- is fine, and that is the case this one exists to show.
-
-    It reads the raw last value and stays available itself when the session
-    drops : the cloud-connectivity sensor is what says whether that value is
-    still fresh, and marking this one unavailable on a backoff would flap it the
-    way the poll deliberately does not. Unknown when the field is absent.
+    The cloud's per-device flag, where CloudConnectivity is the account's
+    session. Stays available itself when the session drops, and unknown when
+    the field is absent. See docs/decisions.md.
     """
 
     _attr_has_entity_name = True

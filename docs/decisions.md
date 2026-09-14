@@ -967,3 +967,563 @@ The job is dispatched by hand a few times a year, so the minute it spends is
 not worth the change on its own. Leaving it on pip also keeps a standing
 proof that the requirements install without uv, which is what a contributor
 following the README has.
+
+## `custom_components/cozytouch/hub.py`
+
+### The poll is the account's, every 30 seconds
+
+30 seconds where every version of this integration has said 60, and it costs
+*less* : the setup view carries every device, so this is two requests a minute
+whatever the account holds, where the per-device poll it replaces was one per
+device per minute — five for the gateway-plus-four-units account in
+`docs/api-surface.md`. Anything from three devices up is both cheaper and
+twice as fresh.
+
+30 is also what the account's own `rateLimit` says, which is the one reading
+of that field nothing contradicts. That is a coincidence worth naming and not
+evidence : `rate_limit` is used as a ceiling in `poll_interval`, never as the
+source of this number.
+
+The floor of 15 s is where the requests stop buying anything. Atlantic's cloud
+learns from the hardware on its own schedule, and no amount of asking makes a
+radiator report sooner.
+
+### `rateLimit` is read as requests per minute, as a ceiling only
+
+Nobody knows what that field counts — `docs/api-surface.md` says so plainly —
+but of the readings a working 60-second-per-device poll does not already
+disprove, it is the strictest, and a ceiling wants the strictest. On the one
+account ever captured it is 30, which permits everything down to the floor and
+so never bites ; on an account that declares 1, it does.
+
+### One coordinator on a beat, and one per device pushed to from it
+
+This used to be a coordinator per device, each fetching
+`/magellan/capabilities/?deviceId=` for its own — N requests a minute for N
+devices. The setup view answers for the whole account in one request
+(`account.refresh_setup`), which is why the shape was worth changing : the same
+budget buys N times the frequency, and the cost stops growing with the number
+of devices somebody ticked at setup.
+
+The hubs stay coordinators with no schedule of their own, which keeps every
+entity a `CoordinatorEntity` of its own device — one device failing still shows
+as that device failing — and leaves `async_request_refresh()` after a write
+working as it did. `Hub._async_update_data` therefore runs only when something
+asks, which is after a write : re-reading the whole account to confirm one
+setpoint would be the wrong trade at that one moment.
+
+The hubs are a constructor argument of `AccountCoordinator` rather than
+something attached afterwards : a coordinator that polls before it knows who to
+tell would spend a request and drop the answer.
+
+### The account coordinator subscribes to itself
+
+Nothing else ever does : every entity listens to its hub, and Home Assistant
+books a coordinator's next refresh only while it has at least one listener.
+Without `async_add_listener(lambda: None)` the interval is dead letter — setup's
+one refresh runs and no poll ever follows it. This was live for three releases ;
+`tests/test_polling.py` covers it.
+
+### A rate limit backs off, it does not fail
+
+Being asked to slow down is not the same as having failed, and marking every
+entity unavailable because the account is a few seconds ahead of its budget
+would be a worse lie than a value that is one poll old. The values stand, and
+the next tick finds the backoff still holding and skips in turn.
+
+`ConfigEntryAuthFailed` is the opposite case and passes straight through the
+coordinator, which answers it by opening a reauth dialog and by not
+rescheduling itself. `UpdateFailed` would only book another attempt with the
+same rejected password.
+
+### An account failure reaches entities through their hubs
+
+The failure belongs to the account, and no entity listens to the account
+coordinator, so `_publish_error` marks every hub instead.
+
+### The away window is staged, then committed
+
+Editing the start or the end of the window stamps the change, and the commit
+runs once that stamp is more than 20 seconds old, so both ends can be set
+before either is sent. It used to hang off the hub's own 60-second poll, which
+no longer exists — so it runs on every path that now stands in for it, the
+account's tick and a post-write refresh alike. Hanging it off one of them would
+have made the delay depend on which, and off neither would have left a staged
+window sitting there for good.
+
+### `modificationDate` reads as None rather than as 1970
+
+Anything missing, unparsable or at or below zero comes back None. The field is
+undocumented — there is no catalogue to check it against — so what it holds on
+hardware nobody has captured is a guess, and a wrong timestamp on a dashboard
+is worse than an empty one. A string is tolerated because `value` arrives from
+this API as one.
+
+`get_last_modification_date` takes the newest across the whole device rather
+than one capability : the question it answers is whether the hardware is still
+talking to Atlantic's cloud, and one capability can legitimately sit unchanged
+for hours.
+
+### The device lookup is a module function, not a method
+
+`device_of` is read by eleven of Hub's methods and is deliberately not on the
+class : the tests drive those methods unbound against a duck-typed stand-in
+(`Hub.get_via_device(SimpleNamespace(...))`), which has no methods of its own.
+
+### A write updates the local value only on a completed execution
+
+A write that never lands has to leave the local value alone, and let the next
+poll say what the device really did.
+
+### The diagnostics dump describes the account, not the hub that was asked
+
+Every device the setup returns is listed, whether or not somebody added it,
+because what a mapping needs first is the model ids a user actually owns — with
+the capability ids to go with them, since the setup view carries a capability
+list for every device on the account.
+
+Those lists are all as fresh as each other now that the setup view is the poll :
+a device nobody added is refreshed on the same tick as one somebody did, where
+it used to hold whatever the last reconnect said. `isConfiguredHere` therefore
+says which devices have entities and no longer implies anything about freshness.
+
+Zones are skipped. They are not hardware anybody has to map, and a dump is read
+to find hardware that is ; listing them put two capability ids that resolve to
+nothing — one of them declined on purpose — in front of whoever reads it, which
+reads exactly like work to do.
+
+### The gateway link, and `via_device_id`
+
+The API declares the topology itself : every room unit and thermal zone carries
+the gateway's id in `masterDeviceId`. Home Assistant can only draw the link if
+the gateway was added too, since a device here is registered under the subentry
+it was added as — so `get_via_device` returns None for a gateway, and for a
+child whose gateway nobody added. None rather than a guess matters : HA logs a
+warning when `via_device` names a device that is not in the registry. The
+registry-id spelling is covered under `__init__.py` above.
+
+## `custom_components/cozytouch/calendar.py`
+
+### The program is a calendar, and read-only
+
+The program is what these devices are scheduled by — it keeps running when Home
+Assistant is off — and it could only be read as seven strings, one per day,
+formatted for a dashboard. `get_schedule` made it machine-readable ; the
+calendar makes it a week you can look at, and something the `calendar` triggers
+can fire on : "when the program moves to its next setpoint" is an event start,
+which is the shape of an automation nobody could write before.
+
+Writing is `set_schedule`'s job and stays there. An event has a start and an
+end, while a slot has only a start — the next slot is what ends it — and a
+calendar that silently rewrote the following slots would be the wrong place to
+resolve that.
+
+The entity's state is not the useful part : a program that covers the whole day
+means `event` is never None, so the entity sits at `on` for good. What is
+useful is the current event and the next one, which is what the card shows and
+what an automation reads.
+
+### A calendar exists only for a block the device reports in full
+
+All seven days rather than any : the mapping claims 196-209 wholesale, so a
+device that has the block has every day of it, and a calendar built from a
+partial one would show a gap where it should show a setpoint — which reads as
+"nothing scheduled that day" rather than as missing data. The same rule gates
+the per-day sensors arriving disabled, under `__init__.py` above.
+
+### `CURRENT_EVENT_WINDOW` is a day either side of now
+
+The last slot of a day runs into the next one, so the event in charge at 00:30
+began yesterday. The window has to reach past now as well, since
+`_events_between` takes a half-open range and would drop a slot starting
+exactly on the boundary.
+
+### Expansion is in Home Assistant's local time
+
+The device stores minutes past midnight and nothing says which clock it keeps.
+It reports an offset — the away-mode timestamps use it, and
+`docs/architecture.md` records that path applying it twice — but no capture has
+ever tied that offset to the program. Home Assistant's zone is the reading that
+matches what the app shows for anyone whose house and hub agree, which is
+everybody until somebody reports otherwise.
+
+A slot runs until the next one, and the last of the day until midnight : the
+next day's first slot starts at 00:00 — `set_schedule` refuses a day that does
+not — so nothing is left uncovered. Events are selected by overlapping the
+range rather than by being contained in it, because an event that started
+before the window is the one running at its beginning.
+
+The seven days are read once and not once per date, or a card asking for a year
+would re-read and re-sort the same seven programs 365 times.
+
+### An unusable slot is dropped, and the rest of the day still renders
+
+A minute count past the end of the day, or a setpoint that is not a number.
+Neither has been captured ; both are one bad matrix away from breaking every
+event in the week. The temperature is carried as a float on purpose : the
+summary formats with `%g`, and a value that arrived as a string — which this
+API does — would raise there instead, taking the whole calendar with it.
+
+`_slots_for` also sorts, though the device stores slots in order : an event list
+built on that assumption without checking would put an evening setpoint in
+charge of the morning.
+
+### `heating` and `cooling` are the service's words
+
+Kept so one vocabulary covers all three blocks. `capability.py` calls 203-209
+the zone 2 program outside air conditioners, which is the same unresolved naming
+`set_schedule` carries ; the program exists in both cool and heat, so nothing
+here decides it either.
+
+## `custom_components/cozytouch/account.py`
+
+### The account owns the session, the token and the setup view
+
+Everything a Cozytouch account declares — the token, the household, the zones,
+the list of devices — is the same answer whatever device is asking, because
+`setupviewv2` describes the whole account and not the device that fetched it.
+
+This lived on `Hub`, which meant one config entry per device also bought one
+session, one `POST /users/token` and one `GET setupviewv2` per device : a
+gateway plus four units cost five logins for four copies of the same payload.
+Worse, the state it filled in sat on the `Hub` *class* for a while, so the hubs
+overwrote each other and the last one to connect won —
+`tests/test_regressions.py` still pins the fix. The state was always shared ;
+owning it in one object says so, and lets the shape be checked.
+
+The per-device half stays on `Hub` : which capability ids that device reports,
+what they mean for its model, and the targeted fetch that confirms a write.
+
+The session is Home Assistant's own and not one of ours : it is closed when Home
+Assistant stops, so there is nothing left to leak when a setup fails and the
+account it built is discarded.
+
+### `connect()` is idempotent, and a failing login is not collapsed
+
+`online` is the whole reconnect mechanism, and every hub on the account flips it
+and calls `connect()`. Re-checking it once the lock is held is what keeps a
+*successful* reconnect from costing one login per device — five coordinators on
+one beat make one request.
+
+A failing one is deliberately not collapsed : a failure leaves `online` False,
+so each waiter in turn takes the lock, sees that, and tries again. That is right
+for a network failure and wrong for a refused password, which no number of
+attempts fixes and which repeated *failed* logins could get an account locked
+out for. So `InvalidAuth` is the one exception `connect()` does not fold into
+`online = False` : it propagates, and `connect_or_auth_failed` turns it into
+`ConfigEntryAuthFailed`, which Home Assistant answers by opening the reauth
+dialog and by not rescheduling the coordinator that raised it — "ask once"
+rather than "retry the rejected password every minute for as long as the
+installation runs". `tests/test_reauth.py` pins the one-retry-per-waiting-hub
+limitation that is left.
+
+### A 429 backs off without dropping the connection
+
+`_note_rate_limited` deliberately does not touch `online`. Every other failure
+here drops the connection so the next poll re-authenticates, which for a 429 is
+exactly backwards : the token is fine, and reconnecting spends a
+`POST /users/token` and a `GET setupviewv2` on an account that just asked for
+*fewer* requests. Repeated failed logins are also the one thing that can lock an
+account out, so answering a throttle with a login loop is the worst move
+available. The backoff is checked before the lock and before the login for the
+same reason.
+
+`RATE_LIMIT_BACKOFF` is 300 s and is a guess : Atlantic has never been observed
+sending a 429, because nothing in the integration used to recognise one. It is
+deliberately long — the cost of waiting five minutes too long is stale values,
+the cost of waiting too little is being throttled for good. `Retry-After` is
+read as seconds per RFC 9110 ; the HTTP-date form no gateway here sends falls
+back to the default rather than throwing inside a poll.
+
+`RATE_LIMIT_HEADERS` are logged rather than parsed, at warning level on purpose.
+WSO2 API Manager, which `docs/api-surface.md` identifies as the gateway, is the
+likely source, and those headers are what would say what the limit actually is —
+the one thing no capture has ever established about `rateLimit`. The first
+person to see a 429 is holding the only evidence there is.
+
+### `invalid_grant` is the only answer that means the password is wrong
+
+OAuth2 spells it that way and Atlantic uses the standard spelling. Anything else
+malformed is a bad response, not a bad password : telling somebody their
+password is wrong because the gateway hiccuped sends them off to reset a
+password that was fine.
+
+### The setup view is the poll
+
+The same request `connect()` makes, called on a beat rather than once : it
+carries a capability list for **every** device on the account, so one request
+refreshes the whole account where the per-device route refreshes one device. It
+also carries `absence`, which lives nowhere else — an away window set in the
+Cozytouch app used to wait for a reconnect to be seen.
+
+What it does not carry is proof of being as fresh as
+`/magellan/capabilities/`. The two are the same three fields and the integration
+has always built its entities from this payload at startup, but nobody has
+compared their latency. `modificationDate` is in both and read by neither, so
+the measurement is there to be made — `scripts/probe_api.py --cadence` makes it.
+
+`last_poll` moves only on a success : a skipped or failed poll leaves it
+standing, which is what makes it readable as "how old is what the entities
+show".
+
+### An expiring token just drops the connection
+
+There is no separate retry loop anywhere : flipping `online` is how every
+failure path here asks for a reconnect, and an expiry is another one, seen a
+minute early.
+
+### `API_DECLARED_FIELDS` are carried, not read
+
+Nothing decides anything from them. They are carried because a diagnostics dump
+is what a mapping gets built from, and the vendor's own name and family for a
+model the table does not know is the first thing worth having. On the one
+account these were read from, only the gateway carries a real `longName` and a
+`modelFamily` — its children report an internal name or a literal `---`, and the
+name the user actually typed is `customName` — so what other product families
+put here is still open.
+
+`SETUP_WRITABLE_FIELDS` is the subset the away-mode PUT has to send back :
+`absence` is what the call is for and `id` addresses the resource, so neither
+belongs in the body.
+
+### The setup view refreshes every device, not just the one that asked
+
+It carries capabilities for all of them, and this used to drop all but one —
+which cost the account a per-device poll before its entities could be built, and
+left a diagnostics dump describing the hardware nobody has mapped yet without
+the capability ids that are the whole point of the dump. Zones and
+`API_DECLARED_FIELDS` are refreshed on every view rather than set once at
+creation, for the same reason : `isAvailable` moves as a device drops off its
+gateway, a renamed zone has to reach the entity names it feeds, and a device
+renamed in the app should not keep its old `longName`.
+
+### A write waits for its execution
+
+A write is not fire-and-forget : the POST answers with an execution id, and the
+state of that execution is polled — once immediately, then up to five more times
+a second apart — until it reports 3. Returning False means the local value must
+stay as it was, and the next poll will say what actually happened.
+
+A write is attempted even while the account is backing off from a 429, unlike
+the polls : somebody just pressed a button, and refusing to send it because a
+*reader* was throttled would be a worse answer than letting the server refuse
+it. A 429 here still arms the backoff, so the readers learn from a write's
+rejection. The execution loop is the burstiest thing the integration does — up
+to six requests in five seconds for one button press — so it is the likeliest
+place to meet the limit, and the last place to keep hammering after meeting it.
+
+`fetch_capabilities` raises rather than returning a sentinel : the caller is a
+coordinator, and an empty list is a legitimate answer that must not read as a
+failure. Every failure but a 429 also drops `online`, which is what asks for the
+reconnect.
+
+### The absence window is a setup resource
+
+Away mode is the one feature that is not a capability write alone : the window
+lives on the setup, a resource of the account rather than of a device, which is
+why it is on the account and not on the hub.
+
+### Zones are not offered when adding devices
+
+A THZONE is one zone of a ducted heat pump, not hardware : it reports no climate
+capability, no setpoint, and two ids that resolve to nothing, so adding it would
+create a device with an empty page behind it. The model comes from the table
+rather than from the `modelInfos` filled in when a device first appeared — the
+same lookup every other caller makes, and the name a zone is recognised *by* can
+change under a cached one. The raw setup view still holds the zones, and the
+`dump_json` option writes it out.
+
+`get_unmapped_models` runs over the whole account rather than one device : the
+setup view lists them all, and one report that covers everything is one issue
+for the person who has to write it. It goes through the name-aware lookup too,
+or a THZONE reads as an unknown product and the repair asks for a dump about it,
+once per zone.
+
+### A zone with no name reads as None, not as its id
+
+Every caller puts the result in front of somebody — a device name, a line in a
+diagnostics dump — and `Zone (1030104)` is a worse name than no name at all :
+the id is ours to join on, not a room anybody recognises. The callers decide
+what to show instead.
+
+### Three exception types, because they want opposite handling
+
+`CannotConnect` is retried until the network comes back ; `InvalidAuth` never
+resolves without somebody typing a new password. `CozytouchRateLimited` is a
+subclass of `CozytouchApiError` so a caller that only cares that the call failed
+keeps working ; what it adds is `retry_after`, and what it does not do is touch
+`online`.
+
+## `custom_components/cozytouch/repairs.py` and `diagnostics.py`
+
+### Why the integration asks, rather than waiting to be told
+
+A device the model table does not know still gets entities — the generic
+capabilities work — but the specifics are missing and its name reads
+`Unknown product (…)`. The user has no reason to connect that string to anything
+they can do about it, so the fix always depended on someone thinking to open an
+issue and attach a diagnostics dump. The repair asks at the one moment it is
+obvious the mapping is missing, and hands over a report that is already written.
+
+The dump is the same information one click away from the integration page, with
+the account details already taken out. Asking for it by hand cost the reporter
+an option to tick, a log file to find and a JSON to redact, and that is where
+most reports stopped.
+
+### One report per account, covering devices nobody added
+
+`_account_report` reads one account rather than scanning the entry store, and no
+longer depends on which devices somebody added : the setup view carries a
+capability list for every device on the account, so an unmapped model
+contributes its capability ids whether it has a subentry or not. That used to be
+the half of a report that was missing exactly when it mattered — hardware nobody
+has mapped is hardware nobody has added yet. Any hub answers for any device on
+its account, since the mapping is keyed on the model.
+
+Several devices can share one unmapped model, and a silent one must not
+overwrite what a talkative sibling reported.
+
+Likewise one dump per account, covering every device the setup view returned. It
+used to take one dump per device, which is a file per device to find, download
+and attach for a report that needed all of them.
+
+### The report URL carries ids and nothing else
+
+Deliberately only the model ids and the capability ids nothing names : those are
+what a mapping is built from, and they say nothing about the household. Values
+stay out — among them the wifi SSID (219) and the gateway serial — and so does
+the device name, which people call after a room or a child. A URL is clicked
+without being read. The dump the form asks for carries all of that, stripped,
+and is attached knowingly.
+
+The query keys after `template` are the ids of that form's fields, which is how
+GitHub fills them in. Renaming one in `.github/ISSUE_TEMPLATE/` breaks the link
+quietly — it just arrives empty — so the two move together, and
+`tests/test_repairs.py` checks that they still match.
+
+### The issue is keyed on the model, and asked once
+
+A pair of identical towel racks asks once, which has to be recognised while
+walking the account rather than left to the issue registry to overwrite : the
+second device would replace the first one's name and ask about the same mapping
+twice. `REPORTED_MODELS` is written by the fix flow and read on every setup,
+across every entry — the model stays unmapped until a release maps it, so
+without it the issue would come back at each restart at someone who already did
+their part, and one report speaks for whoever else owns the same hardware.
+
+The issue is cleared on the way through as well as raised : a release that adds
+the mapping is the expected end of it, and the setup that follows the update is
+where that shows.
+
+The report is read when the dialog opens rather than stored on the issue, so a
+device that gained a capability, or an entry added since, is in what somebody is
+about to send. Answering it closes the repairs raised for the other models it
+covered ; the one the flow belongs to is deleted by Home Assistant.
+
+### Thermal zones are asked about too
+
+Nothing separates a zone from a real device nobody has mapped yet : the
+gateway's id sits in `masterDeviceId` on both, and `modelFamily` is null on
+both. Any rule would be a guess, and the two ways of being wrong do not cost the
+same — a zone reported is an issue closed in seconds, a real device silenced is
+someone never finding out why their hardware is half-supported.
+
+## `custom_components/cozytouch/device_trigger.py`
+
+### Two gaps, and nothing else
+
+Home Assistant already builds device triggers out of the entity domains a device
+happens to have : the connectivity binary sensor gives "connected" and
+"disconnected", the away-mode switch gives "turned on", the climate entity gives
+"HVAC mode changed". Nothing there reaches the weekly program, and the program is
+what these devices are scheduled by — it keeps running when Home Assistant is
+off, which is the whole reason the two schedule services exist.
+
+So this module fills two gaps and no others :
+
+- the program is seven diagnostic sensors, one per day, that no entity groups,
+  so "the heating program changed" has no entity to be triggered on ;
+- `climate.device_trigger` offers `hvac_mode_changed` and the two current-value
+  triggers and no preset trigger at all — and the preset is where prog, override
+  and basic are reported.
+
+There is deliberately no `device_condition.py` and no `device_action.py`. The
+`climate` domain already ships both for presets : "Cozytouch is set to prog" is
+a condition Home Assistant writes itself, and setting one is a climate device
+action. Adding ours would put two entries with the same meaning in one picker.
+
+Both kinds are offered only when the device reports what they read : a water
+heater with no cooling program gets no cooling trigger, and a device whose
+climate entity has no prog preset gets none of the three. Which presets exist is
+on the entity and not in the registry, so a climate entity with no state yet
+answers for none of them — the same read `climate.device_trigger` makes.
+
+The trigger list follows the programs the schedule services know : a program
+nothing can read back is not one an automation should be told changed.
+
+### Both halves fail silently, which is why they are tested
+
+A trigger that never fires logs nothing. `tests/test_device_trigger.py` pins
+which triggers a device is offered and what each one then watches.
+
+- A schedule trigger carries no `entity_id` : a program is seven sensors, and
+  which seven is a question about the device rather than about any one of them.
+  It resolves to registry ids rather than entity ids, so an entity that gets
+  renamed keeps working.
+- A day sensor that is merely unreachable has not been reprogrammed, so the trip
+  through unavailable and back is ruled out at both ends. Ruling both ends out
+  also turns it into a state-value trigger : with no `to` or `from` at all, the
+  state trigger fires on attribute changes too, and a renamed entity would read
+  as an edited program.
+- A preset trigger watches the `preset_mode` attribute and not the state : the
+  state of a climate entity is its HVAC mode, and a setpoint change would fire
+  it.
+- `for` is offered on the preset triggers only. "Overridden for two hours" is a
+  thing to automate on ; "changed for two hours" is not, since a program that
+  changed does not change back.
+
+### A sensor's capability id is the tail of its unique id
+
+Sensors are keyed `cozytouch_{subentry_id}_{capabilityId}`, and a subentry id
+carries no underscore. The two away-mode timestamps are the exception,
+`{subentry_id}_0` and `{subentry_id}_1`, and 0 and 1 fall outside every program
+block, so they rule themselves out.
+
+## `custom_components/cozytouch/config_flow.py`
+
+### One entry per account, one subentry per device
+
+The account is what the credentials buy — one login, one setup view — and the
+devices are what somebody actually wants entities for, added at setup time or
+later from the integration page.
+
+That shape is also why reauth is one dialog and one write, with no loop over
+sibling entries : the credentials exist in exactly one place, and reloading that
+entry brings every device on the account back with it. Before the reauth path
+existed, a changed Cozytouch password left the account retrying the old one for
+as long as the installation ran, saying only that it could not connect. The
+username is not asked for again — changing it would point the entry at a
+different account, which is an entry to add and not a password to fix.
+
+`validate_input` raises `InvalidAuth` for a refused password and `CannotConnect`
+for an account that could not be asked, and the caller shows a different message
+for each : "check your password" is unhelpful advice during an outage.
+
+The device list is read once on the way into the subentry step and kept across
+the submit : the step is re-entered to answer the form, and logging in again to
+resolve the id somebody just picked would double the cost of adding a device for
+nothing.
+
+### Only the device id travels in a picker option
+
+It used to be a whole dict — credentials included — serialised with `str()` and
+read back with `ast.literal_eval`, which put the account password in the form
+the browser posts.
+
+### All three options are account-wide
+
+`dump_json` always was, since there is one `Cozytouch.json`. `create_unknown`
+follows it rather than earning a reconfigure flow per device for a setting used
+to work out what a value means. `poll_interval` has to be : there is one poll
+for the account, so a per-device interval would describe something that does not
+exist.

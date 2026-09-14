@@ -70,25 +70,14 @@ class CozytouchDeviceType(StrEnum):
 # -- see docs/decisions.md.
 ZONE_NAME_PREFIX = "THZONE"
 
-# The mode tables most of the branches below share, named once rather than
-# spelled out per model. Twenty-seven of the thirty-six HVACModes tables in
-# this file are OFF_HEAT and seven more are OFF_ONLY; thirteen of the sixteen
-# HeatingModes tables are MANUAL_ECO_PROG. A branch that still declares a
-# literal is a branch whose hardware really does differ, which is the thing
-# worth seeing.
-#
-# Shared objects, and read-only by fact rather than by type: nothing mutates a
-# mode table, every reader copies (`list(...values())`) or looks up. Plain
-# dicts and not MappingProxyType because these travel into the diagnostics
-# dump and into the snapshot, both of which serialise as JSON.
+# The mode tables the branches below share. A branch that declares a literal
+# instead is one whose hardware differs. Shared objects, never mutated.
 OFF_HEAT = {
     0: HVACMode.OFF,
     4: HVACMode.HEAT,
 }
 
-# The hubs and the Naviclim box: they report a mode capability and offer
-# nothing to switch it to, so an off/heat pair would be a claim about hardware
-# that cannot heat.
+# The hubs and the Naviclim box, which report a mode and cannot heat.
 OFF_ONLY = {
     0: HVACMode.OFF,
 }
@@ -117,8 +106,7 @@ CALYPSO_SPLIT_VM = {
 
 # Two listings of one platform: EGEO VS <volume>L, and the internal code
 # TD <volume> VS <brand> 1800M TYB CA. 1010/2346 and 957/2345 are the same two
-# products under both. ATL is Atlantic, TH Thermor, SA Sauter; the badges we
-# have no commercial name for keep the catalogue's string.
+# products under both.
 EGEO_PLATFORM = {
     957: "Egeo VS 200L",  # catalogue only
     1010: "Egeo VS 250L",  # catalogue only
@@ -174,16 +162,9 @@ ALFEA_EXTENSA_DUO_AI_3 = {
 }
 
 # One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
-# with SERP for the tank that carries a coil. Eight brands share it and the
-# grid is volume x coil x brand.
-#
-# Atlantic's own badge, ATE, is the only one with a commercial name we know,
-# so it is the only one whose ids read as Explorer V5; 1656 and 1657/1658 came
-# from captures under the Thermor and AT badges and keep the names their
-# reporters gave. The rest keep the catalogue's string, which is what they
-# already displayed -- what they gain is the water heater type, and with it a
-# resistance sensor that is not called a pump and a hot water mode select with
-# options in it.
+# with SERP for the tank that carries a coil; the grid is volume x coil x
+# brand, over eight badges. Only Atlantic's ATE has a commercial name we know.
+# See docs/decisions.md.
 EXPLORER_V5 = {
     1641: "Atlantic Explorer V5 (200L)",
     1642: "Atlantic Explorer V5 (270L)",
@@ -208,15 +189,9 @@ EXPLORER_V5 = {
     1664: "TD 270 VS NEU 1200M TYB V5S SERP",  # catalogue only
 }
 
-# One ACI HYB hybrid water heater platform sold under four brands, in VS 300L,
-# VM 150L and VM 200L variants. Only the commercial name changes between the
-# ids, so they share a branch. Names are the catalogue's own string, verbatim,
-# because on this platform the brand *is* the name.
-#
-# The last three are that fourth badge, and are read off the catalogue rather
-# than off a report: "THE DURALIS CONNECT VM 150 2200M PE" carries the product
-# line and the figures of 393 and differs in the listing prefix, the dropped
-# ACI HYB and a PE suffix. 386-394 came from captures; these three did not.
+# One ACI HYB hybrid water heater platform under four brands, in VS 300L, VM
+# 150L and VM 200L. Only the commercial name changes, and on this platform the
+# brand *is* the name, so the catalogue's string is kept verbatim.
 ACI_HYB_WATER_HEATERS = {
     386: "PHAZY VS 300L 3000M",
     387: "PHAZY VM 150L 2200M",
@@ -232,27 +207,17 @@ ACI_HYB_WATER_HEATERS = {
     1366: "THE DURALIS CONNECT VS 300 3000M PE",  # catalogue only
 }
 
-# The connectivity box, under each of the brands it is sold as. The catalogue
-# calls 2447 "Hub IO Sauter" and the next three "Hub IO Thermor", "Hub IO
-# Atlantic" and "Hub IO Inter": one box, four badges. This is a set rather
-# than four branches because the branch below is not the whole of it -- a room
-# slot reads its master's id to tell a radiator from an air conditioner, and
-# an unmapped badge sent every one of them to the air conditioner branch.
+# The connectivity box, under each of the four brands it is sold as. A set
+# rather than four branches because a room slot reads its master's id to tell
+# a radiator from an air conditioner. See docs/decisions.md.
 # 2448, 2449 and 2450 are catalogue only -- 2447 is the badge that was
 # captured.
 COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 
-# The three connected towel rack ranges, by model id. Every one of these is the
-# same product in another wattage or another finish -- the catalogue lists them
-# as RIVA 5 ETROIT 0300W CARBONE beside RIVA 5 ETROIT 1300W BLC -- and the
-# branch body was already identical for the eight that were mapped one at a
-# time: a name, the towel rack type, and off/heat.
-#
-# The names are the house spelling of the catalogue's own string, minus the
-# BRI suffix and the leading zero on a wattage. The eight that were already
-# mapped keep the name they had, inconsistencies included ("1750W Blanc" next
-# to "1500W ANTH"), because the name reaches the device registry and rewriting
-# it renames the device of somebody who already has one.
+# The three connected towel rack ranges, which are one product in several
+# wattages and finishes. Names are the house spelling of the catalogue's
+# string ; the eight mapped before keep the name they had, inconsistencies
+# included, because renaming one renames somebody's device.
 TOWEL_RACK_VARIANTS = {
     1388: "Doris étroit 1500W BLC",
     1540: "Asama Connecté II 500W BLC",  # catalogue only
@@ -305,10 +270,9 @@ TOWEL_RACK_VARIANTS = {
     1635: "Riva 5 étroit 1500W CARBONE",  # catalogue only
 }
 
-# Catalogue only, the whole table: name and the `productId` of 1 that puts
-# these in the same family as 56, 61 and 65. A commercial name is not unique
-# here -- 257 and 260 are both "Naema Micro 25" -- and the duplicates are
-# distinct ids in the vendor's catalogue. See docs/decisions.md.
+# Catalogue only, the whole table. A commercial name is not unique here -- 257
+# and 260 are both "Naema Micro 25" -- and the duplicates are distinct ids in
+# the vendor's catalogue. See docs/decisions.md.
 NAEMA_NAIA_BOILERS = {
     1: "Naema Micro 30",
     2: "Naema 12",
@@ -384,36 +348,22 @@ def get_model_infos(  # noqa: C901
 ) -> ModelInfos:
     """Return infos from model ID.
 
-    One long if/elif over model ids, which is why it is over the complexity
-    ceiling: the shape of the problem is a lookup table, and the table is the
-    function. Splitting it per device type would move the branches without
-    removing one.
-
-    `deviceName` is the exception to that: a zone is recognised by the name the
-    API gives it, before any id is looked at, because the ids are per zone
-    rather than per product.
-
-    `masterModelId` is the second one: a room slot's id says which room, not
-    what the hardware is, so the hub it hangs off is what tells a radiator from
-    an air conditioner. None when the device has no hub, or when the account
-    does not hold it.
+    `deviceName` and `masterModelId` are the two inputs that are not the id : a
+    zone is recognised by its name, and a room slot by the hub it hangs off.
+    See docs/decisions.md.
     """
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
     if deviceName is not None and deviceName.startswith(ZONE_NAME_PREFIX):
-        # A zone of a ducted heat pump, not a product: it reports no climate
-        # capability, so mapping it buys a name and silence rather than
-        # entities. See docs/decisions.md.
+        # A zone of a ducted heat pump, not a product. See docs/decisions.md.
         modelInfos.name = f"Zone ({zoneName})" if zoneName else deviceName
         modelInfos.type = CozytouchDeviceType.ZONE
-        # Empty on purpose: the fall-through's off/heat pair is what made a
-        # zone read as a thermostat that could heat.
+        # Empty on purpose : off/heat made a zone read as a thermostat.
         modelInfos.HVACModes = {}
 
     elif modelId in NAEMA_NAIA_BOILERS:
-        # The first-generation Naema and Naia, plus the two Naema 2 that sit
-        # beside the 56 below. Name and type only, no flag -- see
-        # docs/decisions.md.
+        # The first-generation Naema and Naia, plus the two Naema 2 beside the
+        # 56 below. Name and type only. See docs/decisions.md.
         modelInfos.name = NAEMA_NAIA_BOILERS[modelId]
         modelInfos.type = CozytouchDeviceType.GAZ_BOILER
         modelInfos.HVACModes = OFF_HEAT

@@ -40,9 +40,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 # The value a healthy fault code reads as, and the one an empty slot carries.
-# 0xFF fills a field of a slot that holds no fault: on the captures, whole
-# accounts report the same `[0,255,0,4]` row repeated ten times, which is a
-# ten-row empty list and not ten identical faults. See docs/decisions.md.
+# See docs/decisions.md.
 ERROR_CODE_HEALTHY = "OK"
 ERROR_CODE_EMPTY_SLOT = 255
 
@@ -50,18 +48,9 @@ ERROR_CODE_EMPTY_SLOT = 255
 def decode_error_code(raw: str | None) -> str | None:
     """Turn a fault-code matrix into the codes that are actually active.
 
-    The device reports a matrix of `[system, majorCode, minorCode, level]`
-    rows (some firmwares carry a fifth field). A row is a fault only when it
-    is neither all-zero (healthy) nor carrying the 0xFF empty-slot sentinel;
-    an active row becomes `system_majorCode_minorCode_level`, the same key
-    shape Atlantic's own fault table uses. Healthy reads as "OK", so the
-    common case stops being a ten-row matrix nobody could read.
-
-    The raw string is returned unchanged when it does not parse, so an
-    encoding this does not expect is surfaced rather than swallowed. What no
-    capture has ever shown is an active row, so the join is derived from the
-    format, not from a decoded example -- and naming a code is a separate
-    step this does not attempt, since that table is Atlantic's to ship.
+    A row is a fault only when it is neither all-zero nor carrying the
+    empty-slot sentinel. The raw string comes back unchanged when it does not
+    parse. See docs/decisions.md.
     """
     if raw is None:
         return None
@@ -312,16 +301,11 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
                             self._capability.timezoneCapabilityId
                         )
                     )
-                    # The device's own offset is already added to the unix
-                    # timestamp, so what is wanted here is that sum read as
-                    # wall-clock time. fromtimestamp() without a tz reads it
-                    # in Home Assistant's local zone instead, which applies
-                    # the offset a second time for anyone not on UTC. Passing
-                    # tz=UTC is the fix, and it changes what this sensor
-                    # displays -- so it belongs in its own change, with a
-                    # capture of what the Cozytouch app shows, rather than
-                    # riding along in a lint pass. Recorded as a rough edge
-                    # in docs/architecture.md.
+                    # DTZ006 is silenced on purpose: the device's offset is
+                    # already in the timestamp, so reading it naively applies
+                    # that offset twice for anyone off UTC. Fixing it changes
+                    # what the sensor displays and wants its own change, with
+                    # a capture to check against -- docs/architecture.md.
                     ts = datetime.datetime.fromtimestamp(  # noqa: DTZ006
                         timestamp + timeOffset
                     )
@@ -556,17 +540,9 @@ class CozytouchErrorCodeSensor(CozytouchSensor):
 class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
     """When the device last changed any of the values it reports.
 
-    Every capability item carries a `modificationDate` alongside its value, and
-    until now nothing read it. What it answers is the question a frozen reading
-    raises and no other entity here can settle : the value has not moved, but is
-    the hardware still reporting, or has it fallen off Atlantic's cloud with the
-    integration cheerfully serving the last thing it heard ?
-
-    Deliberately only that. The obvious next step -- calling the device
-    unavailable once this is old enough -- needs a threshold nobody can defend
-    yet : a stable water heater can leave every capability untouched for hours,
-    so a guessed one would mark working hardware as broken. This is the
-    measurement that makes the threshold decidable later.
+    Answers what a frozen reading cannot : is the hardware still reporting, or
+    has it fallen off Atlantic's cloud ? A staleness threshold on top of this
+    is deliberately not attempted. See docs/decisions.md.
     """
 
     _attr_has_entity_name = True
@@ -589,10 +565,8 @@ class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
     def native_value(self) -> datetime.datetime | None:
         """The newest date the device reports, as an aware datetime.
 
-        Read on demand rather than cached : there is nothing to convert and no
-        formatting to pin, and `tz=datetime.UTC` is what keeps this out of the
-        double-offset trap the away-mode timestamp sensor is in -- an epoch is
-        absolute, so the only correct reading of it is UTC.
+        UTC, because an epoch is absolute -- which is what keeps this out of
+        the double-offset trap the away-mode timestamp sensor is in.
         """
         epoch = self.coordinator.get_last_modification_date()
         if epoch is None:
@@ -609,16 +583,9 @@ class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
 class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     """When the integration last fetched the account from the API.
 
-    The other half of the question `CozytouchLastUpdateSensor` answers : that
-    one says when the hardware last changed a value, this one says when the
-    integration last asked. Without it, "the poll runs and nothing changes"
-    and "the poll has stopped running" -- a 429 backoff serving the last known
-    values, an API outage ridden out -- read exactly the same.
-
-    Per device even though the date is the account's : one setup-view request
-    refreshes every device at once, so every device answers the same. The
-    duplication is deliberate, so the reading sits on the device whose values
-    it dates.
+    The other half of what `CozytouchLastUpdateSensor` answers : that one says
+    when the hardware last changed a value, this one when anybody last asked.
+    Per device though the date is the account's. See docs/decisions.md.
     """
 
     _attr_has_entity_name = True
@@ -640,8 +607,7 @@ class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     def available(self) -> bool:
         """Available as long as a poll ever succeeded.
 
-        Deliberately not the CoordinatorEntity reading, which follows the last
-        poll's outcome -- see docs/decisions.md.
+        Deliberately not the CoordinatorEntity reading. See docs/decisions.md.
         """
         return self.coordinator.get_last_poll() is not None
 
@@ -699,21 +665,10 @@ def _away_mode_timestamps(coordinator, capability, config_title, config_uniq_id)
     ]
 
 
-# MEASUREMENT on everything that reads an instant value. Without a state class
-# the recorder keeps the state history and no long-term statistics, so a
-# temperature is gone from the charts after the purge window -- ten days by
-# default -- and min/max/mean over a season is not available at all. The types
-# that count something instead declare TOTAL_INCREASING.
-#
-# VOLUME_STORAGE and not VOLUME: the three capabilities typed `volume` are how
-# much water the tank holds or has left (258, 268, 270), never how much ran
-# through it. VOLUME accepts only the totalling state classes, so MEASUREMENT
-# on it is a combination Home Assistant rejects outright.
-#
-# PERCENTAGE has no device class, because percentage is the unit and not the
-# meaning. SensorDeviceClass.BATTERY was the closest match and made
-# hot_water_available (271) read as a battery level, icon and voice assistants
-# included.
+# MEASUREMENT on everything that reads an instant value, TOTAL_INCREASING on
+# what counts; VOLUME_STORAGE and not VOLUME on a tank; no device class on a
+# percentage. Each of those is a combination HA rejects or misreads otherwise
+# -- see docs/decisions.md.
 SENSOR_BUILDERS = {
     CapabilityType.STRING: CozytouchSensor,
     CapabilityType.INT: CozytouchSensor,
