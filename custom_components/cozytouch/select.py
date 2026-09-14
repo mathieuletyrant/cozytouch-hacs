@@ -9,7 +9,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub
+from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
@@ -41,38 +41,14 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    # One device per subentry, and its entities are registered under it :
-    # the subentry id is the identity that used to be the entry's own, back
-    # when an entry meant a device.
-    for subentry_id, subentry in config_entry.subentries.items():
-        hub = config_entry.runtime_data.hubs[subentry_id]
-
-        # Init selects
-        selects = []
-        capabilities = hub.get_capabilities_for_device()
-        for capability in capabilities:
-            if capability.type == CapabilityType.SELECT:
-                selects.append(
-                    CozytouchSelect(
-                        coordinator=hub,
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                    )
-                )
-            elif capability.type == CapabilityType.DURATION_SELECT:
-                selects.append(
-                    CozytouchDurationSelect(
-                        coordinator=hub,
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                    )
-                )
-
-        # Add the entities to HA
-        if len(selects) > 0:
-            async_add_entities(selects, True, config_subentry_id=subentry_id)
+    add_capability_entities(
+        config_entry,
+        async_add_entities,
+        {
+            CapabilityType.SELECT: CozytouchSelect,
+            CapabilityType.DURATION_SELECT: CozytouchDurationSelect,
+        },
+    )
 
 
 class CozytouchSelect(SelectEntity, CozytouchSensor):

@@ -10,7 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .const import CozytouchCapabilityVariableType
-from .hub import CozytouchConfigEntry, Hub
+from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
@@ -24,34 +24,30 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up entry."""
-    # One device per subentry, and its entities are registered under it :
-    # the subentry id is the identity that used to be the entry's own, back
-    # when an entry meant a device.
-    for subentry_id, subentry in config_entry.subentries.items():
-        hub = config_entry.runtime_data.hubs[subentry_id]
+    add_capability_entities(
+        config_entry,
+        async_add_entities,
+        {CapabilityType.AWAY_MODE_TIMESTAMPS: _away_mode_datetimes},
+    )
 
-        # Init datetimes
-        datetimes = []
-        capabilities = hub.get_capabilities_for_device()
-        for capability in capabilities:
-            if capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
-                for index, timestamp in enumerate(capability.timestamps):
-                    datetimes.append(
-                        CozytouchAwayModeDateTime(
-                            capability=capability,
-                            config_title=subentry.title,
-                            config_uniq_id=subentry_id,
-                            attr_uniq_id=f"{subentry_id}_{index}",
-                            coordinator=hub,
-                            translation_key=timestamp.name,
-                            icon=timestamp.icon,
-                            timestamp_index=index,
-                        )
-                    )
 
-        # Add the entities to HA
-        if len(datetimes) > 0:
-            async_add_entities(datetimes, True, config_subentry_id=subentry_id)
+def _away_mode_datetimes(
+    coordinator: Hub, capability, config_title: str, config_uniq_id: str
+) -> list[CozytouchAwayModeDateTime]:
+    """The two ends of the away window, which are one capability."""
+    return [
+        CozytouchAwayModeDateTime(
+            capability=capability,
+            config_title=config_title,
+            config_uniq_id=config_uniq_id,
+            attr_uniq_id=f"{config_uniq_id}_{index}",
+            coordinator=coordinator,
+            translation_key=timestamp.name,
+            icon=timestamp.icon,
+            timestamp_index=index,
+        )
+        for index, timestamp in enumerate(capability.timestamps)
+    ]
 
 
 class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):

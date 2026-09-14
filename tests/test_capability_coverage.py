@@ -64,13 +64,11 @@ PLATFORMS = (
     "switch.py",
 )
 
-# `capability.type == CapabilityType.X` and `capability.type in
-# (CapabilityType.X, CapabilityType.Y)`, the two ways a platform states which
-# type it was written for. The member is resolved to its value, so a name the
-# enum does not declare fails here rather than matching nothing at runtime.
-TYPE_TEST = re.compile(
-    r"capability\.type\s*(?:== CapabilityType\.(\w+)|in \(([^)]*)\))"
-)
+# A key of a platform's builder table -- `CapabilityType.X: SomeEntity` -- which
+# is how a platform states which type it was written for. The member is
+# resolved to its value, so a name the enum does not declare fails here rather
+# than matching nothing at runtime.
+TYPE_TEST = re.compile(r"CapabilityType\.(\w+):")
 
 # What sensor.py turns into an EntityCategory, plus the "sensor" that means no
 # category at all. Anything else it silently drops on the floor.
@@ -116,12 +114,8 @@ def types_the_platforms_consume():
         source = pathlib.Path("custom_components/cozytouch", platform).read_text(
             encoding="utf-8"
         )
-        for single, group in TYPE_TEST.findall(source):
-            members = (
-                [single] if single else re.findall(r"CapabilityType\.(\w+)", group)
-            )
-            for member in members:
-                consumed.setdefault(CapabilityType[member].value, set()).add(platform)
+        for member in TYPE_TEST.findall(source):
+            consumed.setdefault(CapabilityType[member].value, set()).add(platform)
     return consumed
 
 
