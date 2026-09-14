@@ -861,6 +861,122 @@ nobody here owns, so the bit nothing names is the interesting part. The
 number the device sent stays on the entity as a `raw` attribute for the
 same reason.
 
+### Five hot-water ids named off the Android enum, not off a capture
+
+`research/data/capability_id_to_name_android.tsv` names 244, 105011, 105122,
+105906 and 105907, and the mapping had nothing for the first three and the
+placeholders `Target 105906` / `Target 105907` for the last two. The names
+here are the app's, transliterated to the naming already in the table:
+
+| id | The app's name | Here |
+| -- | -------------- | ---- |
+| 244 | `DHW_MAX_NUMBER_PROGRAMMING_RANGE_PER_DAY` | `max_schedule_ranges_per_day` |
+| 105011 | `DHW_SUPPORTED_MODES_CAPABILITIES` | `supported_dhw_modes` |
+| 105122 | `DHW_BOOST_END_TIMESTAMP` | `dhw_boost_end_timestamp` |
+| 105906 | `DHW_V40_APPLIED_SETPOINT` | `v40_applied_setpoint` |
+| 105907 | `DHW_V40_MANUALLY_FILLED_BY_USER` | `v40_setpoint_filled_by_user` |
+
+244 is the max counterpart of 329 (`DHW_MIN_NUMBER_PROGRAMMING_RANGE_PER_DAY`,
+mapped as `min_schedule_ranges_per_day`), and so takes the same shape. It is
+a different bound from 236, which the app calls
+`DHW_MAX_NUMBER_MILESTONE_PER_DAY` -- ranges and milestones are two things,
+and a mapping that merges them reads one device's limit onto the other.
+
+105011 carries the same `DHWMode` mask as 168, so it is a line in
+`CAPABILITY_BIT_FIELDS` pointing at the table 168 already uses, the way 105012
+pairs with 223.
+
+What the enum does **not** settle is the encoding of 105122. The name says a
+Unix timestamp and the fork this was compared against reads it as one, but no
+capture here holds a value, so it arrives as a raw string and switched off --
+the rule for any capability whose encoding is unverified. A reading turns it
+into a real timestamp.
+
+105907 is the one to be careful with. `MANUALLY_FILLED_BY_USER` is not "the
+setpoint the user set": the mapping types both 105906 and 105907 as
+temperatures between 15 and 65 °C, so the reading carried here is the V40
+setpoint *as filled in manually*, against 105906's *applied* one. Nothing in
+the corpus shows the two disagreeing, which is what would prove it.
+
+Every id here is hot-water, and no device on hand reports one. The evidence
+is the app's own enum and nothing else -- which is stronger than a guess and
+weaker than a capture.
+
+### Twelve more ids the enum names and the corpus confirms
+
+Walking the whole of `capability_id_to_name_android.tsv` against the mapping,
+rather than only the ids the fork happened to touch, left 14 named by the app
+and mapped nowhere here. Eleven are taken. `9812 DEBUG` and `106 POWER` are
+not, because a name that vague buys an entity nobody can read, and `100014
+ROOM_TYPE` is not either: it is one of the two ids a thermal zone reports,
+and a zone deliberately resolves to no entity at all. Naming it is what
+`test_a_zone_maps_to_nothing_at_all` exists to catch, and it caught it.
+
+What makes these better evidence than the five above is that
+`research/capability-corpus/by-capability.md` holds values for most of them:
+
+| id | The app's name | Here | The corpus reads |
+| -- | -------------- | ---- | ---------------- |
+| 352 | `ABSENCE_DAY_HEATING` | `absence_day_heating_temperature` | 18, on 10 models |
+| 353 | `PRESENCE_DAY_HEATING` | `presence_day_heating_temperature` | 19, on 10 models |
+| 354 | `PRESENCE_NIGHT_HEATING` | `presence_night_heating_temperature` | 18, on 10 models |
+| 355 | `ABSENCE_DAY_COOLING` | `absence_day_cooling_temperature` | 26, on 10 models |
+| 356 | `PRESENCE_DAY_COOLING` | `presence_day_cooling_temperature` | 24, on 10 models |
+| 357 | `PRESENCE_NIGHT_COOLING` | `presence_night_cooling_temperature` | 26, on 10 models |
+| 100000 | `THERMAL_ZONE_NUMBER` | `thermal_zones_count` | 1, 2, 3 |
+| 100196 | `PROG_ABSENCE` | `absence_schedule` | nothing |
+| 102006 | `AIR_MIXING_MODES_AVAILABLE` | `air_circulation_available_modes` | 285, on 3 models |
+| 102020 | `AIR_MIXING_ACTUAL_MODE` | `air_circulation_current_mode` | 3, on 3 models |
+| 105636 | `DHW_COMFORT_MODE` | `dhw_comfort_mode` | 0 and 1 |
+
+The six 352-357 are the find. Ten distinct models report them, fifteen
+readings each, and every reading is the same number: 18/19/18 in heating and
+26/24/26 in cooling. Those are °C, and they line up as a comfort grid --
+absence colder than presence in heating and warmer in cooling, night
+following day. The name and the number agree, which neither does alone.
+
+They are named the way 100197 and 100198 already are (`*_temperature`, raw
+string, off by default) rather than typed as temperatures. The corpus shows
+what they read, not whether anything writes them, and nothing here has ever
+seen one move.
+
+102006 is the one the corpus actually decodes: 285 is
+1|4|8|16|256 against `_AIR_CIRCULATION_MODE_BITS` -- off, auto season, cool,
+heat, dry -- with no bit left over. So it is a line in `CAPABILITY_BIT_FIELDS`
+pointing at the table 102005 already uses. 102005 is
+`AIR_MIXING_MODES_SUPPORTED` and 102006 is `..._AVAILABLE`; the supported /
+available pair is kept in the names because the app keeps it.
+
+102020 reads 3, which is not one bit of that table and not obviously one
+member either, so it stays raw.
+
+### The chain reads in ascending id order
+
+119 branches on disjoint ids, so nothing but reading order depends on where a
+branch sits -- which is why it drifted. Ids were landing wherever the commit
+that added them happened to be editing: 303 between 184 and 196, 150 and 290
+after 102024, 312 after 105907, 100320 after 100507. Looking an id up meant
+grepping for it instead of scrolling to it.
+
+The rule is ascending by the branch's lowest id, range branches sorting on
+their low bound, and `test_the_mapping_reads_in_ascending_id_order` is what
+keeps it rather than anyone remembering. A new branch goes where its number
+goes.
+
+The reorder itself is provable: `tests/snapshots/` did not move a byte.
+
+### The enum is not the catalogue
+
+Worth recording, because it is the question this walk was meant to answer.
+The app names 187 ids; the mapping now claims 206. **46 of ours are absent
+from the enum**, including 1, 2 and 8 -- the base HVAC modes, which every
+device on every account reports.
+
+So the Android enum is not the capability catalogue `docs/api-surface.md`
+says does not exist. It is what the *app* knows how to display, which is a
+different and smaller thing. Recouping it against the corpus is worth doing
+again when the app ships a new version; treating it as exhaustive is not.
+
 ### `read_setpoint` : hundredths, but not for hot water
 
 The app divides a program slot's target temperature by 100 when it reads

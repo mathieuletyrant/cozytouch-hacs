@@ -36,6 +36,7 @@ SELF_DESCRIBING_CAPABILITIES = {
     224: "dhw_estimation_supported",
     230: "dhw_operating_mode",
     236: "max_dhw_schedule_slots_per_day",
+    244: "max_schedule_ranges_per_day",
     294: "target_temperature_step",
     295: "schedule_time_step",
     296: "schedule_minimum_interval",
@@ -52,10 +53,17 @@ SELF_DESCRIBING_CAPABILITIES = {
     339: "dhw_panel_data",
     340: "water_setpoint_step",
     344: "linked_interfaces_count",
+    352: "absence_day_heating_temperature",
+    353: "presence_day_heating_temperature",
+    354: "presence_night_heating_temperature",
+    355: "absence_day_cooling_temperature",
+    356: "presence_day_cooling_temperature",
+    357: "presence_night_cooling_temperature",
     350: "air_circulation_supported_speeds",
     351: "connectivity_display_capabilities",
     358: "air_circulation_scope",
     381: "ble_pairing_compatibility",
+    100000: "thermal_zones_count",
     100002: "supported_estimation_modes",
     100004: "available_control_modes",
     100013: "available_schedule_types",
@@ -66,6 +74,7 @@ SELF_DESCRIBING_CAPABILITIES = {
     100078: "identify_supported",
     100102: "adaptive_planning",
     100103: "unexpected_events",
+    100196: "absence_schedule",
     100197: "night_target_temperature",
     100198: "presence_target_temperature",
     100300: "schedule_start_day",
@@ -79,13 +88,18 @@ SELF_DESCRIBING_CAPABILITIES = {
     100341: "new_schedule_sunday",
     100503: "wifi_fw",
     100800: "available_fan_speeds",
+    102006: "air_circulation_available_modes",
+    102020: "air_circulation_current_mode",
     103034: "room_controls_capabilities",
     103150: "ambient_temperature_available",
     103199: "antifrost_temperature",
     103450: "schedule_anticipation_state",
     104050: "open_window_detection",
     104051: "open_window_state",
+    105011: "supported_dhw_modes",
     105012: "supported_dhw_system_operating_modes",
+    105122: "dhw_boost_end_timestamp",
+    105636: "dhw_comfort_mode",
 }
 
 
@@ -187,6 +201,8 @@ CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
     100022: _HVAC_MODE_BITS,
     100023: _CONTROL_MODE_BITS,
     102005: _AIR_CIRCULATION_MODE_BITS,
+    102006: _AIR_CIRCULATION_MODE_BITS,
+    105011: _DHW_MODE_BITS,
     105012: _DHW_HEATING_TYPE_BITS,
 }
 
@@ -617,6 +633,14 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:tag"
 
+    elif capabilityId == 150:
+        # Home-level fault code, sibling of the room (303) and DHW (290) codes,
+        # same matrix shape and decoding.
+        capability.name = "home_error_code"
+        capability.type = CapabilityType.ERROR_CODE
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:alert-circle-outline"
+
     elif capabilityId in (152, 227):
         capability.name = "away_mode"
         capability.type = CapabilityType.AWAY_MODE_SWITCH
@@ -782,15 +806,6 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:clock-outline"
 
-    elif capabilityId == 303:
-        # Room fault code: a matrix of [system, majorCode, minorCode, level]
-        # rows, all-zero when healthy. The type decodes it to a code list;
-        # see sensor.py and docs/decisions.md for the format and its limits.
-        capability.name = "error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
-
     elif 196 <= capabilityId <= 209:
         # Weekly program: two blocks of seven capabilities, monday first. On an
         # air conditioner the second block is the cooling program rather than a
@@ -868,6 +883,14 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.TIME
         capability.category = CapabilityCategory.DIAG
         capability.icon = "mdi:clock-outline"
+
+    elif 237 <= capabilityId <= 243:
+        # Domestic-hot-water weekly program, one capability per day, monday first.
+        capability.name = f"dhw_prog_{PROGRAM_DAYS[capabilityId - 237]}"
+        capability.type = CapabilityType.PROG
+        capability.category = CapabilityCategory.DIAG
+        if _whole_block_reported(237, availableCapabilityIds):
+            capability.enabled_by_default = False
 
     elif capabilityId == 245:
         capability.name = "prog_01"
@@ -974,6 +997,13 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:clock-outline"
 
+    elif capabilityId == 290:
+        # DHW fault code, same matrix shape and decoding as the room code (303).
+        capability.name = "dhw_error_code"
+        capability.type = CapabilityType.ERROR_CODE
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:alert-circle-outline"
+
     elif capabilityId == 292:
         # Not a level: the app counts showers. Atlantic water heaters display a
         # number of expected/remaining showers rather than a percentage.
@@ -988,6 +1018,26 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.INT
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:water-check"
+
+    elif capabilityId == 303:
+        # Room fault code: a matrix of [system, majorCode, minorCode, level]
+        # rows, all-zero when healthy. The type decodes it to a code list;
+        # see sensor.py and docs/decisions.md for the format and its limits.
+        capability.name = "error_code"
+        capability.type = CapabilityType.ERROR_CODE
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:alert-circle-outline"
+
+    # For test
+    elif capabilityId == 312:
+        # Atlantic calls this one currentControlTarget, which matches the
+        # setpoint shape read below -- but it gives 306 the same name, and 306 is
+        # already mapped as a schedule bound. One of the two is wrong and nothing
+        # here says which, so the placeholder name stays until a capture settles
+        # it.
+        capability.name = "Temp_" + str(capabilityId)
+        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
+        capability.category = CapabilityCategory.SENSOR
 
     elif capabilityId == 315:
         capability.name = "timezone"
@@ -1015,56 +1065,6 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.BINARY
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:airplane"
-
-    elif capabilityId == 100402:
-        capability.name = "number_of_hours_burner"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fire"
-
-    elif capabilityId == 100406:
-        capability.name = "number_of_starts_burner"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fire"
-
-    elif capabilityId == 100450:
-        # The vendor app's "Anticipation de chauffe"; 0/1 encoding verified on
-        # a live toggle -- see docs/decisions.md.
-        capability.name = "schedule_anticipation"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-fast"
-
-    elif capabilityId == 100505:
-        capability.name = "powerful_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:wind-power"
-
-    elif capabilityId == 100506:
-        # Towel dryers only: no capture has one reporting it, and the branch
-        # predates the room radiators, which do report it and are sold on the
-        # presence detection.
-        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
-            capability = CapabilityInfos()
-        else:
-            capability.name = "presence_mode"
-            capability.type = CapabilityType.SWITCH
-            capability.category = CapabilityCategory.SENSOR
-            capability.icon = "mdi:account"
-
-    elif capabilityId == 100507:
-        # Same story as the absence setpoint in 172: the air conditioners report
-        # eco mode without the Cozytouch app ever offering it. Reported is not
-        # supported, so let the model table decide.
-        if not modelInfos.get("ecoModeAvailable", True):
-            return CapabilityInfos()
-
-        capability.name = "eco_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:flower-outline"
 
     elif capabilityId == 100320:
         capability.name = "prog_heat_monday"
@@ -1136,6 +1136,56 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
 
+    elif capabilityId == 100402:
+        capability.name = "number_of_hours_burner"
+        capability.type = CapabilityType.INT
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:fire"
+
+    elif capabilityId == 100406:
+        capability.name = "number_of_starts_burner"
+        capability.type = CapabilityType.INT
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:fire"
+
+    elif capabilityId == 100450:
+        # The vendor app's "Anticipation de chauffe"; 0/1 encoding verified on
+        # a live toggle -- see docs/decisions.md.
+        capability.name = "schedule_anticipation"
+        capability.type = CapabilityType.SWITCH
+        capability.category = CapabilityCategory.SENSOR
+        capability.icon = "mdi:clock-fast"
+
+    elif capabilityId == 100505:
+        capability.name = "powerful_mode"
+        capability.type = CapabilityType.SWITCH
+        capability.category = CapabilityCategory.SENSOR
+        capability.icon = "mdi:wind-power"
+
+    elif capabilityId == 100506:
+        # Towel dryers only: no capture has one reporting it, and the branch
+        # predates the room radiators, which do report it and are sold on the
+        # presence detection.
+        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
+            capability = CapabilityInfos()
+        else:
+            capability.name = "presence_mode"
+            capability.type = CapabilityType.SWITCH
+            capability.category = CapabilityCategory.SENSOR
+            capability.icon = "mdi:account"
+
+    elif capabilityId == 100507:
+        # Same story as the absence setpoint in 172: the air conditioners report
+        # eco mode without the Cozytouch app ever offering it. Reported is not
+        # supported, so let the model table decide.
+        if not modelInfos.get("ecoModeAvailable", True):
+            return CapabilityInfos()
+
+        capability.name = "eco_mode"
+        capability.type = CapabilityType.SWITCH
+        capability.category = CapabilityCategory.SENSOR
+        capability.icon = "mdi:flower-outline"
+
     elif capabilityId == 100802:
         capability.name = "quiet_mode"
         capability.type = CapabilityType.SWITCH
@@ -1154,6 +1204,18 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:fan"
         capability.modelList = "AirCirculationSpeeds"
+
+    elif capabilityId == 102005:
+        # The set of air-circulation modes this device supports -- a static
+        # descriptor bitmask, not a control. Off by default like every other
+        # supported_*/available_* descriptor (which reach that state through
+        # SELF_DESCRIBING_CAPABILITIES); this one has its own branch and was
+        # the lone one left visible.
+        capability.name = "air_circulation_supported_modes"
+        capability.type = CapabilityType.STRING
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:fan"
+        capability.enabled_by_default = False
 
     elif capabilityId == 102021:
         # Air circulation runs for a set number of minutes, and the app offers
@@ -1174,6 +1236,14 @@ def get_capability_infos(  # noqa: C901
         capability.highest_value = 300
         capability.step = 15
 
+    elif capabilityId == 102022:
+        # Step for the air-circulation duration (102021).
+        capability.name = "air_circulation_time_step"
+        capability.type = CapabilityType.INT
+        capability.category = CapabilityCategory.DIAG
+        capability.icon = "mdi:fan-clock"
+        capability.enabled_by_default = False
+
     elif capabilityId == 102023:
         capability.name = "air_circulation_remaining_time"
         capability.type = CapabilityType.TIME
@@ -1185,49 +1255,6 @@ def get_capability_infos(  # noqa: C901
         capability.type = CapabilityType.SWITCH
         capability.category = CapabilityCategory.SENSOR
         capability.icon = "mdi:fan"
-
-    elif capabilityId == 150:
-        # Home-level fault code, sibling of the room (303) and DHW (290) codes,
-        # same matrix shape and decoding.
-        capability.name = "home_error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
-
-    elif 237 <= capabilityId <= 243:
-        # Domestic-hot-water weekly program, one capability per day, monday first.
-        capability.name = f"dhw_prog_{PROGRAM_DAYS[capabilityId - 237]}"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-        if _whole_block_reported(237, availableCapabilityIds):
-            capability.enabled_by_default = False
-
-    elif capabilityId == 290:
-        # DHW fault code, same matrix shape and decoding as the room code (303).
-        capability.name = "dhw_error_code"
-        capability.type = CapabilityType.ERROR_CODE
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:alert-circle-outline"
-
-    elif capabilityId == 102005:
-        # The set of air-circulation modes this device supports -- a static
-        # descriptor bitmask, not a control. Off by default like every other
-        # supported_*/available_* descriptor (which reach that state through
-        # SELF_DESCRIBING_CAPABILITIES); this one has its own branch and was
-        # the lone one left visible.
-        capability.name = "air_circulation_supported_modes"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan"
-        capability.enabled_by_default = False
-
-    elif capabilityId == 102022:
-        # Step for the air-circulation duration (102021).
-        capability.name = "air_circulation_time_step"
-        capability.type = CapabilityType.INT
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:fan-clock"
-        capability.enabled_by_default = False
 
     elif capabilityId == 102025:
         # Minimum air-circulation duration; the lower bound of 102021.
@@ -1272,29 +1299,18 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.DIAG
 
     elif capabilityId == 105906:
-        capability.name = "Target 105906"
+        capability.name = "v40_applied_setpoint"
         capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
         capability.category = CapabilityCategory.SENSOR
         capability.temperatureMin = 15.0
         capability.temperatureMax = 65.0
 
     elif capabilityId == 105907:
-        capability.name = "Target 105907"
+        capability.name = "v40_setpoint_filled_by_user"
         capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
         capability.category = CapabilityCategory.SENSOR
         capability.temperatureMin = 15.0
         capability.temperatureMax = 65.0
-
-    # For test
-    elif capabilityId == 312:
-        # Atlantic calls this one currentControlTarget, which matches the
-        # setpoint shape read below -- but it gives 306 the same name, and 306 is
-        # already mapped as a schedule bound. One of the two is wrong and nothing
-        # here says which, so the placeholder name stays until a capture settles
-        # it.
-        capability.name = "Temp_" + str(capabilityId)
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
 
     elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
         capability.name = SELF_DESCRIBING_CAPABILITIES[capabilityId]
