@@ -711,10 +711,10 @@
    "153": {
     "capabilityId": 153,
     "category": "sensor",
-    "icon": "mdi:radiator",
+    "icon": "mdi:heat-wave",
     "modelId": 1381,
-    "name": "resistance",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -2556,8 +2556,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 1457,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -4395,8 +4395,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 1505,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -6226,8 +6226,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 1641,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -8065,8 +8065,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 1734,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -9922,8 +9922,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 211,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -11744,8 +11744,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 2374,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -13585,8 +13585,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 418,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -15417,8 +15417,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 557,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -17259,10 +17259,10 @@
    "153": {
     "capabilityId": 153,
     "category": "sensor",
-    "icon": "mdi:fire",
+    "icon": "mdi:heat-wave",
     "modelId": 56,
-    "name": "flame",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -19094,8 +19094,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 562,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -20927,8 +20927,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 76,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,
@@ -22766,8 +22766,8 @@
     "category": "sensor",
     "icon": "mdi:heat-wave",
     "modelId": 999999,
-    "name": "heating",
-    "type": "binary"
+    "name": "heating_status",
+    "type": "string"
    },
    "154": {
     "capabilityId": 154,

@@ -523,17 +523,14 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     153: Entity(
-        # Atlantic calls it HEATING_STATUS: whether heat is being produced,
-        # not what produces it. The products that know say so; a default of
-        # "flame" reached the air conditioners, which have none.
-        name="heating",
-        type=CapabilityType.BINARY,
+        # Three states, not two: the app reads it as HeatingStatus { OFF,
+        # HEAT_UP, COOL_DOWN } and never gives it a label of its own. See
+        # docs/decisions.md.
+        name="heating_status",
+        type=CapabilityType.STRING,
         enabled_by_default=True,
         icon="mdi:heat-wave",
-        per_type={
-            ELECTRIC_HEATERS: {"name": "resistance", "icon": "mdi:radiator"},
-            (CozytouchDeviceType.GAZ_BOILER,): {"name": "flame", "icon": "mdi:fire"},
-        },
+        reads_as={"0": "off", "1": "heating", "2": "cooling"},
     ),
     154: Entity(
         name="zone_1",

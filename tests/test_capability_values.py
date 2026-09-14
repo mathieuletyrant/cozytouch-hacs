@@ -72,6 +72,11 @@ from custom_components.cozytouch.capability import (
         # One named bit each, and the corpus only ever shows the others.
         (103034, "16", "antifrost"),
         (224, "3", "water_flow, unknown (1)"),
+        # Three states, and the third is the one a binary sensor read as off:
+        # an air conditioner cooling reports 2.
+        (153, "0", "off"),
+        (153, "1", "heating"),
+        (153, "2", "cooling"),
         # Value spaces rather than masks.
         (73, "4", "cooling_and_heating"),
         (73, "2", "heating_only"),

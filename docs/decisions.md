@@ -645,6 +645,58 @@ an error, and `dhw_error_code` is a better entity name than
 Its name here comes from the iOS list, which is the only source for it, and
 which is wrong about every other id on this page at least once.
 
+### Capability 153 has three states, and Atlantic never names it
+
+`HEATING_STATUS`, read as `HeatingStatus { OFF "0", HEAT_UP "1", COOL_DOWN
+"2" }`. Two things follow, and the second is the one that mattered.
+
+**It was a binary sensor**, whose `is_on` is `value == "1"`. A device
+reporting 2 read as off, silently, and the product that reports 2 is an air
+conditioner while it is cooling -- including the room units this
+integration is developed against. The corpus holds 23 readings of 153 and
+every one is 0, so the captures could not have shown this: they were all
+taken outside the cooling season. It becomes a string with `reads_as`, and
+`BINARY` and `STRING` are built by the same platform, so nothing has to
+migrate.
+
+**The flame and the resistance were ours.** The app labels 153 nowhere --
+its eight uses of `HeatingStatus` drive a colour and two booleans, and
+there is no `R.string` near any of them. So a boiler saying "flame" and a
+towel dryer saying "resistance" was an invention, defensible while the
+value was a flag and incoherent once it can say "cooling": a flame that
+cools is not a thing. One name for every product, which is what Atlantic
+has.
+
+The default was also wrong before that, and wrong in the way CLAUDE.md
+warns about: `flame` was the shared default with the electric heaters as
+the exception, so it claimed every product nobody had considered -- the air
+conditioners included.
+
+### Seventeen names the iOS list got wrong
+
+The mapping's names came from an extraction of the iOS app. The Android
+enum (`research/data/capability_id_to_name_android.tsv`) disagrees on
+seventeen, and where the two differ the Android one is the enum itself,
+read in clear Kotlin, not a string recovered from a compiled binary.
+
+Only the ones that said something *false* were changed; a paraphrase is not
+an error, and `dhw_error_code` is a better entity name than
+`ERROR_CODE_DHW`.
+
+| id | was | is |
+| -- | --- | -- |
+| 344 | `linked_interfaces_count` | `ROOM_COUNT` -- a count of rooms |
+| 100002, 100024 | `*_estimation_modes` | ventilation options, a `VentilationOption` mask |
+| 100004, 100021 | `*_control_modes` | ventilation controls, a `VentilationControls` mask |
+| 100196-100198 | `absence_schedule`, `*_target_temperature` | `PROG_ABSENCE` / `NIGHT` / `PRESENCE`, each a JSON `[temperature, offState]` pair and not a scalar |
+| 100334-100341 | `new_schedule_*` | `THERMOSTAT_LIFESTYLE_HEATING_*` -- the lifestyle program, nothing new about it |
+| 100078 | `identify_supported` | `VENTILATION_WINK_REQUEST`, read by `isWinkRequested` : a request, not a support flag |
+| 358 | `air_circulation_scope` | `thermalAmbianceScope` -- nothing to do with air circulation |
+
+358 is the one the Android enum does *not* carry : the app never reads it.
+Its name here comes from the iOS list, which is the only source for it, and
+which is wrong about every other id on this page at least once.
+
 ### Capability 153 is whether it is heating, not what is burning
 
 Atlantic calls it `HEATING_STATUS` and reads it as `HeatingStatus { OFF,
