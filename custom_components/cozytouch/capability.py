@@ -378,6 +378,16 @@ class Entity:
     extra   the remaining keys a platform reads off a capability -- the bounds
             of a number, a step, a modelList. Spelled out rather than given
             fields of their own, because each is read by one platform only.
+
+    The last four say the same id does not mean the same thing on every
+    product, which is why this is a table of rows rather than of strings :
+
+    absent_on   device types with no such entity at all.
+    needs_flag  a flag from model.py that has to hold for the entity to exist.
+                A model that does not mention it is taken to have it.
+    per_type    per device type, the keys to merge in last.
+    per_model   the same per model id, for the products Atlantic wired to
+                different capabilities.
     """
 
     name: str
@@ -385,22 +395,51 @@ class Entity:
     category: CapabilityCategory = CapabilityCategory.SENSOR
     icon: str | None = None
     extra: Mapping[str, object] | None = None
+    absent_on: tuple[CozytouchDeviceType, ...] = ()
+    needs_flag: str | None = None
+    per_type: Mapping[CozytouchDeviceType, Mapping[str, object]] | None = None
+    per_model: Mapping[int, Mapping[str, object]] | None = None
 
-    def apply(self, capability: CapabilityInfos) -> None:
-        """Fill in the fields this row declares, and nothing else."""
+    def resolve(
+        self, capability: CapabilityInfos, modelInfos: ModelInfos
+    ) -> CapabilityInfos:
+        """Fill the capability in, or hand back an empty one where it does not exist."""
+        if modelInfos.type in self.absent_on:
+            return CapabilityInfos()
+        if self.needs_flag and not modelInfos.get(self.needs_flag, True):
+            return CapabilityInfos()
+
         capability.name = self.name
         capability.type = self.type
         capability.category = self.category
         if self.icon is not None:
             capability.icon = self.icon
-        for key, value in (self.extra or {}).items():
-            capability[key] = value
+        for source in (
+            self.extra,
+            (self.per_type or {}).get(modelInfos.type),
+            (self.per_model or {}).get(modelInfos.modelId),
+        ):
+            for key, value in (source or {}).items():
+                capability[key] = value
+        return capability
 
 
 CAPABILITIES: dict[int, Entity] = {
     19: Entity(
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
+    ),
+    22: Entity(
+        name="target_temperature_dhw",
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
+        per_model={
+            2374: {
+                "lowestValueCapabilityId": 253,
+                "highestValueCapabilityId": 252,
+                "step": 1,
+            }
+        },
     ),
     25: Entity(
         name="number_of_starts_ch_pump",
@@ -519,6 +558,17 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
+    99: Entity(
+        name="dhw_pump",
+        type=CapabilityType.BINARY,
+        icon="mdi:faucet",
+        per_type={
+            CozytouchDeviceType.WATER_HEATER: {
+                "name": "resistance",
+                "icon": "mdi:radiator",
+            }
+        },
+    ),
     100: Entity(
         name="water_pressure",
         type=CapabilityType.PRESSURE,
@@ -534,6 +584,11 @@ CAPABILITIES: dict[int, Entity] = {
     111: Entity(
         name="dhw_temperature",
         type=CapabilityType.TEMPERATURE,
+    ),
+    116: Entity(
+        name="exhaust_temperature",
+        type=CapabilityType.TEMPERATURE,
+        needs_flag="exhaustTemperatureAvailable",
     ),
     117: Entity(
         name="thermostat_temperature_z1",
@@ -555,6 +610,15 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
     ),
+    153: Entity(
+        name="flame",
+        type=CapabilityType.BINARY,
+        icon="mdi:fire",
+        per_type={
+            deviceType: {"name": "resistance", "icon": "mdi:radiator"}
+            for deviceType in ELECTRIC_HEATERS
+        },
+    ),
     154: Entity(
         name="zone_1",
         type=CapabilityType.STRING,
@@ -566,6 +630,25 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         icon="mdi:home-floor-2",
+    ),
+    158: Entity(
+        name="override_total_time_z1",
+        type=CapabilityType.HOURS_ADJUSTMENT_NUMBER,
+        icon="mdi:clock-outline",
+        extra={"lowest_value": 1, "highest_value": 24},
+        per_type={
+            deviceType: {"name": "override_total_time"}
+            for deviceType in ELECTRIC_HEATERS
+        },
+    ),
+    159: Entity(
+        name="override_remain_time_z1",
+        type=CapabilityType.TIME,
+        icon="mdi:clock-outline",
+        per_type={
+            deviceType: {"name": "override_remain_time"}
+            for deviceType in ELECTRIC_HEATERS
+        },
     ),
     160: Entity(
         name="temperature_adjustment_min",
@@ -584,17 +667,52 @@ CAPABILITIES: dict[int, Entity] = {
         "step": 0.5,
         },
     ),
+    165: Entity(
+        # water-boiler icon: a domestic-hot-water boost, not the generic boost.
+        name="domestic_hot_water_boost",
+        type=CapabilityType.SWITCH,
+        icon="mdi:water-boiler",
+        per_type={
+            CozytouchDeviceType.HEAT_PUMP: {"value_off": "false", "value_on": "true"}
+        },
+    ),
     169: Entity(
         name="radio_signal",
         type=CapabilityType.PERCENTAGE,
         category=CapabilityCategory.DIAG,
         icon="mdi:radio-tower",
     ),
+    171: Entity(
+        # The cooling half of the absence setpoint, 172 being the heating one.
+        # Read-only where 172 is a number. See docs/decisions.md.
+        name="away_mode_cooling_temperature",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        needs_flag="awayModeTemperatureAvailable",
+        extra={"enabled_by_default": False},
+    ),
+    177: Entity(
+        name="target_cool_temperature",
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        absent_on=(CozytouchDeviceType.GAZ_BOILER,),
+        extra={"lowestValueCapabilityId": 162, "highestValueCapabilityId": 163},
+    ),
     179: Entity(
         name="wifi_signal",
         type=CapabilityType.SIGNAL,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
+    ),
+    218: Entity(
+        # `wifiConnected` by name, but never the boolean it looks like : shown
+        # raw and off by default. See docs/decisions.md. A zone gets nothing at
+        # all, having no readings to go with it.
+        name="wifi_connected",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        icon="mdi:wifi",
+        absent_on=(CozytouchDeviceType.ZONE,),
+        extra={"enabled_by_default": False},
     ),
     219: Entity(
         name="wifi_ssid",
@@ -606,6 +724,21 @@ CAPABILITIES: dict[int, Entity] = {
         name="absence_dhw_temperature",
         type=CapabilityType.TEMPERATURE,
         category=CapabilityCategory.DIAG,
+    ),
+    231: Entity(
+        name="target_temperature",
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        extra={
+            "lowestValueCapabilityId": 105301,
+            "highestValueCapabilityId": 105304,
+        },
+        per_model={
+            2374: {
+                "lowestValueCapabilityId": 253,
+                "highestValueCapabilityId": 252,
+                "step": 1,
+            }
+        },
     ),
     232: Entity(
         name="boost_total_time",
@@ -843,6 +976,24 @@ CAPABILITIES: dict[int, Entity] = {
         name="powerful_mode",
         type=CapabilityType.SWITCH,
         icon="mdi:wind-power",
+    ),
+    100506: Entity(
+        # Towel dryers only: no capture has one reporting it, and the branch
+        # predates the room radiators, which do report it and are sold on the
+        # presence detection.
+        name="presence_mode",
+        type=CapabilityType.SWITCH,
+        icon="mdi:account",
+        absent_on=(CozytouchDeviceType.TOWEL_RACK,),
+    ),
+    100507: Entity(
+        # Same story as the absence setpoint in 172: the air conditioners report
+        # eco mode without the Cozytouch app ever offering it. Reported is not
+        # supported, so let the model table decide.
+        name="eco_mode",
+        type=CapabilityType.SWITCH,
+        icon="mdi:flower-outline",
+        needs_flag="ecoModeAvailable",
     ),
     100802: Entity(
         name="quiet_mode",
@@ -1109,44 +1260,13 @@ def get_capability_infos(  # noqa: C901
                 capability.swingOnCapabilityId = 100804
 
     elif capabilityId in CAPABILITIES:
-        CAPABILITIES[capabilityId].apply(capability)
-
-    elif capabilityId == 22:
-        capability.name = "target_temperature_dhw"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        if modelId == 2374:
-            capability.lowestValueCapabilityId = 253
-            capability.highestValueCapabilityId = 252
-            capability.step = 1
-        else:
-            capability.lowestValueCapabilityId = 160
-            capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 99:
-        if modelInfos.type == CozytouchDeviceType.WATER_HEATER:
-            capability.name = "resistance"
-            capability.icon = "mdi:radiator"
-        else:
-            capability.name = "dhw_pump"
-            capability.icon = "mdi:faucet"
-
-        capability.type = CapabilityType.BINARY
-        capability.category = CapabilityCategory.SENSOR
+        capability = CAPABILITIES[capabilityId].resolve(capability, modelInfos)
 
     elif capabilityId in (101, 102, 103, 104):
         capability.name = "Capability_" + str(capabilityId)
         capability.type = CapabilityType.STRING
         capability.value_type = CozytouchCapabilityVariableType.ARRAY
         capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 116:
-        if modelInfos.get("exhaustTemperatureAvailable", True):
-            capability.name = "exhaust_temperature"
-            capability.type = CapabilityType.TEMPERATURE
-            capability.category = CapabilityCategory.SENSOR
-        else:
-            return CapabilityInfos()
 
     elif capabilityId == 119:
         # Outside temperature is invalid when value is -327.68
@@ -1170,39 +1290,6 @@ def get_capability_infos(  # noqa: C901
         elif capabilityId == 227:
             capability.timestampsCapabilityId = 226
 
-    elif capabilityId == 153:
-        if modelInfos.type in ELECTRIC_HEATERS:
-            capability.name = "resistance"
-            capability.icon = "mdi:radiator"
-        else:
-            capability.name = "flame"
-            capability.icon = "mdi:fire"
-
-        capability.type = CapabilityType.BINARY
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 158:
-        if modelInfos.type in ELECTRIC_HEATERS:
-            capability.name = "override_total_time"
-        else:
-            capability.name = "override_total_time_z1"
-
-        capability.type = CapabilityType.HOURS_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-outline"
-        capability.lowest_value = 1
-        capability.highest_value = 24
-
-    elif capabilityId == 159:
-        if modelInfos.type in ELECTRIC_HEATERS:
-            capability.name = "override_remain_time"
-        else:
-            capability.name = "override_remain_time_z1"
-
-        capability.type = CapabilityType.TIME
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-outline"
-
     elif capabilityId in (162, 163):
         # The cooling counterpart of the 160/161 heating bounds. Two independent
         # reverse-engineering efforts name these the same way, so the unit is
@@ -1213,30 +1300,6 @@ def get_capability_infos(  # noqa: C901
             if capabilityId == 162
             else "cooling_temperature_max"
         )
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-        capability.enabled_by_default = False
-
-    elif capabilityId == 165:
-        # water-boiler icon: a domestic-hot-water boost, not the generic boost.
-        capability.name = "domestic_hot_water_boost"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:water-boiler"
-
-        if modelInfos.type == CozytouchDeviceType.HEAT_PUMP:
-            capability.value_off = "false"
-            capability.value_on = "true"
-
-    elif capabilityId == 171:
-        # The cooling half of the absence setpoint, 172 being the heating one.
-        # Read-only where 172 is a number : the app names it, and every capture
-        # agrees on the unit, but nothing has been seen writing it. See
-        # docs/decisions.md.
-        if not modelInfos.get("awayModeTemperatureAvailable", True):
-            return CapabilityInfos()
-
-        capability.name = "away_mode_cooling_temperature"
         capability.type = CapabilityType.TEMPERATURE
         capability.category = CapabilityCategory.DIAG
         capability.enabled_by_default = False
@@ -1256,16 +1319,6 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.SENSOR
         capability.lowestValueCapabilityId = 160
         capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 177:
-        if modelInfos.type == CozytouchDeviceType.GAZ_BOILER:
-            return CapabilityInfos()
-
-        capability.name = "target_cool_temperature"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.lowestValueCapabilityId = 162
-        capability.highestValueCapabilityId = 163
 
     elif capabilityId == 181:
         # Ignore, same as heat sensor (7, 8)
@@ -1293,19 +1346,6 @@ def get_capability_infos(  # noqa: C901
         if _whole_block_reported(196 if index < 7 else 203, availableCapabilityIds):
             capability.enabled_by_default = False
 
-    elif capabilityId == 218:
-        # `wifiConnected` by name, but never the boolean it looks like : shown
-        # raw and off by default. See docs/decisions.md. A zone gets nothing at
-        # all, having no readings to go with it.
-        if modelInfos.type is CozytouchDeviceType.ZONE:
-            return CapabilityInfos()
-
-        capability.name = "wifi_connected"
-        capability.type = CapabilityType.STRING
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:wifi"
-        capability.enabled_by_default = False
-
     elif capabilityId in (222, 226):
         capability.name = "away_mode"
         capability.type = CapabilityType.AWAY_MODE_TIMESTAMPS
@@ -1319,18 +1359,6 @@ def get_capability_infos(  # noqa: C901
             capability.capabilityDuplicate = 226
         else:
             capability.capabilityDuplicate = 222
-
-    elif capabilityId == 231:
-        capability.name = "target_temperature"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        if modelId == 2374:
-            capability.lowestValueCapabilityId = 253
-            capability.highestValueCapabilityId = 252
-            capability.step = 1
-        else:
-            capability.lowestValueCapabilityId = 105301
-            capability.highestValueCapabilityId = 105304
 
     elif capabilityId == 233:
         capability.name = "boost_remaining_time"
@@ -1355,30 +1383,6 @@ def get_capability_infos(  # noqa: C901
         capability.name = "Temp_" + str(capabilityId)
         capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
         capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 100506:
-        # Towel dryers only: no capture has one reporting it, and the branch
-        # predates the room radiators, which do report it and are sold on the
-        # presence detection.
-        if modelInfos.type == CozytouchDeviceType.TOWEL_RACK:
-            capability = CapabilityInfos()
-        else:
-            capability.name = "presence_mode"
-            capability.type = CapabilityType.SWITCH
-            capability.category = CapabilityCategory.SENSOR
-            capability.icon = "mdi:account"
-
-    elif capabilityId == 100507:
-        # Same story as the absence setpoint in 172: the air conditioners report
-        # eco mode without the Cozytouch app ever offering it. Reported is not
-        # supported, so let the model table decide.
-        if not modelInfos.get("ecoModeAvailable", True):
-            return CapabilityInfos()
-
-        capability.name = "eco_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:flower-outline"
 
     elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
         capability.name, capability.type = SELF_DESCRIBING_CAPABILITIES[capabilityId]
