@@ -7,9 +7,6 @@ reads, and the handful of ids no row can decide. The rows themselves are in
 
 from .capability_table import (
     CAPABILITIES,
-    CAPABILITY_BIT_FIELDS,
-    CAPABILITY_SPEED_SETS,
-    CAPABILITY_VALUE_SPACES,
     ELECTRIC_HEATERS,
     SUPPRESSED_CAPABILITIES,
     hidden_by_a_calendar,
@@ -26,18 +23,22 @@ from .model import CozytouchDeviceType
 def describe_capability_value(capabilityId: int, value) -> str | None:
     """Read a descriptor capability as what it says, or None if nothing does.
 
-    Bits nothing names are kept as a count rather than dropped: these entities
-    exist to investigate hardware nobody here owns, and a bit the tables do not
-    cover is exactly what such a reader is after.
-    """
-    space = CAPABILITY_VALUE_SPACES.get(capabilityId) or CAPABILITY_SPEED_SETS.get(
-        capabilityId
-    )
-    if space is not None:
-        return space.get(str(value).strip())
+    The row says how: `values` when the number names one thing, `bits` when it
+    is a sum of them. A row that says neither is a number nobody has decoded,
+    and it reaches the entity as it came.
 
-    bits = CAPABILITY_BIT_FIELDS.get(capabilityId)
-    if bits is None:
+    Bits nothing names are kept as a count rather than dropped: these entities
+    exist to investigate hardware nobody here owns, and a bit the table does
+    not cover is exactly what such a reader is after.
+    """
+    row = CAPABILITIES.get(capabilityId)
+    if row is None:
+        return None
+
+    if row.values is not None:
+        return row.values.get(str(value).strip())
+
+    if row.bits is None:
         return None
 
     try:
@@ -48,10 +49,10 @@ def describe_capability_value(capabilityId: int, value) -> str | None:
     if mask == 0:
         return "none"
 
-    named = [label for bit, label in bits if mask & bit]
+    named = [label for bit, label in row.bits if mask & bit]
 
     known = 0
-    for bit, _ in bits:
+    for bit, _ in row.bits:
         known |= bit
     leftover = mask & ~known
     if leftover:

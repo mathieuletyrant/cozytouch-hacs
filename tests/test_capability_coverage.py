@@ -28,12 +28,7 @@ import pytest
 
 from custom_components.cozytouch import capability_table
 from custom_components.cozytouch.capability import get_capability_infos
-from custom_components.cozytouch.capability_table import (
-    CAPABILITIES,
-    CAPABILITY_BIT_FIELDS,
-    CAPABILITY_SPEED_SETS,
-    CAPABILITY_VALUE_SPACES,
-)
+from custom_components.cozytouch.capability_table import CAPABILITIES
 from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
@@ -238,39 +233,22 @@ def test_a_capability_that_says_nothing_is_enabled():
     assert "enabled_by_default" not in result
 
 
-def test_a_decoding_table_does_not_shadow_another():
-    """The three tables read the same number three incompatible ways.
+def test_no_row_decodes_its_value_two_ways():
+    """Bits and values read the same number two incompatible ways.
 
-    A sum of bits, one member of an enum, or the name of a whole set: nothing
-    in the value says which, only the id does. describe_capability_value tries
-    the value spaces first, so an id in two tables would be read by one of them
-    and silently mean something else -- 217 reading 3083 as a mode number
-    rather than a mask is that mistake, already made once.
+    A sum of powers of two, or one thing named: nothing in the value says
+    which, only the row does, and 4 is a legal answer to either. A row setting
+    both would be read by whichever describe_capability_value tries first and
+    would silently mean something else -- 217 read as a mode numbered 3083
+    rather than as a mask is that mistake, already made once.
     """
-    tables = {
-        "bit fields": set(CAPABILITY_BIT_FIELDS),
-        "value spaces": set(CAPABILITY_VALUE_SPACES),
-        "speed sets": set(CAPABILITY_SPEED_SETS),
-    }
+    both = sorted(
+        capabilityId
+        for capabilityId, row in CAPABILITIES.items()
+        if row.bits is not None and row.values is not None
+    )
 
-    for left, right in itertools.combinations(sorted(tables), 2):
-        shared = tables[left] & tables[right]
-        assert not shared, f"{sorted(shared)} is in both {left} and {right}"
-
-
-@pytest.mark.parametrize(
-    "capabilityId",
-    sorted(
-        set(CAPABILITY_BIT_FIELDS)
-        | set(CAPABILITY_VALUE_SPACES)
-        | set(CAPABILITY_SPEED_SETS)
-    ),
-)
-def test_a_decoded_id_is_one_the_mapping_produces(capabilityId):
-    """A typo in a decoding table is data nothing ever reaches."""
-    infos = get_model_infos(557)
-
-    assert get_capability_infos(infos, capabilityId, "0", {capabilityId}) is not None
+    assert not both, f"{both} set both bits and values"
 
 
 def test_no_capability_id_is_written_twice():

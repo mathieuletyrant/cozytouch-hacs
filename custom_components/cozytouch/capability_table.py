@@ -92,98 +92,6 @@ _VENTILATION_CONTROL_BITS = (
     (128, "vertical_blade_position"),
 )
 
-# What the numbers in the table above mean, read off the vendor's Android app
-# and checked against the capture corpus. A member can claim several bits at
-# once, and the app matches on any bit of the member's mask. Which masks were
-# deliberately left out, and why, is in docs/decisions.md.
-CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
-    164: (
-        (1, "gas_heating"),
-        (2, "electricity_heating"),
-        (4, "electricity_cooling"),
-        (8, "gas_dhw"),
-        (16, "electricity_dhw"),
-        (32, "fuel_heating"),
-        (64, "fuel_dhw"),
-        (256, "heating_production"),
-        (512, "cooling_production"),
-        (1024, "dhw_production"),
-    ),
-    166: _HVAC_MODE_BITS,
-    168: _DHW_MODE_BITS,
-    188: (
-        (1, "thermal_comfort"),
-        (2, "dhw"),
-        (4, "ventilation"),
-        (8, "light"),
-    ),
-    217: _CONTROL_MODE_BITS,
-    223: _DHW_HEATING_TYPE_BITS,
-    224: ((2, "water_flow"),),
-    336: (
-        (1, "v40_state_of_charge"),
-        (2, "main_setpoint_cursor"),
-        (4, "secondary_setpoint_cursor"),
-        (8, "data_inside"),
-    ),
-    100002: _VENTILATION_OPTION_BITS,
-    100004: _VENTILATION_CONTROL_BITS,
-    100013: (
-        (1, "on_off"),
-        (2, "boost"),
-    ),
-    100021: _VENTILATION_CONTROL_BITS,
-    100022: _HVAC_MODE_BITS,
-    100023: _CONTROL_MODE_BITS,
-    100024: _VENTILATION_OPTION_BITS,
-    102005: _AIR_CIRCULATION_MODE_BITS,
-    102006: _AIR_CIRCULATION_MODE_BITS,
-    103034: ((16, "antifrost"),),
-    105011: _DHW_MODE_BITS,
-    105012: _DHW_HEATING_TYPE_BITS,
-}
-
-# The same, for the ids whose value is one member rather than a set of them.
-CAPABILITY_VALUE_SPACES: dict[int, dict[str, str]] = {
-    73: {
-        "0": "cooling_only",
-        "1": "cooling_with_reheat",
-        "2": "heating_only",
-        "3": "heating_with_reheat",
-        "4": "cooling_and_heating",
-        "5": "cooling_and_heating_with_reheat",
-    },
-    230: {
-        "0": "heat",
-        "1": "scheduled_heat",
-        "2": "off_peak_heat",
-    },
-    337: {
-        "0": "nothing",
-        "1": "away",
-        "2": "boost",
-        "3": "photovoltaic",
-        "4": "smart_grid",
-        "5": "antilegionella",
-        "6": "water_setpoint",
-    },
-    338: {
-        "0": "nothing",
-        "1": "eco",
-        "2": "water_setpoint",
-    },
-    339: {
-        "0": "nothing",
-        "1": "v40_state_of_charge",
-        "2": "water_setpoint",
-    },
-    105636: {
-        "0": "eco",
-        "1": "comfort",
-    },
-}
-
-
 # The speed selectors name a whole set rather than one speed, so each value
 # spells its set out. A third mechanism next to the two tables above, and the
 # app's own: `buildListFromValue`. See docs/decisions.md.
@@ -195,10 +103,6 @@ _SPEED_SETS = {
     "4": "auto",
 }
 
-CAPABILITY_SPEED_SETS: dict[int, dict[str, str]] = {
-    350: _SPEED_SETS,
-    100800: _SPEED_SETS,
-}
 
 def hidden_by_a_calendar(capabilityId: int, availableCapabilityIds: set[int]) -> bool:
     """Whether this id is a program day whose whole block the device reports.
@@ -238,6 +142,19 @@ class Entity:
             has no default on purpose : every row states it, so whether an
             entity shows up on a device page is answered by reading the row
             rather than by knowing what the field falls back to.
+    bits    the value is a *sum*: one number saying several things at once.
+            166 reading 411 is 1+2+4+16+128+256, so the unit does off, auto,
+            cool, heat, fan and dry. The question it answers is "which of
+            these can I do".
+    values  the value names *one* thing. 73 reading 4 is the fourth member,
+            cooling_and_heating, and nothing else. The question it answers is
+            "which one, right now".
+
+            At most one of the two, and the choice is not cosmetic: 4 read as
+            a sum is the third flag, read as a name it is the fourth member,
+            and both readings look perfectly sensible. Only the id says which,
+            which is why a row setting both fails a test. The way to tell them
+            apart is whether the device can report two of these at once.
     extra   the remaining keys a platform reads off a capability -- the bounds
             of a number, a step, a modelList. Spelled out rather than given
             fields of their own, because each is read by one platform only.
@@ -261,6 +178,8 @@ class Entity:
     category: CapabilityCategory = CapabilityCategory.SENSOR
     icon: str | None = None
     enabled_by_default: bool
+    bits: tuple[tuple[int, str], ...] | None = None
+    values: Mapping[str, str] | None = None
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
@@ -294,7 +213,6 @@ class Entity:
             for key, setting in (source or {}).items():
                 capability[key] = setting
         return capability
-
 
 
 # The two ends of the away window, which arrive as one comma-separated value.
@@ -428,6 +346,14 @@ CAPABILITIES: dict[int, Entity] = {
     73: Entity(
         name="available_thermostat_modes",
         type=CapabilityType.STRING,
+        values={
+            "0": "cooling_only",
+            "1": "cooling_with_reheat",
+            "2": "heating_only",
+            "3": "heating_with_reheat",
+            "4": "cooling_and_heating",
+            "5": "cooling_and_heating_with_reheat",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -672,6 +598,18 @@ CAPABILITIES: dict[int, Entity] = {
     164: Entity(
         name="energy_consumption_supported",
         type=CapabilityType.STRING,
+        bits=(
+            (1, "gas_heating"),
+            (2, "electricity_heating"),
+            (4, "electricity_cooling"),
+            (8, "gas_dhw"),
+            (16, "electricity_dhw"),
+            (32, "fuel_heating"),
+            (64, "fuel_dhw"),
+            (256, "heating_production"),
+            (512, "cooling_production"),
+            (1024, "dhw_production"),
+        ),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -688,12 +626,14 @@ CAPABILITIES: dict[int, Entity] = {
     166: Entity(
         name="system_operating_mode",
         type=CapabilityType.STRING,
+        bits=_HVAC_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     168: Entity(
         name="available_dhw_modes",
         type=CapabilityType.STRING,
+        bits=_DHW_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -749,6 +689,12 @@ CAPABILITIES: dict[int, Entity] = {
     188: Entity(
         name="home_services",
         type=CapabilityType.STRING,
+        bits=(
+            (1, "thermal_comfort"),
+            (2, "dhw"),
+            (4, "ventilation"),
+            (8, "light"),
+        ),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -853,6 +799,7 @@ CAPABILITIES: dict[int, Entity] = {
     217: Entity(
         name="system_setpoint_mode",
         type=CapabilityType.STRING,
+        bits=_CONTROL_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -887,12 +834,14 @@ CAPABILITIES: dict[int, Entity] = {
     223: Entity(
         name="dhw_system_operating_mode",
         type=CapabilityType.STRING,
+        bits=_DHW_HEATING_TYPE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     224: Entity(
         name="dhw_estimation_supported",
         type=CapabilityType.STRING,
+        bits=((2, "water_flow"),),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -927,6 +876,11 @@ CAPABILITIES: dict[int, Entity] = {
     230: Entity(
         name="dhw_operating_mode",
         type=CapabilityType.STRING,
+        values={
+            "0": "heat",
+            "1": "scheduled_heat",
+            "2": "off_peak_heat",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1245,24 +1199,49 @@ CAPABILITIES: dict[int, Entity] = {
     336: Entity(
         name="dhw_panel_capabilities",
         type=CapabilityType.STRING,
+        bits=(
+            (1, "v40_state_of_charge"),
+            (2, "main_setpoint_cursor"),
+            (4, "secondary_setpoint_cursor"),
+            (8, "data_inside"),
+        ),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     337: Entity(
         name="main_cursor_information",
         type=CapabilityType.STRING,
+        values={
+            "0": "nothing",
+            "1": "away",
+            "2": "boost",
+            "3": "photovoltaic",
+            "4": "smart_grid",
+            "5": "antilegionella",
+            "6": "water_setpoint",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     338: Entity(
         name="secondary_cursor_information",
         type=CapabilityType.STRING,
+        values={
+            "0": "nothing",
+            "1": "eco",
+            "2": "water_setpoint",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     339: Entity(
         name="dhw_panel_data",
         type=CapabilityType.STRING,
+        values={
+            "0": "nothing",
+            "1": "v40_state_of_charge",
+            "2": "water_setpoint",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1281,6 +1260,7 @@ CAPABILITIES: dict[int, Entity] = {
     350: Entity(
         name="air_circulation_supported_speeds",
         type=CapabilityType.STRING,
+        values=_SPEED_SETS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1347,42 +1327,52 @@ CAPABILITIES: dict[int, Entity] = {
     100002: Entity(
         name="supported_estimation_modes",
         type=CapabilityType.STRING,
+        bits=_VENTILATION_OPTION_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100004: Entity(
         name="available_control_modes",
         type=CapabilityType.STRING,
+        bits=_VENTILATION_CONTROL_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100013: Entity(
         name="available_schedule_types",
         type=CapabilityType.STRING,
+        bits=(
+            (1, "on_off"),
+            (2, "boost"),
+        ),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100021: Entity(
         name="supported_control_modes",
         type=CapabilityType.STRING,
+        bits=_VENTILATION_CONTROL_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100022: Entity(
         name="supported_system_operating_modes",
         type=CapabilityType.STRING,
+        bits=_HVAC_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100023: Entity(
         name="supported_system_modes",
         type=CapabilityType.STRING,
+        bits=_CONTROL_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     100024: Entity(
         name="available_estimation_modes",
         type=CapabilityType.STRING,
+        bits=_VENTILATION_OPTION_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1621,6 +1611,7 @@ CAPABILITIES: dict[int, Entity] = {
     100800: Entity(
         name="available_fan_speeds",
         type=CapabilityType.STRING,
+        values=_SPEED_SETS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1648,6 +1639,7 @@ CAPABILITIES: dict[int, Entity] = {
     102005: Entity(
         name="air_circulation_supported_modes",
         type=CapabilityType.STRING,
+        bits=_AIR_CIRCULATION_MODE_BITS,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan",
         enabled_by_default=False,
@@ -1655,6 +1647,7 @@ CAPABILITIES: dict[int, Entity] = {
     102006: Entity(
         name="air_circulation_available_modes",
         type=CapabilityType.STRING,
+        bits=_AIR_CIRCULATION_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1715,6 +1708,7 @@ CAPABILITIES: dict[int, Entity] = {
     103034: Entity(
         name="room_controls_capabilities",
         type=CapabilityType.STRING,
+        bits=((16, "antifrost"),),
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1769,12 +1763,14 @@ CAPABILITIES: dict[int, Entity] = {
     105011: Entity(
         name="supported_dhw_modes",
         type=CapabilityType.STRING,
+        bits=_DHW_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
     105012: Entity(
         name="supported_dhw_system_operating_modes",
         type=CapabilityType.STRING,
+        bits=_DHW_HEATING_TYPE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1799,6 +1795,10 @@ CAPABILITIES: dict[int, Entity] = {
     105636: Entity(
         name="dhw_comfort_mode",
         type=CapabilityType.STRING,
+        values={
+            "0": "eco",
+            "1": "comfort",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
