@@ -20,6 +20,9 @@ from .infos import (
 )
 from .model import CozytouchDeviceType
 
+# Both report the same ids and mean the same things by them, so the rows that
+# differ from the default differ together. See capability.py for why the API
+# splits them at all.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
 _HVAC_MODE_BITS = (
@@ -168,7 +171,9 @@ class Entity:
     absent_on   device types with no such entity at all.
     needs_flag  a flag from model.py that has to hold for the entity to exist.
                 A model that does not mention it is taken to have it.
-    per_type    per device type, the keys to merge in last.
+    per_type    the keys to merge in last, for the device types named in the
+                key -- a tuple, like absent_on, so two products reading an id
+                the same way say so once.
     per_model   the same per model id, for the products Atlantic wired to
                 different capabilities.
     valid_above the entity exists only while the value is above this. Atlantic
@@ -186,7 +191,9 @@ class Entity:
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
-    per_type: Mapping[CozytouchDeviceType, Mapping[str, object]] | None = None
+    per_type: (
+        Mapping[tuple[CozytouchDeviceType, ...], Mapping[str, object]] | None
+    ) = None
     per_model: Mapping[int, Mapping[str, object]] | None = None
     valid_above: float | None = None
 
@@ -208,11 +215,14 @@ class Entity:
             capability.icon = self.icon
         if not self.enabled_by_default:
             capability.enabled_by_default = False
-        for source in (
-            self.extra,
-            (self.per_type or {}).get(modelInfos.type),
-            (self.per_model or {}).get(modelInfos.modelId),
-        ):
+        overrides = [self.extra]
+        overrides += [
+            override
+            for deviceTypes, override in (self.per_type or {}).items()
+            if modelInfos.type in deviceTypes
+        ]
+        overrides.append((self.per_model or {}).get(modelInfos.modelId))
+        for source in overrides:
             for key, setting in (source or {}).items():
                 capability[key] = setting
         return capability
@@ -408,7 +418,7 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         icon="mdi:faucet",
         per_type={
-            CozytouchDeviceType.WATER_HEATER: {
+            (CozytouchDeviceType.WATER_HEATER,): {
                 "name": "resistance",
                 "icon": "mdi:radiator",
             }
@@ -517,10 +527,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.BINARY,
         enabled_by_default=True,
         icon="mdi:fire",
-        per_type={
-            deviceType: {"name": "resistance", "icon": "mdi:radiator"}
-            for deviceType in ELECTRIC_HEATERS
-        },
+        per_type={ELECTRIC_HEATERS: {"name": "resistance", "icon": "mdi:radiator"}},
     ),
     154: Entity(
         name="zone_1",
@@ -548,20 +555,14 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         icon="mdi:clock-outline",
         extra={"lowest_value": 1, "highest_value": 24},
-        per_type={
-            deviceType: {"name": "override_total_time"}
-            for deviceType in ELECTRIC_HEATERS
-        },
+        per_type={ELECTRIC_HEATERS: {"name": "override_total_time"}},
     ),
     159: Entity(
         name="override_remain_time_z1",
         type=CapabilityType.TIME,
         enabled_by_default=True,
         icon="mdi:clock-outline",
-        per_type={
-            deviceType: {"name": "override_remain_time"}
-            for deviceType in ELECTRIC_HEATERS
-        },
+        per_type={ELECTRIC_HEATERS: {"name": "override_remain_time"}},
     ),
     160: Entity(
         name="temperature_adjustment_min",
@@ -623,7 +624,7 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         icon="mdi:water-boiler",
         per_type={
-            CozytouchDeviceType.HEAT_PUMP: {"value_off": "false", "value_on": "true"}
+            (CozytouchDeviceType.HEAT_PUMP,): {"value_off": "false", "value_on": "true"}
         },
     ),
     166: Entity(
@@ -706,98 +707,98 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_monday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_monday"}},
     ),
     197: Entity(
         name="prog_02_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_tuesday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_tuesday"}},
     ),
     198: Entity(
         name="prog_03_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_wednesday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_wednesday"}},
     ),
     199: Entity(
         name="prog_04_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_thursday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_thursday"}},
     ),
     200: Entity(
         name="prog_05_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_friday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_friday"}},
     ),
     201: Entity(
         name="prog_06_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_saturday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_saturday"}},
     ),
     202: Entity(
         name="prog_07_z1",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_sunday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_sunday"}},
     ),
     203: Entity(
         name="prog_08_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_monday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_monday"}},
     ),
     204: Entity(
         name="prog_09_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_tuesday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_tuesday"}},
     ),
     205: Entity(
         name="prog_10_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_wednesday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_wednesday"}},
     ),
     206: Entity(
         name="prog_11_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_thursday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_thursday"}},
     ),
     207: Entity(
         name="prog_12_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_friday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_friday"}},
     ),
     208: Entity(
         name="prog_13_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_saturday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_saturday"}},
     ),
     209: Entity(
         name="prog_14_z2",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_sunday"}},
+        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_sunday"}},
     ),
     217: Entity(
         name="system_setpoint_mode",
