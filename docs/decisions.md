@@ -601,6 +601,26 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### The speed sets (350, 100800) name a set, and `4` names one speed
+
+These two ids are not a bitmask and not a member of an enum : one number
+picks a whole set of speeds. The vendor's app has the mechanism as its own
+method, `buildListFromValue`, next to `fromBitField` and `fromValue`, which
+is why `CAPABILITY_SPEED_SETS` is its own table here rather than an entry
+in `CAPABILITY_VALUE_SPACES` it happened to fit.
+
+`SpeedAirMixingState` and `VentilationSpeedMode` carry the same table, and
+**`4` returns the auto speed alone** -- it used to read here as "on, auto",
+which no capture contradicted because no capture has ever shown a 4. The
+whole corpus reads 0 on 350 and 2 on 100800.
+
+The app also has a fallback : a value outside 0-4 yields the full set, and
+a *different* full set per id (air mixing includes the quiet speed,
+ventilation does not). That is not reproduced. An unknown value is left
+undescribed, so the raw number reaches the entity -- on a diagnostic
+sensor whose reason to exist is investigating unknown hardware, the number
+is worth more than a guessed set.
+
 ### `FAN_MODES` / `SWING_MODES` : global vocabularies, not model data
 
 The value/label pairs `model.py` repeats per model are the vendor's own

@@ -56,6 +56,10 @@ from custom_components.cozytouch.capability import (
         (337, "6", "water_setpoint"),
         (100800, "2", "low, medium, high, auto"),
         (350, "0", "low, medium, high"),
+        # A speed set naming one speed, which is what the app's table says and
+        # what "on, auto" used to get wrong.
+        (350, "4", "auto"),
+        (100800, "4", "auto"),
         # Nothing set is a reading of its own, not an empty string.
         (164, "0", "none"),
         # A bit the table does not name is carried through, since these

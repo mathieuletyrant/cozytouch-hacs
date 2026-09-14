@@ -156,13 +156,19 @@ _AIR_CIRCULATION_MODE_BITS = (
 )
 
 # The speed selectors name a whole set rather than one speed, so each value
-# spells its set out.
+# spells its set out. A third mechanism next to the two tables below, and the
+# app's own: `buildListFromValue`. See docs/decisions.md.
 _SPEED_SETS = {
     "0": "low, medium, high",
     "1": "low, high",
     "2": "low, medium, high, auto",
     "3": "low, high, auto",
-    "4": "on, auto",
+    "4": "auto",
+}
+
+CAPABILITY_SPEED_SETS: dict[int, dict[str, str]] = {
+    350: _SPEED_SETS,
+    100800: _SPEED_SETS,
 }
 
 # What the numbers in the table above mean, read off the vendor's Android app
@@ -240,8 +246,6 @@ CAPABILITY_VALUE_SPACES: dict[int, dict[str, str]] = {
         "1": "v40_state_of_charge",
         "2": "water_setpoint",
     },
-    350: _SPEED_SETS,
-    100800: _SPEED_SETS,
 }
 
 
@@ -252,7 +256,9 @@ def describe_capability_value(capabilityId: int, value) -> str | None:
     exist to investigate hardware nobody here owns, and a bit the tables do not
     cover is exactly what such a reader is after.
     """
-    space = CAPABILITY_VALUE_SPACES.get(capabilityId)
+    space = CAPABILITY_VALUE_SPACES.get(capabilityId) or CAPABILITY_SPEED_SETS.get(
+        capabilityId
+    )
     if space is not None:
         return space.get(str(value).strip())
 
