@@ -42,16 +42,37 @@ AIR_CIRCULATION_SPEED_HIGH = "high"
 # water on a water heater. A device gets a calendar per block it reports in
 # full, which in practice means one or two of them.
 #
-# Deliberately its own table rather than `services.PROGRAM_FIRST_CAPABILITY`,
-# which knows 196 and 203 only. Reading a program and writing one are not the
-# same risk: what the second member of a hot-water slot means has never been
-# confirmed against a capture, and writing a block on that basis could leave a
-# water heater running a program it never had. Reading it costs nothing, and
-# the prog sensors have rendered 237-243 as a time and a setpoint for as long
-# as they have existed. `set_schedule` still refuses the block, and should
-# until a capture says otherwise.
-#
 # Here rather than in calendar.py, which built it: the blocks a calendar
 # covers are also the blocks whose per-day sensors arrive disabled, and the
 # migration in __init__.py that disables existing ones reads the same table.
 PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
+
+# A block is seven consecutive capabilities, one per day, monday first. The
+# tuple is the order the device stores them in, so an index into it is an
+# offset from the block's first id -- which is what `program_block` below
+# returns, and what the per-day sensor names are built from.
+PROGRAM_DAYS = (
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+)
+
+# Writing is narrower than reading, and deliberately: what the second member
+# of a hot-water slot means has never been confirmed against a capture, and
+# writing a block on that basis could leave a water heater running a program
+# it never had. `set_schedule` refuses the block until one says otherwise,
+# while the calendar and the prog sensors read it happily.
+WRITABLE_PROGRAM_BLOCKS = {
+    program: first
+    for program, first in PROGRAM_BLOCKS.items()
+    if program != "hot_water"
+}
+
+
+def program_block(first: int) -> range:
+    """The seven consecutive capability ids one weekly program is stored in."""
+    return range(first, first + len(PROGRAM_DAYS))

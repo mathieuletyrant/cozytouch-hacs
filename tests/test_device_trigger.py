@@ -19,7 +19,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from custom_components.cozytouch import device_trigger, services
+from custom_components.cozytouch import const, device_trigger
 from homeassistant.components.device_automation.exceptions import (
     InvalidDeviceAutomationConfig,
 )
@@ -374,7 +374,7 @@ def test_the_program_triggers_follow_the_programs_the_services_know():
     the trigger would fire and get_schedule would then refuse the device.
     """
     assert set(device_trigger.SCHEDULE_TRIGGER_TYPES.values()) == set(
-        services.PROGRAM_FIRST_CAPABILITY
+        const.WRITABLE_PROGRAM_BLOCKS
     )
 
 

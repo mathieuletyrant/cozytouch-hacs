@@ -20,34 +20,19 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, entity_registry as er
 
 from .capability import read_setpoint
-from .const import DOMAIN
+from .const import DOMAIN, PROGRAM_DAYS, WRITABLE_PROGRAM_BLOCKS
 
 _LOGGER = logging.getLogger(__name__)
 
 SERVICE_SET_SCHEDULE = "set_schedule"
 SERVICE_GET_SCHEDULE = "get_schedule"
 
-# A weekly program is seven consecutive capabilities, one per day starting on
-# monday. Heating and cooling are two separate blocks; the Cozytouch app calls
-# them "Chauffage" and "Refroidissement".
-PROGRAM_FIRST_CAPABILITY = {"heating": 196, "cooling": 203}
-
-DAYS = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-]
-
 # Shortcuts the day picker offers next to the seven days. Expanded here rather
 # than in the frontend, so a YAML automation gets them too.
 DAY_GROUPS = {
-    "all": DAYS,
-    "weekdays": DAYS[:5],
-    "weekend": DAYS[5:],
+    "all": PROGRAM_DAYS,
+    "weekdays": PROGRAM_DAYS[:5],
+    "weekend": PROGRAM_DAYS[5:],
 }
 
 # The device always stores ten slots, unused ones being [0,0].
@@ -67,20 +52,20 @@ def _expand_days(days: list[str]) -> list[str]:
     -- still writes each capability once.
     """
     named = {day for item in days for day in DAY_GROUPS.get(item, [item])}
-    return [day for day in DAYS if day in named]
+    return [day for day in PROGRAM_DAYS if day in named]
 
 
 SET_SCHEDULE_SCHEMA = vol.Schema(
     {
         vol.Required("entity_id"): cv.entity_ids,
-        vol.Required("program"): vol.In(PROGRAM_FIRST_CAPABILITY),
+        vol.Required("program"): vol.In(WRITABLE_PROGRAM_BLOCKS),
         # vol.All is a pipeline, so the length check has to run before the
         # expansion -- afterwards a group has already become several days,
         # and an empty list is the only thing left that it could catch.
         vol.Required("days"): vol.All(
             cv.ensure_list,
             vol.Length(min=1),
-            [vol.In([*DAYS, *DAY_GROUPS])],
+            [vol.In([*PROGRAM_DAYS, *DAY_GROUPS])],
             _expand_days,
         ),
         vol.Required("slots"): vol.All(
@@ -101,7 +86,7 @@ SET_SCHEDULE_SCHEMA = vol.Schema(
 GET_SCHEDULE_SCHEMA = vol.Schema(
     {
         vol.Required("entity_id"): cv.entity_ids,
-        vol.Required("program"): vol.In(PROGRAM_FIRST_CAPABILITY),
+        vol.Required("program"): vol.In(WRITABLE_PROGRAM_BLOCKS),
     }
 )
 
@@ -242,7 +227,7 @@ def async_register_services(hass: HomeAssistant) -> None:
         """Write the same day program to every requested day."""
         slots = call.data["slots"]
         value = _build_matrix(slots)
-        first = PROGRAM_FIRST_CAPABILITY[call.data["program"]]
+        first = WRITABLE_PROGRAM_BLOCKS[call.data["program"]]
 
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
@@ -255,7 +240,7 @@ def async_register_services(hass: HomeAssistant) -> None:
                 )
 
             for day in call.data["days"]:
-                capabilityId = first + DAYS.index(day)
+                capabilityId = first + PROGRAM_DAYS.index(day)
                 _LOGGER.debug(
                     "set_schedule %s %s %s -> capability %d = %s",
                     entity_id,
@@ -271,14 +256,14 @@ def async_register_services(hass: HomeAssistant) -> None:
     async def async_get_schedule(call: ServiceCall) -> ServiceResponse:
         """Read a whole week back, in the shape set_schedule takes."""
         program = call.data["program"]
-        first = PROGRAM_FIRST_CAPABILITY[program]
+        first = WRITABLE_PROGRAM_BLOCKS[program]
 
         response: dict[str, Any] = {}
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
 
             days = {}
-            for index, day in enumerate(DAYS):
+            for index, day in enumerate(PROGRAM_DAYS):
                 # The default is the string "0", which parses as a number
                 # rather than a matrix; None is what makes a device that does
                 # not have this program tellable from one whose day is empty.

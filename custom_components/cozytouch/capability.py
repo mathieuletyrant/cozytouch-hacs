@@ -2,7 +2,7 @@
 
 from homeassistant.const import UnitOfEnergy, UnitOfPressure
 
-from .const import CozytouchCapabilityVariableType
+from .const import PROGRAM_DAYS, CozytouchCapabilityVariableType, program_block
 from .infos import (
     CapabilityCategory,
     CapabilityInfos,
@@ -18,17 +18,6 @@ from .model import CozytouchDeviceType
 # side of it : both report the same ids and mean the same things by them. The
 # one place they part is 100506, below.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
-
-PROG_DAYS = (
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-)
-
 
 # Capabilities the device uses to describe itself: what it supports, what its
 # scheduler allows, which controls exist. The name below is everything that is
@@ -329,7 +318,7 @@ def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
     """
     return all(
         capabilityId in availableCapabilityIds
-        for capabilityId in range(first, first + 7)
+        for capabilityId in program_block(first)
     )
 
 
@@ -828,7 +817,7 @@ def get_capability_infos(  # noqa: C901
         index = capabilityId - 196
         if modelInfos.type == CozytouchDeviceType.AC:
             block = "heating" if index < 7 else "cooling"
-            capability.name = f"prog_{block}_{PROG_DAYS[index % 7]}"
+            capability.name = f"prog_{block}_{PROGRAM_DAYS[index % 7]}"
         else:
             capability.name = f"prog_{index + 1:02d}_z{1 if index < 7 else 2}"
 
@@ -1234,7 +1223,7 @@ def get_capability_infos(  # noqa: C901
 
     elif 237 <= capabilityId <= 243:
         # Domestic-hot-water weekly program, one capability per day, monday first.
-        capability.name = f"dhw_prog_{PROG_DAYS[capabilityId - 237]}"
+        capability.name = f"dhw_prog_{PROGRAM_DAYS[capabilityId - 237]}"
         capability.type = CapabilityType.PROG
         capability.category = CapabilityCategory.DIAG
         if _whole_block_reported(237, availableCapabilityIds):

@@ -10,9 +10,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, PROGRAM_BLOCKS
+from .const import DOMAIN, PROGRAM_BLOCKS, program_block
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
-from .services import DAYS, parse_slots
+from .services import parse_slots
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,8 +59,8 @@ def _reports_the_whole_block(hub: Hub, first: int) -> bool:
     as "nothing scheduled that day" rather than as missing data.
     """
     return all(
-        hub.get_capability_value(first + day, None) is not None
-        for day in range(len(DAYS))
+        hub.get_capability_value(capabilityId, None) is not None
+        for capabilityId in program_block(first)
     )
 
 
