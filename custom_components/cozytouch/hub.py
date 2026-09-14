@@ -234,6 +234,19 @@ def as_epoch(value) -> int | None:
     return epoch if epoch > 0 else None
 
 
+def device_of(hub, deviceId: int | None = None) -> dict | None:
+    """One device as the API describes it -- the hub's own, unless asked.
+
+    None when the account does not hold it; what a missing device means is
+    the caller's to decide.
+    """
+    deviceId = deviceId or hub._deviceId
+    return next(
+        (dev for dev in hub._account.devices if dev["deviceId"] == deviceId),
+        None,
+    )
+
+
 class Hub(DataUpdateCoordinator):
     """One device of an Atlantic Cozytouch account.
 
@@ -401,31 +414,28 @@ class Hub(DataUpdateCoordinator):
 
     def get_model_infos(self, deviceId: int | None = None) -> str:
         """Get model infos."""
-        if not deviceId:
-            deviceId = self._deviceId
+        dev = device_of(self, deviceId)
+        if dev is None:
+            return get_model_infos(-1)
 
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                zoneId = dev["zoneId"]
+        zoneId = dev["zoneId"]
 
-                # Special case for sub-devices, use master zone Id
-                for masterDev in self._account.devices:
-                    if "tags" in masterDev:
-                        for tag in masterDev["tags"]:
-                            if (
-                                "label" in tag
-                                and tag["label"] == "iothubChildrenIds"
-                                and "value" in tag
-                                and tag["value"] == dev["name"]
-                            ):
-                                zoneId = masterDev["zoneId"]
-                                break
+        # Special case for sub-devices, use master zone Id
+        for masterDev in self._account.devices:
+            if "tags" in masterDev:
+                for tag in masterDev["tags"]:
+                    if (
+                        "label" in tag
+                        and tag["label"] == "iothubChildrenIds"
+                        and "value" in tag
+                        and tag["value"] == dev["name"]
+                    ):
+                        zoneId = masterDev["zoneId"]
+                        break
 
-                return get_device_model_infos(
-                    self._account.devices, dev, self.get_zone_name(zoneId)
-                )
-
-        return get_model_infos(-1)
+        return get_device_model_infos(
+            self._account.devices, dev, self.get_zone_name(zoneId)
+        )
 
     def get_model_id(self, deviceId: int | None = None) -> int | None:
         """The model id the API reports, which is what the mapping is keyed on.
@@ -433,25 +443,13 @@ class Hub(DataUpdateCoordinator):
         get_model_infos answers what the table made of it; this answers what
         the device said, which is what a bug report has to carry.
         """
-        if not deviceId:
-            deviceId = self._deviceId
-
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                return dev["modelId"]
-
-        return None
+        dev = device_of(self, deviceId)
+        return dev["modelId"] if dev else None
 
     def get_serial_number(self, deviceId: int | None = None) -> str:
         """Get serial number."""
-        if not deviceId:
-            deviceId = self._deviceId
-
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                return dev["gatewaySerialNumber"]
-
-        return "Unknown"
+        dev = device_of(self, deviceId)
+        return dev["gatewaySerialNumber"] if dev else "Unknown"
 
     def get_software_version(self) -> str | None:
         """The firmware version the device reports about itself, if it does.
@@ -475,14 +473,8 @@ class Hub(DataUpdateCoordinator):
         None rather than a guess matters: HA logs a warning when via_device
         names a device that is not in the registry.
         """
-        if not deviceId:
-            deviceId = self._deviceId
-
-        masterDeviceId = None
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                masterDeviceId = dev.get("masterDeviceId")
-                break
+        dev = device_of(self, deviceId)
+        masterDeviceId = dev.get("masterDeviceId") if dev else None
 
         if not masterDeviceId:
             return None
@@ -495,47 +487,42 @@ class Hub(DataUpdateCoordinator):
 
     def get_capabilities_for_device(self, deviceId: int | None = None):
         """Get capabilities for a device."""
-        if not deviceId:
-            deviceId = self._deviceId
+        dev = device_of(self, deviceId)
+        if dev is None:
+            return []
+
+        modelInfos = get_device_model_infos(self._account.devices, dev)
+        availableCapabilityIds = {cap["capabilityId"] for cap in dev["capabilities"]}
 
         capabilities = []
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                modelInfos = get_device_model_infos(self._account.devices, dev)
-                availableCapabilityIds = {
-                    cap["capabilityId"] for cap in dev["capabilities"]
-                }
-                for capability in dev["capabilities"]:
-                    capability_infos = get_capability_infos(
-                        modelInfos,
-                        capability["capabilityId"],
-                        capability["value"],
-                        availableCapabilityIds,
-                    )
+        for capability in dev["capabilities"]:
+            capability_infos = get_capability_infos(
+                modelInfos,
+                capability["capabilityId"],
+                capability["value"],
+                availableCapabilityIds,
+            )
 
-                    if capability_infos is None and self._create_unknown:
-                        capability_infos = CapabilityInfos(
-                            capabilityId=capability["capabilityId"],
-                            name="Capability_" + str(capability["capabilityId"]),
-                            type=CapabilityType.STRING,
-                            category=CapabilityCategory.DIAG,
-                        )
+            if capability_infos is None and self._create_unknown:
+                capability_infos = CapabilityInfos(
+                    capabilityId=capability["capabilityId"],
+                    name="Capability_" + str(capability["capabilityId"]),
+                    type=CapabilityType.STRING,
+                    category=CapabilityCategory.DIAG,
+                )
 
-                    if capability_infos is not None and len(capability_infos) > 0:
-                        capability_infos.deviceId = deviceId
+            if capability_infos is None or len(capability_infos) == 0:
+                continue
 
-                        isDuplicate = False
-                        if "capabilityDuplicate" in capability_infos:
-                            for cap in capabilities:
-                                if (
-                                    cap["capabilityId"]
-                                    == capability_infos.capabilityDuplicate
-                                ):
-                                    isDuplicate = True
-                                    break
+            capability_infos.deviceId = dev["deviceId"]
 
-                        if not isDuplicate:
-                            capabilities.append(capability_infos)
+            if "capabilityDuplicate" in capability_infos and any(
+                cap["capabilityId"] == capability_infos.capabilityDuplicate
+                for cap in capabilities
+            ):
+                continue
+
+            capabilities.append(capability_infos)
 
         return capabilities
 
@@ -549,34 +536,27 @@ class Hub(DataUpdateCoordinator):
         of, and it is read both by the diagnostics dump and by the repair that
         asks for one -- so the rule for "named" lives here rather than in each.
         """
-        if not deviceId:
-            deviceId = self._deviceId
+        dev = device_of(self, deviceId)
+        if dev is None:
+            return {}, []
 
-        for dev in self._account.devices:
-            if dev["deviceId"] != deviceId:
-                continue
+        modelInfos = get_device_model_infos(self._account.devices, dev)
+        availableCapabilityIds = {cap["capabilityId"] for cap in dev["capabilities"]}
 
-            modelInfos = get_device_model_infos(self._account.devices, dev)
-            availableCapabilityIds = {
-                cap["capabilityId"] for cap in dev["capabilities"]
-            }
+        mapped, unmapped = {}, []
+        for cap in dev["capabilities"]:
+            infos = get_capability_infos(
+                modelInfos,
+                cap["capabilityId"],
+                cap["value"],
+                availableCapabilityIds,
+            )
+            if infos:
+                mapped[cap["capabilityId"]] = infos.get("name")
+            else:
+                unmapped.append(cap["capabilityId"])
 
-            mapped, unmapped = {}, []
-            for cap in dev["capabilities"]:
-                infos = get_capability_infos(
-                    modelInfos,
-                    cap["capabilityId"],
-                    cap["value"],
-                    availableCapabilityIds,
-                )
-                if infos:
-                    mapped[cap["capabilityId"]] = infos.get("name")
-                else:
-                    unmapped.append(cap["capabilityId"])
-
-            return mapped, sorted(unmapped)
-
-        return {}, []
+        return mapped, sorted(unmapped)
 
     def get_diagnostics(self) -> dict:
         """Describe the account as the API reports it, for a diagnostics dump.
@@ -673,15 +653,15 @@ class Hub(DataUpdateCoordinator):
         self, capabilityId: int, defaultIfNotExist: str | None = "0"
     ):
         """Get value for a device capability."""
-        for dev in self._account.devices:
-            if dev["deviceId"] == self._deviceId:
-                for capability in dev["capabilities"]:
-                    if capabilityId == capability["capabilityId"]:
-                        return capability["value"]
+        dev = device_of(self)
+        if dev is None:
+            return None
 
-                return defaultIfNotExist
+        for capability in dev["capabilities"]:
+            if capabilityId == capability["capabilityId"]:
+                return capability["value"]
 
-        return None
+        return defaultIfNotExist
 
     def get_capability_modification_date(self, capabilityId: int) -> int | None:
         """When the device last changed one capability, as the API says.
@@ -691,13 +671,18 @@ class Hub(DataUpdateCoordinator):
         available and unused. It is already here: the poll copies each item
         whole, so this costs no request.
         """
-        for dev in self._account.devices:
-            if dev["deviceId"] == self._deviceId:
-                for capability in dev["capabilities"]:
-                    if capabilityId == capability["capabilityId"]:
-                        return as_epoch(capability.get("modificationDate"))
+        dev = device_of(self)
+        if dev is None:
+            return None
 
-        return None
+        return next(
+            (
+                as_epoch(capability.get("modificationDate"))
+                for capability in dev["capabilities"]
+                if capability["capabilityId"] == capabilityId
+            ),
+            None,
+        )
 
     def get_last_modification_date(self) -> int | None:
         """The newest modification date this device reports, if it reports one.
@@ -711,10 +696,12 @@ class Hub(DataUpdateCoordinator):
         the sensor built from this is not created at all in that case rather
         than sitting there empty.
         """
+        dev = device_of(self)
+        if dev is None:
+            return None
+
         dates = [
             as_epoch(capability.get("modificationDate"))
-            for dev in self._account.devices
-            if dev["deviceId"] == self._deviceId
             for capability in dev["capabilities"]
         ]
 
@@ -745,14 +732,8 @@ class Hub(DataUpdateCoordinator):
         is not cleared when the session drops : the last value stands, and the
         cloud-connectivity sensor is what says whether it is still fresh.
         """
-        if not deviceId:
-            deviceId = self._deviceId
-
-        for dev in self._account.devices:
-            if dev["deviceId"] == deviceId:
-                return dev.get("isAvailable")
-
-        return None
+        dev = device_of(self, deviceId)
+        return dev.get("isAvailable") if dev else None
 
     async def set_capability_value(self, capabilityId: int, value: str):
         """Set value for a device capability."""
@@ -762,23 +743,23 @@ class Hub(DataUpdateCoordinator):
         if not self.online:
             return
 
-        for dev in self._account.devices:
-            if dev["deviceId"] != self._deviceId:
+        dev = device_of(self)
+        if dev is None:
+            return
+
+        for capability in dev["capabilities"]:
+            if capabilityId != capability["capabilityId"]:
                 continue
 
-            for capability in dev["capabilities"]:
-                if capabilityId != capability["capabilityId"]:
-                    continue
+            # Only on a completed execution : a write that never lands has to
+            # leave the local value alone, and let the next poll say what the
+            # device really did.
+            if await self._account.write_capability(
+                self._deviceId, capabilityId, value
+            ):
+                capability["value"] = value
 
-                # Only on a completed execution : a write that never lands has
-                # to leave the local value alone, and let the next poll say
-                # what the device really did.
-                if await self._account.write_capability(
-                    self._deviceId, capabilityId, value
-                ):
-                    capability["value"] = value
-
-                return
+            return
 
     def away_mode_init(self, timestampStart, timestampEnd):
         """Init away mode timestamps."""
