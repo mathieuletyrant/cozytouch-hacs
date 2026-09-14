@@ -564,26 +564,6 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
 class CozytouchBinarySensor(BinarySensorEntity, CozytouchSensor):
     """Class for binary sensor."""
 
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a binary Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
-        self._last_value: False
-
     @property
     def is_on(self) -> bool:
         """Return last state value."""
@@ -596,25 +576,6 @@ class CozytouchBinarySensor(BinarySensorEntity, CozytouchSensor):
 
 class CozytouchAwayModeSensor(CozytouchSensor):
     """Class for away mode sensor."""
-
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a binary Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
@@ -668,10 +629,6 @@ class CozytouchUnitSensor(CozytouchSensor):
         if state_class:
             self._attr_state_class = state_class
 
-        self.displayed_unit_of_measurement = (
-            capability.get("displayed_unit_of_measurement", None),
-        )
-
         self._display_factor = display_factor
 
     def get_value(self):
@@ -698,26 +655,6 @@ class CozytouchUnitSensor(CozytouchSensor):
 
 class CozytouchTimeSensor(CozytouchSensor):
     """Class for time sensor (in minutes)."""
-
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a time Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
-        self._last_value: 0
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
@@ -749,26 +686,6 @@ class CozytouchTimeSensor(CozytouchSensor):
 class CozytouchTimezoneSensor(CozytouchSensor):
     """Class for timezone sensor."""
 
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a time Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
-        self._last_value: 0
-
     def get_value(self) -> str:
         """Retrieve value from hub."""
         value = self.coordinator.get_capability_value(self._capability.capabilityId)
@@ -789,25 +706,6 @@ class CozytouchTimezoneSensor(CozytouchSensor):
 
 class CozytouchProgSensor(CozytouchSensor):
     """Class for Prog sensor."""
-
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a prog Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
 
     def get_value(self) -> str:
         """Retrieve value from hub."""
@@ -839,25 +737,6 @@ class CozytouchProgSensor(CozytouchSensor):
 class CozytouchProgTimeSensor(CozytouchSensor):
     """Class for ProgTime sensor."""
 
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize a prog time Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
-
     def get_value(self) -> str:
         """Retrieve value from hub."""
         value = self.coordinator.get_capability_value(self._capability.capabilityId)
@@ -887,25 +766,6 @@ class CozytouchProgTimeSensor(CozytouchSensor):
 
 class CozytouchErrorCodeSensor(CozytouchSensor):
     """A fault-code capability, decoded to the codes that are active."""
-
-    def __init__(
-        self,
-        capability,
-        config_title: str,
-        config_uniq_id: str,
-        coordinator: Hub,
-        name: str | None = None,
-        icon: str | None = None,
-    ) -> None:
-        """Initialize an error code Sensor."""
-        super().__init__(
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            coordinator=coordinator,
-            name=name,
-            icon=icon,
-        )
 
     def get_value(self) -> str | None:
         """Retrieve value from hub and decode the fault matrix."""
