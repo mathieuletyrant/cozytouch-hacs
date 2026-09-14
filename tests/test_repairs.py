@@ -17,6 +17,7 @@ made to work out which devices are not really products.
 
 import asyncio
 import json
+import pathlib
 import re
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
@@ -29,10 +30,17 @@ from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.model import get_model_infos
 
+# strings.json first: it is the reference the others are compared against.
+# The rest is a glob, so a language contributed later is held to the same
+# completeness without anyone editing this line.
 TRANSLATIONS = (
     "custom_components/cozytouch/strings.json",
-    "custom_components/cozytouch/translations/en.json",
-    "custom_components/cozytouch/translations/fr.json",
+    *sorted(
+        str(path)
+        for path in pathlib.Path("custom_components/cozytouch/translations").glob(
+            "*.json"
+        )
+    ),
 )
 
 # A mapped id and two nothing claims, checked below so none of them can drift

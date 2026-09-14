@@ -31,6 +31,8 @@ of that :
 - device triggers for schedule changes and program overrides, on top of the ones
   Home Assistant builds itself
 - a diagnostics dump that an unmapped device points you at by itself
+- an interface in English, French, Spanish, German and Italian, following the
+  language Home Assistant is set to
 
 Everything runs over the cloud : one login, one poll for the whole account,
 every 30 seconds by default.

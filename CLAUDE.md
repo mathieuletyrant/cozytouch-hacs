@@ -186,7 +186,7 @@ capture, so a test going green says "nobody changed this by accident", never
   added outside it needs that range widened.
 - `tests/test_capability_coverage.py` — the seams around the mapping : that a
   self-describing capability arrives switched off, that every name the mapping
-  can produce has an entry in all three translation files, and that the
+  can produce has an entry in every translation file, and that the
   `CapabilityType` members the mapping writes and the ones the platforms match
   on are the same set — a type on one side only is silent both ways, and two
   lived exactly there.
@@ -214,9 +214,11 @@ coordinator per device on top of it.
    surfaced as a raw string, and `enabled_by_default` False, so it costs nobody
    anything until someone turns it on to investigate. Claim a type only where
    the unit is actually known.
-3. Translations — a new capability name needs an entry in **all three** of
-   `strings.json`, `translations/en.json` and `translations/fr.json`, kept in
-   the alphabetical order and column alignment already in the file.
+3. Translations — a new capability name needs an entry in **every** one of
+   `strings.json` and the files under `translations/` (en, fr, es, de, it),
+   kept in the alphabetical order and column alignment already in the file.
+   The tests glob that directory, so a language added later is held to the
+   same completeness without anyone editing them.
 4. Tests — a case in `MODEL_GROUPS`, and the snapshots regenerated in the same
    commit (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff
    shows the new model and nothing else.

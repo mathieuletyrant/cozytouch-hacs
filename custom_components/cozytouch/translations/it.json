@@ -1,0 +1,533 @@
+{
+    "title": "Cozytouch",
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "username": "Nome utente",
+                    "password": "Password"
+                }
+            },
+            "reauth_confirm": {
+                "title": "Reinserisci la tua password Cozytouch",
+                "description": "Atlantic non accetta più la password memorizzata per {username}. Inserisci quella attuale per riconnettere tutti i dispositivi di questo account.",
+                "data": {
+                    "password": "Password"
+                }
+            },
+            "devices": {
+                "title": "Dispositivi da aggiungere",
+                "description": "Tutto ciò che questo account dichiara, gateway e zone termiche inclusi. Lascia fuori ciò di cui non vuoi entità; potrai aggiungerlo più tardi dalla pagina dell'integrazione.",
+                "data": {
+                    "devices": "Dispositivi",
+                    "create_unknown": "Creare entità per le capacità sconosciute",
+                    "dump_json": "Generare un file JSON con i dati ricevuti"
+                }
+            }
+        },
+        "abort": {
+            "already_configured": "[%key:common::config_flow::abort::already_configured_account%]",
+            "reauth_successful": "La riautenticazione è riuscita",
+            "no_devices": "Questo account Cozytouch non dichiara alcun dispositivo"
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi ai server Atlantic Cozytouch",
+            "invalid_auth": "Autenticazione Atlantic Cozytouch non valida",
+            "unknown": "Errore sconosciuto"
+        }
+    },
+    "config_subentries": {
+        "device": {
+            "entry_type": "Dispositivo",
+            "initiate_flow": {
+                "user": "Aggiungi dispositivo"
+            },
+            "step": {
+                "user": {
+                    "title": "Aggiungere un dispositivo",
+                    "description": "I dispositivi dichiarati da questo account che non sono ancora configurati qui.",
+                    "data": {
+                        "device": "Dispositivo"
+                    }
+                }
+            },
+            "abort": {
+                "invalid_auth": "Atlantic non accetta più la password memorizzata per questo account; riconnettilo prima",
+                "cannot_connect": "Impossibile connettersi ai server Atlantic Cozytouch",
+                "no_new_devices": "Tutti i dispositivi dichiarati da questo account sono già configurati"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "create_unknown": "Creare entità per le capacità sconosciute",
+                    "dump_json": "Generare un file JSON con i dati ricevuti",
+                    "poll_interval": "Secondi tra un aggiornamento e l'altro"
+                },
+                "data_description": {
+                    "poll_interval": "Una sola richiesta aggiorna tutti i dispositivi dell'account, quindi il costo non aumenta aggiungendo altri dispositivi."
+                }
+            }
+        }
+    },
+    "entity": {
+        "calendar": {
+            "heating_program":         { "name": "Programma di riscaldamento" },
+            "cooling_program":         { "name": "Programma di raffrescamento" },
+            "hot_water_program":       { "name": "Programma acqua calda" }
+        },
+        "climate": {
+            "air_conditioner":
+            {
+                "name": "Condizionatore",
+                "state_attributes":
+                {
+                    "fan_mode":
+                    {
+                        "state":
+                        {
+                            "quiet": "Silenzioso"
+                        }
+                    },
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    },
+                    "swing_mode":
+                    {
+                        "state":
+                        {
+                            "down": "Basso",
+                            "middle_down": "Medio basso",
+                            "middle_up": "Medio alto",
+                            "up": "Alto"
+                        }
+                    }
+                }
+            },
+            "central_heating":
+            {
+                "name": "Riscaldamento",
+                "state_attributes":
+                {
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    }
+                }
+            },
+            "heat":
+            {
+                "name": "Riscaldamento",
+                "state_attributes":
+                {
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    }
+                }
+            },
+            "heat_pump_z1":
+            {
+                "name": "Pompa di calore Z1",
+                "state_attributes":
+                {
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    }
+                }
+            },
+            "heat_pump_z2":
+            {
+                "name": "Pompa di calore Z2",
+                "state_attributes":
+                {
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    }
+                }
+            }
+        },
+        "datetime": {
+            "away_mode_start":  { "name": "Inizio modalità assenza" },
+            "away_mode_stop":   { "name": "Fine modalità assenza" }
+        },
+        "number": {
+            "away_mode_temperature":      { "name": "Temperatura modalità assenza" },
+            "boost_timeout_max":          { "name": "Durata max. Boost" },
+            "override_total_time":        { "name": "Durata totale della forzatura" },
+            "override_total_time_z1":     { "name": "Durata totale della forzatura Z1" },
+            "override_total_time_z2":     { "name": "Durata totale della forzatura Z2" },
+            "target_cool_temperature":    { "name": "Temperatura target raffrescamento" },
+            "target_temperature":         { "name": "Temperatura target" },
+            "target_temperature_dhw":     { "name": "Temperatura target ACS" },
+            "target_temperature_eco_z1":  { "name": "Temperatura target Eco Z1" },
+            "target_temperature_eco_z2":  { "name": "Temperatura target Eco Z2" },
+            "v40_applied_setpoint":       { "name": "Setpoint V40 applicato" },
+            "v40_setpoint_filled_by_user": { "name": "Setpoint V40 impostato dall'utente" },
+            "temperature_adjustment_max": { "name": "Temperatura massima" }
+        },
+        "select": {
+            "air_circulation_speed":
+            {
+                "name": "Velocità di circolazione dell'aria",
+                "state":
+                {
+                    "low": "Bassa",
+                    "medium": "Media",
+                    "high": "Alta"
+                }
+            },
+            "air_circulation_total_time": { "name": "Durata totale della circolazione dell'aria" },
+            "domestic_hot_water_mode":
+            {
+                "name": "Modalità acqua calda sanitaria",
+                "state":
+                {
+                    "manual": "Manuale",
+                    "eco_plus": "Eco+",
+                    "prog": "Prog"
+                }
+            }
+        },
+        "sensor": {
+            "error_code":                     { "name": "Codice di errore" },
+            "home_error_code":          { "name": "Codice di errore riscaldamento" },
+            "dhw_error_code":           { "name": "Codice di errore ACS" },
+            "adaptive_planning":        { "name": "Pianificazione adattiva" },
+            "air_circulation":          { "name": "Circolazione dell'aria" },
+            "air_circulation_remaining_time": { "name": "Tempo rimanente circolazione dell'aria" },
+            "air_circulation_scope":    { "name": "Ambito della circolazione dell'aria" },
+            "air_circulation_supported_modes": { "name": "Modalità di circolazione dell'aria supportate" },
+            "air_circulation_supported_speeds": { "name": "Velocità di circolazione dell'aria supportate" },
+            "air_circulation_time_max": { "name": "Durata max. circolazione dell'aria" },
+            "air_circulation_time_min": { "name": "Durata min. circolazione dell'aria" },
+            "air_circulation_time_step": { "name": "Passo della durata di circolazione dell'aria" },
+            "absence_dhw_temperature":  { "name": "Temperatura ACS in assenza" },
+            "air_conditioner":          { "name": "Condizionatore" },
+            "ambient_temperature_available": { "name": "Temperatura ambiente disponibile" },
+            "antifrost_temperature":    { "name": "Temperatura antigelo" },
+            "available_control_modes":  { "name": "Modalità di controllo disponibili" },
+            "available_dhw_modes":      { "name": "Modalità ACS disponibili" },
+            "available_estimation_modes": { "name": "Modalità di stima disponibili" },
+            "available_fan_speeds":     { "name": "Velocità ventola disponibili" },
+            "available_schedule_types": { "name": "Tipi di programmazione disponibili" },
+            "available_thermostat_modes": { "name": "Modalità termostato disponibili" },
+            "away_mode":                { "name": "Modalità assenza" },
+            "away_mode_cooling_temperature": { "name": "Temperatura di raffrescamento in modalità assenza" },
+            "away_mode_start":          { "name": "Inizio modalità assenza" },
+            "away_mode_stop":           { "name": "Fine modalità assenza" },
+            "ble_pairing_compatibility": { "name": "Compatibilità accoppiamento BLE" },
+            "boiler_or_heat_pump":      { "name": "Caldaia o pompa di calore" },
+            "boiler_water_temperature": { "name": "Temperatura acqua caldaia" },
+            "boost_mode":               { "name": "Modalità Boost" },
+            "boost_total_time":         { "name": "Durata totale del Boost" },
+            "boost_remaining_time":     { "name": "Tempo rimanente del Boost" },
+            "central_heating":          { "name": "Riscaldamento" },
+            "ch_power_consumption":     { "name": "Consumo elettrico riscaldamento" },
+            "cold_water_temperature":   { "name": "Temperatura acqua fredda" },
+            "condenser_temperature":    { "name": "Temperatura del condensatore" },
+            "connectivity_display_capabilities": { "name": "Capacità di visualizzazione della connettività" },
+            "cooling_temperature_max":  { "name": "Temperatura max. raffrescamento" },
+            "cooling_temperature_min":  { "name": "Temperatura min. raffrescamento" },
+            "dhw_estimation_supported": { "name": "Stima ACS supportata" },
+            "dhw_operating_mode":       { "name": "Modalità di funzionamento ACS" },
+            "dhw_panel_capabilities":   { "name": "Capacità del pannello ACS" },
+            "dhw_panel_data":           { "name": "Dati del pannello ACS" },
+            "dhw_power_consumption":    { "name": "Consumo elettrico ACS" },
+            "dhw_pump":                 { "name": "Pompa ACS" },
+            "dhw_system_operating_mode": { "name": "Modalità di funzionamento del sistema ACS" },
+            "dhw_temperature":          { "name": "Temperatura ACS" },
+            "domestic_hot_water":       { "name": "Acqua calda sanitaria" },
+            "domestic_hot_water_boost": { "name": "Boost acqua calda sanitaria" },
+            "eco_mode":                 { "name": "Modalità Eco" },
+            "energy_consumption_supported": { "name": "Consumo energetico supportato" },
+            "exhaust_temperature":      { "name": "Temperatura aria espulsa" },
+            "flame":                    { "name": "Fiamma" },
+            "heat":                     { "name": "Riscaldamento" },
+            "heat_pump_z1":             { "name": "Pompa di calore Z1" },
+            "heat_pump_z2":             { "name": "Pompa di calore Z2" },
+            "heating_period_max_duration": { "name": "Durata massima del periodo di riscaldamento" },
+            "heating_period_min_duration": { "name": "Durata minima del periodo di riscaldamento" },
+            "home_services":            { "name": "Servizi dell'abitazione" },
+            "hot_water_available":      { "name": "Acqua calda disponibile" },
+            "hot_water_showers_expected": { "name": "Docce di acqua calda previste" },
+            "hot_water_showers_remaining": { "name": "Docce di acqua calda rimanenti" },
+            "identify_supported":       { "name": "Identificazione supportata" },
+            "interface_fw":             { "name": "Firmware dell'interfaccia" },
+            "last_device_update":       { "name": "Ultima modifica dichiarata" },
+            "last_poll":                { "name": "Ultima interrogazione" },
+            "linked_interfaces_count":  { "name": "Numero di interfacce collegate" },
+            "absence_day_heating_temperature": { "name": "Temperatura di riscaldamento diurna in assenza" },
+            "presence_day_heating_temperature": { "name": "Temperatura di riscaldamento diurna in presenza" },
+            "presence_night_heating_temperature": { "name": "Temperatura di riscaldamento notturna in presenza" },
+            "absence_day_cooling_temperature": { "name": "Temperatura di raffrescamento diurna in assenza" },
+            "presence_day_cooling_temperature": { "name": "Temperatura di raffrescamento diurna in presenza" },
+            "presence_night_cooling_temperature": { "name": "Temperatura di raffrescamento notturna in presenza" },
+            "thermal_zones_count":           { "name": "Numero di zone termiche" },
+            "absence_schedule":              { "name": "Programmazione assenza" },
+            "air_circulation_available_modes": { "name": "Modalità di circolazione dell'aria disponibili" },
+            "air_circulation_current_mode":  { "name": "Modalità attuale di circolazione dell'aria" },
+            "dhw_comfort_mode":              { "name": "Modalità comfort ACS" },
+            "main_cursor_information":  { "name": "Informazioni sul cursore principale" },
+            "max_schedule_slots_per_day": { "name": "Max. fasce di programmazione al giorno" },
+            "max_schedule_slots_per_week": { "name": "Max. fasce di programmazione a settimana" },
+            "max_target_temperature_derogation": { "name": "Max. deroga della temperatura target" },
+            "min_schedule_ranges_per_day": { "name": "Min. intervalli di programmazione al giorno" },
+            "max_schedule_ranges_per_day": { "name": "Max. intervalli di programmazione al giorno" },
+            "night_target_temperature": { "name": "Temperatura target notturna" },
+            "new_schedule_monday":      { "name": "Nuova programmazione (lun)" },
+            "new_schedule_tuesday":     { "name": "Nuova programmazione (mar)" },
+            "new_schedule_wednesday":   { "name": "Nuova programmazione (mer)" },
+            "new_schedule_thursday":    { "name": "Nuova programmazione (gio)" },
+            "new_schedule_friday":      { "name": "Nuova programmazione (ven)" },
+            "new_schedule_saturday":    { "name": "Nuova programmazione (sab)" },
+            "new_schedule_sunday":      { "name": "Nuova programmazione (dom)" },
+            "open_window_detection":    { "name": "Rilevamento finestra aperta" },
+            "open_window_state":        { "name": "Stato finestra aperta" },
+            "override_setpoint_activation": { "name": "Attivazione del setpoint di forzatura" },
+            "schedule_anticipation":    { "name": "Anticipo della programmazione" },
+            "schedule_anticipation_state": { "name": "Stato dell'anticipo della programmazione" },
+            "schedule_minimum_interval": { "name": "Intervallo minimo della programmazione" },
+            "schedule_range_max_duration": { "name": "Durata massima dell'intervallo di programmazione" },
+            "schedule_range_min_duration": { "name": "Durata minima dell'intervallo di programmazione" },
+            "schedule_range_step":      { "name": "Passo dell'intervallo di programmazione" },
+            "schedule_start_day":       { "name": "Giorno di inizio della programmazione" },
+            "schedule_time_step":       { "name": "Passo orario della programmazione" },
+            "secondary_cursor_information": { "name": "Informazioni sul cursore secondario" },
+            "supported_control_modes":  { "name": "Modalità di controllo supportate" },
+            "supported_dhw_system_operating_modes": { "name": "Modalità di funzionamento del sistema ACS supportate" },
+            "supported_estimation_modes": { "name": "Modalità di stima supportate" },
+            "supported_system_modes":   { "name": "Modalità di sistema supportate" },
+            "supported_system_operating_modes": { "name": "Modalità di funzionamento del sistema supportate" },
+            "system_operating_mode":    { "name": "Modalità di funzionamento del sistema" },
+            "system_setpoint_mode":     { "name": "Modalità setpoint del sistema" },
+            "temperature_setpoint":     { "name": "Setpoint di temperatura" },
+            "model_name":               { "name": "Modello" },
+            "number_of_hours_burner":   { "name": "Ore di funzionamento del bruciatore" },
+            "number_of_hours_ch_pump":  { "name": "Ore di funzionamento della pompa di riscaldamento" },
+            "number_of_hours_dhw_pump": { "name": "Ore di funzionamento della pompa ACS" },
+            "number_of_starts_burner":  { "name": "Avviamenti del bruciatore" },
+            "number_of_starts_ch_pump": { "name": "Avviamenti della pompa di riscaldamento" },
+            "number_of_starts_dhw_pump":{ "name": "Avviamenti della pompa ACS" },
+            "off_peak_hours":           { "name": "Ore fuori punta" },
+            "outside_temperature":      { "name": "Temperatura esterna" },
+            "override_remain_time":     { "name": "Tempo rimanente della forzatura" },
+            "override_remain_time_z1":  { "name": "Tempo rimanente della forzatura Z1" },
+            "override_remain_time_z2":  { "name": "Tempo rimanente della forzatura Z2" },
+            "power_consumption":        { "name": "Consumo elettrico" },
+            "powerful_mode":            { "name": "Modalità Powerful" },
+            "presence_mode":            { "name": "Modalità presenza" },
+            "presence_target_temperature": { "name": "Temperatura target in presenza" },
+            "product_number":           { "name": "Numero di prodotto" },
+            "prog_01":                  { "name": "Prog 01 (lun)" },
+            "prog_01_z1":               { "name": "Prog 01 (lun Z1)" },
+            "prog_02":                  { "name": "Prog 02 (mar)" },
+            "prog_02_z1":               { "name": "Prog 02 (mar Z1)" },
+            "prog_03":                  { "name": "Prog 03 (mer)" },
+            "prog_03_z1":               { "name": "Prog 03 (mer Z1)" },
+            "prog_04":                  { "name": "Prog 04 (gio)" },
+            "prog_04_z1":               { "name": "Prog 04 (gio Z1)" },
+            "prog_05":                  { "name": "Prog 05 (ven)" },
+            "prog_05_z1":               { "name": "Prog 05 (ven Z1)" },
+            "prog_06":                  { "name": "Prog 06 (sab)" },
+            "prog_06_z1":               { "name": "Prog 06 (sab Z1)" },
+            "prog_07":                  { "name": "Prog 07 (dom)" },
+            "prog_07_z1":               { "name": "Prog 07 (dom Z1)" },
+            "prog_08_z2":               { "name": "Prog 08 (lun Z2)" },
+            "prog_09_z2":               { "name": "Prog 09 (mar Z2)" },
+            "prog_10_z2":               { "name": "Prog 10 (mer Z2)" },
+            "prog_11_z2":               { "name": "Prog 11 (gio Z2)" },
+            "prog_12_z2":               { "name": "Prog 12 (ven Z2)" },
+            "prog_13_z2":               { "name": "Prog 13 (sab Z2)" },
+            "prog_14_z2":               { "name": "Prog 14 (dom Z2)" },
+            "prog_heating_monday":      { "name": "Programma di riscaldamento (lun)" },
+            "prog_heating_tuesday":     { "name": "Programma di riscaldamento (mar)" },
+            "prog_heating_wednesday":   { "name": "Programma di riscaldamento (mer)" },
+            "prog_heating_thursday":    { "name": "Programma di riscaldamento (gio)" },
+            "prog_heating_friday":      { "name": "Programma di riscaldamento (ven)" },
+            "prog_heating_saturday":    { "name": "Programma di riscaldamento (sab)" },
+            "prog_heating_sunday":      { "name": "Programma di riscaldamento (dom)" },
+            "prog_cooling_monday":      { "name": "Programma di raffrescamento (lun)" },
+            "prog_cooling_tuesday":     { "name": "Programma di raffrescamento (mar)" },
+            "prog_cooling_wednesday":   { "name": "Programma di raffrescamento (mer)" },
+            "prog_cooling_thursday":    { "name": "Programma di raffrescamento (gio)" },
+            "prog_cooling_friday":      { "name": "Programma di raffrescamento (ven)" },
+            "prog_cooling_saturday":    { "name": "Programma di raffrescamento (sab)" },
+            "prog_cooling_sunday":      { "name": "Programma di raffrescamento (dom)" },
+            "max_dhw_schedule_slots_per_day": { "name": "Max. fasce di programmazione ACS al giorno" },
+            "supported_dhw_modes":         { "name": "Modalità ACS supportate" },
+            "dhw_boost_end_timestamp":    { "name": "Orario di fine del Boost ACS" },
+            "dhw_prog_monday":            { "name": "Programma ACS (lun)" },
+            "dhw_prog_tuesday":            { "name": "Programma ACS (mar)" },
+            "dhw_prog_wednesday":            { "name": "Programma ACS (mer)" },
+            "dhw_prog_thursday":            { "name": "Programma ACS (gio)" },
+            "dhw_prog_friday":            { "name": "Programma ACS (ven)" },
+            "dhw_prog_saturday":            { "name": "Programma ACS (sab)" },
+            "dhw_prog_sunday":            { "name": "Programma ACS (dom)" },
+            "prog_cool_monday":         { "name": "Programma raffrescamento lunedì" },
+            "prog_cool_tuesday":        { "name": "Programma raffrescamento martedì" },
+            "prog_cool_wednesday":      { "name": "Programma raffrescamento mercoledì" },
+            "prog_cool_thursday":       { "name": "Programma raffrescamento giovedì" },
+            "prog_cool_friday":         { "name": "Programma raffrescamento venerdì" },
+            "prog_cool_saturday":       { "name": "Programma raffrescamento sabato" },
+            "prog_cool_sunday":         { "name": "Programma raffrescamento domenica" },
+            "prog_heat_monday":         { "name": "Programma riscaldamento lunedì" },
+            "prog_heat_tuesday":        { "name": "Programma riscaldamento martedì" },
+            "prog_heat_wednesday":      { "name": "Programma riscaldamento mercoledì" },
+            "prog_heat_thursday":       { "name": "Programma riscaldamento giovedì" },
+            "prog_heat_friday":         { "name": "Programma riscaldamento venerdì" },
+            "prog_heat_saturday":       { "name": "Programma riscaldamento sabato" },
+            "prog_heat_sunday":         { "name": "Programma riscaldamento domenica" },
+            "prog_mode":                { "name": "Modalità programma" },
+            "quiet_mode":               { "name": "Modalità silenziosa" },
+            "radio_signal":             { "name": "Segnale radio" },
+            "resistance":               { "name": "Resistenza" },
+            "room_controls_capabilities": { "name": "Capacità dei comandi di stanza" },
+            "serial_number":            { "name": "Numero di serie" },
+            "swing_mode":               { "name": "Oscillazione" },
+            "tank_bottom_temperature":  { "name": "Temperatura inferiore del serbatoio" },
+            "tank_capacity":            { "name": "Capacità del serbatoio" },
+            "tank_middle_temperature":  { "name": "Temperatura intermedia del serbatoio" },
+            "tank_top_temperature":     { "name": "Temperatura superiore del serbatoio" },
+            "target_temperature":       { "name": "Temperatura target" },
+            "target_temperature_dhw":   { "name": "Temperatura target ACS" },
+            "target_temperature_eco_z1":{ "name": "Temperatura target Eco Z1" },
+            "target_temperature_eco_z2":{ "name": "Temperatura target Eco Z2" },
+            "target_temperature_max":   { "name": "Temperatura target max." },
+            "target_temperature_min":   { "name": "Temperatura target min." },
+            "target_temperature_step":  { "name": "Passo della temperatura target" },
+            "temperature_adjustment_min": { "name": "Temperatura minima" },
+            "thermostat_temperature_z1":{ "name": "Temperatura del termostato Z1" },
+            "thermostat_temperature_z2":{ "name": "Temperatura del termostato Z2" },
+            "timezone":                 { "name": "Fuso orario" },
+            "total_power_consumption":  { "name": "Consumo elettrico totale" },
+            "unexpected_events":        { "name": "Eventi imprevisti" },
+            "v40_water_available":      { "name": "Acqua V40 disponibile"},
+            "v40_water_capacity":       { "name": "Capacità acqua V40"},
+            "version":                  { "name": "Versione" },
+            "water_consumption":        { "name": "Consumo di acqua"},
+            "water_pressure":           { "name": "Pressione dell'acqua" },
+            "water_setpoint_step":      { "name": "Passo del setpoint dell'acqua" },
+            "water_temperature_limit":  { "name": "Limite di temperatura dell'acqua" },
+            "wifi_connected":           { "name": "Wi-Fi connesso" },
+            "wifi_fw":                  { "name": "Firmware Wi-Fi" },
+            "wifi_signal":              { "name": "Segnale Wi-Fi" },
+            "wifi_ssid":                { "name": "SSID Wi-Fi" },
+            "zone_1":                   { "name": "Zona 1" },
+            "zone_2":                   { "name": "Zona 2" },
+            "zones_count":              { "name": "Numero di zone" }
+        },
+        "switch": {
+            "air_circulation":    { "name": "Circolazione dell'aria" },
+            "away_mode":          { "name": "Modalità assenza" },
+            "boost_mode":         { "name": "Modalità Boost" },
+            "domestic_hot_water": { "name": "Acqua calda sanitaria" },
+            "domestic_hot_water_boost": { "name": "Boost acqua calda sanitaria" },
+            "eco_mode":           { "name": "Modalità Eco" },
+            "powerful_mode":      { "name": "Modalità Powerful" },
+            "presence_mode":      { "name": "Modalità presenza" },
+            "prog_mode":          { "name": "Modalità programma" },
+            "quiet_mode":         { "name": "Modalità silenziosa" },
+            "schedule_anticipation": { "name": "Anticipo della programmazione" },
+            "swing_mode":         { "name": "Oscillazione" }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "heating_schedule_changed": "Il programma di riscaldamento è cambiato",
+            "cooling_schedule_changed": "Il programma di raffrescamento è cambiato",
+            "schedule_resumed":         "{entity_name} went back to its program",
+            "schedule_overridden":      "{entity_name} program was overridden",
+            "schedule_stopped":         "{entity_name} stopped following its program"
+        }
+    },
+    "issues": {
+        "unknown_model": {
+            "title": "{device_name} è un modello che questa integrazione non conosce",
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Inviare il rapporto",
+                        "description": "L'id di modello `{model_id}` non è nella tabella di corrispondenza, quindi funzionano solo le capacità generiche di questo dispositivo. Manca una corrispondenza che qualcuno deve scrivere, e per scriverla servono due cose da te.\n\n[Apri una segnalazione precompilata]({report_url}). Contiene tutti i modelli senza corrispondenza di questo account (`{model_ids}`) con gli id di capacità che nulla nomina per ciascuno -- e nient'altro sulla tua casa.\n\nAllega poi un file di diagnostica, da *Impostazioni > Dispositivi e servizi > Atlantic Cozytouch > ⋮ > Scarica diagnostica*. Un solo file copre l'intero account, con i valori di capacità di ogni dispositivo dichiarato -- compresi quelli non configurati qui, dov'è di solito un modello senza corrispondenza. Le tue credenziali e il tuo indirizzo vengono rimossi.\n\nSeleziona **Invia** una volta inviata. Un rapporto vale per tutti i dispositivi che contiene, quindi le altre riparazioni per dispositivo sconosciuto di questo account si chiudono con questa. Una versione che aggiunge una corrispondenza la chiude comunque."
+                    }
+                }
+            }
+        }
+    },
+    "selector": {
+        "days": {
+            "options": {
+                "all":       "Every day",
+                "weekdays":  "Weekdays",
+                "weekend":   "Weekend",
+                "monday":    "Monday",
+                "tuesday":   "Tuesday",
+                "wednesday": "Mercoledì",
+                "thursday":  "Thursday",
+                "friday":    "Friday",
+                "saturday":  "Saturday",
+                "sunday":    "Sunday"
+            }
+        },
+        "program": {
+            "options": {
+                "heating":   "Heating",
+                "cooling":   "Cooling"
+            }
+        },
+        "schedule_slot": {
+            "fields": {
+                "time":        "Starts at",
+                "temperature": "Temperatura"
+            }
+        }
+    },
+    "services": {
+        "get_schedule": {
+            "name": "Leggere il programma di una settimana",
+            "description": "Restituisce i sette programmi giornalieri di un dispositivo, nella forma accettata da \"Impostare un programma giornaliero\".",
+            "fields": {
+                "program":  { "name": "Programma", "description": "Riscaldamento o raffrescamento." }
+            }
+        },
+        "set_schedule": {
+            "name": "Impostare un programma giornaliero",
+            "description": "Scrive lo stesso programma orario su uno o più giorni, per riscaldamento o raffrescamento.",
+            "fields": {
+                "program":  { "name": "Programma", "description": "Riscaldamento o raffrescamento." },
+                "days":     { "name": "Giorni", "description": "I giorni che riceveranno questo programma. Tutti i giorni, Giorni feriali e Fine settimana valgono per i giorni che nominano." },
+                "slots":    { "name": "Fasce", "description": "Elenco di coppie ora/temperatura. La prima fascia deve iniziare alle 00:00, dieci al massimo." }
+            }
+        }
+    }
+}
