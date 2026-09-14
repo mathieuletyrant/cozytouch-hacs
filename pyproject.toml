@@ -69,11 +69,6 @@ ignore = [
              # answers for one id", not "Answer what the mapping ...". The
              # house style in CLAUDE.md is that a comment says why a value is
              # what it is, and the docstrings follow it.
-    "PERF401",  # would turn three of the seven platform setup loops into list
-                # comprehensions and leave the other four as loops, because
-                # they branch on more than one capability type. The platforms
-                # are read side by side; uniform beats marginally shorter, and
-                # there is no performance in it either way at five entities.
     "RUF001",  # the ambiguous characters it finds are deliberate typography:
                # `×` in the generated capability table, matching the prose in
                # docs/architecture.md.

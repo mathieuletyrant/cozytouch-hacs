@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import logging
@@ -889,3 +890,40 @@ class CozytouchDeviceEntity(CoordinatorEntity):
     def device_info(self) -> DeviceInfo:
         """Return the device info."""
         return device_info_for(self.coordinator, self._device_uniq_id)
+
+
+def add_capability_entities(
+    config_entry: CozytouchConfigEntry,
+    async_add_entities,
+    builders: dict[CapabilityType, Callable],
+) -> None:
+    """Build one platform's entities from the capabilities each device reports.
+
+    `builders` maps a capability type to what to make of it. A builder is
+    called with the four arguments every entity here takes, and returns either
+    one entity or several -- the away-mode window is one capability and two
+    entities. A capability whose type is not in the map belongs to another
+    platform and is skipped.
+
+    Entities are registered under the subentry their device was added as,
+    which is the identity every unique id is built from.
+    """
+    for subentry_id, subentry in config_entry.subentries.items():
+        hub = config_entry.runtime_data.hubs[subentry_id]
+
+        entities = []
+        for capability in hub.get_capabilities_for_device():
+            builder = builders.get(capability.type)
+            if builder is None:
+                continue
+
+            built = builder(
+                coordinator=hub,
+                capability=capability,
+                config_title=subentry.title,
+                config_uniq_id=subentry_id,
+            )
+            entities.extend(built if isinstance(built, list) else [built])
+
+        if entities:
+            async_add_entities(entities, True, config_subentry_id=subentry_id)

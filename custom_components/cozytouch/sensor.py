@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime
+from functools import partial
 import json
 import logging
 
@@ -27,7 +28,12 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .capability import describe_capability_value, read_setpoint
 from .const import DOMAIN, CozytouchCapabilityVariableType
-from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
+from .hub import (
+    CozytouchConfigEntry,
+    CozytouchDeviceEntity,
+    Hub,
+    add_capability_entities,
+)
 from .infos import CapabilityCategory, CapabilityType
 
 _LOGGER = logging.getLogger(__name__)
@@ -85,254 +91,28 @@ async def async_setup_entry(
 ) -> None:
     """Modern (thru config entry) sensors setup."""
     _LOGGER.debug("%s: setting up sensor plateform", config_entry.title)
-    # One device per subentry, and its entities are registered under it :
-    # the subentry id is the identity that used to be the entry's own, back
-    # when an entry meant a device.
-    for subentry_id, subentry in config_entry.subentries.items():
+    # SENSOR_BUILDERS is at the foot of this module, because it names the
+    # classes below.
+    add_capability_entities(config_entry, async_add_entities, SENSOR_BUILDERS)
+
+    # The two dates are not built from a capability, so they are not in the
+    # table above : one comes with every capability rather than being one of
+    # them, the other belongs to the account. Each is created only when the
+    # device reports it, the same rule the capability flags follow -- an entity
+    # nobody's hardware backs is worse than no entity. The poll date is always
+    # there in production, since connect() reads the setup view before any
+    # platform loads.
+    for subentry_id in config_entry.subentries:
         hub = config_entry.runtime_data.hubs[subentry_id]
 
-        # Init sensors
-        sensors = []
-        capabilities = hub.get_capabilities_for_device()
-        for capability in capabilities:
-            if capability.type in (CapabilityType.STRING, CapabilityType.INT):
-                # Use a CozytouchSensor for integers
-                sensors.append(
-                    CozytouchSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.TEMPERATURE:
-                # MEASUREMENT on everything that reads an instant value, here
-                # and on the four branches below. Without a state class the
-                # recorder keeps the state history and no long-term
-                # statistics, so a temperature is gone from the charts after
-                # the purge window -- ten days by default -- and min/max/mean
-                # over a season is not available at all. The types that count
-                # something instead (energy, water) declare TOTAL_INCREASING
-                # further down.
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        device_class=SensorDeviceClass.TEMPERATURE,
-                        state_class=SensorStateClass.MEASUREMENT,
-                        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-                    )
-                )
-            elif capability.type == CapabilityType.PRESSURE:
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        device_class=SensorDeviceClass.PRESSURE,
-                        state_class=SensorStateClass.MEASUREMENT,
-                        native_unit_of_measurement=UnitOfPressure.BAR,
-                    )
-                )
-            elif capability.type == CapabilityType.AWAY_MODE_TIMESTAMPS:
-                for index, timestamp in enumerate(capability.timestamps):
-                    sensors.append(
-                        CozytouchAwayModeTimestampSensor(
-                            capability=capability,
-                            config_title=subentry.title,
-                            config_uniq_id=subentry_id,
-                            attr_uniq_id=f"{subentry_id}_{index}",
-                            coordinator=hub,
-                            translation_key=timestamp.name,
-                            icon=timestamp.icon,
-                            separator=",",
-                            timestamp_index=index,
-                        )
-                    )
-            elif capability.type in (CapabilityType.SWITCH, CapabilityType.BINARY):
-                sensors.append(
-                    CozytouchBinarySensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.AWAY_MODE_SWITCH:
-                sensors.append(
-                    CozytouchAwayModeSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.SIGNAL:
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        device_class=SensorDeviceClass.SIGNAL_STRENGTH,
-                        state_class=SensorStateClass.MEASUREMENT,
-                        native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
-                    )
-                )
-            elif capability.type == CapabilityType.ENERGY:
-                native_unit_of_measurement = capability.get(
-                    "displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR
-                )
-
-                display_factor = 1.0
-                if native_unit_of_measurement == UnitOfEnergy.KILO_WATT_HOUR:
-                    display_factor = 0.001
-
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        device_class=SensorDeviceClass.ENERGY,
-                        state_class=SensorStateClass.TOTAL_INCREASING,
-                        native_unit_of_measurement=native_unit_of_measurement,
-                        display_factor=display_factor,
-                    )
-                )
-            elif capability.type == CapabilityType.VOLUME:
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        # VOLUME_STORAGE, not VOLUME: the three capabilities
-                        # typed `volume` are how much water the tank holds or
-                        # has left (258, 268, 270), never how much ran through
-                        # it. The distinction is not cosmetic -- VOLUME accepts
-                        # only the totalling state classes, so MEASUREMENT on
-                        # it is the combination Home Assistant rejects outright.
-                        device_class=SensorDeviceClass.VOLUME_STORAGE,
-                        state_class=SensorStateClass.MEASUREMENT,
-                        native_unit_of_measurement=UnitOfVolume.LITERS,
-                    )
-                )
-            elif capability.type == CapabilityType.WATER_CONSUMPTION:
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        device_class=SensorDeviceClass.WATER,
-                        native_unit_of_measurement=UnitOfVolume.LITERS,
-                        state_class=SensorStateClass.TOTAL_INCREASING,
-                    )
-                )
-            elif capability.type == CapabilityType.PERCENTAGE:
-                sensors.append(
-                    CozytouchUnitSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                        # No device class: percentage is the unit, not the meaning.
-                        # SensorDeviceClass.BATTERY was the closest match and made
-                        # hot_water_available (271) read as a battery level, icon
-                        # and voice assistants included.
-                        device_class=None,
-                        state_class=SensorStateClass.MEASUREMENT,
-                        native_unit_of_measurement=PERCENTAGE,
-                    )
-                )
-            elif capability.type == CapabilityType.TIME:
-                sensors.append(
-                    CozytouchTimeSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-
-            elif capability.type == CapabilityType.TIMEZONE:
-                sensors.append(
-                    CozytouchTimezoneSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.ERROR_CODE:
-                sensors.append(
-                    CozytouchErrorCodeSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.PROG:
-                sensors.append(
-                    CozytouchProgSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.PROGTIME:
-                sensors.append(
-                    CozytouchProgTimeSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-            elif capability.type == CapabilityType.CLIMATE:
-                sensors.append(
-                    CozytouchSensor(
-                        capability=capability,
-                        config_title=subentry.title,
-                        config_uniq_id=subentry_id,
-                        coordinator=hub,
-                    )
-                )
-
-        # Not built from a capability, so it is not in the loop above: the
-        # date comes with every capability the device reports rather than
-        # being one of them. Only created when the device actually reports
-        # one, which is the same rule the capability flags follow -- an entity
-        # nobody's hardware backs is worse than no entity.
+        dates = []
         if hub.get_last_modification_date() is not None:
-            sensors.append(
-                CozytouchLastUpdateSensor(
-                    config_uniq_id=subentry_id,
-                    coordinator=hub,
-                )
-            )
-
-        # Its sibling, dating the poll rather than the hardware. The gate is
-        # the same rule, though in production it is always open : connect()
-        # reads the setup view before any platform loads, so the date exists
-        # by the time this runs.
+            dates.append(CozytouchLastUpdateSensor(hub, subentry_id))
         if hub.get_last_poll() is not None:
-            sensors.append(
-                CozytouchLastPollSensor(
-                    config_uniq_id=subentry_id,
-                    coordinator=hub,
-                )
-            )
+            dates.append(CozytouchLastPollSensor(hub, subentry_id))
 
-        # Add the entities to HA
-        if len(sensors) > 0:
-            async_add_entities(sensors, True, config_subentry_id=subentry_id)
+        if dates:
+            async_add_entities(dates, True, config_subentry_id=subentry_id)
 
 
 class CozytouchSensor(SensorEntity, CozytouchDeviceEntity):
@@ -874,3 +654,108 @@ class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Publish whatever the poll just brought back."""
         self.async_write_ha_state()
+
+
+def _unit(device_class, state_class, unit):
+    """A CozytouchUnitSensor builder, for a type whose unit is fixed."""
+    return partial(
+        CozytouchUnitSensor,
+        device_class=device_class,
+        state_class=state_class,
+        native_unit_of_measurement=unit,
+    )
+
+
+def _energy(coordinator, capability, config_title: str, config_uniq_id: str):
+    """An energy counter, in whichever of the two units the mapping asked for."""
+    unit = capability.get("displayed_unit_of_measurement", UnitOfEnergy.WATT_HOUR)
+    return CozytouchUnitSensor(
+        coordinator=coordinator,
+        capability=capability,
+        config_title=config_title,
+        config_uniq_id=config_uniq_id,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=unit,
+        display_factor=0.001 if unit == UnitOfEnergy.KILO_WATT_HOUR else 1.0,
+    )
+
+
+def _away_mode_timestamps(coordinator, capability, config_title, config_uniq_id):
+    """The two ends of the away window, which are one capability."""
+    return [
+        CozytouchAwayModeTimestampSensor(
+            capability=capability,
+            config_title=config_title,
+            config_uniq_id=config_uniq_id,
+            attr_uniq_id=f"{config_uniq_id}_{index}",
+            coordinator=coordinator,
+            translation_key=timestamp.name,
+            icon=timestamp.icon,
+            separator=",",
+            timestamp_index=index,
+        )
+        for index, timestamp in enumerate(capability.timestamps)
+    ]
+
+
+# MEASUREMENT on everything that reads an instant value. Without a state class
+# the recorder keeps the state history and no long-term statistics, so a
+# temperature is gone from the charts after the purge window -- ten days by
+# default -- and min/max/mean over a season is not available at all. The types
+# that count something instead declare TOTAL_INCREASING.
+#
+# VOLUME_STORAGE and not VOLUME: the three capabilities typed `volume` are how
+# much water the tank holds or has left (258, 268, 270), never how much ran
+# through it. VOLUME accepts only the totalling state classes, so MEASUREMENT
+# on it is a combination Home Assistant rejects outright.
+#
+# PERCENTAGE has no device class, because percentage is the unit and not the
+# meaning. SensorDeviceClass.BATTERY was the closest match and made
+# hot_water_available (271) read as a battery level, icon and voice assistants
+# included.
+SENSOR_BUILDERS = {
+    CapabilityType.STRING: CozytouchSensor,
+    CapabilityType.INT: CozytouchSensor,
+    CapabilityType.CLIMATE: CozytouchSensor,
+    CapabilityType.SWITCH: CozytouchBinarySensor,
+    CapabilityType.BINARY: CozytouchBinarySensor,
+    CapabilityType.AWAY_MODE_SWITCH: CozytouchAwayModeSensor,
+    CapabilityType.AWAY_MODE_TIMESTAMPS: _away_mode_timestamps,
+    CapabilityType.TIME: CozytouchTimeSensor,
+    CapabilityType.TIMEZONE: CozytouchTimezoneSensor,
+    CapabilityType.ERROR_CODE: CozytouchErrorCodeSensor,
+    CapabilityType.PROG: CozytouchProgSensor,
+    CapabilityType.PROGTIME: CozytouchProgTimeSensor,
+    CapabilityType.ENERGY: _energy,
+    CapabilityType.TEMPERATURE: _unit(
+        SensorDeviceClass.TEMPERATURE,
+        SensorStateClass.MEASUREMENT,
+        UnitOfTemperature.CELSIUS,
+    ),
+    CapabilityType.PRESSURE: _unit(
+        SensorDeviceClass.PRESSURE,
+        SensorStateClass.MEASUREMENT,
+        UnitOfPressure.BAR,
+    ),
+    CapabilityType.SIGNAL: _unit(
+        SensorDeviceClass.SIGNAL_STRENGTH,
+        SensorStateClass.MEASUREMENT,
+        UnitOfSoundPressure.DECIBEL,
+    ),
+    CapabilityType.VOLUME: _unit(
+        SensorDeviceClass.VOLUME_STORAGE,
+        SensorStateClass.MEASUREMENT,
+        UnitOfVolume.LITERS,
+    ),
+    CapabilityType.WATER_CONSUMPTION: _unit(
+        SensorDeviceClass.WATER,
+        SensorStateClass.TOTAL_INCREASING,
+        UnitOfVolume.LITERS,
+    ),
+    CapabilityType.PERCENTAGE: _unit(
+        None,
+        SensorStateClass.MEASUREMENT,
+        PERCENTAGE,
+    ),
+}
