@@ -273,6 +273,7 @@
             "eco_mode":                 { "name": "Mode Eco" },
             "energy_consumption_supported": { "name": "Consommation d'énergie disponible" },
             "exhaust_temperature":      { "name": "Température Échappement" },
+            "heating":                  { "name": "Chauffe" },
             "flame":                    { "name": "Flamme" },
             "heat":                     { "name": "Chauffage" },
             "heat_pump_z1":             { "name": "PAC Z1" },

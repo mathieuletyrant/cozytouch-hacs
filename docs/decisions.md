@@ -601,6 +601,24 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### Capability 153 is whether it is heating, not what is burning
+
+Atlantic calls it `HEATING_STATUS` and reads it as `HeatingStatus { OFF,
+HEAT_UP }`. The flame and the resistance are *how* a product makes heat,
+which is a per-product detail, and the row had it as the default : anything
+that was not an electric heater read `flame`, with a fire icon.
+
+That reached the air conditioners, which report 153 and have no flame --
+nine model ids in the capture corpus do, including the room units on the
+household this integration is developed against. So the default becomes
+`heating`, and the two products that know what is producing it say so on
+their own rows.
+
+This is the rule in CLAUDE.md the row was breaking : model-specific
+behaviour goes behind a per-product entry, never into the shared default.
+A default written for one product silently claims every product nobody has
+thought about yet.
+
 ### 312 is the hot-water control target, and it is read-only
 
 The placeholder name `Temp_312` was there because the iOS extraction gave

@@ -273,6 +273,7 @@
             "eco_mode":                 { "name": "Eco-Modus" },
             "energy_consumption_supported": { "name": "Energieverbrauch unterstützt" },
             "exhaust_temperature":      { "name": "Ablufttemperatur" },
+            "heating":                  { "name": "Heizt" },
             "flame":                    { "name": "Flamme" },
             "heat":                     { "name": "Heizen" },
             "heat_pump_z1":             { "name": "Wärmepumpe Z1" },

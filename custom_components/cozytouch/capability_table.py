@@ -191,9 +191,9 @@ class Entity:
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
-    per_type: (
-        Mapping[tuple[CozytouchDeviceType, ...], Mapping[str, object]] | None
-    ) = None
+    per_type: Mapping[tuple[CozytouchDeviceType, ...], Mapping[str, object]] | None = (
+        None
+    )
     per_model: Mapping[int, Mapping[str, object]] | None = None
     valid_above: float | None = None
 
@@ -523,11 +523,17 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     153: Entity(
-        name="flame",
+        # Atlantic calls it HEATING_STATUS: whether heat is being produced,
+        # not what produces it. The products that know say so; a default of
+        # "flame" reached the air conditioners, which have none.
+        name="heating",
         type=CapabilityType.BINARY,
         enabled_by_default=True,
-        icon="mdi:fire",
-        per_type={ELECTRIC_HEATERS: {"name": "resistance", "icon": "mdi:radiator"}},
+        icon="mdi:heat-wave",
+        per_type={
+            ELECTRIC_HEATERS: {"name": "resistance", "icon": "mdi:radiator"},
+            (CozytouchDeviceType.GAZ_BOILER,): {"name": "flame", "icon": "mdi:fire"},
+        },
     ),
     154: Entity(
         name="zone_1",

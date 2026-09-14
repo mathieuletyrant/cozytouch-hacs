@@ -273,6 +273,7 @@
             "eco_mode":                 { "name": "Modo Eco" },
             "energy_consumption_supported": { "name": "Consumo de energía admitido" },
             "exhaust_temperature":      { "name": "Temperatura del aire expulsado" },
+            "heating":                  { "name": "Calentando" },
             "flame":                    { "name": "Llama" },
             "heat":                     { "name": "Calefacción" },
             "heat_pump_z1":             { "name": "Bomba de calor Z1" },
