@@ -146,12 +146,15 @@ class Entity:
             166 reading 411 is 1+2+4+16+128+256, so the unit does off, auto,
             cool, heat, fan and dry. The question it answers is "which of
             these can I do".
-    values  the value names *one* thing. 73 reading 4 is the fourth member,
-            cooling_and_heating, and nothing else. The question it answers is
-            "which one, right now".
+    reads_as
+            the value is looked up whole. Usually that is an enum -- 73
+            reading 4 is the fourth member, cooling_and_heating -- but not
+            always: 350 reading 2 is "low, medium, high, auto", four speeds
+            named by one number. Hence reads_as and not values, which would
+            promise a member every time.
 
             At most one of the two, and the choice is not cosmetic: 4 read as
-            a sum is the third flag, read as a name it is the fourth member,
+            a sum is the third flag, looked up whole it is the fourth member,
             and both readings look perfectly sensible. Only the id says which,
             which is why a row setting both fails a test. The way to tell them
             apart is whether the device can report two of these at once.
@@ -179,7 +182,7 @@ class Entity:
     icon: str | None = None
     enabled_by_default: bool
     bits: tuple[tuple[int, str], ...] | None = None
-    values: Mapping[str, str] | None = None
+    reads_as: Mapping[str, str] | None = None
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
@@ -346,7 +349,7 @@ CAPABILITIES: dict[int, Entity] = {
     73: Entity(
         name="available_thermostat_modes",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "cooling_only",
             "1": "cooling_with_reheat",
             "2": "heating_only",
@@ -876,7 +879,7 @@ CAPABILITIES: dict[int, Entity] = {
     230: Entity(
         name="dhw_operating_mode",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "heat",
             "1": "scheduled_heat",
             "2": "off_peak_heat",
@@ -1211,7 +1214,7 @@ CAPABILITIES: dict[int, Entity] = {
     337: Entity(
         name="main_cursor_information",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "nothing",
             "1": "away",
             "2": "boost",
@@ -1226,7 +1229,7 @@ CAPABILITIES: dict[int, Entity] = {
     338: Entity(
         name="secondary_cursor_information",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "nothing",
             "1": "eco",
             "2": "water_setpoint",
@@ -1237,7 +1240,7 @@ CAPABILITIES: dict[int, Entity] = {
     339: Entity(
         name="dhw_panel_data",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "nothing",
             "1": "v40_state_of_charge",
             "2": "water_setpoint",
@@ -1260,7 +1263,7 @@ CAPABILITIES: dict[int, Entity] = {
     350: Entity(
         name="air_circulation_supported_speeds",
         type=CapabilityType.STRING,
-        values=_SPEED_SETS,
+        reads_as=_SPEED_SETS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1611,7 +1614,7 @@ CAPABILITIES: dict[int, Entity] = {
     100800: Entity(
         name="available_fan_speeds",
         type=CapabilityType.STRING,
-        values=_SPEED_SETS,
+        reads_as=_SPEED_SETS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1795,7 +1798,7 @@ CAPABILITIES: dict[int, Entity] = {
     105636: Entity(
         name="dhw_comfort_mode",
         type=CapabilityType.STRING,
-        values={
+        reads_as={
             "0": "eco",
             "1": "comfort",
         },

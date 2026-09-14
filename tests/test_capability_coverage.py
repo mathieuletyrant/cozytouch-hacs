@@ -245,10 +245,10 @@ def test_no_row_decodes_its_value_two_ways():
     both = sorted(
         capabilityId
         for capabilityId, row in CAPABILITIES.items()
-        if row.bits is not None and row.values is not None
+        if row.bits is not None and row.reads_as is not None
     )
 
-    assert not both, f"{both} set both bits and values"
+    assert not both, f"{both} set both bits and reads_as"
 
 
 def test_no_capability_id_is_written_twice():

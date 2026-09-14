@@ -23,9 +23,9 @@ from .model import CozytouchDeviceType
 def describe_capability_value(capabilityId: int, value) -> str | None:
     """Read a descriptor capability as what it says, or None if nothing does.
 
-    The row says how: `values` when the number names one thing, `bits` when it
-    is a sum of them. A row that says neither is a number nobody has decoded,
-    and it reaches the entity as it came.
+    The row says how: `reads_as` when the number is looked up whole, `bits`
+    when it is a sum of them. A row that says neither is a number nobody has
+    decoded, and it reaches the entity as it came.
 
     Bits nothing names are kept as a count rather than dropped: these entities
     exist to investigate hardware nobody here owns, and a bit the table does
@@ -35,8 +35,8 @@ def describe_capability_value(capabilityId: int, value) -> str | None:
     if row is None:
         return None
 
-    if row.values is not None:
-        return row.values.get(str(value).strip())
+    if row.reads_as is not None:
+        return row.reads_as.get(str(value).strip())
 
     if row.bits is None:
         return None
