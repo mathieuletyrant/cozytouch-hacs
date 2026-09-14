@@ -671,3 +671,48 @@ def test_a_window_still_being_edited_is_not_sent_yet(monkeypatch):
     asyncio.run(hub.async_account_updated())
 
     assert sent == []
+
+
+# --- a write against a setup view that has not caught up -------------------
+
+
+def write_and_poll(monkeypatch, account, session, *, value="1", polls=1):
+    """Write one capability, then poll a setup view that still says "18"."""
+    session._answers["writecapability"] = FakeResponse(42, status=201)
+    session._answers["/magellan/executions/"] = FakeResponse({"state": 3})
+    assert asyncio.run(account.write_capability(1, 100, value)) is True
+
+    for _ in range(polls):
+        asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    return account.devices[0]["capabilities"][0]["value"]
+
+
+def test_a_poll_right_after_a_write_does_not_undo_it(monkeypatch):
+    """The flicker: toggle a switch, and the next poll answers with the old
+    value because the cloud has not propagated the write yet. Holding the
+    confirmed value is what stops the entity going back and forth.
+    """
+    account, session = connected(monkeypatch)
+    assert write_and_poll(monkeypatch, account, session) == "1"
+
+
+def test_the_setup_view_takes_over_once_it_agrees(monkeypatch):
+    """The hold is not a local override: the API stays the source of truth."""
+    account, session = connected(monkeypatch)
+    write_and_poll(monkeypatch, account, session)
+
+    session._answers["setupviewv2"] = FakeResponse(setup_view(value="1"))
+    asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+    session._answers["setupviewv2"] = FakeResponse(setup_view(value="25"))
+    asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert account.devices[0]["capabilities"][0]["value"] == "25"
+
+
+def test_a_write_nothing_ever_reports_stops_being_held(monkeypatch):
+    """A value the cloud accepted and then ignored must not be held forever."""
+    account, session = connected(monkeypatch)
+    monkeypatch.setattr(account_module, "PENDING_WRITE_GRACE", -1.0)
+
+    assert write_and_poll(monkeypatch, account, session) == "18"

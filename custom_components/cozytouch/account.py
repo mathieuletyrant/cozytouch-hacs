@@ -29,6 +29,10 @@ _LOGGER = logging.getLogger(__name__)
 # will stall a poll forever, blocking every subsequent one.
 REQUEST_TIMEOUT = ClientTimeout(total=30)
 
+# How long a confirmed write outranks the setup view, in seconds. The lag
+# between the two is not documented anywhere; see docs/decisions.md.
+PENDING_WRITE_GRACE = 60.0
+
 # How long to stop asking after a 429 that does not say. A guess, deliberately
 # long -- see docs/decisions.md.
 RATE_LIMIT_BACKOFF = 300.0
@@ -123,6 +127,10 @@ class CozytouchAccount:
         self.last_poll: datetime | None = None
 
         self._dump_json = False
+        # A write the cloud confirmed but the setup view does not report yet,
+        # as (deviceId, capabilityId) -> (value, expiry). See
+        # docs/decisions.md.
+        self._pending_writes: dict[tuple[int, int], tuple[str, float]] = {}
 
     @property
     def account_id(self) -> str:
@@ -399,6 +407,31 @@ class CozytouchAccount:
                     remote_device["capabilities"]
                 )
 
+        self._apply_pending_writes()
+
+    def _apply_pending_writes(self) -> None:
+        """Keep a confirmed write until the setup view catches up with it."""
+        if not self._pending_writes:
+            return
+
+        now = datetime.now(UTC).timestamp()
+        for device in self.devices:
+            for capability in device["capabilities"]:
+                key = (device["deviceId"], capability["capabilityId"])
+                pending = self._pending_writes.get(key)
+                if pending is None:
+                    continue
+
+                value, expiry = pending
+                if capability["value"] == value or now >= expiry:
+                    del self._pending_writes[key]
+                else:
+                    capability["value"] = value
+
+        for key, (_, expiry) in list(self._pending_writes.items()):
+            if now >= expiry:
+                del self._pending_writes[key]
+
     async def fetch_capabilities(self, deviceId: int) -> list:
         """GET the capability list of one device, to confirm a write.
 
@@ -510,7 +543,14 @@ class CozytouchAccount:
             )
             return False
 
-        return await self._await_execution(executionId)
+        if not await self._await_execution(executionId):
+            return False
+
+        self._pending_writes[(deviceId, capabilityId)] = (
+            value,
+            datetime.now(UTC).timestamp() + PENDING_WRITE_GRACE,
+        )
+        return True
 
     async def _await_execution(self, executionId) -> bool:
         """Poll one execution until it reports completion, or give up."""

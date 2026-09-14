@@ -24,9 +24,14 @@ def setup_payload(zones, devices=()):
 
 def stub_account(zones=(), devices=()):
     """A stand-in exposing only what update_devices_from_json_data writes."""
-    return SimpleNamespace(
-        _dump_json=False, zones=list(zones), devices=list(devices)
+    stub = SimpleNamespace(
+        _dump_json=False,
+        zones=list(zones),
+        devices=list(devices),
+        _pending_writes={},
     )
+    stub._apply_pending_writes = lambda: CozytouchAccount._apply_pending_writes(stub)
+    return stub
 
 
 def make_account(monkeypatch, username="someone@example.com"):

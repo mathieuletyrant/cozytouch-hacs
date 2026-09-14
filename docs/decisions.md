@@ -1314,6 +1314,39 @@ The session is Home Assistant's own and not one of ours : it is closed when Home
 Assistant stops, so there is nothing left to leak when a setup fails and the
 account it built is discarded.
 
+### A confirmed write outranks the setup view for a minute
+
+Every platform writes a capability and then asks the coordinator to refresh, so
+the entity shows what the device now reports rather than what it was asked for.
+The two do not happen in that order. `writecapability` returns an execution id,
+`_await_execution` waits for the execution to report completion — and
+`setupviewv2` still answers with the old value for a while after that. The poll
+replaces the capability list in one go, so the value that was just written is
+overwritten by the stale one, and the entity goes back to where it started
+until the next poll a poll interval later.
+
+Toggling air circulation on a room air conditioner shows it plainly : the
+switch reads on, then off, then on again thirty seconds later. Reported on
+model 557 on 2026-09-13, against 2026.9.8.
+
+So a write the cloud confirmed is held in `_pending_writes` and re-applied
+after each poll, until the setup view reports the same value — at which point
+the entry is dropped and the API is the source of truth again. It is a
+tiebreaker, not an override : nothing is held that the API has agreed with, and
+a value changed in the Cozytouch app still wins the moment the hold is gone.
+
+`PENDING_WRITE_GRACE` is 60 seconds, which is a guess. Nothing measured how
+long the propagation actually takes ; the number only has to outlast it while
+staying short enough that a write the cloud accepted and then quietly ignored
+stops being shown as the truth. Two default poll intervals is the reasoning,
+and the only evidence is that the flicker is gone at that value.
+
+The alternative was to drop the refresh that follows each write, which is a
+smaller diff — thirteen deletions. It was not taken because the refresh is what
+brings the *derived* values along : the remaining time and the mode the unit
+locks itself into while air circulation runs are not what was written, and
+nothing else would fetch them for a poll interval.
+
 ### `connect()` is idempotent, and a failing login is not collapsed
 
 `online` is the whole reconnect mechanism, and every hub on the account flips it
