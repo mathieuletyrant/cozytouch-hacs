@@ -86,7 +86,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     A version 1 entry keeps landing in MIGRATION_ERROR, as it always has. 2.2
     disables the per-day program sensors a calendar makes redundant, once and
-    not per start. See docs/decisions.md.
+    not per start. 2.3 drops the number entity capability 312 used to build.
+    See docs/decisions.md.
     """
     if entry.version != 2:
         return False
@@ -108,6 +109,17 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 )
 
         hass.config_entries.async_update_entry(entry, minor_version=2)
+
+    if entry.minor_version < 3:
+        # 312 is read-only and became a sensor. The registry is keyed on the
+        # platform as well as the unique id, so the number it used to build is
+        # not reused -- it stays behind, unavailable, forever.
+        registry = er.async_get(hass)
+        for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+            if entity.domain == "number" and entity.unique_id.endswith("_312"):
+                registry.async_remove(entity.entity_id)
+
+        hass.config_entries.async_update_entry(entry, minor_version=3)
 
     return True
 

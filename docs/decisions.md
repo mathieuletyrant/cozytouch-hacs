@@ -601,6 +601,25 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### What a rename costs here, and what it does not
+
+Every entity's unique id is `f"{DOMAIN}_{subentry_id}_{capabilityId}"` --
+keyed on the capability id, never on the name. So renaming one renames what
+Home Assistant displays and nothing else : the registry entry, the
+entity_id and the recorded history all survive, and an automation naming
+the entity_id keeps working.
+
+The wart is that the entity_id keeps the slug it was created from. Somebody
+whose sensor was called `flame` in 2026 keeps `sensor.…_flamme` showing
+"Chauffe". Renaming entity_ids would fix the cosmetics and break every
+automation that names one, which is the trade nobody wants.
+
+**Changing a capability's *type* is a different matter.** The registry is
+keyed on the platform as well as the unique id, so an id that moves from
+`number` to `sensor` does not reuse its entry : a new one is created and
+the old one stays behind, unavailable, forever. Capability 312 did exactly
+that, which is what migration 2.3 is for.
+
 ### Seventeen names the iOS list got wrong
 
 The mapping's names came from an extraction of the iOS app. The Android
