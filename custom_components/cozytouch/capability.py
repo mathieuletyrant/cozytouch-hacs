@@ -11,16 +11,12 @@ from .capability_table import (
     CAPABILITY_SPEED_SETS,
     CAPABILITY_VALUE_SPACES,
     ELECTRIC_HEATERS,
+    FAMILIES,
     SELF_DESCRIBING_CAPABILITIES,
+    SUPPRESSED_CAPABILITIES,
 )
-from .const import PROGRAM_DAYS, CozytouchCapabilityVariableType, program_block
-from .infos import (
-    CapabilityCategory,
-    CapabilityInfos,
-    CapabilityType,
-    ModelInfos,
-    TimestampInfos,
-)
+from .const import program_block
+from .infos import CapabilityCategory, CapabilityInfos, CapabilityType, ModelInfos
 from .model import CozytouchDeviceType
 
 
@@ -245,130 +241,21 @@ def get_capability_infos(  # noqa: C901
             if 100804 in availableCapabilityIds:
                 capability.swingOnCapabilityId = 100804
 
-    elif capabilityId in CAPABILITIES:
-        capability = CAPABILITIES[capabilityId].resolve(capability, modelInfos)
 
-    elif capabilityId in (101, 102, 103, 104):
-        capability.name = "Capability_" + str(capabilityId)
-        capability.type = CapabilityType.STRING
-        capability.value_type = CozytouchCapabilityVariableType.ARRAY
-        capability.category = CapabilityCategory.SENSOR
-
-    elif capabilityId == 119:
-        # Outside temperature is invalid when value is -327.68
-        if float(capabilityValue) > -327.68:
-            capability.name = "outside_temperature"
-            capability.type = CapabilityType.TEMPERATURE
-            capability.category = CapabilityCategory.SENSOR
-        else:
-            return CapabilityInfos()
-
-    elif capabilityId in (152, 227):
-        capability.name = "away_mode"
-        capability.type = CapabilityType.AWAY_MODE_SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:airplane"
-        capability.value_off = "0"
-        capability.value_on = "1"
-        capability.value_pending = "2"
-        if capabilityId == 152:
-            capability.timestampsCapabilityId = 222
-        elif capabilityId == 227:
-            capability.timestampsCapabilityId = 226
-
-    elif capabilityId in (162, 163):
-        # The cooling counterpart of the 160/161 heating bounds. Two independent
-        # reverse-engineering efforts name these the same way, so the unit is
-        # not a guess -- but nothing reads them yet. Wiring them as the climate
-        # entity's min and max while cooling is a separate change.
-        capability.name = (
-            "cooling_temperature_min"
-            if capabilityId == 162
-            else "cooling_temperature_max"
-        )
-        capability.type = CapabilityType.TEMPERATURE
-        capability.category = CapabilityCategory.DIAG
-        capability.enabled_by_default = False
-
-    elif capabilityId == 172:
-        # Absence setpoint. Only the heating products act on it. An air
-        # conditioner reports it and stores what is written, but never reads it
-        # back: absence there stops the units until the return date, and the
-        # weekly program keeps driving 40 and 177 throughout. Exposing a number
-        # nothing honours would promise a setting the Cozytouch app does not
-        # even offer on this hardware.
-        if not modelInfos.get("awayModeTemperatureAvailable", True):
-            return CapabilityInfos()
-
-        capability.name = "away_mode_temperature"
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
-        capability.lowestValueCapabilityId = 160
-        capability.highestValueCapabilityId = 161
-
-    elif capabilityId == 181:
-        # Ignore, same as heat sensor (7, 8)
+    elif capabilityId in SUPPRESSED_CAPABILITIES:
         return CapabilityInfos()
 
-    elif capabilityId == 184:
-        capability.name = "prog_mode"
-        capability.type = CapabilityType.SWITCH
-        capability.category = CapabilityCategory.SENSOR
-        capability.icon = "mdi:clock-outline"
-
-    elif 196 <= capabilityId <= 209:
-        # Weekly program: two blocks of seven capabilities, monday first. On an
-        # air conditioner the second block is the cooling program rather than a
-        # second zone -- the app calls them "Chauffage" and "Refroidissement".
-        index = capabilityId - 196
-        if modelInfos.type == CozytouchDeviceType.AC:
-            block = "heating" if index < 7 else "cooling"
-            capability.name = f"prog_{block}_{PROGRAM_DAYS[index % 7]}"
-        else:
-            capability.name = f"prog_{index + 1:02d}_z{1 if index < 7 else 2}"
-
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-        if _whole_block_reported(196 if index < 7 else 203, availableCapabilityIds):
-            capability.enabled_by_default = False
-
-    elif capabilityId in (222, 226):
-        capability.name = "away_mode"
-        capability.type = CapabilityType.AWAY_MODE_TIMESTAMPS
-        capability.category = CapabilityCategory.SENSOR
-        capability.timestamps = (
-            TimestampInfos("away_mode_start", "mdi:airplane-takeoff"),
-            TimestampInfos("away_mode_stop", "mdi:airplane-landing"),
+    elif capabilityId in CAPABILITIES:
+        capability = CAPABILITIES[capabilityId].resolve(
+            capability, modelInfos, capabilityValue
         )
-        capability.timezoneCapabilityId = 315
-        if capabilityId == 222:
-            capability.capabilityDuplicate = 226
-        else:
-            capability.capabilityDuplicate = 222
 
-    elif capabilityId == 233:
-        capability.name = "boost_remaining_time"
-        capability.type = CapabilityType.TIME
-        capability.category = CapabilityCategory.DIAG
-        capability.icon = "mdi:clock-outline"
-
-    elif 237 <= capabilityId <= 243:
-        # Domestic-hot-water weekly program, one capability per day, monday first.
-        capability.name = f"dhw_prog_{PROGRAM_DAYS[capabilityId - 237]}"
-        capability.type = CapabilityType.PROG
-        capability.category = CapabilityCategory.DIAG
-        if _whole_block_reported(237, availableCapabilityIds):
+    elif family := next(
+        (family for family in FAMILIES if capabilityId in family.ids), None
+    ):
+        capability = family.resolve(capability, capabilityId, modelInfos)
+        if _whole_block_reported(family.ids.start, availableCapabilityIds):
             capability.enabled_by_default = False
-
-    elif capabilityId == 312:
-        # Atlantic calls this one currentControlTarget, which matches the
-        # setpoint shape read below -- but it gives 306 the same name, and 306 is
-        # already mapped as a schedule bound. One of the two is wrong and nothing
-        # here says which, so the placeholder name stays until a capture settles
-        # it.
-        capability.name = "Temp_" + str(capabilityId)
-        capability.type = CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER
-        capability.category = CapabilityCategory.SENSOR
 
     elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
         capability.name, capability.type = SELF_DESCRIBING_CAPABILITIES[capabilityId]

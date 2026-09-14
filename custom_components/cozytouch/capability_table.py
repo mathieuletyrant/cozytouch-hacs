@@ -10,7 +10,14 @@ from dataclasses import dataclass
 
 from homeassistant.const import UnitOfEnergy, UnitOfPressure
 
-from .infos import CapabilityCategory, CapabilityInfos, CapabilityType, ModelInfos
+from .const import CozytouchCapabilityVariableType
+from .infos import (
+    CapabilityCategory,
+    CapabilityInfos,
+    CapabilityType,
+    ModelInfos,
+    TimestampInfos,
+)
 from .model import CozytouchDeviceType
 
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
@@ -306,6 +313,9 @@ class Entity:
     per_type    per device type, the keys to merge in last.
     per_model   the same per model id, for the products Atlantic wired to
                 different capabilities.
+    valid_above the entity exists only while the value is above this. Atlantic
+                sends a far-out-of-range reading rather than nothing when a
+                probe has nothing to say.
     """
 
     name: str
@@ -317,14 +327,17 @@ class Entity:
     needs_flag: str | None = None
     per_type: Mapping[CozytouchDeviceType, Mapping[str, object]] | None = None
     per_model: Mapping[int, Mapping[str, object]] | None = None
+    valid_above: float | None = None
 
     def resolve(
-        self, capability: CapabilityInfos, modelInfos: ModelInfos
+        self, capability: CapabilityInfos, modelInfos: ModelInfos, value: str = "0"
     ) -> CapabilityInfos:
         """Fill the capability in, or hand back an empty one where it does not exist."""
         if modelInfos.type in self.absent_on:
             return CapabilityInfos()
         if self.needs_flag and not modelInfos.get(self.needs_flag, True):
+            return CapabilityInfos()
+        if self.valid_above is not None and float(value) <= self.valid_above:
             return CapabilityInfos()
 
         capability.name = self.name
@@ -337,9 +350,121 @@ class Entity:
             (self.per_type or {}).get(modelInfos.type),
             (self.per_model or {}).get(modelInfos.modelId),
         ):
-            for key, value in (source or {}).items():
-                capability[key] = value
+            for key, setting in (source or {}).items():
+                capability[key] = setting
         return capability
+
+
+@dataclass(frozen=True, kw_only=True, slots=True)
+class Family:
+    """A run of consecutive ids a device fills one per day.
+
+    Atlantic lays a weekly program out as seven capabilities, monday first.
+    Nothing about them varies but the name, so the names are the table -- one
+    per id, in id order, and a test checks there are as many as the range
+    holds.
+
+    per_type    the whole name list again, for a device type that reads the
+                block differently. An air conditioner's second block is the
+                cooling program ; on anything else it is a second zone.
+    """
+
+    ids: range
+    names: tuple[str, ...]
+    type: CapabilityType
+    category: CapabilityCategory = CapabilityCategory.SENSOR
+    per_type: Mapping[CozytouchDeviceType, tuple[str, ...]] | None = None
+
+    def resolve(
+        self, capability: CapabilityInfos, capabilityId: int, modelInfos: ModelInfos
+    ) -> CapabilityInfos:
+        """Fill the capability in with the name this id carries."""
+        names = (self.per_type or {}).get(modelInfos.type, self.names)
+        capability.name = names[capabilityId - self.ids.start]
+        capability.type = self.type
+        capability.category = self.category
+        return capability
+
+
+# The weekly programs. A block whose every day the device reports gets a
+# calendar instead, so its per-day sensors arrive disabled; see
+# docs/decisions.md.
+FAMILIES: tuple[Family, ...] = (
+    Family(
+        ids=range(196, 203),
+        names=(
+            "prog_01_z1",
+            "prog_02_z1",
+            "prog_03_z1",
+            "prog_04_z1",
+            "prog_05_z1",
+            "prog_06_z1",
+            "prog_07_z1",
+        ),
+        per_type={
+            CozytouchDeviceType.AC: (
+                "prog_heating_monday",
+                "prog_heating_tuesday",
+                "prog_heating_wednesday",
+                "prog_heating_thursday",
+                "prog_heating_friday",
+                "prog_heating_saturday",
+                "prog_heating_sunday",
+            )
+        },
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+    ),
+    Family(
+        ids=range(203, 210),
+        names=(
+            "prog_08_z2",
+            "prog_09_z2",
+            "prog_10_z2",
+            "prog_11_z2",
+            "prog_12_z2",
+            "prog_13_z2",
+            "prog_14_z2",
+        ),
+        per_type={
+            CozytouchDeviceType.AC: (
+                "prog_cooling_monday",
+                "prog_cooling_tuesday",
+                "prog_cooling_wednesday",
+                "prog_cooling_thursday",
+                "prog_cooling_friday",
+                "prog_cooling_saturday",
+                "prog_cooling_sunday",
+            )
+        },
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+    ),
+    Family(
+        ids=range(237, 244),
+        names=(
+            "dhw_prog_monday",
+            "dhw_prog_tuesday",
+            "dhw_prog_wednesday",
+            "dhw_prog_thursday",
+            "dhw_prog_friday",
+            "dhw_prog_saturday",
+            "dhw_prog_sunday",
+        ),
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+    ),
+)
+
+# The two ends of the away window, which arrive as one comma-separated value.
+AWAY_MODE_TIMESTAMPS = (
+    TimestampInfos("away_mode_start", "mdi:airplane-takeoff"),
+    TimestampInfos("away_mode_stop", "mdi:airplane-landing"),
+)
+
+# Ids the mapping deliberately drops: reported, understood, and not wanted as
+# an entity of their own.
+SUPPRESSED_CAPABILITIES = frozenset({181})
 
 
 CAPABILITIES: dict[int, Entity] = {
@@ -495,6 +620,26 @@ CAPABILITIES: dict[int, Entity] = {
             "displayed_unit_of_measurement": UnitOfPressure.BAR,
         },
     ),
+    101: Entity(
+        name="Capability_101",
+        type=CapabilityType.STRING,
+        extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
+    ),
+    102: Entity(
+        name="Capability_102",
+        type=CapabilityType.STRING,
+        extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
+    ),
+    103: Entity(
+        name="Capability_103",
+        type=CapabilityType.STRING,
+        extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
+    ),
+    104: Entity(
+        name="Capability_104",
+        type=CapabilityType.STRING,
+        extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
+    ),
     109: Entity(
         name="boiler_water_temperature",
         type=CapabilityType.TEMPERATURE,
@@ -516,6 +661,12 @@ CAPABILITIES: dict[int, Entity] = {
         name="thermostat_temperature_z2",
         type=CapabilityType.TEMPERATURE,
     ),
+    119: Entity(
+        # Atlantic sends -327.68 rather than nothing when there is no probe.
+        name="outside_temperature",
+        type=CapabilityType.TEMPERATURE,
+        valid_above=-327.68,
+    ),
     121: Entity(
         name="version",
         type=CapabilityType.STRING,
@@ -527,6 +678,17 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.ERROR_CODE,
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
+    ),
+    152: Entity(
+        name="away_mode",
+        type=CapabilityType.AWAY_MODE_SWITCH,
+        icon="mdi:airplane",
+        extra={
+            "value_off": "0",
+            "value_on": "1",
+            "value_pending": "2",
+            "timestampsCapabilityId": 222,
+        },
     ),
     153: Entity(
         name="flame",
@@ -585,6 +747,22 @@ CAPABILITIES: dict[int, Entity] = {
             "step": 0.5,
         },
     ),
+    162: Entity(
+        # The cooling counterpart of the 160/161 heating bounds. Two independent
+        # reverse-engineering efforts name these the same way, so the unit is
+        # not a guess -- but nothing reads them yet. Wiring them as the climate
+        # entity's min and max while cooling is a separate change.
+        name="cooling_temperature_min",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        extra={"enabled_by_default": False},
+    ),
+    163: Entity(
+        name="cooling_temperature_max",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        extra={"enabled_by_default": False},
+    ),
     165: Entity(
         # water-boiler icon: a domestic-hot-water boost, not the generic boost.
         name="domestic_hot_water_boost",
@@ -609,6 +787,18 @@ CAPABILITIES: dict[int, Entity] = {
         needs_flag="awayModeTemperatureAvailable",
         extra={"enabled_by_default": False},
     ),
+    172: Entity(
+        # Absence setpoint. Only the heating products act on it. An air
+        # conditioner reports it and stores what is written, but never reads it
+        # back: absence there stops the units until the return date, and the
+        # weekly program keeps driving 40 and 177 throughout. Exposing a number
+        # nothing honours would promise a setting the Cozytouch app does not
+        # even offer on this hardware.
+        name="away_mode_temperature",
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        needs_flag="awayModeTemperatureAvailable",
+        extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
+    ),
     177: Entity(
         name="target_cool_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
@@ -620,6 +810,11 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.SIGNAL,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
+    ),
+    184: Entity(
+        name="prog_mode",
+        type=CapabilityType.SWITCH,
+        icon="mdi:clock-outline",
     ),
     218: Entity(
         # `wifiConnected` by name, but never the boolean it looks like : shown
@@ -637,6 +832,35 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
+    ),
+    222: Entity(
+        name="away_mode",
+        type=CapabilityType.AWAY_MODE_TIMESTAMPS,
+        extra={
+            "timestamps": AWAY_MODE_TIMESTAMPS,
+            "timezoneCapabilityId": 315,
+            "capabilityDuplicate": 226,
+        },
+    ),
+    226: Entity(
+        name="away_mode",
+        type=CapabilityType.AWAY_MODE_TIMESTAMPS,
+        extra={
+            "timestamps": AWAY_MODE_TIMESTAMPS,
+            "timezoneCapabilityId": 315,
+            "capabilityDuplicate": 222,
+        },
+    ),
+    227: Entity(
+        name="away_mode",
+        type=CapabilityType.AWAY_MODE_SWITCH,
+        icon="mdi:airplane",
+        extra={
+            "value_off": "0",
+            "value_on": "1",
+            "value_pending": "2",
+            "timestampsCapabilityId": 226,
+        },
     ),
     228: Entity(
         name="absence_dhw_temperature",
@@ -660,6 +884,12 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     232: Entity(
         name="boost_total_time",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        icon="mdi:clock-outline",
+    ),
+    233: Entity(
+        name="boost_remaining_time",
         type=CapabilityType.TIME,
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
@@ -779,6 +1009,15 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.ERROR_CODE,
         category=CapabilityCategory.DIAG,
         icon="mdi:alert-circle-outline",
+    ),
+    312: Entity(
+        # Atlantic calls this one currentControlTarget, which matches the
+        # setpoint shape read below -- but it gives 306 the same name, and 306
+        # is already mapped as a schedule bound. One of the two is wrong and
+        # nothing here says which, so the placeholder name stays until a
+        # capture settles it.
+        name="Temp_312",
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
     ),
     315: Entity(
         name="timezone",
