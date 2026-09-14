@@ -102,6 +102,33 @@ SELF_DESCRIBING_CAPABILITIES = {
     105636: "dhw_comfort_mode",
 }
 
+# The subset whose encoding the vendor's Android app settles, by the decoder
+# its reader calls: a temperature is a float beside the other setpoints, a
+# duration is minutes, a flag is a `boolean` and not a mask. Everything else
+# in the table above stays a raw string. See docs/decisions.md.
+DESCRIBING_CAPABILITY_TYPES: dict[int, CapabilityType] = {
+    157: CapabilityType.BINARY,
+    296: CapabilityType.TIME,
+    307: CapabilityType.TIME,
+    331: CapabilityType.TIME,
+    332: CapabilityType.TIME,
+    333: CapabilityType.TIME,
+    352: CapabilityType.TEMPERATURE,
+    353: CapabilityType.TEMPERATURE,
+    354: CapabilityType.TEMPERATURE,
+    355: CapabilityType.TEMPERATURE,
+    356: CapabilityType.TEMPERATURE,
+    357: CapabilityType.TEMPERATURE,
+    381: CapabilityType.BINARY,
+    100078: CapabilityType.BINARY,
+    100102: CapabilityType.BINARY,
+    100103: CapabilityType.BINARY,
+    103150: CapabilityType.BINARY,
+    103199: CapabilityType.TEMPERATURE,
+    104050: CapabilityType.BINARY,
+    104051: CapabilityType.BINARY,
+}
+
 
 _HVAC_MODE_BITS = (
     (1, "off"),
@@ -257,6 +284,10 @@ CAPABILITY_VALUE_SPACES: dict[int, dict[str, str]] = {
         "0": "nothing",
         "1": "v40_state_of_charge",
         "2": "water_setpoint",
+    },
+    105636: {
+        "0": "eco",
+        "1": "comfort",
     },
 }
 
@@ -1349,7 +1380,9 @@ def get_capability_infos(  # noqa: C901
 
     elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
         capability.name = SELF_DESCRIBING_CAPABILITIES[capabilityId]
-        capability.type = CapabilityType.STRING
+        capability.type = DESCRIBING_CAPABILITY_TYPES.get(
+            capabilityId, CapabilityType.STRING
+        )
         capability.category = CapabilityCategory.DIAG
         capability.enabled_by_default = False
 

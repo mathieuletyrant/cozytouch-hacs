@@ -185,6 +185,35 @@ def test_a_self_describing_capability_arrives_switched_off(capabilityId):
     assert result["category"] == "diag"
 
 
+@pytest.mark.parametrize(
+    ("capabilityId", "expected"),
+    [
+        # Minutes, which the time sensor renders as 1d 00:00 rather than 1440.
+        (331, "time"),
+        (307, "time"),
+        # A setpoint in degrees, beside the ones the climate entity already
+        # reads as temperatures.
+        (352, "temperature"),
+        (103199, "temperature"),
+        # Flags the corpus reads as 0 on every capture, so only the app says
+        # they have a high state at all.
+        (104051, "binary"),
+        (100078, "binary"),
+        # Still a raw string: the app reads these through a mask or a parser
+        # nothing here mirrors.
+        (224, "string"),
+        (105122, "string"),
+        (100300, "string"),
+    ],
+)
+def test_a_descriptor_is_read_as_what_the_app_reads_it_as(capabilityId, expected):
+    infos = get_model_infos(557)
+
+    result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
+
+    assert result["type"] == expected
+
+
 def test_a_capability_that_says_nothing_is_enabled():
     """The flag is opt-in: only a capability that asks for it arrives off."""
     infos = get_model_infos(557)

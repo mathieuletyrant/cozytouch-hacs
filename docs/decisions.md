@@ -601,6 +601,45 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### Twenty descriptors read as what they are, and the ones left alone
+
+`SELF_DESCRIBING_CAPABILITIES` says "the name is everything we know". For
+twenty ids that stopped being true once the vendor app's readers were read
+(`research/data/android_capability_types.tsv`), so `DESCRIBING_CAPABILITY_TYPES`
+carries the type beside the name. They stay diag and stay **off by
+default**: knowing the encoding is not a reason to put twenty more
+entities on everybody's device page, and the flag is what makes the
+descriptor family cost nothing.
+
+- **Minutes** (296, 307, 331, 332, 333): the app reads them with
+  `toIntOrNull` in its prog-in-range feature, and 331 reads 1440 on eleven
+  models -- the minutes in a day. The time sensor renders that `1d 00:00`.
+- **Degrees** (352-357, 103199): `float getDayAbsenceTemperature` and its
+  siblings, beside the setpoints the climate entity already reads. The
+  corpus has 18/19/18/26/24/26 on ten models each; 103199 appears in no
+  capture at all and is typed on the app's word alone.
+- **Flags** (157, 381, 100078, 100102, 100103, 103150, 104050, 104051):
+  each has a reader returning `boolean`. Every one of them reads 0 on
+  every capture, which is why the corpus could not settle them and the app
+  can: constant is not the same as false.
+
+Left as raw strings on purpose:
+
+- **294, 340, 295, 330** are steps (`TEMPERATURE_UPDATE_STEP`,
+  `DHW_STEP_PROG_RANGE`). A step is not the quantity it steps, so 294 is
+  not a temperature -- a `device_class` of temperature on it would put a
+  "0.5 °C" reading into long-term statistics. `INT` would be honest but
+  changes nothing: `sensor.py` builds it with the same class as a string,
+  no unit and no state class. The precedent is 102022, the air-circulation
+  duration step, already `INT` and already diag.
+- **Counters** (93, 236, 244, 306, 329, 100000, 100301), same reason.
+- **100300** is `float getProgramStartingDay`, and the app's `ProgDay`
+  enum runs 1 (monday) to 7. The corpus reads 0 and 1. Two sources against
+  the only one that speaks for real hardware is not enough.
+- **105122** is a `long` of epoch milliseconds. No `CapabilityType`
+  renders that, and adding one is its own change.
+- **224 and 103034** are masks, handled above.
+
 ### Six more masks, and the two bits the corpus could not place
 
 The vendor app's `fromBitField` classes were read whole in September 2026
