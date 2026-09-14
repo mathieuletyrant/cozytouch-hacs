@@ -101,6 +101,26 @@ MODEL_GROUPS = [
         },
     ),
     (
+        2303,
+        {
+            "modelId": 2303,
+            "HVACModesCapabilityId": set(),
+            "name": "Alfea Extensa S Duo",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+        },
+    ),
+    (
+        2327,
+        {
+            "modelId": 2327,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Alfea Extensa S Duo",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+        },
+    ),
+    (
         235,
         {
             "modelId": 235,

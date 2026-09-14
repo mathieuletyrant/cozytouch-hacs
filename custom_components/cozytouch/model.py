@@ -161,6 +161,11 @@ ALFEA_EXTENSA_DUO_AI_3 = {
     219: "Alfea Extensa Duo A.I. 3 R32 Thermor",  # catalogue only
 }
 
+ALFEA_EXTENSA_S_DUO = {
+    2303: "Alfea Extensa S Duo",
+    2327: "Alfea Extensa S Duo",
+}
+
 # One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
 # with SERP for the tank that carries a coil; the grid is volume x coil x
 # brand, over eight badges. Only Atlantic's ATE has a commercial name we know.
@@ -411,6 +416,17 @@ def get_model_infos(  # noqa: C901
         modelInfos.HeatingModes = MANUAL_ONLY
 
         modelInfos.exhaustTemperatureAvailable = False
+
+    elif modelId in ALFEA_EXTENSA_S_DUO:
+        modelInfos.name = ALFEA_EXTENSA_S_DUO[modelId]
+        modelInfos.type = CozytouchDeviceType.HEAT_PUMP
+        modelInfos.HVACModes = OFF_HEAT
+
+        if modelId == 2303:
+            # The captured parent reports capability 8 without the zone target a
+            # heat-pump climate would need; the heating circuit itself is a child
+            # device.
+            modelInfos.HVACModesCapabilityId = set()
 
     elif modelId == 235:
         modelInfos.name = "Thermostat Navilink Connect"

@@ -1967,6 +1967,29 @@
   "name": "Naema 2 30",
   "type": "gaz_boiler"
  },
+ "2303": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [],
+  "modelId": 2303,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2327": {
+  "HVACModes": {
+   "0": "off",
+   "4": "heat"
+  },
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 2327,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
  "2345": {
   "HVACModes": {
    "0": "off",

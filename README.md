@@ -86,6 +86,7 @@ rooms in.
 | Alfea | 76 | Alfea Extensa Duo AI UE |
 | Alfea | 211 | Alfea Extensa Duo A.I. 3 R32 |
 | Alfea | 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
+| Alfea | 2303, 2327 | Alfea Extensa S Duo |
 
 ### 🎛️ Thermostats
 
