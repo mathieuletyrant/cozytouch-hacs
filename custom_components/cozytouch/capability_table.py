@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 from homeassistant.const import UnitOfEnergy, UnitOfPressure
 
-from .const import CozytouchCapabilityVariableType
+from .const import CozytouchCapabilityVariableType, program_block
 from .infos import (
     CapabilityCategory,
     CapabilityInfos,
@@ -284,6 +284,18 @@ CAPABILITY_SPEED_SETS: dict[int, dict[str, str]] = {
     100800: _SPEED_SETS,
 }
 
+def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
+    """Whether the device reports all seven days of the program block at `first`.
+
+    All seven is the calendar platform's condition for building one, so this
+    is also the condition for the per-day sensors arriving disabled: a device
+    with a partial block has no calendar, and its per-day sensors stay its
+    only view. See docs/decisions.md.
+    """
+    return all(
+        capabilityId in availableCapabilityIds for capabilityId in program_block(first)
+    )
+
 
 @dataclass(frozen=True, kw_only=True, slots=True)
 class Entity:
@@ -316,6 +328,9 @@ class Entity:
     valid_above the entity exists only while the value is above this. Atlantic
                 sends a far-out-of-range reading rather than nothing when a
                 probe has nothing to say.
+    block_start the first id of the weekly-program block this day belongs to.
+                A device reporting the whole block gets a calendar instead, so
+                its per-day sensors arrive disabled ; see docs/decisions.md.
     """
 
     name: str
@@ -328,9 +343,14 @@ class Entity:
     per_type: Mapping[CozytouchDeviceType, Mapping[str, object]] | None = None
     per_model: Mapping[int, Mapping[str, object]] | None = None
     valid_above: float | None = None
+    block_start: int | None = None
 
     def resolve(
-        self, capability: CapabilityInfos, modelInfos: ModelInfos, value: str = "0"
+        self,
+        capability: CapabilityInfos,
+        modelInfos: ModelInfos,
+        value: str = "0",
+        availableCapabilityIds: set[int] | None = None,
     ) -> CapabilityInfos:
         """Fill the capability in, or hand back an empty one where it does not exist."""
         if modelInfos.type in self.absent_on:
@@ -352,109 +372,13 @@ class Entity:
         ):
             for key, setting in (source or {}).items():
                 capability[key] = setting
+        if self.block_start is not None and _whole_block_reported(
+            self.block_start, availableCapabilityIds or set()
+        ):
+            capability.enabled_by_default = False
         return capability
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
-class Family:
-    """A run of consecutive ids a device fills one per day.
-
-    Atlantic lays a weekly program out as seven capabilities, monday first.
-    Nothing about them varies but the name, so the names are the table -- one
-    per id, in id order, and a test checks there are as many as the range
-    holds.
-
-    per_type    the whole name list again, for a device type that reads the
-                block differently. An air conditioner's second block is the
-                cooling program ; on anything else it is a second zone.
-    """
-
-    ids: range
-    names: tuple[str, ...]
-    type: CapabilityType
-    category: CapabilityCategory = CapabilityCategory.SENSOR
-    per_type: Mapping[CozytouchDeviceType, tuple[str, ...]] | None = None
-
-    def resolve(
-        self, capability: CapabilityInfos, capabilityId: int, modelInfos: ModelInfos
-    ) -> CapabilityInfos:
-        """Fill the capability in with the name this id carries."""
-        names = (self.per_type or {}).get(modelInfos.type, self.names)
-        capability.name = names[capabilityId - self.ids.start]
-        capability.type = self.type
-        capability.category = self.category
-        return capability
-
-
-# The weekly programs. A block whose every day the device reports gets a
-# calendar instead, so its per-day sensors arrive disabled; see
-# docs/decisions.md.
-FAMILIES: tuple[Family, ...] = (
-    Family(
-        ids=range(196, 203),
-        names=(
-            "prog_01_z1",
-            "prog_02_z1",
-            "prog_03_z1",
-            "prog_04_z1",
-            "prog_05_z1",
-            "prog_06_z1",
-            "prog_07_z1",
-        ),
-        per_type={
-            CozytouchDeviceType.AC: (
-                "prog_heating_monday",
-                "prog_heating_tuesday",
-                "prog_heating_wednesday",
-                "prog_heating_thursday",
-                "prog_heating_friday",
-                "prog_heating_saturday",
-                "prog_heating_sunday",
-            )
-        },
-        type=CapabilityType.PROG,
-        category=CapabilityCategory.DIAG,
-    ),
-    Family(
-        ids=range(203, 210),
-        names=(
-            "prog_08_z2",
-            "prog_09_z2",
-            "prog_10_z2",
-            "prog_11_z2",
-            "prog_12_z2",
-            "prog_13_z2",
-            "prog_14_z2",
-        ),
-        per_type={
-            CozytouchDeviceType.AC: (
-                "prog_cooling_monday",
-                "prog_cooling_tuesday",
-                "prog_cooling_wednesday",
-                "prog_cooling_thursday",
-                "prog_cooling_friday",
-                "prog_cooling_saturday",
-                "prog_cooling_sunday",
-            )
-        },
-        type=CapabilityType.PROG,
-        category=CapabilityCategory.DIAG,
-    ),
-    Family(
-        ids=range(237, 244),
-        names=(
-            "dhw_prog_monday",
-            "dhw_prog_tuesday",
-            "dhw_prog_wednesday",
-            "dhw_prog_thursday",
-            "dhw_prog_friday",
-            "dhw_prog_saturday",
-            "dhw_prog_sunday",
-        ),
-        type=CapabilityType.PROG,
-        category=CapabilityCategory.DIAG,
-    ),
-)
 
 # The two ends of the away window, which arrive as one comma-separated value.
 AWAY_MODE_TIMESTAMPS = (
@@ -816,6 +740,104 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.SWITCH,
         icon="mdi:clock-outline",
     ),
+    196: Entity(
+        name="prog_01_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_monday"}},
+    ),
+    197: Entity(
+        name="prog_02_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_tuesday"}},
+    ),
+    198: Entity(
+        name="prog_03_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_wednesday"}},
+    ),
+    199: Entity(
+        name="prog_04_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_thursday"}},
+    ),
+    200: Entity(
+        name="prog_05_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_friday"}},
+    ),
+    201: Entity(
+        name="prog_06_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_saturday"}},
+    ),
+    202: Entity(
+        name="prog_07_z1",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=196,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_heating_sunday"}},
+    ),
+    203: Entity(
+        name="prog_08_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_monday"}},
+    ),
+    204: Entity(
+        name="prog_09_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_tuesday"}},
+    ),
+    205: Entity(
+        name="prog_10_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_wednesday"}},
+    ),
+    206: Entity(
+        name="prog_11_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_thursday"}},
+    ),
+    207: Entity(
+        name="prog_12_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_friday"}},
+    ),
+    208: Entity(
+        name="prog_13_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_saturday"}},
+    ),
+    209: Entity(
+        name="prog_14_z2",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=203,
+        per_type={CozytouchDeviceType.AC: {"name": "prog_cooling_sunday"}},
+    ),
     218: Entity(
         # `wifiConnected` by name, but never the boolean it looks like : shown
         # raw and off by default. See docs/decisions.md. A zone gets nothing at
@@ -893,6 +915,48 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.TIME,
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
+    ),
+    237: Entity(
+        name="dhw_prog_monday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    238: Entity(
+        name="dhw_prog_tuesday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    239: Entity(
+        name="dhw_prog_wednesday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    240: Entity(
+        name="dhw_prog_thursday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    241: Entity(
+        name="dhw_prog_friday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    242: Entity(
+        name="dhw_prog_saturday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
+    ),
+    243: Entity(
+        name="dhw_prog_sunday",
+        type=CapabilityType.PROG,
+        category=CapabilityCategory.DIAG,
+        block_start=237,
     ),
     245: Entity(
         name="prog_01",

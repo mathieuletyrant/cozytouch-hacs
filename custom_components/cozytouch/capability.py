@@ -11,11 +11,9 @@ from .capability_table import (
     CAPABILITY_SPEED_SETS,
     CAPABILITY_VALUE_SPACES,
     ELECTRIC_HEATERS,
-    FAMILIES,
     SELF_DESCRIBING_CAPABILITIES,
     SUPPRESSED_CAPABILITIES,
 )
-from .const import program_block
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType, ModelInfos
 from .model import CozytouchDeviceType
 
@@ -87,22 +85,10 @@ def read_setpoint(capabilityId: int | None, value):
     return setpoint / 100 if setpoint > 40 else setpoint
 
 
-def _whole_block_reported(first: int, availableCapabilityIds: set[int]) -> bool:
-    """Whether the device reports all seven days of the program block at `first`.
-
-    All seven is the calendar platform's condition for building one, so this
-    is also the condition for the per-day sensors arriving disabled: a device
-    with a partial block has no calendar, and its per-day sensors stay its
-    only view. See docs/decisions.md.
-    """
-    return all(
-        capabilityId in availableCapabilityIds for capabilityId in program_block(first)
-    )
-
 
 # C901 is still over: 70 branches of complexity, down from 180. What is left
 # reads the model, the value or another capability, so it cannot be a row.
-def get_capability_infos(  # noqa: C901
+def get_capability_infos(
     modelInfos: ModelInfos,
     capabilityId: int,
     capabilityValue: str,
@@ -247,15 +233,8 @@ def get_capability_infos(  # noqa: C901
 
     elif capabilityId in CAPABILITIES:
         capability = CAPABILITIES[capabilityId].resolve(
-            capability, modelInfos, capabilityValue
+            capability, modelInfos, capabilityValue, availableCapabilityIds
         )
-
-    elif family := next(
-        (family for family in FAMILIES if capabilityId in family.ids), None
-    ):
-        capability = family.resolve(capability, capabilityId, modelInfos)
-        if _whole_block_reported(family.ids.start, availableCapabilityIds):
-            capability.enabled_by_default = False
 
     elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
         capability.name, capability.type = SELF_DESCRIBING_CAPABILITIES[capabilityId]
