@@ -601,6 +601,31 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### Seventeen names the iOS list got wrong
+
+The mapping's names came from an extraction of the iOS app. The Android
+enum (`research/data/capability_id_to_name_android.tsv`) disagrees on
+seventeen, and where the two differ the Android one is the enum itself,
+read in clear Kotlin, not a string recovered from a compiled binary.
+
+Only the ones that said something *false* were changed; a paraphrase is not
+an error, and `dhw_error_code` is a better entity name than
+`ERROR_CODE_DHW`.
+
+| id | was | is |
+| -- | --- | -- |
+| 344 | `linked_interfaces_count` | `ROOM_COUNT` -- a count of rooms |
+| 100002, 100024 | `*_estimation_modes` | ventilation options, a `VentilationOption` mask |
+| 100004, 100021 | `*_control_modes` | ventilation controls, a `VentilationControls` mask |
+| 100196-100198 | `absence_schedule`, `*_target_temperature` | `PROG_ABSENCE` / `NIGHT` / `PRESENCE`, each a JSON `[temperature, offState]` pair and not a scalar |
+| 100334-100341 | `new_schedule_*` | `THERMOSTAT_LIFESTYLE_HEATING_*` -- the lifestyle program, nothing new about it |
+| 100078 | `identify_supported` | `VENTILATION_WINK_REQUEST`, read by `isWinkRequested` : a request, not a support flag |
+| 358 | `air_circulation_scope` | `thermalAmbianceScope` -- nothing to do with air circulation |
+
+358 is the one the Android enum does *not* carry : the app never reads it.
+Its name here comes from the iOS list, which is the only source for it, and
+which is wrong about every other id on this page at least once.
+
 ### Capability 153 is whether it is heating, not what is burning
 
 Atlantic calls it `HEATING_STATUS` and reads it as `HeatingStatus { OFF,

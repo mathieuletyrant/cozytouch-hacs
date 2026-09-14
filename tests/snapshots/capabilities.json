@@ -26,7 +26,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -34,7 +34,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -50,7 +50,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -74,7 +74,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -82,7 +82,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -106,7 +106,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -114,7 +114,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -122,7 +122,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -252,7 +252,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -260,7 +260,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -268,7 +268,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -276,7 +276,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -284,7 +284,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -292,7 +292,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -300,7 +300,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -1580,7 +1580,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -1652,7 +1652,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -1862,7 +1862,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -1870,7 +1870,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -1886,7 +1886,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -1910,7 +1910,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -1918,7 +1918,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -1942,7 +1942,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -1950,7 +1950,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -1958,7 +1958,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -2088,7 +2088,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -2096,7 +2096,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -2104,7 +2104,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -2112,7 +2112,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -2120,7 +2120,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -2128,7 +2128,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -2136,7 +2136,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -3423,7 +3423,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -3495,7 +3495,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -3701,7 +3701,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -3709,7 +3709,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -3725,7 +3725,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -3749,7 +3749,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -3757,7 +3757,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -3781,7 +3781,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -3789,7 +3789,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -3797,7 +3797,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -3927,7 +3927,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -3935,7 +3935,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -3943,7 +3943,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -3951,7 +3951,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -3959,7 +3959,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -3967,7 +3967,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -3975,7 +3975,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -5254,7 +5254,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -5326,7 +5326,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -5532,7 +5532,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -5540,7 +5540,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -5556,7 +5556,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -5580,7 +5580,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -5588,7 +5588,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -5612,7 +5612,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -5620,7 +5620,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -5628,7 +5628,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -5758,7 +5758,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -5766,7 +5766,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -5774,7 +5774,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -5782,7 +5782,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -5790,7 +5790,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -5798,7 +5798,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -5806,7 +5806,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -7093,7 +7093,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -7165,7 +7165,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -7371,7 +7371,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -7379,7 +7379,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -7395,7 +7395,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -7419,7 +7419,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -7427,7 +7427,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -7451,7 +7451,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -7459,7 +7459,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -7467,7 +7467,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -7597,7 +7597,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -7605,7 +7605,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -7613,7 +7613,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -7621,7 +7621,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -7629,7 +7629,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -7637,7 +7637,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -7645,7 +7645,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -8917,7 +8917,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -8989,7 +8989,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -9234,7 +9234,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -9242,7 +9242,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -9258,7 +9258,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -9282,7 +9282,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -9290,7 +9290,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -9314,7 +9314,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -9322,7 +9322,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -9330,7 +9330,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -9460,7 +9460,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -9468,7 +9468,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -9476,7 +9476,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -9484,7 +9484,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -9492,7 +9492,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -9500,7 +9500,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -9508,7 +9508,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -10808,7 +10808,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -10880,7 +10880,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -11050,7 +11050,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -11058,7 +11058,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -11074,7 +11074,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -11098,7 +11098,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -11106,7 +11106,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -11130,7 +11130,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -11138,7 +11138,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -11146,7 +11146,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -11276,7 +11276,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -11284,7 +11284,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -11292,7 +11292,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -11300,7 +11300,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -11308,7 +11308,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -11316,7 +11316,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -11324,7 +11324,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -12613,7 +12613,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -12685,7 +12685,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -12891,7 +12891,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -12899,7 +12899,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -12915,7 +12915,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -12939,7 +12939,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -12947,7 +12947,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -12971,7 +12971,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -12979,7 +12979,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -12987,7 +12987,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -13117,7 +13117,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -13125,7 +13125,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -13133,7 +13133,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -13141,7 +13141,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -13149,7 +13149,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -13157,7 +13157,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -13165,7 +13165,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -14452,7 +14452,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -14524,7 +14524,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -14730,7 +14730,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -14738,7 +14738,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -14754,7 +14754,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -14778,7 +14778,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -14786,7 +14786,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -14810,7 +14810,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -14818,7 +14818,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -14826,7 +14826,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -14956,7 +14956,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -14964,7 +14964,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -14972,7 +14972,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -14980,7 +14980,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -14988,7 +14988,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -14996,7 +14996,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -15004,7 +15004,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -16269,7 +16269,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -16341,7 +16341,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -16567,7 +16567,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -16575,7 +16575,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -16591,7 +16591,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -16615,7 +16615,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -16623,7 +16623,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -16647,7 +16647,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -16655,7 +16655,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -16663,7 +16663,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -16793,7 +16793,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -16801,7 +16801,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -16809,7 +16809,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -16817,7 +16817,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -16825,7 +16825,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -16833,7 +16833,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -16841,7 +16841,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -18120,7 +18120,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -18192,7 +18192,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -18400,7 +18400,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -18408,7 +18408,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -18424,7 +18424,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -18448,7 +18448,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -18456,7 +18456,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -18480,7 +18480,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -18488,7 +18488,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -18496,7 +18496,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -18626,7 +18626,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -18634,7 +18634,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -18642,7 +18642,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -18650,7 +18650,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -18658,7 +18658,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -18666,7 +18666,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -18674,7 +18674,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -19961,7 +19961,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -20033,7 +20033,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -20239,7 +20239,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -20247,7 +20247,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -20263,7 +20263,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -20287,7 +20287,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -20295,7 +20295,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -20319,7 +20319,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -20327,7 +20327,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -20335,7 +20335,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -20465,7 +20465,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -20473,7 +20473,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -20481,7 +20481,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -20489,7 +20489,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -20497,7 +20497,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -20505,7 +20505,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -20513,7 +20513,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -21796,7 +21796,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -21868,7 +21868,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
@@ -22072,7 +22072,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "supported_estimation_modes",
+    "name": "ventilation_options_supported",
     "type": "string"
    },
    "100004": {
@@ -22080,7 +22080,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "available_control_modes",
+    "name": "ventilation_controls_available",
     "type": "string"
    },
    "100013": {
@@ -22096,7 +22096,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "supported_control_modes",
+    "name": "ventilation_controls_supported",
     "type": "string"
    },
    "100022": {
@@ -22120,7 +22120,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "available_estimation_modes",
+    "name": "ventilation_options_available",
     "type": "string"
    },
    "100078": {
@@ -22128,7 +22128,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "identify_supported",
+    "name": "identify_request",
     "type": "binary"
    },
    "100102": {
@@ -22152,7 +22152,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "absence_schedule",
+    "name": "absence_programming_state",
     "type": "string"
    },
    "100197": {
@@ -22160,7 +22160,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "night_target_temperature",
+    "name": "night_programming_state",
     "type": "string"
    },
    "100198": {
@@ -22168,7 +22168,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "presence_target_temperature",
+    "name": "presence_programming_state",
     "type": "string"
    },
    "100261": {
@@ -22298,7 +22298,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_monday",
+    "name": "lifestyle_prog_monday",
     "type": "string"
    },
    "100335": {
@@ -22306,7 +22306,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_tuesday",
+    "name": "lifestyle_prog_tuesday",
     "type": "string"
    },
    "100336": {
@@ -22314,7 +22314,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_wednesday",
+    "name": "lifestyle_prog_wednesday",
     "type": "string"
    },
    "100337": {
@@ -22322,7 +22322,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_thursday",
+    "name": "lifestyle_prog_thursday",
     "type": "string"
    },
    "100338": {
@@ -22330,7 +22330,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_friday",
+    "name": "lifestyle_prog_friday",
     "type": "string"
    },
    "100339": {
@@ -22338,7 +22338,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_saturday",
+    "name": "lifestyle_prog_saturday",
     "type": "string"
    },
    "100341": {
@@ -22346,7 +22346,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "new_schedule_sunday",
+    "name": "lifestyle_prog_sunday",
     "type": "string"
    },
    "100402": {
@@ -23633,7 +23633,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "linked_interfaces_count",
+    "name": "room_count",
     "type": "string"
    },
    "350": {
@@ -23705,7 +23705,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "air_circulation_scope",
+    "name": "thermal_ambiance_scope",
     "type": "string"
    },
    "381": {
