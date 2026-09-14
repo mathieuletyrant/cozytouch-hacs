@@ -222,6 +222,7 @@
         "sensor": {
             "error_code":                     { "name": "Code d'erreur" },
             "home_error_code":          { "name": "Code erreur maison" },
+            "dhw_current_control_target": { "name": "Consigne eau chaude appliquée" },
             "dhw_error_code":           { "name": "Code erreur eau chaude" },
             "adaptive_planning":        { "name": "Planification adaptative" },
             "air_circulation":          { "name": "Brassage d'air" },

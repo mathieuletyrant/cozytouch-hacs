@@ -222,6 +222,7 @@
         "sensor": {
             "error_code":                     { "name": "Error Code" },
             "home_error_code":          { "name": "Home Error Code" },
+            "dhw_current_control_target": { "name": "DHW current control target" },
             "dhw_error_code":           { "name": "DHW Error Code" },
             "adaptive_planning":        { "name": "Adaptive Planning" },
             "air_circulation":          { "name": "Air Circulation" },

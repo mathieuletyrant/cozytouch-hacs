@@ -1468,8 +1468,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1381,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -3311,8 +3311,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1457,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -5142,8 +5142,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1505,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -6981,8 +6981,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1641,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -8805,8 +8805,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1734,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -10696,8 +10696,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 211,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -12501,8 +12501,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 2374,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -14340,8 +14340,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 418,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -16157,8 +16157,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 557,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -18008,8 +18008,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 56,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -19849,8 +19849,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 562,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -21684,8 +21684,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 76,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,
@@ -23521,8 +23521,8 @@
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 999999,
-    "name": "Temp_312",
-    "type": "temperature_adjustment_number"
+    "name": "dhw_current_control_target",
+    "type": "temperature"
    },
    "315": {
     "capabilityId": 315,

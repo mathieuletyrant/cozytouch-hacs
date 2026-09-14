@@ -1185,13 +1185,10 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     312: Entity(
-        # Atlantic calls this one currentControlTarget, which matches the
-        # setpoint shape read below -- but it gives 306 the same name, and 306
-        # is already mapped as a schedule bound. One of the two is wrong and
-        # nothing here says which, so the placeholder name stays until a
-        # capture settles it.
-        name="Temp_312",
-        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        # Read-only: the app has a getter and no writer, unlike 231 beside it.
+        # See docs/decisions.md.
+        name="dhw_current_control_target",
+        type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
     ),
     315: Entity(

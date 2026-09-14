@@ -601,6 +601,26 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### 312 is the hot-water control target, and it is read-only
+
+The placeholder name `Temp_312` was there because the iOS extraction gave
+**both 306 and 312 the name `currentControlTarget`**, and 306 was already
+mapped as a schedule bound. One of the two had to be wrong and nothing said
+which.
+
+The Android enum separates them : 306 is `MAX_NUMBER_OF_MILESTONES_PER_DAY`,
+which is what 306 was already mapped as, and 312 is
+`DHW_CURRENT_CONTROL_TARGET`. The iOS extraction was wrong about 306, and
+312 keeps the name. The corpus agrees on the unit -- 45 to 65 °C across
+five model ids.
+
+It also stops being writable. The app has `String getCurrentControlTarget`
+and no writer, where 231 beside it has both a getter and
+`writeManualTargetSetByUser`. So it was a number entity offering a command
+the vendor app never sends, and on an unbounded range at that : the row
+declared no min and no max, which is the other thing a placeholder leaves
+behind.
+
 ### One table, one row per id, nothing derived
 
 `CAPABILITIES` in `capability_table.py` is the whole mapping : 222 rows, in

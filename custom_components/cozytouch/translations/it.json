@@ -222,6 +222,7 @@
         "sensor": {
             "error_code":                     { "name": "Codice di errore" },
             "home_error_code":          { "name": "Codice di errore riscaldamento" },
+            "dhw_current_control_target": { "name": "Setpoint acqua calda applicato" },
             "dhw_error_code":           { "name": "Codice di errore ACS" },
             "adaptive_planning":        { "name": "Pianificazione adattiva" },
             "air_circulation":          { "name": "Circolazione dell'aria" },

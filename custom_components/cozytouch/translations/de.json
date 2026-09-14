@@ -222,6 +222,7 @@
         "sensor": {
             "error_code":                     { "name": "Fehlercode" },
             "home_error_code":          { "name": "Fehlercode Heizung" },
+            "dhw_current_control_target": { "name": "Angewandter Warmwasser-Sollwert" },
             "dhw_error_code":           { "name": "Fehlercode Warmwasser" },
             "adaptive_planning":        { "name": "Adaptive Planung" },
             "air_circulation":          { "name": "Luftumwälzung" },
