@@ -45,7 +45,6 @@ async def async_setup_entry(
                             coordinator=hub,
                             translation_key=timestamp.name,
                             icon=timestamp.icon,
-                            separator=",",
                             timestamp_index=index,
                         )
                     )
@@ -66,7 +65,6 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
         coordinator: Hub,
         translation_key: str | None = None,
         icon: str | None = None,
-        separator: str | None = None,
         timestamp_index: int | None = None,
         attr_uniq_id: str | None = None,
     ) -> None:
@@ -81,7 +79,6 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
             icon=icon,
             value_type=CozytouchCapabilityVariableType.STRING,
         )
-        self._separator = separator
         self._timestamp_index = timestamp_index
 
     async def async_set_value(self, value: datetime) -> None:
