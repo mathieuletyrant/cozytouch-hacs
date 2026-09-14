@@ -236,10 +236,14 @@ def get_capability_infos(
         modelId=modelInfos.modelId, capabilityId=capabilityId
     )
 
-    if (
-        capabilityId in (1, 2, 7, 8)
-        and capabilityId in modelInfos.HVACModesCapabilityId
-    ):
+    if capabilityId in (1, 2, 7, 8):
+        # The four ids that can carry an HVAC mode. A product steers on one or
+        # two of them and still reports the others; those get no entity, and
+        # their row below exists so the reading beside the climate one reads as
+        # a word rather than a number.
+        if capabilityId not in modelInfos.HVACModesCapabilityId:
+            return CapabilityInfos()
+
         capability = _climate_entity(
             capability, capabilityId, modelInfos, availableCapabilityIds
         )

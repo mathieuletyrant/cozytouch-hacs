@@ -72,6 +72,14 @@ from custom_components.cozytouch.capability import (
         # One named bit each, and the corpus only ever shows the others.
         (103034, "16", "antifrost"),
         (224, "3", "water_flow, unknown (1)"),
+        # The service space, shared by the id that asks (7) and the one that
+        # answers (181). 3 is what an air conditioner cooling reports.
+        (7, "3", "cool"),
+        (181, "3", "cool"),
+        (7, "0", "off"),
+        # The air-circulation mode actually running, a fourth id in a fourth
+        # space that happens to agree on 3.
+        (102020, "3", "cool"),
         # Three states, and the third is the one a binary sensor read as off:
         # an air conditioner cooling reports 2.
         (153, "0", "off"),

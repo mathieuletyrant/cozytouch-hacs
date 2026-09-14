@@ -274,6 +274,7 @@
             "energy_consumption_supported": { "name": "Consumo de energía admitido" },
             "exhaust_temperature":      { "name": "Temperatura del aire expulsado" },
             "heating_status":           { "name": "Estado de calentamiento" },
+            "service_in_progress":      { "name": "Servicio en curso" },
             "heat":                     { "name": "Calefacción" },
             "heat_pump_z1":             { "name": "Bomba de calor Z1" },
             "heat_pump_z2":             { "name": "Bomba de calor Z2" },

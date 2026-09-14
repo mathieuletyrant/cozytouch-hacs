@@ -274,6 +274,7 @@
             "energy_consumption_supported": { "name": "Energy Consumption Supported" },
             "exhaust_temperature":      { "name": "Exhaust Temperature" },
             "heating_status":           { "name": "Heating status" },
+            "service_in_progress":      { "name": "Service in progress" },
             "heat":                     { "name": "Heat" },
             "heat_pump_z1":             { "name": "Heat Pump Z1" },
             "heat_pump_z2":             { "name": "Heat Pump Z2" },

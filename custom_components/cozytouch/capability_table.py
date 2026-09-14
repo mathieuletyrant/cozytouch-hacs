@@ -25,6 +25,18 @@ from .model import CozytouchDeviceType
 # splits them at all.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
+_SERVICE_VALUES = {
+    "0": "off",
+    "1": "auto",
+    "3": "cool",
+    "4": "heat",
+    "5": "emergency_heat",
+    "6": "pre_cooling",
+    "7": "fan",
+    "8": "dry",
+    "9": "sleep",
+}
+
 _HVAC_MODE_BITS = (
     (1, "off"),
     (6, "auto"),
@@ -236,10 +248,20 @@ AWAY_MODE_TIMESTAMPS = (
 
 # Ids the mapping deliberately drops: reported, understood, and not wanted as
 # an entity of their own.
-SUPPRESSED_CAPABILITIES = frozenset({181})
+SUPPRESSED_CAPABILITIES: frozenset[int] = frozenset()
 
 
 CAPABILITIES: dict[int, Entity] = {
+    7: Entity(
+        # The climate entity is built from this id by _climate_entity, which
+        # runs first; the row is what lets the raw reading beside it read as a
+        # word instead of a number.
+        name="air_conditioner",
+        type=CapabilityType.CLIMATE,
+        enabled_by_default=True,
+        icon="mdi:air-conditioner",
+        reads_as=_SERVICE_VALUES,
+    ),
     19: Entity(
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
@@ -686,6 +708,17 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
+    ),
+    181: Entity(
+        # The service actually running, against the one 7 asked for. Diag and
+        # off by default: it is the answer to "is it doing what I told it",
+        # which nobody needs until they are asking.
+        name="service_in_progress",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        icon="mdi:air-conditioner",
+        reads_as=_SERVICE_VALUES,
     ),
     184: Entity(
         name="prog_mode",
@@ -1661,6 +1694,15 @@ CAPABILITIES: dict[int, Entity] = {
     102020: Entity(
         name="air_circulation_current_mode",
         type=CapabilityType.STRING,
+        reads_as={
+            "0": "off",
+            "1": "auto_temperature",
+            "2": "auto_season",
+            "3": "cool",
+            "4": "heat",
+            "7": "fan",
+            "8": "dry",
+        },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),

@@ -274,6 +274,7 @@
             "energy_consumption_supported": { "name": "Energieverbrauch unterstützt" },
             "exhaust_temperature":      { "name": "Ablufttemperatur" },
             "heating_status":           { "name": "Heizstatus" },
+            "service_in_progress":      { "name": "Laufender Dienst" },
             "heat":                     { "name": "Heizen" },
             "heat_pump_z1":             { "name": "Wärmepumpe Z1" },
             "heat_pump_z2":             { "name": "Wärmepumpe Z2" },

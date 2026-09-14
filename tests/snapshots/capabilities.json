@@ -4,6 +4,7 @@
  },
  "every id reported": {
   "1381": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -867,7 +868,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 1381,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -923,6 +932,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -1840,6 +1850,7 @@
    }
   },
   "1457": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -2710,7 +2721,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 1457,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -2766,6 +2785,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -3679,6 +3699,7 @@
    }
   },
   "1505": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -4549,7 +4570,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 1505,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -4605,6 +4634,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -5510,6 +5540,7 @@
    }
   },
   "1641": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -6380,7 +6411,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 1641,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -6436,6 +6475,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -7349,6 +7389,7 @@
    }
   },
   "1734": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -8204,7 +8245,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 1734,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -8260,6 +8309,7 @@
     "name": "prog_heating_thursday",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -10078,7 +10128,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 211,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -10961,6 +11019,7 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "7": {},
    "73": {
     "capabilityId": 73,
     "category": "diag",
@@ -10969,6 +11028,7 @@
     "name": "available_thermostat_modes",
     "type": "string"
    },
+   "8": {},
    "86": {
     "capabilityId": 86,
     "category": "sensor",
@@ -11028,6 +11088,7 @@
    }
   },
   "2374": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -11898,7 +11959,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 2374,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -11954,6 +12023,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -12869,6 +12939,7 @@
    }
   },
   "418": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -13739,7 +13810,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 418,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -13795,6 +13874,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -14708,6 +14788,7 @@
    }
   },
   "557": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -15556,7 +15637,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 557,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -15612,6 +15701,7 @@
     "name": "prog_heating_thursday",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -16545,6 +16635,7 @@
    }
   },
   "56": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -17407,7 +17498,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 56,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -17463,6 +17562,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -18378,6 +18478,7 @@
    }
   },
   "562": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -19248,7 +19349,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 562,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -19304,6 +19413,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -20217,6 +20327,7 @@
    }
   },
   "76": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -21083,7 +21194,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 76,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -21139,6 +21258,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -22050,6 +22170,7 @@
    }
   },
   "999999": {
+   "1": {},
    "100": {
     "capabilityId": 100,
     "category": "sensor",
@@ -22920,7 +23041,15 @@
     "name": "wifi_signal",
     "type": "signal"
    },
-   "181": {},
+   "181": {
+    "capabilityId": 181,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:air-conditioner",
+    "modelId": 999999,
+    "name": "service_in_progress",
+    "type": "string"
+   },
    "184": {
     "capabilityId": 184,
     "category": "sensor",
@@ -22976,6 +23105,7 @@
     "name": "prog_04_z1",
     "type": "prog"
    },
+   "2": {},
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -23891,8 +24021,8 @@
  },
  "none reported": {
   "1381": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -23925,8 +24055,8 @@
    }
   },
   "1457": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -23957,8 +24087,8 @@
    }
   },
   "1505": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -23989,8 +24119,8 @@
    }
   },
   "1641": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24021,8 +24151,8 @@
    }
   },
   "1734": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24089,12 +24219,12 @@
     "targetCapabilityId": 18,
     "type": "climate"
    },
-   "7": null,
-   "8": null
+   "7": {},
+   "8": {}
   },
   "2374": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24125,8 +24255,8 @@
    }
   },
   "418": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24157,8 +24287,8 @@
    }
   },
   "557": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24197,8 +24327,8 @@
    }
   },
   "56": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24231,8 +24361,8 @@
    }
   },
   "562": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24263,8 +24393,8 @@
    }
   },
   "76": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",
@@ -24295,8 +24425,8 @@
    }
   },
   "999999": {
-   "1": null,
-   "2": null,
+   "1": {},
+   "2": {},
    "7": {
     "capabilityId": 7,
     "category": "sensor",

@@ -274,6 +274,7 @@
             "energy_consumption_supported": { "name": "Consommation d'énergie disponible" },
             "exhaust_temperature":      { "name": "Température Échappement" },
             "heating_status":           { "name": "État de chauffe" },
+            "service_in_progress":      { "name": "Service en cours" },
             "heat":                     { "name": "Chauffage" },
             "heat_pump_z1":             { "name": "PAC Z1" },
             "heat_pump_z2":             { "name": "PAC Z2" },
