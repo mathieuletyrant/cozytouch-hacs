@@ -14,6 +14,7 @@ if what it hands back can be written again unchanged.
 import asyncio
 from datetime import time
 import json
+import pathlib
 from types import SimpleNamespace
 
 import pytest
@@ -27,10 +28,17 @@ from homeassistant.exceptions import ServiceValidationError
 
 SUBENTRY_ID = "sub-1"
 
+# strings.json first: it is the reference the others are compared against.
+# The rest is a glob, so a language contributed later is held to the same
+# completeness without anyone editing this line.
 TRANSLATIONS = (
     "custom_components/cozytouch/strings.json",
-    "custom_components/cozytouch/translations/en.json",
-    "custom_components/cozytouch/translations/fr.json",
+    *sorted(
+        str(path)
+        for path in pathlib.Path("custom_components/cozytouch/translations").glob(
+            "*.json"
+        )
+    ),
 )
 
 PADDING = ",[0,0]" * 8
