@@ -11,7 +11,6 @@ from .capability_table import (
     CAPABILITY_SPEED_SETS,
     CAPABILITY_VALUE_SPACES,
     ELECTRIC_HEATERS,
-    SELF_DESCRIBING_CAPABILITIES,
     SUPPRESSED_CAPABILITIES,
     hidden_by_a_calendar,
 )
@@ -221,11 +220,11 @@ def get_capability_infos(
 ) -> CapabilityInfos | None:
     """What this device turns this capability into.
 
-    Four answers, in order : the climate entity for an id carrying an HVAC
-    mode, nothing at all for an id deliberately dropped, a row of
-    `CAPABILITIES`, and a name from `SELF_DESCRIBING_CAPABILITIES` for the
-    descriptors. None means the mapping does not know the id, which is what
-    the diagnostics dump reports so somebody can name it.
+    Three answers, in order : the climate entity for an id carrying an HVAC
+    mode, nothing at all for an id deliberately dropped, and a row of
+    `CAPABILITIES` for everything else. None means the mapping does not know
+    the id, which is what the diagnostics dump reports so somebody can name
+    it.
 
     availableCapabilityIds is what the device actually reports. Optional
     features are declared per model, but the same model id is reused across
@@ -253,11 +252,6 @@ def get_capability_infos(
         )
         if hidden_by_a_calendar(capabilityId, availableCapabilityIds):
             capability.enabled_by_default = False
-
-    elif capabilityId in SELF_DESCRIBING_CAPABILITIES:
-        capability.name, capability.type = SELF_DESCRIBING_CAPABILITIES[capabilityId]
-        capability.category = CapabilityCategory.DIAG
-        capability.enabled_by_default = False
 
     else:
         return None

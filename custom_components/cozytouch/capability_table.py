@@ -24,8 +24,12 @@ ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR
 
 # Capabilities the device uses to describe itself : the name, and what the
 # value is. STRING means the encoding is unverified, which is most of them --
-# the typed ones are the subset the vendor app's readers settle. All of them
-# are diag and switched off by default. See docs/decisions.md.
+# the typed ones are the subset the vendor app's readers settle.
+#
+# A shorthand, not a second table : every one becomes a row of CAPABILITIES at
+# the bottom of this file, diag and switched off by default. Writing that out
+# per row would be seventy-seven repetitions of the same two lines, and one of
+# them would eventually be wrong. See docs/decisions.md.
 SELF_DESCRIBING_CAPABILITIES = {
     73: ("available_thermostat_modes", CapabilityType.STRING),
     93: ("zones_count", CapabilityType.STRING),
@@ -340,6 +344,7 @@ class Entity:
     type: CapabilityType
     category: CapabilityCategory = CapabilityCategory.SENSOR
     icon: str | None = None
+    enabled_by_default: bool = True
     extra: Mapping[str, object] | None = None
     absent_on: tuple[CozytouchDeviceType, ...] = ()
     needs_flag: str | None = None
@@ -363,6 +368,8 @@ class Entity:
         capability.category = self.category
         if self.icon is not None:
             capability.icon = self.icon
+        if not self.enabled_by_default:
+            capability.enabled_by_default = False
         for source in (
             self.extra,
             (self.per_type or {}).get(modelInfos.type),
@@ -673,13 +680,13 @@ CAPABILITIES: dict[int, Entity] = {
         name="cooling_temperature_min",
         type=CapabilityType.TEMPERATURE,
         category=CapabilityCategory.DIAG,
-        extra={"enabled_by_default": False},
+        enabled_by_default=False,
     ),
     163: Entity(
         name="cooling_temperature_max",
         type=CapabilityType.TEMPERATURE,
         category=CapabilityCategory.DIAG,
-        extra={"enabled_by_default": False},
+        enabled_by_default=False,
     ),
     165: Entity(
         # water-boiler icon: a domestic-hot-water boost, not the generic boost.
@@ -703,7 +710,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.TEMPERATURE,
         category=CapabilityCategory.DIAG,
         needs_flag="awayModeTemperatureAvailable",
-        extra={"enabled_by_default": False},
+        enabled_by_default=False,
     ),
     172: Entity(
         # Absence setpoint. Only the heating products act on it. An air
@@ -827,7 +834,7 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:wifi",
         absent_on=(CozytouchDeviceType.ZONE,),
-        extra={"enabled_by_default": False},
+        enabled_by_default=False,
     ),
     219: Entity(
         name="wifi_ssid",
@@ -1212,9 +1219,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan",
-        extra={
-            "enabled_by_default": False,
-        },
+        enabled_by_default=False,
     ),
     102021: Entity(
         name="air_circulation_total_time",
@@ -1234,9 +1239,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.INT,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan-clock",
-        extra={
-            "enabled_by_default": False,
-        },
+        enabled_by_default=False,
     ),
     102023: Entity(
         name="air_circulation_remaining_time",
@@ -1254,18 +1257,14 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.INT,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan-clock",
-        extra={
-            "enabled_by_default": False,
-        },
+        enabled_by_default=False,
     ),
     102026: Entity(
         name="air_circulation_time_max",
         type=CapabilityType.INT,
         category=CapabilityCategory.DIAG,
         icon="mdi:fan-clock",
-        extra={
-            "enabled_by_default": False,
-        },
+        enabled_by_default=False,
     ),
     104044: Entity(
         name="boost_mode",
@@ -1309,4 +1308,19 @@ CAPABILITIES: dict[int, Entity] = {
             "temperatureMax": 65.0,
         },
     ),
+}
+
+
+# The ids spelled out above, before the descriptors join them. An id in both
+# would be silently overwritten here, so a test checks the two are disjoint.
+SPELLED_OUT_CAPABILITIES = frozenset(CAPABILITIES)
+
+CAPABILITIES |= {
+    capabilityId: Entity(
+        name=name,
+        type=capabilityType,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    )
+    for capabilityId, (name, capabilityType) in SELF_DESCRIBING_CAPABILITIES.items()
 }

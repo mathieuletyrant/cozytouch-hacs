@@ -601,6 +601,25 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### One table, and a shorthand that expands into it
+
+`SELF_DESCRIBING_CAPABILITIES` is seventy-seven pairs, not seventy-seven
+rows. Every one becomes an `Entity` at the bottom of `capability_table.py`,
+diag and off by default, merged into `CAPABILITIES` -- so the mapping has
+one lookup and `get_capability_infos` has no branch for descriptors.
+
+Kept as a shorthand rather than spelled out because the two lines every
+descriptor shares would otherwise be written seventy-seven times, and one
+of them would eventually be wrong. What the shorthand cannot do is what it
+must not do: it cannot carry an icon, a bound or a per-product exception,
+which is precisely the line between a descriptor and a mapped capability.
+
+The merge keeps the descriptor when an id is in both, silently, so
+`SPELLED_OUT_CAPABILITIES` freezes the row ids before it and a test asserts
+the two are disjoint. The older test -- every descriptor resolves under its
+own name -- cannot see that collision: after it, the id resolves under the
+descriptor's name, which is what the test asks for.
+
 ### Twenty descriptors read as what they are, and the ones left alone
 
 `SELF_DESCRIBING_CAPABILITIES` used to say "the name is everything we

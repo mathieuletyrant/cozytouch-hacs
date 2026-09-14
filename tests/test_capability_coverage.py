@@ -25,12 +25,13 @@ import re
 
 import pytest
 
-from custom_components.cozytouch.capability import (
+from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.capability_table import (
     CAPABILITY_BIT_FIELDS,
     CAPABILITY_SPEED_SETS,
     CAPABILITY_VALUE_SPACES,
     SELF_DESCRIBING_CAPABILITIES,
-    get_capability_infos,
+    SPELLED_OUT_CAPABILITIES,
 )
 from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
@@ -261,8 +262,19 @@ def test_a_decoded_id_is_one_the_mapping_produces(capabilityId):
     assert get_capability_infos(infos, capabilityId, "0", {capabilityId}) is not None
 
 
-def test_the_self_describing_table_does_not_shadow_a_real_mapping():
-    """An id in the table that another branch claims first would never be read."""
+def test_a_descriptor_does_not_shadow_a_spelled_out_row():
+    """The descriptors are merged in last, so an id in both would lose its row.
+
+    Nothing would say so: the merge keeps the descriptor, the row disappears,
+    and the entity turns into a raw string switched off by default.
+    """
+    shared = SPELLED_OUT_CAPABILITIES & SELF_DESCRIBING_CAPABILITIES.keys()
+
+    assert not shared, f"{sorted(shared)} is both spelled out and a descriptor"
+
+
+def test_a_descriptor_reaches_the_mapping_under_its_own_name():
+    """The shorthand expands into rows; this is what those rows resolve to."""
     infos = get_model_infos(557)
 
     for capabilityId, (name, _) in SELF_DESCRIBING_CAPABILITIES.items():

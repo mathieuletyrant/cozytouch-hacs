@@ -24,10 +24,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
-from custom_components.cozytouch.capability import (
-    SELF_DESCRIBING_CAPABILITIES,
-    get_capability_infos,
-)
+from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.capability_table import SELF_DESCRIBING_CAPABILITIES
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 # One model per device type, so a branch that keys off the type is reached.
