@@ -50,6 +50,28 @@ from custom_components.cozytouch.capability import (
             ),
         ),
         (105012, "7", "heat, scheduled_heat, off_peak_heat"),
+        # The ventilation masks. Every corpus value decodes whole on these
+        # two, which is not true of the two above them.
+        (
+            100004,
+            "197",
+            (
+                "temperature, emergency_temperature, "
+                "horizontal_blade_position, vertical_blade_position"
+            ),
+        ),
+        (
+            100021,
+            "201",
+            (
+                "temperature, powerful_mode, "
+                "horizontal_blade_position, vertical_blade_position"
+            ),
+        ),
+        (100004, "49", "temperature, boost_with_fan, boost_without_fan"),
+        # One named bit each, and the corpus only ever shows the others.
+        (103034, "16", "antifrost"),
+        (224, "3", "water_flow, unknown (1)"),
         # Value spaces rather than masks.
         (73, "4", "cooling_and_heating"),
         (73, "2", "heating_only"),
@@ -65,7 +87,7 @@ from custom_components.cozytouch.capability import (
         # A bit the table does not name is carried through, since these
         # entities exist for the reader chasing exactly that.
         (188, "257", "thermal_comfort, unknown (256)"),
-        (164, "1040", "electricity_dhw, unknown (1024)"),
+        (164, "1040", "electricity_dhw, dhw_production"),
     ],
 )
 def test_a_descriptor_reads_as_what_it_says(capabilityId, value, expected):

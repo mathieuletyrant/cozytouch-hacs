@@ -155,21 +155,23 @@ _AIR_CIRCULATION_MODE_BITS = (
     (256, "dry"),
 )
 
-# The speed selectors name a whole set rather than one speed, so each value
-# spells its set out. A third mechanism next to the two tables below, and the
-# app's own: `buildListFromValue`. See docs/decisions.md.
-_SPEED_SETS = {
-    "0": "low, medium, high",
-    "1": "low, high",
-    "2": "low, medium, high, auto",
-    "3": "low, high, auto",
-    "4": "auto",
-}
+_VENTILATION_OPTION_BITS = (
+    (1, "temperature"),
+    (2, "open_window_detection"),
+    (4, "presence_detection"),
+    (32, "adaptive_planning"),
+)
 
-CAPABILITY_SPEED_SETS: dict[int, dict[str, str]] = {
-    350: _SPEED_SETS,
-    100800: _SPEED_SETS,
-}
+_VENTILATION_CONTROL_BITS = (
+    (1, "temperature"),
+    (2, "hygrometry"),
+    (4, "emergency_temperature"),
+    (8, "powerful_mode"),
+    (16, "boost_with_fan"),
+    (32, "boost_without_fan"),
+    (64, "horizontal_blade_position"),
+    (128, "vertical_blade_position"),
+)
 
 # What the numbers in the table above mean, read off the vendor's Android app
 # and checked against the capture corpus. A member can claim several bits at
@@ -186,6 +188,7 @@ CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
         (64, "fuel_dhw"),
         (256, "heating_production"),
         (512, "cooling_production"),
+        (1024, "dhw_production"),
     ),
     166: _HVAC_MODE_BITS,
     168: _DHW_MODE_BITS,
@@ -197,17 +200,26 @@ CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
     ),
     217: _CONTROL_MODE_BITS,
     223: _DHW_HEATING_TYPE_BITS,
+    224: ((2, "water_flow"),),
     336: (
         (1, "v40_state_of_charge"),
         (2, "main_setpoint_cursor"),
         (4, "secondary_setpoint_cursor"),
         (8, "data_inside"),
     ),
-    100013: ((1, "on_off"),),
+    100002: _VENTILATION_OPTION_BITS,
+    100004: _VENTILATION_CONTROL_BITS,
+    100013: (
+        (1, "on_off"),
+        (2, "boost"),
+    ),
+    100021: _VENTILATION_CONTROL_BITS,
     100022: _HVAC_MODE_BITS,
     100023: _CONTROL_MODE_BITS,
+    100024: _VENTILATION_OPTION_BITS,
     102005: _AIR_CIRCULATION_MODE_BITS,
     102006: _AIR_CIRCULATION_MODE_BITS,
+    103034: ((16, "antifrost"),),
     105011: _DHW_MODE_BITS,
     105012: _DHW_HEATING_TYPE_BITS,
 }
@@ -246,6 +258,23 @@ CAPABILITY_VALUE_SPACES: dict[int, dict[str, str]] = {
         "1": "v40_state_of_charge",
         "2": "water_setpoint",
     },
+}
+
+
+# The speed selectors name a whole set rather than one speed, so each value
+# spells its set out. A third mechanism next to the two tables above, and the
+# app's own: `buildListFromValue`. See docs/decisions.md.
+_SPEED_SETS = {
+    "0": "low, medium, high",
+    "1": "low, high",
+    "2": "low, medium, high, auto",
+    "3": "low, high, auto",
+    "4": "auto",
+}
+
+CAPABILITY_SPEED_SETS: dict[int, dict[str, str]] = {
+    350: _SPEED_SETS,
+    100800: _SPEED_SETS,
 }
 
 

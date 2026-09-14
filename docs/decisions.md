@@ -601,6 +601,33 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### Six more masks, and the two bits the corpus could not place
+
+The vendor app's `fromBitField` classes were read whole in September 2026
+(`research/data/android_bitfields_331.tsv`, app 3.31.0). The twelve tables
+already here matched it member for member, which is the useful part: it is
+the check that says the reverse-engineered ones were right.
+
+Two bits were missing, and both had been seen on real hardware with no
+name: **164 bit 10 (1024) is `dhw_production`**, read on 1040, 1298 and
+1307, and **100013 bit 1 (2) is `boost`**, the second milestone type.
+
+Six ids were masks read as a bare integer. 100004 and 100021
+(`VentilationControls`) are the interesting pair: every value the corpus
+holds -- 197, 205, 201, 49, 9, 1 -- decodes with no bit left over, which
+none of the older tables can claim. 100002 and 100024
+(`VentilationOption`) leave bits over. 103034 and 224 have exactly one
+named member each (`antifrost` at 16, `water_flow` at 2) and the corpus
+shows mostly other bits, so what they mostly report is the leftover count.
+
+**224 is a mask, not a flag.** The app's method is
+`boolean getEstimationSupport`, which reads like a boolean and is not: the
+body is `fromBitField(...).contains(WATER_FLOW)`. The corpus reads 125,
+113, 3 and 1. A capability is not typed by the signature that consumes it.
+
+**188 bit 8 (256) is still unexplained.** `HomeService` has four members in
+both copies of the class, and 257 is in the corpus.
+
 ### The speed sets (350, 100800) name a set, and `4` names one speed
 
 These two ids are not a bitmask and not a member of an enum : one number
