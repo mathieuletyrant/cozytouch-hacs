@@ -36,6 +36,7 @@ SELF_DESCRIBING_CAPABILITIES = {
     224: "dhw_estimation_supported",
     230: "dhw_operating_mode",
     236: "max_dhw_schedule_slots_per_day",
+    244: "max_schedule_ranges_per_day",
     294: "target_temperature_step",
     295: "schedule_time_step",
     296: "schedule_minimum_interval",
@@ -85,7 +86,9 @@ SELF_DESCRIBING_CAPABILITIES = {
     103450: "schedule_anticipation_state",
     104050: "open_window_detection",
     104051: "open_window_state",
+    105011: "supported_dhw_modes",
     105012: "supported_dhw_system_operating_modes",
+    105122: "dhw_boost_end_timestamp",
 }
 
 
@@ -187,6 +190,7 @@ CAPABILITY_BIT_FIELDS: dict[int, tuple[tuple[int, str], ...]] = {
     100022: _HVAC_MODE_BITS,
     100023: _CONTROL_MODE_BITS,
     102005: _AIR_CIRCULATION_MODE_BITS,
+    105011: _DHW_MODE_BITS,
     105012: _DHW_HEATING_TYPE_BITS,
 }
 
@@ -1272,14 +1276,14 @@ def get_capability_infos(  # noqa: C901
         capability.category = CapabilityCategory.DIAG
 
     elif capabilityId == 105906:
-        capability.name = "Target 105906"
+        capability.name = "v40_applied_setpoint"
         capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
         capability.category = CapabilityCategory.SENSOR
         capability.temperatureMin = 15.0
         capability.temperatureMax = 65.0
 
     elif capabilityId == 105907:
-        capability.name = "Target 105907"
+        capability.name = "v40_setpoint_filled_by_user"
         capability.type = CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER
         capability.category = CapabilityCategory.SENSOR
         capability.temperatureMin = 15.0

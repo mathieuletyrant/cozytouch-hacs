@@ -534,12 +534,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -560,7 +576,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 1381,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -569,7 +585,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 1381,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -1150,6 +1166,14 @@
     "modelId": 1381,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -2265,12 +2289,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -2291,7 +2331,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 1457,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -2300,7 +2340,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 1457,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -2881,6 +2921,14 @@
     "modelId": 1457,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -3992,12 +4040,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -4018,7 +4082,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 1505,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -4027,7 +4091,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 1505,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -4600,6 +4664,14 @@
     "modelId": 1505,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -5711,12 +5783,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -5737,7 +5825,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 1641,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -5746,7 +5834,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 1641,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -6327,6 +6415,14 @@
     "modelId": 1641,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -7438,12 +7534,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -7464,7 +7576,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 1734,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -7473,7 +7585,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 1734,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -8039,6 +8151,14 @@
     "modelId": 1734,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -9189,12 +9309,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -9215,7 +9351,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 211,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -9224,7 +9360,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 211,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -9818,6 +9954,14 @@
     "modelId": 211,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -10893,12 +11037,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -10919,7 +11079,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 2374,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -10928,7 +11088,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 2374,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -11511,6 +11671,14 @@
     "modelId": 2374,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -12622,12 +12790,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -12648,7 +12832,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 418,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -12657,7 +12841,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 418,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -13238,6 +13422,14 @@
     "modelId": 418,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -14342,12 +14534,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -14368,7 +14576,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 557,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -14377,7 +14585,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 557,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -14943,6 +15151,14 @@
     "modelId": 557,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -16074,12 +16290,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -16100,7 +16332,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 56,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -16109,7 +16341,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 56,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -16682,6 +16914,14 @@
     "modelId": 56,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -17795,12 +18035,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -17821,7 +18077,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 562,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -17830,7 +18086,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 562,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -18411,6 +18667,14 @@
     "modelId": 562,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -19522,12 +19786,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -19548,7 +19828,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 76,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -19557,7 +19837,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 76,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -20134,6 +20414,14 @@
     "modelId": 76,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,
@@ -21243,12 +21531,28 @@
     "name": "open_window_state",
     "type": "string"
    },
+   "105011": {
+    "capabilityId": 105011,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "supported_dhw_modes",
+    "type": "string"
+   },
    "105012": {
     "capabilityId": 105012,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "supported_dhw_system_operating_modes",
+    "type": "string"
+   },
+   "105122": {
+    "capabilityId": 105122,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_boost_end_timestamp",
     "type": "string"
    },
    "105300": {
@@ -21269,7 +21573,7 @@
     "capabilityId": 105906,
     "category": "sensor",
     "modelId": 999999,
-    "name": "Target 105906",
+    "name": "v40_applied_setpoint",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -21278,7 +21582,7 @@
     "capabilityId": 105907,
     "category": "sensor",
     "modelId": 999999,
-    "name": "Target 105907",
+    "name": "v40_setpoint_filled_by_user",
     "temperatureMax": 65.0,
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
@@ -21859,6 +22163,14 @@
     "modelId": 999999,
     "name": "dhw_prog_sunday",
     "type": "prog"
+   },
+   "244": {
+    "capabilityId": 244,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "max_schedule_ranges_per_day",
+    "type": "string"
    },
    "245": {
     "capabilityId": 245,

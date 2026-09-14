@@ -861,6 +861,47 @@ nobody here owns, so the bit nothing names is the interesting part. The
 number the device sent stays on the entity as a `raw` attribute for the
 same reason.
 
+### Five hot-water ids named off the Android enum, not off a capture
+
+`research/data/capability_id_to_name_android.tsv` names 244, 105011, 105122,
+105906 and 105907, and the mapping had nothing for the first three and the
+placeholders `Target 105906` / `Target 105907` for the last two. The names
+here are the app's, transliterated to the naming already in the table:
+
+| id | The app's name | Here |
+| -- | -------------- | ---- |
+| 244 | `DHW_MAX_NUMBER_PROGRAMMING_RANGE_PER_DAY` | `max_schedule_ranges_per_day` |
+| 105011 | `DHW_SUPPORTED_MODES_CAPABILITIES` | `supported_dhw_modes` |
+| 105122 | `DHW_BOOST_END_TIMESTAMP` | `dhw_boost_end_timestamp` |
+| 105906 | `DHW_V40_APPLIED_SETPOINT` | `v40_applied_setpoint` |
+| 105907 | `DHW_V40_MANUALLY_FILLED_BY_USER` | `v40_setpoint_filled_by_user` |
+
+244 is the max counterpart of 329 (`DHW_MIN_NUMBER_PROGRAMMING_RANGE_PER_DAY`,
+mapped as `min_schedule_ranges_per_day`), and so takes the same shape. It is
+a different bound from 236, which the app calls
+`DHW_MAX_NUMBER_MILESTONE_PER_DAY` -- ranges and milestones are two things,
+and a mapping that merges them reads one device's limit onto the other.
+
+105011 carries the same `DHWMode` mask as 168, so it is a line in
+`CAPABILITY_BIT_FIELDS` pointing at the table 168 already uses, the way 105012
+pairs with 223.
+
+What the enum does **not** settle is the encoding of 105122. The name says a
+Unix timestamp and the fork this was compared against reads it as one, but no
+capture here holds a value, so it arrives as a raw string and switched off --
+the rule for any capability whose encoding is unverified. A reading turns it
+into a real timestamp.
+
+105907 is the one to be careful with. `MANUALLY_FILLED_BY_USER` is not "the
+setpoint the user set": the mapping types both 105906 and 105907 as
+temperatures between 15 and 65 °C, so the reading carried here is the V40
+setpoint *as filled in manually*, against 105906's *applied* one. Nothing in
+the corpus shows the two disagreeing, which is what would prove it.
+
+Every id here is hot-water, and no device on hand reports one. The evidence
+is the app's own enum and nothing else -- which is stronger than a guess and
+weaker than a capture.
+
 ### `read_setpoint` : hundredths, but not for hot water
 
 The app divides a program slot's target temperature by 100 when it reads
