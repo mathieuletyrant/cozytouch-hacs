@@ -1775,6 +1775,35 @@ the account details already taken out. Asking for it by hand cost the reporter
 an option to tick, a log file to find and a JSON to redact, and that is where
 most reports stopped.
 
+### The form requires screenshots of the app
+
+The report used to ask for two things, the ids and a diagnostics dump, and
+describe what the app offers in prose. Both are what a device *reports*, and
+neither says what a person can actually do with it. The mapping has to say
+which raw value is which mode, and whether a capability is worth an entity at
+all -- and a device reporting a capability does not mean the app exposes it.
+
+Guessing from the numbers has been wrong more than once. Room units behind a
+Navizone report an eco capability the app never shows, and were offered one
+for months. A heating circuit slot shipped as a towel rack (issue #93) on a
+guess nobody could check. In both cases the app's own screen would have
+settled it in a glance.
+
+So the form asks for three screenshots and makes them required: the home
+screen, which is the only view of how the appliance is grouped and named --
+one appliance often reports itself as several devices, and nothing in the API
+says which of them a person is meant to see ; each device's own screen ; and
+the screens behind it, the mode picker, the schedule, the settings.
+
+The field itself says the three and one line of why, and nothing more. A form
+nobody finishes reading is a form nobody fills in, which is the whole of what
+it has to avoid ; the argument above is the reason it is required, not text to
+put in front of somebody who is already reporting a bug.
+
+The repair dialog says three things rather than two to match, in all six
+translation files. It is the dialog that gets read, the form that gets filled,
+and one contradicting the other costs the round trip the form exists to save.
+
 ### One report per account, covering devices nobody added
 
 `_account_report` reads one account rather than scanning the entry store, and no

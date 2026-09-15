@@ -50,14 +50,36 @@ body:
       description: >
         The modes the app lists for this device (heating, cooling, automatic,
         eco, boost, …), the fan speeds and swing positions if it has them, and
-        whether it offers a quiet mode and an absence temperature. A
-        screenshot of the mode picker answers most of this at once.
+        whether it offers a quiet mode and an absence temperature. The
+        screenshots below carry most of this; write down anything they do not
+        show, and anything the app words oddly.
 
 
         Asked because nothing else can answer it. The mapping has to say which
         raw value means which mode, and a device reporting a capability does
         not mean the app exposes it -- the room units behind a Navizone report
         an eco capability the app never shows.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots of the Cozytouch app
+      description: >
+        Drag the images in here. Three, and all three are needed:
+
+
+        1. the app's home screen, with every device on the account;
+
+        2. each device's own screen, one per device this report covers;
+
+        3. the screens behind it -- mode picker, schedule, settings.
+
+
+        The dump says what a device reports. Only these say what you can
+        actually do with it, and that is what the mapping has to get right.
+        Crop anything you would rather not show.
     validations:
       required: true
 
