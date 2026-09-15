@@ -505,6 +505,23 @@ def get_model_infos(  # noqa: C901
         modelInfos.type = CozytouchDeviceType.RADIATOR
         modelInfos.HVACModes = OFF_HEAT
 
+    elif masterModelId in ALFEA_EXTENSA_S_INTERFACES and 557 <= modelId <= 561:
+        # The same room index behind a heat pump rather than an AC hub, so it
+        # is the room control of a heating circuit. Its modes are the app's
+        # OFF / ON / AUTO -- frost protection, heating, and heating driven by
+        # the outside temperature. See docs/decisions.md.
+        modelInfos.name = (
+            "Heating circuit (" + zoneName + ")"
+            if zoneName is not None
+            else "Heating circuit (#" + str(modelId - 556) + ")"
+        )
+        modelInfos.type = CozytouchDeviceType.THERMOSTAT
+        modelInfos.HVACModes = {
+            0: HVACMode.OFF,
+            1: HVACMode.AUTO,
+            4: HVACMode.HEAT,
+        }
+
     elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
         name = "Air Conditioner "
         if zoneName is not None:

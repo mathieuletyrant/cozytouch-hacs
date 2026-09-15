@@ -148,6 +148,7 @@ first five rooms, 1734-1737 for the next four.
 | modelId | Slot | Behind | Mapped as |
 | ------: | ---- | ------ | --------- |
 | 557-561 | `ROOM_0`-`ROOM_4` | a CozyBox (2447-2450) | Radiator |
+| 557-561 | `ROOM_0`-`ROOM_4` | an Alfea Extensa S interface (2295-2317) | Heating circuit |
 | 557-561 | `ROOM_0`-`ROOM_4` | a Naviclim (556) or Navizone (1681, 1758) | Air conditioner |
 | 1734-1737 | `ROOM_5`-`ROOM_8` | a HUB Cozytouch (1457) | Air conditioner |
 | 562-570 | `UI_0`-`UI_8` | any of the above | Air conditioner user interface |

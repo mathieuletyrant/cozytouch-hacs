@@ -21,6 +21,7 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from .capability_table import HVAC_MODE_MASKS
 from .const import DOMAIN
 from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
@@ -29,6 +30,36 @@ from .sensor import CozytouchSensor
 _LOGGER = logging.getLogger(__name__)
 
 FAN_QUIET = "quiet"
+
+# `supportedSystemOperatingMode`, the bitmask of the HVAC modes the unit was
+# built with. See docs/decisions.md.
+SUPPORTED_HVAC_MODES_CAPABILITY_ID = 100022
+
+
+def supported_hvac_modes(
+    HVACModes: dict[int, HVACMode], supported: str | None
+) -> list[HVACMode]:
+    """The model's modes, minus the ones this unit says it was not built with.
+
+    A model's table is what the product line can do ; `supported` is what the
+    unit in front of us reports, and reads narrower on a heat pump sold with
+    the cooling kit left out. A mode the bit table does not name is kept, and
+    so is the whole table when the narrowing leaves nothing -- an entity with
+    no mode at all is worse than one offering a mode that does nothing.
+    See docs/decisions.md.
+    """
+    modes = list(HVACModes.values())
+    if supported is None:
+        return modes
+
+    mask = int(supported)
+    narrowed = [
+        mode
+        for value, mode in HVACModes.items()
+        if value not in HVAC_MODE_MASKS or HVAC_MODE_MASKS[value] & mask
+    ]
+    return narrowed or modes
+
 
 PRESET_BASIC = "basic"
 PRESET_PROG = "prog"
@@ -106,7 +137,12 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             | ClimateEntityFeature.TURN_ON
         )
 
-        self._attr_hvac_modes = list(self._modelInfos.HVACModes.values())
+        self._attr_hvac_modes = supported_hvac_modes(
+            self._modelInfos.HVACModes,
+            self.coordinator.get_capability_value(
+                SUPPORTED_HVAC_MODES_CAPABILITY_ID, None
+            ),
+        )
         self._attr_hvac_mode = HVACMode.OFF
 
         # Fan modes

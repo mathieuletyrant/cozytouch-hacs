@@ -536,16 +536,115 @@ names it would otherwise spell better. The line is that those are spellings of
 the right product and these were the wrong product. An owner of an Alfea saw a
 Doris in their device list.
 
-### What is still open on issue #93
+### A room slot behind an Alfea is a heating circuit (issue #93)
 
-Model 557 in that household is `ROOM_0` behind the heat pump, and it arrives
-as `Air Conditioner (Circuit 1)` for a floor heating circuit. The branch that
-tells a radiator from an air conditioner reads the master's id and knows only
-the CozyBox, so a heat pump master falls through to the air conditioner
-mapping. The device does report a cooling setpoint (177), cooling limits (162,
-163) and a full cooling program, so the firmware is not obviously heating-only
-and a guess either way is a guess. The reporter has been asked what the app
-offers. Left alone until there is an answer.
+Model 557 in that household is `ROOM_0` behind the heat pump's interface, and
+it arrived as `Air Conditioner (Circuit 1)` for a floor heating circuit. It
+reports a cooling setpoint (177), cooling limits (162, 163) and a full cooling
+program, so the dump alone could not say whether the firmware is heating-only.
+The reporter's screenshots of the app answer it:
+
+- The zone's mode dialog offers **ON / OFF / AUTO** and nothing else -- the
+  app's own words are frost protection (Off), heating (On), or heating driven
+  by the outside temperature (Auto). No cooling mode, no cooling setpoint.
+- The appliance can do floor cooling. The reporter's does not have the part
+  installed for it.
+- There is no mode for the heat pump itself, only for the circuit and for the
+  hot water, which is the other half of why neither 2303 nor 2327 gets a
+  climate entity.
+
+So a third master joins the branch, with its own name and its own table :
+`ROOM_n` behind an `ALFEA_EXTENSA_S_INTERFACES` id is `Heating circuit
+(<zone>)`, typed `THERMOSTAT` -- what it is, a room control for a circuit --
+with modes `{0 off, 1 auto, 4 heat}`. Run against the dump's capability ids
+the entity list does not move: the same 57, with capability 7 renamed from
+`air_conditioner` to `heat` and the device renamed with it. What changes is
+the four modes the entity offered and the appliance cannot reach.
+
+The modes are the app's, and capability 166 agrees exactly -- it reads **21**
+on this unit, bits off, auto and heat. It is not the table's source, because
+166 is the *currently permitted* mask and moves with the season (see the
+entry above), but it is what a second Alfea would be read against.
+
+**Cooling is left out of the table on purpose, and that is the ceiling here.**
+100022 reads 29 on this unit, which sets the cool bit: the appliance line
+supports cooling and this one cannot reach it. Nothing in the dump separates
+"has the kit" from "has not", so an owner with the cooling kit gets a heating
+circuit that does not offer cooling, and a report saying so is what would
+settle it. The two tiles the app draws for this household -- Circuit 1 and
+the hot water -- are what the mapping now produces.
+
+### The two app tiles are five devices, and one of them is a pair
+
+Worth writing down, because it reads as a bug. The app draws two tiles and the
+API reports five devices, split by zone:
+
+| device | zone | zoneType |
+| ------ | ---- | -------- |
+| 2303 interface, 2327 generator, 1376 `DHW_0` | `zoneTechnique` | 2 |
+| 1388 `TESC_0` | Circuit 1 | 29 |
+| 557 `ROOM_0` | Circuit 1 | 1 |
+
+`TESC_0` carries the tag `iothubChildrenIds: ROOM_0`, so the circuit slot and
+the room slot are two halves of one tile. `TESC_0` is typed `ZONE`, which is
+not offered when adding devices, so what an owner picks from is the room slot
+and the hot water -- the two tiles -- plus the two technical halves the app
+keeps in its settings.
+
+## `custom_components/cozytouch/climate.py`
+
+### The mode list is the model's table, narrowed by what the unit reports
+
+A model's `HVACModes` is the product *line*'s table, and two units off one
+line differ : the Alfea Extensa S of issue #93 is sold with a cooling kit and
+without, under the same model id. So `supported_hvac_modes()` intersects the
+table with capability 100022, `supportedSystemOperatingMode`, before the
+entity declares its modes.
+
+The masks come from `HVAC_MODE_MASKS` in `capability_table.py`, derived from
+the two tables already there (`_SERVICE_VALUES` maps a mode value to a name,
+`_HVAC_MODE_BITS` a name to a mask) rather than written out a third time.
+`auto` owns two bits, 1 and 2, which is why the test matches the vendor app's
+`mask & value != 0` and not `== mask` -- 411 and 415 are the same set of
+modes.
+
+Three things it deliberately does not do.
+
+*It reads 100022, not 166.* 166 is the same space and the same encoding, and
+it is what the app actually greys by -- on the issue #93 unit it reads 21
+where 100022 reads 29, and 21 is exactly the ON / OFF / AUTO the app draws.
+But 166 is the *currently permitted* mask and moves with the season : a
+Navizone air conditioner reads 9 = {off, cool} under a summer lock. The mode
+list is built once in `__init__`, so narrowing by 166 would make `heat`
+disappear from Home Assistant in July and take every automation naming it
+with it. Following 166 is possible, but it means recomputing the list on each
+poll and living with a mode list that moves -- a bigger change than this one,
+and one nobody has asked for.
+
+*It only removes.* A mode the model table does not declare is never added,
+whatever the mask says.
+
+The bit table is the vendor app's, and bit 7 is the one measured against real
+hardware. `hub-navizone-2026-08.json` -- three room air conditioners behind a
+Navizone -- reads `100022 = 285`, the only reading in the corpus with bit 7
+clear where every other 557-561 reads 411 or 415. Their owner's app offers
+five modes: arret general, chauffage, froid, auto, deshumidification. Five,
+and no fan. So the narrowing removes exactly the sixth mode the entity was
+offering and the hardware cannot do.
+
+What the app does have is **brassage**, and it is a separate option rather
+than a mode -- capabilities 102004 / 102021, household-wide across the three
+rooms. Reading it as `HVACMode.FAN_ONLY` is what the model table was doing,
+and it is the wrong control in the wrong place: a mode the unit switches to,
+where the app has an option it leaves running underneath whatever mode is
+selected.
+
+*It never empties the list.* A mask of 0 -- which is also what
+`get_capability_value` answers by default for a device that does not report
+the capability -- or a mask that matches nothing leaves the table alone. A
+climate entity with no mode at all is broken in Home Assistant, which is
+worse than one offering a mode that does nothing. A mode value no bit names
+(5 emergency heat, 6 pre-cooling, 9 sleep) is kept for the same reason.
 
 ## `custom_components/cozytouch/select.py`
 

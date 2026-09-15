@@ -1120,7 +1120,37 @@ def test_a_room_slot_without_its_zone_is_numbered_like_the_air_conditioners():
     assert get_model_infos(560, None, "ROOM_3", 2447)["name"] == "Radiator (#4)"
 
 
-@pytest.mark.parametrize("masterModelId", [None, 556, 1681, 1758])
+@pytest.mark.parametrize("masterModelId", [2295, 2303, 2317])
+@pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
+def test_a_room_slot_behind_an_alfea_is_a_heating_circuit(modelId, masterModelId):
+    """The third master the same room index arrives behind : a heat pump's
+    connected interface, where the slot is the room control of a heating
+    circuit and not an air conditioner. Issue #93.
+
+    The modes are the app's OFF / ON / AUTO, which is what capability 166
+    reads on the captured unit -- 21, bits off, auto and heat. Cooling is
+    deliberately absent : the appliance supports it (100022 sets the cool
+    bit) but the reporter's has no cooling kit, and nothing shows how a unit
+    that has one differs.
+    """
+    infos = get_model_infos(
+        modelId, "Circuit 1", f"ROOM_{modelId - 557}", masterModelId
+    )
+
+    assert infos["type"] is CozytouchDeviceType.THERMOSTAT
+    assert infos["name"] == "Heating circuit (Circuit 1)"
+    assert infos["HVACModes"] == {
+        0: HVACMode.OFF,
+        1: HVACMode.AUTO,
+        4: HVACMode.HEAT,
+    }
+
+
+def test_a_heating_circuit_without_its_zone_is_numbered_like_the_others():
+    assert get_model_infos(560, None, "ROOM_3", 2303)["name"] == "Heating circuit (#4)"
+
+
+@pytest.mark.parametrize("masterModelId", [None, 556, 1681, 1758, 2326])
 def test_a_room_slot_behind_anything_else_stays_an_air_conditioner(masterModelId):
     """The narrow rule is the point : one account is the whole of what says a
     CozyBox drives radiators, so every other hub keeps the answer it had.
