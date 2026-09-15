@@ -50,18 +50,57 @@ from custom_components.cozytouch.capability import (
             ),
         ),
         (105012, "7", "heat, scheduled_heat, off_peak_heat"),
+        # The ventilation masks. Every corpus value decodes whole on these
+        # two, which is not true of the two above them.
+        (
+            100004,
+            "197",
+            (
+                "temperature, emergency_temperature, "
+                "horizontal_blade_position, vertical_blade_position"
+            ),
+        ),
+        (
+            100021,
+            "201",
+            (
+                "temperature, powerful_mode, "
+                "horizontal_blade_position, vertical_blade_position"
+            ),
+        ),
+        (100004, "49", "temperature, boost_with_fan, boost_without_fan"),
+        # One named bit each, and the corpus only ever shows the others.
+        (103034, "16", "antifrost"),
+        (224, "3", "water_flow, unknown (1)"),
+        # The service space, shared by the id that asks (7) and the one that
+        # answers (181). 3 is what an air conditioner cooling reports.
+        (7, "3", "cool"),
+        (181, "3", "cool"),
+        (7, "0", "off"),
+        # The air-circulation mode actually running, a fourth id in a fourth
+        # space that happens to agree on 3.
+        (102020, "3", "cool"),
+        # Three states, and the third is the one a binary sensor read as off:
+        # an air conditioner cooling reports 2.
+        (153, "0", "off"),
+        (153, "1", "heating"),
+        (153, "2", "cooling"),
         # Value spaces rather than masks.
         (73, "4", "cooling_and_heating"),
         (73, "2", "heating_only"),
         (337, "6", "water_setpoint"),
         (100800, "2", "low, medium, high, auto"),
         (350, "0", "low, medium, high"),
+        # A speed set naming one speed, which is what the app's table says and
+        # what "on, auto" used to get wrong.
+        (350, "4", "auto"),
+        (100800, "4", "auto"),
         # Nothing set is a reading of its own, not an empty string.
         (164, "0", "none"),
         # A bit the table does not name is carried through, since these
         # entities exist for the reader chasing exactly that.
         (188, "257", "thermal_comfort, unknown (256)"),
-        (164, "1040", "electricity_dhw, unknown (1024)"),
+        (164, "1040", "electricity_dhw, dhw_production"),
     ],
 )
 def test_a_descriptor_reads_as_what_it_says(capabilityId, value, expected):

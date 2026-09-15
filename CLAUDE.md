@@ -175,11 +175,13 @@ capture, so a test going green says "nobody changed this by accident", never
   link can only be drawn when the gateway was set up too; these pin that a
   missing gateway yields no link rather than a dangling one.
 - `tests/test_snapshot.py` — the whole of both tables against JSON files in
-  `tests/snapshots/` : every mapped model id, and every capability id the
-  chain claims on one model per device type. This is what makes a pure
+  `tests/snapshots/` : every mapped model id, every capability id the chain
+  claims on one model per device type, and a digest per model id for the
+  other 2486, which is the half a probe cannot see. This is what makes a pure
   refactor provable — if the files do not change, no answer did. Regenerate
   deliberately, in the same commit as the change the diff shows, with
-  `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`.
+  `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`. It is also the slowest
+  file here, about three seconds of the suite's five.
 - `tests/test_capability.py` — walks every mapped model id to check which
   models a flag reaches and whether the gates in `capability.py` still follow
   the flag they were written for. The walk runs over `range(1, 2500)`; a model
@@ -207,9 +209,12 @@ coordinator per device on top of it.
    documented in the module docstring; **only declare a flag when the device
    actually needs it**, because `capability.py` reads them to decide which
    entities exist, and a flag set on a shared branch reaches every model in it.
-2. `custom_components/cozytouch/capability.py` — only if the device reports
-   capability ids nothing maps yet. Model-specific behaviour goes behind
-   `if modelId == …`, never a change to the shared default. A capability whose
+2. `custom_components/cozytouch/capability_table.py` — only if the device
+   reports capability ids nothing maps yet. A row per id ; a device that
+   reads an id differently says so on its row (`absent_on`, `needs_flag`,
+   `per_type`, `per_model`), never by changing the shared default. An id the
+   row cannot decide — it depends on the value, or on what else the device
+   reports — belongs in the chain in `capability.py` instead. A capability whose
    encoding is unverified belongs in `SELF_DESCRIBING_CAPABILITIES`: named,
    surfaced as a raw string, and `enabled_by_default` False, so it costs nobody
    anything until someone turns it on to investigate. Claim a type only where

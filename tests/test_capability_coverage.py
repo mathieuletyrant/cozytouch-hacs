@@ -18,6 +18,7 @@ The checks walk every id the mapping answers for, so a capability added later is
 covered without anyone remembering to cover it.
 """
 
+import ast
 import itertools
 import json
 import pathlib
@@ -25,10 +26,9 @@ import re
 
 import pytest
 
-from custom_components.cozytouch.capability import (
-    SELF_DESCRIBING_CAPABILITIES,
-    get_capability_infos,
-)
+from custom_components.cozytouch import capability_table
+from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.capability_table import CAPABILITIES
 from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
@@ -173,16 +173,55 @@ def test_every_switch_key_is_also_a_sensor_key(path):
     assert not missing, f"{path} sensor section has no name for {sorted(missing)}"
 
 
-@pytest.mark.parametrize("capabilityId", sorted(SELF_DESCRIBING_CAPABILITIES))
-def test_a_self_describing_capability_arrives_switched_off(capabilityId):
-    """A device reports dozens of these; on by default they bury the rest."""
+@pytest.mark.parametrize(
+    "capabilityId",
+    sorted(
+        capabilityId
+        for capabilityId, row in CAPABILITIES.items()
+        if not row.enabled_by_default
+    ),
+)
+def test_a_row_that_says_off_arrives_off(capabilityId):
+    """A device reports dozens of descriptors; on by default they bury the rest."""
     infos = get_model_infos(557)
 
     result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
 
+    if not result:
+        # The row exists but this product has no such entity -- absent_on or a
+        # model flag. Nothing to be switched off.
+        return
+
     assert result["enabled_by_default"] is False
-    assert result["name"] == SELF_DESCRIBING_CAPABILITIES[capabilityId]
-    assert result["category"] == "diag"
+
+
+@pytest.mark.parametrize(
+    ("capabilityId", "expected"),
+    [
+        # Minutes, which the time sensor renders as 1d 00:00 rather than 1440.
+        (331, "time"),
+        (307, "time"),
+        # A setpoint in degrees, beside the ones the climate entity already
+        # reads as temperatures.
+        (352, "temperature"),
+        (103199, "temperature"),
+        # Flags the corpus reads as 0 on every capture, so only the app says
+        # they have a high state at all.
+        (104051, "binary"),
+        (100078, "binary"),
+        # Still a raw string: the app reads these through a mask or a parser
+        # nothing here mirrors.
+        (224, "string"),
+        (105122, "string"),
+        (100300, "string"),
+    ],
+)
+def test_a_descriptor_is_read_as_what_the_app_reads_it_as(capabilityId, expected):
+    infos = get_model_infos(557)
+
+    result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
+
+    assert result["type"] == expected
 
 
 def test_a_capability_that_says_nothing_is_enabled():
@@ -194,14 +233,63 @@ def test_a_capability_that_says_nothing_is_enabled():
     assert "enabled_by_default" not in result
 
 
-def test_the_self_describing_table_does_not_shadow_a_real_mapping():
-    """An id in the table that another branch claims first would never be read."""
+def test_no_row_decodes_its_value_two_ways():
+    """Bits and values read the same number two incompatible ways.
+
+    A sum of powers of two, or one thing named: nothing in the value says
+    which, only the row does, and 4 is a legal answer to either. A row setting
+    both would be read by whichever describe_capability_value tries first and
+    would silently mean something else -- 217 read as a mode numbered 3083
+    rather than as a mask is that mistake, already made once.
+    """
+    both = sorted(
+        capabilityId
+        for capabilityId, row in CAPABILITIES.items()
+        if row.bits is not None and row.reads_as is not None
+    )
+
+    assert not both, f"{both} set both bits and reads_as"
+
+
+def test_no_capability_id_is_written_twice():
+    """Two rows for one id is the later one, silently: a dict literal says nothing.
+
+    Reading CAPABILITIES back cannot see it -- the duplicate is already gone --
+    so this counts the keys in the source instead. Two hundred rows in numeric
+    order is exactly where a paste lands on a neighbour.
+    """
+    source = pathlib.Path(capability_table.__file__).read_text()
+    table = next(
+        node
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.AnnAssign)
+        and getattr(node.target, "id", None) == "CAPABILITIES"
+    )
+    keys = [key.value for key in table.value.keys if isinstance(key, ast.Constant)]
+
+    assert len(keys) == len(set(keys)), (
+        f"written twice: {sorted({key for key in keys if keys.count(key) > 1})}"
+    )
+
+
+def test_every_row_resolves_under_its_own_name():
+    """What the table says an id is, is what the mapping answers for it."""
     infos = get_model_infos(557)
 
-    for capabilityId, name in SELF_DESCRIBING_CAPABILITIES.items():
+    for capabilityId, row in CAPABILITIES.items():
         result = get_capability_infos(infos, capabilityId, "0", {capabilityId})
-        assert result["name"] == name, (
-            f"{capabilityId} resolves to {result['name']!r}, not {name!r}"
+        if not result:
+            continue
+
+        # A per_type row answers one of several names, which is the whole point
+        # of the field; any of them is the row answering for itself.
+        names = {row.name} | {
+            str(override["name"])
+            for override in (row.per_type or {}).values()
+            if "name" in override
+        }
+        assert result["name"] in names, (
+            f"{capabilityId} resolves to {result['name']!r}, not one of {sorted(names)}"
         )
 
 

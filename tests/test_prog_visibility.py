@@ -194,22 +194,27 @@ def test_the_migration_flips_the_unique_ids_the_sensors_actually_claim():
 # --- the migration itself ---------------------------------------------------
 
 
-def registered(unique_id, disabled_by=None):
+def registered(unique_id, disabled_by=None, domain="sensor"):
     return SimpleNamespace(
         unique_id=unique_id,
-        entity_id=f"sensor.{unique_id}",
+        entity_id=f"{domain}.{unique_id}",
+        domain=domain,
         disabled_by=disabled_by,
     )
 
 
 class FakeEntityRegistry:
-    """Records which entities the migration disables."""
+    """Records which entities the migration disables and which it removes."""
 
     def __init__(self):
         self.disabled = []
+        self.removed = []
 
     def async_update_entity(self, entity_id, disabled_by):
         self.disabled.append((entity_id, disabled_by))
+
+    def async_remove(self, entity_id):
+        self.removed.append(entity_id)
 
 
 def migrate(monkeypatch, entry, entities):
@@ -249,7 +254,7 @@ def test_the_migration_disables_a_covered_block_and_bumps_the_entry(monkeypatch)
     result, registry, bumps = migrate(monkeypatch, make_entry(), entities)
 
     assert result is True
-    assert bumps == [2]
+    assert bumps == [2, 3]
     assert sorted(registry.disabled) == [
         (f"sensor.{uid}", er.RegistryEntryDisabler.INTEGRATION)
         for uid in sorted(block_uids(SUBENTRY_ID, 196))
@@ -268,9 +273,11 @@ def test_a_sensor_the_user_already_disabled_keeps_saying_user(monkeypatch):
     assert len(registry.disabled) == 6
 
 
-def test_an_entry_already_at_2_2_is_left_alone(monkeypatch):
+def test_an_entry_already_at_2_2_is_never_disabled_again(monkeypatch):
     """The one-shot promise: somebody who re-enabled a sensor after the
     migration must never find it disabled again on the next start.
+
+    It still moves to 2.3, which is a different step and touches nothing here.
     """
     entities = [registered(uid) for uid in block_uids(SUBENTRY_ID, 196)]
 
@@ -280,7 +287,7 @@ def test_an_entry_already_at_2_2_is_left_alone(monkeypatch):
 
     assert result is True
     assert registry.disabled == []
-    assert bumps == []
+    assert bumps == [3]
 
 
 def test_a_version_1_entry_still_asks_to_be_added_again(monkeypatch):
@@ -291,4 +298,38 @@ def test_a_version_1_entry_still_asks_to_be_added_again(monkeypatch):
 
     assert result is False
     assert registry.disabled == []
+    assert bumps == []
+
+
+def test_the_migration_drops_the_number_312_used_to_build(monkeypatch):
+    """312 became a sensor, and the registry keys on the platform too.
+
+    The number is not reused under the new platform, it is left behind
+    unavailable, so the migration removes it rather than leaving a dead entity
+    on the device page forever.
+    """
+    entities = [
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_312", domain="number"),
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_312"),
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_40", domain="number"),
+    ]
+
+    result, registry, bumps = migrate(
+        monkeypatch, make_entry(minor_version=2), entities
+    )
+
+    assert result is True
+    assert registry.removed == [f"number.{DOMAIN}_{SUBENTRY_ID}_312"]
+    assert bumps == [3]
+
+
+def test_an_entry_already_at_2_3_is_left_alone(monkeypatch):
+    entities = [registered(f"{DOMAIN}_{SUBENTRY_ID}_312", domain="number")]
+
+    result, registry, bumps = migrate(
+        monkeypatch, make_entry(minor_version=3), entities
+    )
+
+    assert result is True
+    assert registry.removed == []
     assert bumps == []

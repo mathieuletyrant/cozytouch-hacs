@@ -601,6 +601,262 @@ nothing on the wire needs a name it does not have. The masks in
 `CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
 decodes with no bit left over.
 
+### What a rename costs here, and what it does not
+
+Every entity's unique id is `f"{DOMAIN}_{subentry_id}_{capabilityId}"` --
+keyed on the capability id, never on the name. So renaming one renames what
+Home Assistant displays and nothing else : the registry entry, the
+entity_id and the recorded history all survive, and an automation naming
+the entity_id keeps working.
+
+The wart is that the entity_id keeps the slug it was created from. Somebody
+whose sensor was called `flame` in 2026 keeps `sensor.…_flamme` showing
+"Chauffe". Renaming entity_ids would fix the cosmetics and break every
+automation that names one, which is the trade nobody wants.
+
+**Changing a capability's *type* is a different matter.** The registry is
+keyed on the platform as well as the unique id, so an id that moves from
+`number` to `sensor` does not reuse its entry : a new one is created and
+the old one stays behind, unavailable, forever. Capability 312 did exactly
+that, which is what migration 2.3 is for.
+
+### Seventeen names the iOS list got wrong
+
+The mapping's names came from an extraction of the iOS app. The Android
+enum (`research/data/capability_id_to_name_android.tsv`) disagrees on
+seventeen, and where the two differ the Android one is the enum itself,
+read in clear Kotlin, not a string recovered from a compiled binary.
+
+Only the ones that said something *false* were changed; a paraphrase is not
+an error, and `dhw_error_code` is a better entity name than
+`ERROR_CODE_DHW`.
+
+| id | was | is |
+| -- | --- | -- |
+| 344 | `linked_interfaces_count` | `ROOM_COUNT` -- a count of rooms |
+| 100002, 100024 | `*_estimation_modes` | ventilation options, a `VentilationOption` mask |
+| 100004, 100021 | `*_control_modes` | ventilation controls, a `VentilationControls` mask |
+| 100196-100198 | `absence_schedule`, `*_target_temperature` | `PROG_ABSENCE` / `NIGHT` / `PRESENCE`, each a JSON `[temperature, offState]` pair and not a scalar |
+| 100334-100341 | `new_schedule_*` | `THERMOSTAT_LIFESTYLE_HEATING_*` -- the lifestyle program, nothing new about it |
+| 100078 | `identify_supported` | `VENTILATION_WINK_REQUEST`, read by `isWinkRequested` : a request, not a support flag |
+| 358 | `air_circulation_scope` | `thermalAmbianceScope` -- nothing to do with air circulation |
+
+358 is the one the Android enum does *not* carry : the app never reads it.
+Its name here comes from the iOS list, which is the only source for it, and
+which is wrong about every other id on this page at least once.
+
+### Capability 153 has three states, and Atlantic never names it
+
+`HEATING_STATUS`, read as `HeatingStatus { OFF "0", HEAT_UP "1", COOL_DOWN
+"2" }`. Two things follow, and the second is the one that mattered.
+
+**It was a binary sensor**, whose `is_on` is `value == "1"`. A device
+reporting 2 read as off, silently, and the product that reports 2 is an air
+conditioner while it is cooling -- including the room units this
+integration is developed against. The corpus holds 23 readings of 153 and
+every one is 0, so the captures could not have shown this: they were all
+taken outside the cooling season. It becomes a string with `reads_as`, and
+`BINARY` and `STRING` are built by the same platform, so nothing has to
+migrate.
+
+**The flame and the resistance were ours.** The app labels 153 nowhere --
+its eight uses of `HeatingStatus` drive a colour and two booleans, and
+there is no `R.string` near any of them. So a boiler saying "flame" and a
+towel dryer saying "resistance" was an invention, defensible while the
+value was a flag and incoherent once it can say "cooling": a flame that
+cools is not a thing. One name for every product, which is what Atlantic
+has.
+
+The default was also wrong before that, and wrong in the way CLAUDE.md
+warns about: `flame` was the shared default with the electric heaters as
+the exception, so it claimed every product nobody had considered -- the air
+conditioners included.
+
+### Seventeen names the iOS list got wrong
+
+The mapping's names came from an extraction of the iOS app. The Android
+enum (`research/data/capability_id_to_name_android.tsv`) disagrees on
+seventeen, and where the two differ the Android one is the enum itself,
+read in clear Kotlin, not a string recovered from a compiled binary.
+
+Only the ones that said something *false* were changed; a paraphrase is not
+an error, and `dhw_error_code` is a better entity name than
+`ERROR_CODE_DHW`.
+
+| id | was | is |
+| -- | --- | -- |
+| 344 | `linked_interfaces_count` | `ROOM_COUNT` -- a count of rooms |
+| 100002, 100024 | `*_estimation_modes` | ventilation options, a `VentilationOption` mask |
+| 100004, 100021 | `*_control_modes` | ventilation controls, a `VentilationControls` mask |
+| 100196-100198 | `absence_schedule`, `*_target_temperature` | `PROG_ABSENCE` / `NIGHT` / `PRESENCE`, each a JSON `[temperature, offState]` pair and not a scalar |
+| 100334-100341 | `new_schedule_*` | `THERMOSTAT_LIFESTYLE_HEATING_*` -- the lifestyle program, nothing new about it |
+| 100078 | `identify_supported` | `VENTILATION_WINK_REQUEST`, read by `isWinkRequested` : a request, not a support flag |
+| 358 | `air_circulation_scope` | `thermalAmbianceScope` -- nothing to do with air circulation |
+
+358 is the one the Android enum does *not* carry : the app never reads it.
+Its name here comes from the iOS list, which is the only source for it, and
+which is wrong about every other id on this page at least once.
+
+### Capability 153 is whether it is heating, not what is burning
+
+Atlantic calls it `HEATING_STATUS` and reads it as `HeatingStatus { OFF,
+HEAT_UP }`. The flame and the resistance are *how* a product makes heat,
+which is a per-product detail, and the row had it as the default : anything
+that was not an electric heater read `flame`, with a fire icon.
+
+That reached the air conditioners, which report 153 and have no flame --
+nine model ids in the capture corpus do, including the room units on the
+household this integration is developed against. So the default becomes
+`heating`, and the two products that know what is producing it say so on
+their own rows.
+
+This is the rule in CLAUDE.md the row was breaking : model-specific
+behaviour goes behind a per-product entry, never into the shared default.
+A default written for one product silently claims every product nobody has
+thought about yet.
+
+### 312 is the hot-water control target, and it is read-only
+
+The placeholder name `Temp_312` was there because the iOS extraction gave
+**both 306 and 312 the name `currentControlTarget`**, and 306 was already
+mapped as a schedule bound. One of the two had to be wrong and nothing said
+which.
+
+The Android enum separates them : 306 is `MAX_NUMBER_OF_MILESTONES_PER_DAY`,
+which is what 306 was already mapped as, and 312 is
+`DHW_CURRENT_CONTROL_TARGET`. The iOS extraction was wrong about 306, and
+312 keeps the name. The corpus agrees on the unit -- 45 to 65 °C across
+five model ids.
+
+It also stops being writable. The app has `String getCurrentControlTarget`
+and no writer, where 231 beside it has both a getter and
+`writeManualTargetSetByUser`. So it was a number entity offering a command
+the vendor app never sends, and on an unbounded range at that : the row
+declared no min and no max, which is the other thing a placeholder leaves
+behind.
+
+### One table, one row per id, nothing derived
+
+`CAPABILITIES` in `capability_table.py` is the whole mapping : 222 rows, in
+id order, every one an `Entity`. There is no second table and no shorthand
+that expands into it -- the seventy-seven descriptors are written out like
+everything else, because a row you have to know is generated somewhere
+else is a row you cannot read in place.
+
+`enabled_by_default` has no default. Every row states it, true or false, so
+whether an entity shows up on a device page is answered by reading the row
+rather than by knowing what the field falls back to. A row that omits it
+fails at import, which is the point.
+
+What a dict literal of 222 rows cannot say is that an id is written twice :
+Python keeps the last one silently. So a test parses this file and counts
+the keys, rather than reading the table back, where the duplicate is
+already gone.
+
+### Twenty descriptors read as what they are, and the ones left alone
+
+`SELF_DESCRIBING_CAPABILITIES` used to say "the name is everything we
+know", one name per id. For twenty ids that stopped being true once the
+vendor app's readers were read (`research/data/android_capability_types.tsv`),
+so the table has a second column and `STRING` is what most rows still say.
+They stay diag and stay **off by default**: knowing the encoding is not a
+reason to put twenty more entities on everybody's device page, and the
+flag is what makes the descriptor family cost nothing.
+
+The type lives in that table and not in the `elif` chain on purpose. A
+branch would have to restate the name, the category and the flag for each
+of the twenty, and the coverage test that walks this table and asserts
+"arrives switched off" would stop reaching them -- twenty diagnostic
+entities silently turning themselves on breaks no test. A second dict
+keyed by the same ids was the first shape and was worse: two rows to keep
+in step for one fact.
+
+The three decoding tables -- `CAPABILITY_BIT_FIELDS`,
+`CAPABILITY_VALUE_SPACES`, `CAPABILITY_SPEED_SETS` -- do **not** merge
+into it, for a reason that is not taste. They are read by
+`describe_capability_value` at every poll, with the value; this table is
+read once at setup, without it. Capability 166 is why that matters: its
+mask shrinks with the season, so a decoding settled at setup would show
+last winter's modes until Home Assistant restarts. Merging the three into
+one column would also mean one column holding three shapes plus a tag
+saying which -- the dict a row sits in is that tag already.
+
+- **Minutes** (296, 307, 331, 332, 333): the app reads them with
+  `toIntOrNull` in its prog-in-range feature, and 331 reads 1440 on eleven
+  models -- the minutes in a day. The time sensor renders that `1d 00:00`.
+- **Degrees** (352-357, 103199): `float getDayAbsenceTemperature` and its
+  siblings, beside the setpoints the climate entity already reads. The
+  corpus has 18/19/18/26/24/26 on ten models each; 103199 appears in no
+  capture at all and is typed on the app's word alone.
+- **Flags** (157, 381, 100078, 100102, 100103, 103150, 104050, 104051):
+  each has a reader returning `boolean`. Every one of them reads 0 on
+  every capture, which is why the corpus could not settle them and the app
+  can: constant is not the same as false.
+
+Left as raw strings on purpose:
+
+- **294, 340, 295, 330** are steps (`TEMPERATURE_UPDATE_STEP`,
+  `DHW_STEP_PROG_RANGE`). A step is not the quantity it steps, so 294 is
+  not a temperature -- a `device_class` of temperature on it would put a
+  "0.5 °C" reading into long-term statistics. `INT` would be honest but
+  changes nothing: `sensor.py` builds it with the same class as a string,
+  no unit and no state class. The precedent is 102022, the air-circulation
+  duration step, already `INT` and already diag.
+- **Counters** (93, 236, 244, 306, 329, 100000, 100301), same reason.
+- **100300** is `float getProgramStartingDay`, and the app's `ProgDay`
+  enum runs 1 (monday) to 7. The corpus reads 0 and 1. Two sources against
+  the only one that speaks for real hardware is not enough.
+- **105122** is a `long` of epoch milliseconds. No `CapabilityType`
+  renders that, and adding one is its own change.
+- **224 and 103034** are masks, handled above.
+
+### Six more masks, and the two bits the corpus could not place
+
+The vendor app's `fromBitField` classes were read whole in September 2026
+(`research/data/android_bitfields_331.tsv`, app 3.31.0). The twelve tables
+already here matched it member for member, which is the useful part: it is
+the check that says the reverse-engineered ones were right.
+
+Two bits were missing, and both had been seen on real hardware with no
+name: **164 bit 10 (1024) is `dhw_production`**, read on 1040, 1298 and
+1307, and **100013 bit 1 (2) is `boost`**, the second milestone type.
+
+Six ids were masks read as a bare integer. 100004 and 100021
+(`VentilationControls`) are the interesting pair: every value the corpus
+holds -- 197, 205, 201, 49, 9, 1 -- decodes with no bit left over, which
+none of the older tables can claim. 100002 and 100024
+(`VentilationOption`) leave bits over. 103034 and 224 have exactly one
+named member each (`antifrost` at 16, `water_flow` at 2) and the corpus
+shows mostly other bits, so what they mostly report is the leftover count.
+
+**224 is a mask, not a flag.** The app's method is
+`boolean getEstimationSupport`, which reads like a boolean and is not: the
+body is `fromBitField(...).contains(WATER_FLOW)`. The corpus reads 125,
+113, 3 and 1. A capability is not typed by the signature that consumes it.
+
+**188 bit 8 (256) is still unexplained.** `HomeService` has four members in
+both copies of the class, and 257 is in the corpus.
+
+### The speed sets (350, 100800) name a set, and `4` names one speed
+
+These two ids are not a bitmask and not a member of an enum : one number
+picks a whole set of speeds. The vendor's app has the mechanism as its own
+method, `buildListFromValue`, next to `fromBitField` and `fromValue`, which
+is why `CAPABILITY_SPEED_SETS` is its own table here rather than an entry
+in `CAPABILITY_VALUE_SPACES` it happened to fit.
+
+`SpeedAirMixingState` and `VentilationSpeedMode` carry the same table, and
+**`4` returns the auto speed alone** -- it used to read here as "on, auto",
+which no capture contradicted because no capture has ever shown a 4. The
+whole corpus reads 0 on 350 and 2 on 100800.
+
+The app also has a fallback : a value outside 0-4 yields the full set, and
+a *different* full set per id (air mixing includes the quiet speed,
+ventilation does not). That is not reproduced. An unknown value is left
+undescribed, so the raw number reaches the entity -- on a diagnostic
+sensor whose reason to exist is investigating unknown hardware, the number
+is worth more than a guessed set.
+
 ### `FAN_MODES` / `SWING_MODES` : global vocabularies, not model data
 
 The value/label pairs `model.py` repeats per model are the vendor's own
