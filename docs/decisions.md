@@ -783,7 +783,7 @@ saying which -- the dict a row sits in is that tag already.
 
 - **Minutes** (296, 307, 331, 332, 333): the app reads them with
   `toIntOrNull` in its prog-in-range feature, and 331 reads 1440 on eleven
-  models -- the minutes in a day. The time sensor renders that `1d 00:00`.
+  models -- the minutes in a day, which is what named the unit.
 - **Degrees** (352-357, 103199): `float getDayAbsenceTemperature` and its
   siblings, beside the setpoints the climate entity already reads. The
   corpus has 18/19/18/26/24/26 on ten models each; 103199 appears in no
