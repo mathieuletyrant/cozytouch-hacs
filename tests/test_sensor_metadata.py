@@ -167,7 +167,14 @@ def test_a_duration_is_reported_in_minutes():
     entity = one("time")
 
     assert entity.native_unit_of_measurement == UnitOfTime.MINUTES
-    assert entity.native_value is None
+
+    # Through the entity the platform actually built, since the formatting
+    # lived in get_value: 480 has to come back as the number 480, not as the
+    # string "08:00" the old class returned for it.
+    entity.coordinator = SimpleNamespace(
+        get_capability_value=lambda capabilityId, defaultIfNotExist="0": "480"
+    )
+    assert entity.get_value() == 480.0
 
 
 # --------------------------------------------------------- firmware version
