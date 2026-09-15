@@ -37,6 +37,7 @@ from homeassistant.components.sensor.const import (
     SensorDeviceClass,
     SensorStateClass,
 )
+from homeassistant.const import UnitOfTime
 
 DEVICE_ID = 27906641
 
@@ -109,6 +110,8 @@ MEASURED = [
     # hot_water_available read as a battery level -- and a state class does
     # not need one.
     ("percentage", None),
+    # Every "time" capability is a duration in minutes, never a time of day.
+    ("time", SensorDeviceClass.DURATION),
 ]
 
 COUNTED = [
@@ -147,12 +150,31 @@ def test_the_pair_is_one_home_assistant_accepts(capability_type, device_class):
     assert entity.state_class in DEVICE_CLASS_STATE_CLASSES[entity.device_class]
 
 
-@pytest.mark.parametrize("capability_type", ["string", "int", "time", "climate"])
+@pytest.mark.parametrize("capability_type", ["string", "int", "climate"])
 def test_the_types_that_are_not_measurements_declare_no_state_class(capability_type):
-    """A mode, a version string or a duration is not something to average, and
-    a state class on one would only put nonsense in the statistics table.
+    """A mode or a version string is not something to average, and a state
+    class on one would only put nonsense in the statistics table.
     """
     assert one(capability_type).state_class is None
+
+
+def test_a_duration_is_reported_in_minutes():
+    """The unit is the whole point: the reading used to be formatted into a
+    string, so 480 minutes of minimum heating per day read as "08:00" -- a
+    clock, and eight o'clock is not eight hours. A number plus a unit lets
+    Home Assistant render and convert it, and lets a template compute on it.
+    """
+    entity = one("time")
+
+    assert entity.native_unit_of_measurement == UnitOfTime.MINUTES
+
+    # Through the entity the platform actually built, since the formatting
+    # lived in get_value: 480 has to come back as the number 480, not as the
+    # string "08:00" the old class returned for it.
+    entity.coordinator = SimpleNamespace(
+        get_capability_value=lambda capabilityId, defaultIfNotExist="0": "480"
+    )
+    assert entity.get_value() == 480.0
 
 
 # --------------------------------------------------------- firmware version

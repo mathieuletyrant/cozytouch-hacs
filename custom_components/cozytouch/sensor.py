@@ -21,6 +21,7 @@ from homeassistant.const import (
     UnitOfPressure,
     UnitOfSoundPressure,
     UnitOfTemperature,
+    UnitOfTime,
     UnitOfVolume,
 )
 from homeassistant.core import HomeAssistant, callback
@@ -417,36 +418,6 @@ class CozytouchUnitSensor(CozytouchSensor):
             return 0.0
 
 
-class CozytouchTimeSensor(CozytouchSensor):
-    """Class for time sensor (in minutes)."""
-
-    def get_value(self) -> str:
-        """Retrieve value from hub."""
-        value = self.coordinator.get_capability_value(self._capability.capabilityId)
-        if value is not None:
-            strValue = ""
-            days = 0
-            remaining = int(value)
-            if remaining >= (60 * 24):
-                days = int(remaining / (60 * 24))
-                remaining -= days * (60 * 24)
-
-            hours = 0
-            if remaining >= 60:
-                hours = int(remaining / 60)
-                remaining -= hours * 60
-
-            minutes = int(remaining)
-
-            if days > 0:
-                strValue = str(days) + "d "
-
-            strValue += f"{hours:02d}:{minutes:02d}"
-            return strValue
-
-        return None
-
-
 class CozytouchTimezoneSensor(CozytouchSensor):
     """Class for timezone sensor."""
 
@@ -677,7 +648,11 @@ SENSOR_BUILDERS = {
     CapabilityType.BINARY: CozytouchBinarySensor,
     CapabilityType.AWAY_MODE_SWITCH: CozytouchAwayModeSensor,
     CapabilityType.AWAY_MODE_TIMESTAMPS: _away_mode_timestamps,
-    CapabilityType.TIME: CozytouchTimeSensor,
+    CapabilityType.TIME: _unit(
+        SensorDeviceClass.DURATION,
+        SensorStateClass.MEASUREMENT,
+        UnitOfTime.MINUTES,
+    ),
     CapabilityType.TIMEZONE: CozytouchTimezoneSensor,
     CapabilityType.ERROR_CODE: CozytouchErrorCodeSensor,
     CapabilityType.PROG: CozytouchProgSensor,
