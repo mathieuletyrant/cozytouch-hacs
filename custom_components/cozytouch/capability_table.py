@@ -1463,6 +1463,15 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    100260: Entity(
+        name="away_mode",
+        type=CapabilityType.AWAY_MODE_TIMESTAMPS,
+        enabled_by_default=True,
+        extra={
+            "timestamps": AWAY_MODE_TIMESTAMPS,
+            "timezoneCapabilityId": 315,
+        },
+    ),
     100261: Entity(
         name="away_mode",
         type=CapabilityType.BINARY,

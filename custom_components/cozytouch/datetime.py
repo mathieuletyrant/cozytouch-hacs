@@ -9,12 +9,22 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
+from .capability_table import CAPABILITIES
 from .const import CozytouchCapabilityVariableType
 from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
 _LOGGER = logging.getLogger(__name__)
+
+# What actually commits a window: the switch writes the setup's absence and
+# only then mirrors it onto the timestamps. A device reporting the pair
+# without one of these can be read, not set -- see docs/decisions.md.
+_AWAY_MODE_SWITCH_IDS = frozenset(
+    capabilityId
+    for capabilityId, row in CAPABILITIES.items()
+    if row.type is CapabilityType.AWAY_MODE_SWITCH
+)
 
 
 # config flow setup
@@ -35,6 +45,12 @@ def _away_mode_datetimes(
     coordinator: Hub, capability, config_title: str, config_uniq_id: str
 ) -> list[CozytouchAwayModeDateTime]:
     """The two ends of the away window, which are one capability."""
+    if all(
+        coordinator.get_capability_value(capabilityId, None) is None
+        for capabilityId in _AWAY_MODE_SWITCH_IDS
+    ):
+        return []
+
     return [
         CozytouchAwayModeDateTime(
             capability=capability,

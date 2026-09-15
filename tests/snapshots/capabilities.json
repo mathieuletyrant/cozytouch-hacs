@@ -126,6 +126,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 1381,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -1971,6 +1989,24 @@
     "modelId": 1457,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 1457,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
@@ -3821,6 +3857,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 1505,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -5661,6 +5715,24 @@
     "modelId": 1641,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 1641,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
@@ -7510,6 +7582,24 @@
     "modelId": 1734,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 1734,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
@@ -9383,6 +9473,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 211,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -11209,6 +11317,24 @@
     "modelId": 2374,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 2374,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
@@ -13061,6 +13187,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 418,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -14910,6 +15054,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 557,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -16757,6 +16919,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 56,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -18599,6 +18779,24 @@
     "modelId": 562,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 562,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
@@ -20449,6 +20647,24 @@
     "name": "presence_programming_state",
     "type": "string"
    },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 76,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
+   },
    "100261": {
     "capabilityId": 100261,
     "category": "sensor",
@@ -22291,6 +22507,24 @@
     "modelId": 999999,
     "name": "presence_programming_state",
     "type": "string"
+   },
+   "100260": {
+    "capabilityId": 100260,
+    "category": "sensor",
+    "modelId": 999999,
+    "name": "away_mode",
+    "timestamps": [
+     [
+      "away_mode_start",
+      "mdi:airplane-takeoff"
+     ],
+     [
+      "away_mode_stop",
+      "mdi:airplane-landing"
+     ]
+    ],
+    "timezoneCapabilityId": 315,
+    "type": "away_mode_timestamps"
    },
    "100261": {
     "capabilityId": 100261,
