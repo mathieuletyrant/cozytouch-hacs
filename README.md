@@ -86,6 +86,8 @@ rooms in.
 | Alfea | 76 | Alfea Extensa Duo AI UE |
 | Alfea | 211 | Alfea Extensa Duo A.I. 3 R32 |
 | Alfea | 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
+| Alfea | 2295-2317 | Alfea Extensa S, S Duo, S Duo XL (interface) |
+| Alfea | 2326-2328 | Alfea Extensa S, S Duo, S Duo XL (generator) |
 
 ### 🎛️ Thermostats
 
@@ -106,7 +108,7 @@ badges and volumes -- the line is what tells you whether a row is yours.
 | Aeromax | 1669, 1670 | CV5 Aeromax Premium 100L, 150L |
 | Aqueo | 389 | AQUEO ACI HYB VS 300L 3000M |
 | Aqueo | 390, 391 | AQUEO ACI HYB VM 150L, 200L 2200M |
-| Calypso | 664, 1369, 1376 | Calypso Split |
+| Calypso | 664, 1369 | Calypso Split |
 | Calypso | 1367 | Calypso SPLIT VM 150L |
 | Calypso | 754, 1368 | Calypso SPLIT VM 200L |
 | Calypso | 1657 | Calypso 200L |
@@ -132,7 +134,7 @@ badges and volumes -- the line is what tells you whether a row is yours.
 | Range | modelId | Model |
 | ----- | ------: | ----- |
 | Asama | 1540-1555 | Asama Connecté II, 500W to 1750W, BLC / ANTH / NOIR / CAPP |
-| Doris | 1388, 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
+| Doris | 1562, 1563, 1587-1600 | Doris étroit, 300W to 1500W, BLC / ANTH / CARAT / NOIR |
 | Kelud | 1381 | KELUD 1750W BLC |
 | Kelud | 1382 | KELUD 1750W Anthracite Standard |
 | Riva | 1564, 1565, 1622-1635 | Riva 5 étroit, 300W to 1500W, BLC / ARDOISE / MENHIR / CARBONE |
@@ -149,6 +151,8 @@ first five rooms, 1734-1737 for the next four.
 | 557-561 | `ROOM_0`-`ROOM_4` | a Naviclim (556) or Navizone (1681, 1758) | Air conditioner |
 | 1734-1737 | `ROOM_5`-`ROOM_8` | a HUB Cozytouch (1457) | Air conditioner |
 | 562-570 | `UI_0`-`UI_8` | any of the above | Air conditioner user interface |
+| 1376 | `DHW_0` | an appliance that heats water | Domestic hot water |
+| 1388-1390 | `TESC_0`-`TESC_2` | an appliance that heats | Heating circuit |
 
 A room slot behind a gateway this table does not know falls through to the air
 conditioner mapping, which is what the first five ids were read as before the

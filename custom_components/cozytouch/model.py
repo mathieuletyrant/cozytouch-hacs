@@ -161,6 +161,17 @@ ALFEA_EXTENSA_DUO_AI_3 = {
     219: "Alfea Extensa Duo A.I. 3 R32 Thermor",  # catalogue only
 }
 
+# The heating circuit slots the catalogue calls TESC_0 to TESC_2, one
+# productId each. See docs/decisions.md.
+TESC_SLOTS = range(1388, 1391)
+
+# The Alfea Extensa S, which reports itself as two devices : the connected
+# interface and the generator under it. The catalogue's own productId is what
+# separates them, and the ids of each half are contiguous.
+# See docs/decisions.md.
+ALFEA_EXTENSA_S_INTERFACES = range(2295, 2318)
+ALFEA_EXTENSA_S_GENERATORS = range(2326, 2329)
+
 # One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
 # with SERP for the tank that carries a coil; the grid is volume x coil x
 # brand, over eight badges. Only Atlantic's ATE has a commercial name we know.
@@ -219,7 +230,6 @@ COZYBOX_HUBS = {2447, 2448, 2449, 2450}
 # string ; the eight mapped before keep the name they had, inconsistencies
 # included, because renaming one renames somebody's device.
 TOWEL_RACK_VARIANTS = {
-    1388: "Doris étroit 1500W BLC",
     1540: "Asama Connecté II 500W BLC",  # catalogue only
     1541: "Asama Connecté II 750W BLC",  # catalogue only
     1542: "Asama Connecté II 1500W BLC",  # catalogue only
@@ -412,6 +422,24 @@ def get_model_infos(  # noqa: C901
 
         modelInfos.exhaustTemperatureAvailable = False
 
+    elif modelId in ALFEA_EXTENSA_S_INTERFACES:
+        # The connected interface of the appliance, not a circuit : it reports
+        # the whole-appliance readings and no setpoint, the control living on
+        # the room and hot water slots under it. Capability 8 is on it and is
+        # not a mode here -- see docs/decisions.md.
+        modelInfos.name = MODEL_CATALOGUE[modelId]
+        modelInfos.type = CozytouchDeviceType.HEAT_PUMP
+        modelInfos.HVACModesCapabilityId = set()
+        modelInfos.HVACModes = {}
+
+    elif modelId in ALFEA_EXTENSA_S_GENERATORS:
+        # The generator under that interface: hydraulic readings only, with no
+        # mode capability of any kind. See docs/decisions.md.
+        modelInfos.name = MODEL_CATALOGUE[modelId]
+        modelInfos.type = CozytouchDeviceType.HEAT_PUMP
+        modelInfos.HVACModesCapabilityId = set()
+        modelInfos.HVACModes = {}
+
     elif modelId == 235:
         modelInfos.name = "Thermostat Navilink Connect"
         modelInfos.type = CozytouchDeviceType.THERMOSTAT
@@ -548,9 +576,30 @@ def get_model_infos(  # noqa: C901
 
         modelInfos.HeatingModes = MANUAL_ECO_PROG
 
+    elif modelId == 1376:
+        # The hot water slot of an appliance, not a product of its own : the
+        # catalogue calls it DHW_0 and gives it no commercial reference.
+        # See docs/decisions.md.
+        modelInfos.name = "Domestic hot water"
+        modelInfos.type = CozytouchDeviceType.WATER_HEATER
+        modelInfos.HVACModes = OFF_HEAT
+
+        modelInfos.HeatingModes = MANUAL_ECO_PROG
+
+    elif modelId in TESC_SLOTS:
+        # A heating circuit of an appliance, the same way THZONE is a zone of
+        # a ducted one. See docs/decisions.md.
+        modelInfos.name = (
+            "Heating circuit (" + zoneName + ")"
+            if zoneName is not None
+            else "Heating circuit (#" + str(modelId - 1387) + ")"
+        )
+        modelInfos.type = CozytouchDeviceType.ZONE
+        modelInfos.HVACModes = {}
+
     # 664 is catalogue only: the same string as 1369 in the vendor's older
     # all-capitals listing.
-    elif modelId in (1369, 1376, 664):
+    elif modelId in (1369, 664):
         modelInfos.name = "Calypso Split"
         modelInfos.type = CozytouchDeviceType.WATER_HEATER
         modelInfos.HVACModes = OFF_HEAT

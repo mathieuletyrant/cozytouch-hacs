@@ -101,6 +101,26 @@ MODEL_GROUPS = [
         },
     ),
     (
+        2303,
+        {
+            "modelId": 2303,
+            "HVACModesCapabilityId": set(),
+            "name": "Alfea Extensa S Duo",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {},
+        },
+    ),
+    (
+        2327,
+        {
+            "modelId": 2327,
+            "HVACModesCapabilityId": set(),
+            "name": "Alfea Extensa S Duo",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {},
+        },
+    ),
+    (
         235,
         {
             "modelId": 235,
@@ -582,7 +602,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1376,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso Split",
+            "name": "Domestic hot water",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -647,9 +667,19 @@ MODEL_GROUPS = [
         {
             "modelId": 1388,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Doris étroit 1500W BLC",
-            "type": CozytouchDeviceType.TOWEL_RACK,
-            "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "name": "Heating circuit (#1)",
+            "type": CozytouchDeviceType.ZONE,
+            "HVACModes": {},
+        },
+    ),
+    (
+        1390,
+        {
+            "modelId": 1390,
+            "HVACModesCapabilityId": {7, 8},
+            "name": "Heating circuit (#3)",
+            "type": CozytouchDeviceType.ZONE,
+            "HVACModes": {},
         },
     ),
     (
@@ -1205,9 +1235,39 @@ def test_the_towel_rack_table_keeps_the_names_the_mapped_ids_had():
     assert get_model_infos(1551)["name"] == "Asama Connecté II 1750W Noir"
     assert get_model_infos(1546)["name"] == "Asama Connecté II 1500W ANTH"
     assert get_model_infos(1595)["name"] == "Doris étroit 1300W CARAT"
-    assert get_model_infos(1388)["name"] == "Doris étroit 1500W BLC"
     assert get_model_infos(1588)["name"] == "Doris étroit 1500W BLC"
     assert get_model_infos(1622)["name"] == "Riva 5 étroit 1300W BLC"
+
+
+# ------------------------------------------------ the Alfea Extensa S halves
+
+
+@pytest.mark.parametrize(
+    "modelId", [*range(2295, 2318), *range(2326, 2329)]
+)
+def test_every_alfea_extensa_s_id_resolves_off_the_catalogue(modelId):
+    """The branch names these out of MODEL_CATALOGUE rather than a table of
+    its own, so an id the catalogue does not carry would raise a KeyError at
+    setup instead of falling through to a name.
+    """
+    infos = get_model_infos(modelId)
+
+    assert infos["name"] == MODEL_CATALOGUE[modelId]
+    assert infos["type"] == CozytouchDeviceType.HEAT_PUMP
+    # Neither half carries a room setpoint : the control is on the slots
+    # under them, and capability 8 on the interface is not a mode.
+    assert infos["HVACModesCapabilityId"] == set()
+
+
+def test_a_heating_circuit_slot_is_named_after_its_zone():
+    """The slot ids say nothing but the index, so the zone is the only name a
+    user recognises -- the same rule the room slots follow.
+    """
+    assert (
+        get_model_infos(1388, zoneName="Circuit 1")["name"]
+        == "Heating circuit (Circuit 1)"
+    )
+    assert get_model_infos(1389)["name"] == "Heating circuit (#2)"
 
 
 # ------------------------------------------------ the fourth ACI HYB badge

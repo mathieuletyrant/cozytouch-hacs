@@ -475,6 +475,78 @@ diagnostics dump about hardware working as designed. `Hub.get_diagnostics`
 drops zones from the dump for the same reason. Reported upstream as
 gduteil/cozytouch#167.
 
+### The Alfea Extensa S is two devices, and its slots are not products (issue #93)
+
+One household (issue #93, September 2026) runs an Alfea Extensa S Duo, and it
+arrives as five devices : 2303 and 2327, both unmapped and both named
+`Alfea Extensa S Duo`, plus three slots with ids the table already knew.
+
+The catalogue's `productId` is what separates the two halves, because it names
+the slot rather than the product. 2303 carries `productId` 54, the one
+`CESA V2 DEFAULT` (1387) sits on -- the connected interface board. 2327 carries
+58, shared with `GENERATOR_0` (1391) and `GENERATOR_HEAT_PUMP_0` (1432) -- the
+generator. What each reports agrees: 2303 has the whole-appliance readings
+(consumption, outside temperature, away mode, error code, serial number) and
+2327 the hydraulics (pump hours and starts for heating and hot water, water
+pressure, flow and discharge temperature). Neither carries a room setpoint.
+
+The split runs through the catalogue cleanly. Of the 26 Alfea Extensa S ids,
+2295-2317 are `productId` 54 and each has its own commercial reference
+(024281, 024420 and so on) ; 2326-2328 are `productId` 58 with no reference at
+all, three of them, one per range -- S, S Duo, S Duo XL. So the two branches
+match contiguous ranges and take their name from `MODEL_CATALOGUE`, which
+already held all 26 and is the only place the vendor's spelling should live.
+
+Neither half gets a climate entity. `HVACModesCapabilityId` is empty on both,
+which is the point of mapping them at all : the interface reports capability 8,
+the default would have read it as an HVAC mode, and its value is `3000` --
+neither 0 nor 4, so the entity had no mode it could show. The heating and hot
+water controls are on the slots below, and what capability 8 does mean is still
+open (asked on issue #93).
+
+Mapping them changes nothing else. Run through `get_capability_infos` with the
+capability ids the dump reports, both halves produce the same entity list typed
+`HEAT_PUMP` as they did typed `UNKNOWN` -- 22 on the interface once the broken
+climate goes, 8 on the generator. What mapping buys is the repair no longer
+firing and the name no longer coming from the fall-through.
+
+### 1376 and 1388 were never a Calypso or a Doris
+
+Two of the slots under that appliance were mapped to products they are not.
+The catalogue calls 1376 `DHW_0 DEFAULT` and 1388 `TESC_0 DEFAULT`, both with
+an empty commercial reference, which is how it writes a firmware slot ; the
+Calypso SPLIT VS 270L is 1369 and the Doris range starts at 1556. Every
+capture in `research/capability-corpus/devices.tsv` that carries either id
+shows it as `DHW_0` or `TESC_0` and never as a product. They were guesses, and
+the sensors they produce -- a hot water tank on 1376, a setpoint and a water
+temperature on 1388 -- are what a slot of that name would report.
+
+So both are renamed by role. 1376 keeps the `WATER_HEATER` type and its 31
+entities and becomes `Domestic hot water`; nothing about it changes but the
+name. 1388 joins 1389 and 1390, the `TESC_1` and `TESC_2` the catalogue lists
+beside it, as `Heating circuit (<zone>)` -- named after the zone the way a room
+slot is, since the id carries nothing but an index. Its type becomes `ZONE`,
+which is the type this repository already has for a circuit that is not a
+product, and the snapshot shows it landing on the digest `THZONE_0` has. The
+only entity that moves with it is 218, which `ZONE` drops and which is off by
+default anyway.
+
+Renaming a device is not free -- the towel rack table says so, and keeps eight
+names it would otherwise spell better. The line is that those are spellings of
+the right product and these were the wrong product. An owner of an Alfea saw a
+Doris in their device list.
+
+### What is still open on issue #93
+
+Model 557 in that household is `ROOM_0` behind the heat pump, and it arrives
+as `Air Conditioner (Circuit 1)` for a floor heating circuit. The branch that
+tells a radiator from an air conditioner reads the master's id and knows only
+the CozyBox, so a heat pump master falls through to the air conditioner
+mapping. The device does report a cooling setpoint (177), cooling limits (162,
+163) and a full cooling program, so the firmware is not obviously heating-only
+and a guess either way is a guess. The reporter has been asked what the app
+offers. Left alone until there is an answer.
+
 ## `custom_components/cozytouch/select.py`
 
 ### The air-circulation duration is a select on the device's own grid

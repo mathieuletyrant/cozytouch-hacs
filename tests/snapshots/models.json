@@ -258,7 +258,7 @@
    "4": "prog"
   },
   "modelId": 1376,
-  "name": "Calypso Split",
+  "name": "Domestic hot water",
   "type": "water_heater"
  },
  "1381": {
@@ -288,17 +288,34 @@
   "type": "towel_rack"
  },
  "1388": {
-  "HVACModes": {
-   "0": "off",
-   "4": "heat"
-  },
+  "HVACModes": {},
   "HVACModesCapabilityId": [
    7,
    8
   ],
   "modelId": 1388,
-  "name": "Doris \u00e9troit 1500W BLC",
-  "type": "towel_rack"
+  "name": "Heating circuit (#1)",
+  "type": "zone"
+ },
+ "1389": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1389,
+  "name": "Heating circuit (#2)",
+  "type": "zone"
+ },
+ "1390": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [
+   7,
+   8
+  ],
+  "modelId": 1390,
+  "name": "Heating circuit (#3)",
+  "type": "zone"
  },
  "1444": {
   "HVACModes": {
@@ -1966,6 +1983,188 @@
   "modelId": 227,
   "name": "Naema 2 30",
   "type": "gaz_boiler"
+ },
+ "2295": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2295,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2296": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2296,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2297": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2297,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2298": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2298,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2299": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2299,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2300": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2300,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2301": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2301,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2302": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2302,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2303": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2303,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2304": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2304,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
+ },
+ "2305": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2305,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
+ },
+ "2306": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2306,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
+ },
+ "2307": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2307,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
+ },
+ "2308": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2308,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
+ },
+ "2309": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2309,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2310": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2310,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2311": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2311,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2312": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2312,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2313": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2313,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2314": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2314,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2315": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2315,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2316": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2316,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2317": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2317,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2326": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2326,
+  "name": "Alfea Extensa S",
+  "type": "heat_pump"
+ },
+ "2327": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2327,
+  "name": "Alfea Extensa S Duo",
+  "type": "heat_pump"
+ },
+ "2328": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 2328,
+  "name": "Alfea Extensa S Duo XL",
+  "type": "heat_pump"
  },
  "2345": {
   "HVACModes": {
