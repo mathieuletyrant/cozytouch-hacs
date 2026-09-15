@@ -192,6 +192,12 @@ capture, so a test going green says "nobody changed this by accident", never
   `CapabilityType` members the mapping writes and the ones the platforms match
   on are the same set — a type on one side only is silent both ways, and two
   lived exactly there.
+- `tests/test_hvac_modes.py` — the modes a climate entity ends up offering :
+  the model's table narrowed by capability 100022, which is what a unit built
+  without the cooling kit reports. The masks are read from the table the
+  mapping derives, so a case fails if either half of that derivation moves,
+  and the two refusals are pinned — a mask never adds a mode, and a mask that
+  matches nothing leaves the table alone rather than emptying it.
 
 ## Entries, subentries, identity
 

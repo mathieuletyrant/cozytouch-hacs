@@ -46,6 +46,17 @@ _HVAC_MODE_BITS = (
     (256, "dry"),
 )
 
+# The same masks, keyed by the mode value 7 and 8 carry, so the climate entity
+# can narrow a model's mode table by what capability 100022 says this unit
+# supports. Derived rather than written out, so the two cannot drift apart ;
+# a mode the bit table does not name is absent here and narrows nothing.
+HVAC_MODE_MASKS = {
+    int(value): mask
+    for value, name in _SERVICE_VALUES.items()
+    for mask, bitName in _HVAC_MODE_BITS
+    if bitName == name
+}
+
 _CONTROL_MODE_BITS = (
     (1, "basic"),
     (2, "prog"),
