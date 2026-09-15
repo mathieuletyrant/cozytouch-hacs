@@ -2127,6 +2127,36 @@ carries no underscore. The two away-mode timestamps are the exception,
 `{subentry_id}_0` and `{subentry_id}_1`, and 0 and 1 fall outside every program
 block, so they rule themselves out.
 
+## `custom_components/cozytouch/datetime.py`
+
+### A room reads the absence window, it does not set it
+
+The 2026-08-28 setup view of a Navizone has the away window on the gateway as
+capability 222 — `[1786658400,1787954400]` — and the same pair, to the second,
+on the room slot as 100260. 100260 had no row at all, so it fell through as an
+unnamed id and only appeared with "create entities for unknown capabilities"
+switched on. It is mapped now, with the same `AWAY_MODE_TIMESTAMPS` reading as
+222 and 226.
+
+What the room does not report is a switch: neither 152 nor 227, only 100261,
+which reads whether the absence is on and is a binary sensor. That matters
+because nothing in a datetime entity commits anything — `set_away_mode_start`
+and `set_away_mode_end` stage the value on the hub, and the write happens in
+`set_away_mode_timestamps`, which the away-mode *switch* calls when it is
+turned on. A room would therefore have got two date pickers that accept a date,
+show it, and send nothing: a control that fails silently, which is worse than
+no control.
+
+So the datetime platform builds the pair only for a device that also reports
+one of the ids the table types as `AWAY_MODE_SWITCH`. The set is derived from
+the table rather than listed, so an away-mode switch mapped later brings its
+pickers with it and a device that reports timestamps alone keeps reading them
+as two sensors.
+
+The timezone id stays 315 on the room's row although no room reports it:
+`get_capability_value` answers "0" for an id a device does not carry, which is
+the offset a missing timezone should mean.
+
 ## `custom_components/cozytouch/config_flow.py`
 
 ### One entry per account, one subentry per device
