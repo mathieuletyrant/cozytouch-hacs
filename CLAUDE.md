@@ -221,10 +221,10 @@ coordinator per device on top of it.
    `per_type`, `per_model`), never by changing the shared default. An id the
    row cannot decide — it depends on the value, or on what else the device
    reports — belongs in the chain in `capability.py` instead. A capability whose
-   encoding is unverified belongs in `SELF_DESCRIBING_CAPABILITIES`: named,
-   surfaced as a raw string, and `enabled_by_default` False, so it costs nobody
-   anything until someone turns it on to investigate. Claim a type only where
-   the unit is actually known.
+   encoding is unverified still gets a row: named, `type=STRING`,
+   `category=DIAG` and `enabled_by_default=False`, with neither `bits` nor
+   `reads_as`, so it costs nobody anything until someone turns it on to
+   investigate. Claim a type only where the unit is actually known.
 3. Translations — a new capability name needs an entry in **every** one of
    `strings.json` and the files under `translations/` (en, fr, es, de, it),
    kept in the alphabetical order and column alignment already in the file.
