@@ -605,8 +605,9 @@ from it when a change makes an entry untrue.
 - **Do not widen a shared model branch to fix one product.** Nine ids share
   the ACI HYB branch and six share the air-conditioner branch. Model-specific
   behaviour goes behind `if modelId == …`.
-- **Do not claim a type for a capability whose encoding is unverified.** It
-  belongs in `SELF_DESCRIBING_CAPABILITIES`: named, raw string, off by default.
-  24 ids sit there today.
+- **Do not claim a type for a capability whose encoding is unverified.** Its
+  row says `STRING`, `DIAG` and `enabled_by_default=False`, and sets neither
+  `bits` nor `reads_as`: named, raw, off by default. 30 rows read that way
+  today.
 - **Do not rename entities to tidy up.** Unique ids survive a rename, but the
   friendly name people built dashboards on does not.

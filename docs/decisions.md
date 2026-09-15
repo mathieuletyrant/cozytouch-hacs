@@ -768,9 +768,9 @@ mapping one.
 The vendor's Android app gives its HVAC enum a mask of **6** for `auto` —
 bits 1 and 2 — and matches a member when *any* bit of its mask is set. So
 411 and 415 are the same set of modes, 285 has no unexplained bit, and
-nothing on the wire needs a name it does not have. The masks in
-`CAPABILITY_BIT_FIELDS` are that enum; every value in the capture corpus
-decodes with no bit left over.
+nothing on the wire needs a name it does not have. `_HVAC_MODE_BITS` is
+that enum; every value in the capture corpus decodes with no bit left
+over.
 
 ### What a rename costs here, and what it does not
 
@@ -908,49 +908,64 @@ behind.
 
 ### One table, one row per id, nothing derived
 
-`CAPABILITIES` in `capability_table.py` is the whole mapping : 222 rows, in
+`CAPABILITIES` in `capability_table.py` is the whole mapping : 225 rows, in
 id order, every one an `Entity`. There is no second table and no shorthand
-that expands into it -- the seventy-seven descriptors are written out like
-everything else, because a row you have to know is generated somewhere
-else is a row you cannot read in place.
+that expands into it -- the 86 descriptors are written out like everything
+else, because a row you have to know is generated somewhere else is a row
+you cannot read in place.
 
 `enabled_by_default` has no default. Every row states it, true or false, so
 whether an entity shows up on a device page is answered by reading the row
 rather than by knowing what the field falls back to. A row that omits it
 fails at import, which is the point.
 
-What a dict literal of 222 rows cannot say is that an id is written twice :
+What a dict literal of 225 rows cannot say is that an id is written twice :
 Python keeps the last one silently. So a test parses this file and counts
 the keys, rather than reading the table back, where the duplicate is
 already gone.
 
 ### Twenty descriptors read as what they are, and the ones left alone
 
-`SELF_DESCRIBING_CAPABILITIES` used to say "the name is everything we
-know", one name per id. For twenty ids that stopped being true once the
-vendor app's readers were read (`research/data/android_capability_types.tsv`),
-so the table has a second column and `STRING` is what most rows still say.
-They stay diag and stay **off by default**: knowing the encoding is not a
-reason to put twenty more entities on everybody's device page, and the
-flag is what makes the descriptor family cost nothing.
+There was a `SELF_DESCRIBING_CAPABILITIES` table saying "the name is
+everything we know", one name per id. For twenty ids that stopped being
+true once the vendor app's readers were read
+(`research/data/android_capability_types.tsv`), and `STRING` is still what
+most of them say. They stay diag and stay **off by default**: knowing the
+encoding is not a reason to put twenty more entities on everybody's device
+page, and the flag is what makes the descriptor family cost nothing.
 
-The type lives in that table and not in the `elif` chain on purpose. A
-branch would have to restate the name, the category and the flag for each
-of the twenty, and the coverage test that walks this table and asserts
-"arrives switched off" would stop reaching them -- twenty diagnostic
-entities silently turning themselves on breaks no test. A second dict
-keyed by the same ids was the first shape and was worse: two rows to keep
-in step for one fact.
+That table is gone, and so are the three decoding ones beside it
+(`CAPABILITY_BIT_FIELDS`, `CAPABILITY_VALUE_SPACES`,
+`CAPABILITY_SPEED_SETS`). All four folded into the `Entity` row: a
+descriptor is a row saying `STRING`, `DIAG` and `enabled_by_default=False`,
+and a decoding is that row's `bits` or `reads_as` -- 20 rows carry `bits`
+today and 12 carry `reads_as`. The shared spaces are module-private tuples
+the rows point at (`_HVAC_MODE_BITS`, `_SERVICE_VALUES`, `_SPEED_SETS`),
+which is what keeps two ids in one space from drifting apart.
 
-The three decoding tables -- `CAPABILITY_BIT_FIELDS`,
-`CAPABILITY_VALUE_SPACES`, `CAPABILITY_SPEED_SETS` -- do **not** merge
-into it, for a reason that is not taste. They are read by
-`describe_capability_value` at every poll, with the value; this table is
-read once at setup, without it. Capability 166 is why that matters: its
+The type lives on the row and not in a branch of its own, and that part is
+unchanged. A branch would have to restate the name, the category and the
+flag for each of the twenty, and the coverage test that walks this table
+and asserts "arrives switched off" would stop reaching them -- twenty
+diagnostic entities silently turning themselves on breaks no test.
+
+**The merge reversed an argument this entry used to make, and the property
+it protected still holds.** The three decoding tables were kept separate
+because they are read with the value at every poll while the descriptor
+table is read once at setup, and capability 166 is why that matters: its
 mask shrinks with the season, so a decoding settled at setup would show
-last winter's modes until Home Assistant restarts. Merging the three into
-one column would also mean one column holding three shapes plus a tag
-saying which -- the dict a row sits in is that tag already.
+last winter's modes until Home Assistant restarts. What makes the merge
+safe is that `describe_capability_value` reads `bits` and `reads_as` off
+the row at every call rather than resolving them when the entity is built,
+so the row is read twice for different things -- once at setup for the
+name, the type and the category, and again on each poll for the decoding.
+Anything that pre-resolves a row's decoding puts 166 back.
+
+`bits` and `reads_as` stay two fields rather than one, for the reason the
+`Entity` docstring gives: 4 read as a sum is the third flag and looked up
+whole it is the fourth member, both readings look sensible, and only the id
+says which. A row setting both fails
+`test_no_row_decodes_its_value_two_ways`.
 
 - **Minutes** (296, 307, 331, 332, 333): the app reads them with
   `toIntOrNull` in its prog-in-range feature, and 331 reads 1440 on eleven
@@ -1012,9 +1027,10 @@ both copies of the class, and 257 is in the corpus.
 
 These two ids are not a bitmask and not a member of an enum : one number
 picks a whole set of speeds. The vendor's app has the mechanism as its own
-method, `buildListFromValue`, next to `fromBitField` and `fromValue`, which
-is why `CAPABILITY_SPEED_SETS` is its own table here rather than an entry
-in `CAPABILITY_VALUE_SPACES` it happened to fit.
+method, `buildListFromValue`, next to `fromBitField` and `fromValue`. Here
+the two ids read it through `reads_as`, pointing at `_SPEED_SETS` -- a
+value looked up whole, which is the same shape as an enum and not the same
+thing, and why `reads_as` is not called `values`.
 
 `SpeedAirMixingState` and `VentilationSpeedMode` carry the same table, and
 **`4` returns the auto speed alone** -- it used to read here as "on, auto",
@@ -1283,8 +1299,8 @@ around them are small enumerations. Neither the API nor the iOS app says so
 in any readable form -- three passes over the iOS binary logged the DHW
 masks (168, 336, 105012) as unresolved. The **Android** app settles it: its
 capability layer is Kotlin rather than compiled Swift, so the enums, their
-masks and their API values are readable as source. `CAPABILITY_BIT_FIELDS`
-and `CAPABILITY_VALUE_SPACES` are that reading.
+masks and their API values are readable as source. The `bits` and
+`reads_as` a row carries are that reading.
 
 Two properties of it matter when editing them.
 
@@ -1342,9 +1358,8 @@ a different bound from 236, which the app calls
 `DHW_MAX_NUMBER_MILESTONE_PER_DAY` -- ranges and milestones are two things,
 and a mapping that merges them reads one device's limit onto the other.
 
-105011 carries the same `DHWMode` mask as 168, so it is a line in
-`CAPABILITY_BIT_FIELDS` pointing at the table 168 already uses, the way 105012
-pairs with 223.
+105011 carries the same `DHWMode` mask as 168, so its row's `bits` points at
+`_DHW_MODE_BITS`, the table 168 already uses, the way 105012 pairs with 223.
 
 What the enum does **not** settle is the encoding of 105122. The name says a
 Unix timestamp and the fork this was compared against reads it as one, but no
@@ -1402,8 +1417,8 @@ seen one move.
 
 102006 is the one the corpus actually decodes: 285 is
 1|4|8|16|256 against `_AIR_CIRCULATION_MODE_BITS` -- off, auto season, cool,
-heat, dry -- with no bit left over. So it is a line in `CAPABILITY_BIT_FIELDS`
-pointing at the table 102005 already uses. 102005 is
+heat, dry -- with no bit left over. So its row's `bits` points at the table
+102005 already uses. 102005 is
 `AIR_MIXING_MODES_SUPPORTED` and 102006 is `..._AVAILABLE`; the supported /
 available pair is kept in the names because the app keeps it.
 
