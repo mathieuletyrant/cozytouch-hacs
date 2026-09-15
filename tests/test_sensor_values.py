@@ -28,7 +28,6 @@ from custom_components.cozytouch.sensor import (
     CozytouchErrorCodeSensor,
     CozytouchProgSensor,
     CozytouchProgTimeSensor,
-    CozytouchTimeSensor,
     CozytouchTimezoneSensor,
     CozytouchUnitSensor,
     decode_error_code,
@@ -67,36 +66,6 @@ def sensor(cls, value, capability=None, **attrs):
     for name, attr in attrs.items():
         setattr(stub, name, attr)
     return stub
-
-
-# ---------------------------------------------------------------- durations
-
-
-@pytest.mark.parametrize(
-    ("minutes", "expected"),
-    [
-        ("0", "00:00"),
-        ("5", "00:05"),
-        ("60", "01:00"),
-        ("65", "01:05"),
-        # A day rolls into a "1d " prefix rather than a 24-hour clock.
-        ("1440", "1d 00:00"),
-        ("1505", "1d 01:05"),
-        ("2880", "2d 00:00"),
-        # More than 99 hours still pads to two digits, it does not truncate.
-        ("10085", "7d 00:05"),
-    ],
-)
-def test_a_duration_reads_as_days_and_a_zero_padded_clock(minutes, expected):
-    """The zero padding is the part a format rewrite can lose: "1:5" instead
-    of "01:05" is the same number and a different string.
-    """
-    got = CozytouchTimeSensor.get_value(sensor(CozytouchTimeSensor, minutes))
-    assert got == expected
-
-
-def test_a_duration_that_is_not_reported_is_not_invented():
-    assert CozytouchTimeSensor.get_value(sensor(CozytouchTimeSensor, None)) is None
 
 
 # ----------------------------------------------------------------- timezone

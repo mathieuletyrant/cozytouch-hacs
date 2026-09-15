@@ -906,6 +906,39 @@ The same method scaled before it looked: `float(value) * self._display_factor`
 on a capability the device had stopped reporting is a TypeError, reachable by
 any ENERGY capability declared in kWh. Guarded in the same place.
 
+### Durations are minutes with a unit, not a formatted clock
+
+Every capability the mapping types `TIME` is a duration, and none of them is
+a time of day. The nine are 159 `override_remain_time_z1`, the boost
+pair (232 `boost_total_time`, 233 `boost_remaining_time`), 102023
+`air_circulation_remaining_time`, and the programming constraints -- 296
+`schedule_minimum_interval`, 307 `heating_period_min_duration`, 331/332 the
+range bounds, 333 `heating_period_max_duration`.
+
+They were rendered by hand into `"%02d:%02d"`, with a `"Nd "` prefix past a
+day. So `heating_period_min_duration`, which a boiler reports as 480, read
+`08:00` on the card -- eight hours shown in exactly the notation that means
+eight o'clock. `heating_period_max_duration` at 1440 read `1d 00:00`, which
+is a day written as if it were not one.
+
+mmnlfrrr/cozytouch@4783f88 found the same thing on an ACI HYB water heater
+and replaced the formatter with another formatter, spelling the units out.
+That fixes the misreading and costs a new module, a new test file, and a
+string with `j` for *jours* baked into it -- this integration ships five
+languages, so a German install would read `2 j 2 h`.
+
+The reading is a number of minutes, so it is reported as one:
+`SensorDeviceClass.DURATION`, `UnitOfTime.MINUTES`,
+`SensorStateClass.MEASUREMENT`, through the `_unit` builder every other
+dimensioned type already goes through. Home Assistant renders and localises
+it, the recorder keeps statistics, and a template can do arithmetic on a
+remaining-boost counter instead of parsing `1d 01:05`. The class it replaces
+is deleted rather than rewritten.
+
+What this gives up: nothing now prints `8 h` in a single glance -- the state
+is `480 min`, which is longer to read and impossible to misread. If a card
+ever wants the spelled-out form, that belongs in the card.
+
 ### The fault-code matrix is decoded, not shown raw
 
 Capabilities 150, 290 and 303 (home, DHW and room fault codes) arrive as a
