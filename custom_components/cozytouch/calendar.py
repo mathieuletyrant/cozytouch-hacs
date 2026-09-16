@@ -4,15 +4,22 @@ from __future__ import annotations
 
 from datetime import datetime, time, timedelta
 import logging
+import re
+from typing import Any
 
-from homeassistant.components.calendar import CalendarEntity, CalendarEvent
+from homeassistant.components.calendar import (
+    CalendarEntity,
+    CalendarEntityFeature,
+    CalendarEvent,
+)
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, PROGRAM_BLOCKS, program_block
+from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS, program_block
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
-from .services import parse_slots
+from .services import build_matrix, parse_slots, slot_limit
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,10 +63,33 @@ def _reports_the_whole_block(hub: Hub, first: int) -> bool:
     )
 
 
+def _in_charge_at(slots: list[dict], moment: time) -> float | None:
+    """The setpoint a day holds at a time, which is the last slot before it."""
+    held = None
+    for slot in slots:
+        if slot["time"] <= moment:
+            held = slot["temperature"]
+
+    return held
+
+
+def _temperature_of(summary: str | None) -> float:
+    """The setpoint somebody typed as an event title, however they spelt it."""
+    try:
+        return float(re.sub(r"[^0-9.,-]", "", summary or "").replace(",", "."))
+    except ValueError:
+        raise HomeAssistantError(
+            f"{summary!r} carries no temperature: name the event after the "
+            "setpoint it holds, for instance '19 °C'"
+        ) from None
+
+
 class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
     """A weekly program, as the week it actually is.
 
-    Read-only : writing a slot is `set_schedule`'s job. See docs/decisions.md.
+    Editable where the device lets it be written : an event is one slot, and
+    every edit lands on that weekday for good, since the week repeats. See
+    docs/decisions.md.
     """
 
     _attr_has_entity_name = True
@@ -81,6 +111,13 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
         # three. See docs/decisions.md.
         self._attr_translation_key = f"{program}_program"
         self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{program}_program"
+
+        if program in WRITABLE_PROGRAM_BLOCKS:
+            self._attr_supported_features = (
+                CalendarEntityFeature.CREATE_EVENT
+                | CalendarEntityFeature.DELETE_EVENT
+                | CalendarEntityFeature.UPDATE_EVENT
+            )
 
     @property
     def event(self) -> CalendarEvent | None:
@@ -141,6 +178,7 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
                             start=start,
                             end=end,
                             summary=f"{slot['temperature']:g} °C",
+                            uid=self._uid(day.weekday(), slot["time"]),
                         )
                     )
 
@@ -172,6 +210,107 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
                 )
 
         return sorted(slots, key=lambda slot: slot["time"])
+
+    def _uid(self, weekday: int, start: time) -> str:
+        """Which slot an event is, which is a weekday and a start time."""
+        return f"{self._program}-{weekday}-{start.hour * 60 + start.minute}"
+
+    def _slot_of(self, uid: str) -> tuple[int, time]:
+        """Read a uid back, refusing one this calendar did not write."""
+        try:
+            program, weekday, minute = uid.rsplit("-", 2)
+            if program != self._program:
+                raise ValueError
+            hours, minutes = divmod(int(minute), 60)
+            return int(weekday), time(hours, minutes)
+        except ValueError:
+            raise HomeAssistantError(
+                f"{uid} is not a slot of the {self._program} program"
+            ) from None
+
+    async def async_create_event(self, **kwargs: Any) -> None:
+        """Add a slot, and restore what ran after it at the event's end."""
+        start = dt_util.as_local(kwargs["dtstart"])
+        end = dt_util.as_local(kwargs["dtend"])
+        temperature = _temperature_of(kwargs.get("summary"))
+
+        weekday = start.weekday()
+        stored = self._slots_for(weekday)
+        # Read before the edit : it is what the day held where this event
+        # stops, and what the next slot has to put back.
+        after = _in_charge_at(stored, end.time())
+
+        slots = [slot for slot in stored if slot["time"] != start.time()]
+        slots.append({"time": start.time(), "temperature": temperature})
+
+        # An event ending mid-day means the drawn block ends there; midnight
+        # or the next day means it runs to the end of the day, which is what
+        # the last slot already does.
+        ends_today = end.date() == start.date() and end.time() != time(0, 0)
+        if (
+            ends_today
+            and after is not None
+            and end.time() > start.time()
+            and not any(slot["time"] == end.time() for slot in slots)
+        ):
+            slots.append({"time": end.time(), "temperature": after})
+
+        await self._write(weekday, slots)
+
+    async def async_delete_event(
+        self,
+        uid: str,
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Drop a slot. The day keeps the one at 00:00. See docs/decisions.md."""
+        weekday, start = self._slot_of(uid)
+        if start == time(0, 0):
+            raise HomeAssistantError(
+                "The slot at 00:00 is what gives the beginning of the day a "
+                "setpoint; change its temperature rather than deleting it"
+            )
+
+        slots = [
+            slot for slot in self._slots_for(weekday) if slot["time"] != start
+        ]
+        await self._write(weekday, slots)
+
+    async def async_update_event(
+        self,
+        uid: str,
+        event: dict[str, Any],
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Rewrite a slot, moving it off its old day first when it moved."""
+        weekday, start = self._slot_of(uid)
+        moved = dt_util.as_local(event["dtstart"])
+
+        if (moved.weekday(), moved.time().replace(second=0, microsecond=0)) != (
+            weekday,
+            start,
+        ):
+            await self.async_delete_event(uid)
+
+        await self.async_create_event(**event)
+
+    async def _write(self, weekday: int, slots: list[dict]) -> None:
+        """Store one day, refusing what the device would not hold."""
+        limit = slot_limit(self.coordinator)
+        if len(slots) > limit:
+            raise HomeAssistantError(
+                f"This device holds {limit} slots a day at most, "
+                f"{len(slots)} would be written"
+            )
+
+        capabilityId = self._first_capability + weekday
+        # build_matrix is set_schedule's, checks included : a first slot at
+        # 00:00, no two slots at the same time.
+        await self.coordinator.set_capability_value(
+            capabilityId, build_matrix(slots)
+        )
+        await self.coordinator.async_request_refresh()
 
     @callback
     def _handle_coordinator_update(self) -> None:

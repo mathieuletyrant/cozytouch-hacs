@@ -135,7 +135,7 @@ def call_with(**data):
 
 def test_a_program_is_stored_as_minutes_since_midnight():
     """The device indexes the day in minutes, not in hours and minutes."""
-    value = services._build_matrix(
+    value = services.build_matrix(
         [
             {"time": time(0, 0), "temperature": 17},
             {"time": time(6, 30), "temperature": 21},
@@ -147,14 +147,14 @@ def test_a_program_is_stored_as_minutes_since_midnight():
 
 def test_the_matrix_is_padded_to_the_ten_slots_the_device_stores():
     """A short matrix leaves the tail of the day at whatever was there."""
-    value = services._build_matrix([{"time": time(0, 0), "temperature": 19}])
+    value = services.build_matrix([{"time": time(0, 0), "temperature": 19}])
 
     assert len(json.loads(value)) == 10
 
 
 def test_the_slots_are_sorted_before_they_are_written():
     """The list is positional : out of order it programs the wrong hours."""
-    value = services._build_matrix(
+    value = services.build_matrix(
         [
             {"time": time(22, 0), "temperature": 17},
             {"time": time(0, 0), "temperature": 19},
@@ -168,7 +168,7 @@ def test_the_slots_are_sorted_before_they_are_written():
 def test_two_slots_at_the_same_time_are_refused():
     """One of them would win silently, and not always the same one."""
     with pytest.raises(ServiceValidationError):
-        services._build_matrix(
+        services.build_matrix(
             [
                 {"time": time(0, 0), "temperature": 19},
                 {"time": time(7, 0), "temperature": 21},
@@ -180,12 +180,12 @@ def test_two_slots_at_the_same_time_are_refused():
 def test_a_day_that_does_not_start_at_midnight_is_refused():
     """The hours before the first slot would have no target temperature."""
     with pytest.raises(ServiceValidationError):
-        services._build_matrix([{"time": time(7, 0), "temperature": 21}])
+        services.build_matrix([{"time": time(7, 0), "temperature": 21}])
 
 
 def test_a_whole_degree_is_written_as_an_integer():
     """21.0 in the payload is not what the app sends, 21 is."""
-    value = services._build_matrix([{"time": time(0, 0), "temperature": 21.0}])
+    value = services.build_matrix([{"time": time(0, 0), "temperature": 21.0}])
 
     assert value.startswith("[[0,21],")
 
@@ -193,7 +193,7 @@ def test_a_whole_degree_is_written_as_an_integer():
 def test_a_program_with_no_slots_is_refused_rather_than_raising():
     """The first-slot check indexes blind; the service is not the only caller."""
     with pytest.raises(ServiceValidationError):
-        services._build_matrix([])
+        services.build_matrix([])
 
 
 # --- what the form sends -----------------------------------------------
@@ -214,7 +214,7 @@ def test_the_time_the_selector_returns_is_accepted(written):
         }
     )
 
-    assert json.loads(services._build_matrix(data["slots"]))[1] == [420, 21]
+    assert json.loads(services.build_matrix(data["slots"]))[1] == [420, 21]
 
 
 def test_a_single_slot_sent_as_a_mapping_is_still_a_list():
@@ -280,7 +280,7 @@ def test_a_day_list_that_names_nothing_real_is_refused(days):
 
 def test_a_device_that_advertises_fewer_slots_is_believed():
     """Capability 306 is the only thing that knows the real ceiling."""
-    assert services._slot_limit(FakeHub({306: "5"})) == 5
+    assert services.slot_limit(FakeHub({306: "5"})) == 5
 
 
 @pytest.mark.parametrize("value", [None, "", "0", "1", "many", "[5]", "99"])
@@ -288,7 +288,7 @@ def test_an_unreadable_slot_count_leaves_the_ten_that_work(value):
     """306 is self-describing and unverified : it may only tighten the check,
     never widen it and never break a write that works today.
     """
-    assert services._slot_limit(FakeHub({306: value})) == services.MAX_SLOTS
+    assert services.slot_limit(FakeHub({306: value})) == services.MAX_SLOTS
 
 
 # --- reading back --------------------------------------------------------
@@ -334,7 +334,7 @@ def test_a_week_that_is_read_back_can_be_written_again_unchanged():
         }
     )
 
-    assert services._build_matrix(data["slots"]) == stored
+    assert services.build_matrix(data["slots"]) == stored
 
 
 # --- resolving the hub ---------------------------------------------------

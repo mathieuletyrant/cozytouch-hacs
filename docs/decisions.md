@@ -1720,7 +1720,7 @@ registry-id spelling is covered under `__init__.py` above.
 
 ## `custom_components/cozytouch/calendar.py`
 
-### The program is a calendar, and read-only
+### The program is a calendar
 
 The program is what these devices are scheduled by — it keeps running when Home
 Assistant is off — and it could only be read as seven strings, one per day,
@@ -1729,10 +1729,35 @@ calendar makes it a week you can look at, and something the `calendar` triggers
 can fire on : "when the program moves to its next setpoint" is an event start,
 which is the shape of an automation nobody could write before.
 
-Writing is `set_schedule`'s job and stays there. An event has a start and an
-end, while a slot has only a start — the next slot is what ends it — and a
-calendar that silently rewrote the following slots would be the wrong place to
-resolve that.
+### The calendar is where the program gets edited
+
+It was read-only at first, because an event has a start and an end while a slot
+has only a start — the next slot is what ends it — and rewriting the following
+slots looked like the wrong thing to do silently. `set_schedule` was the answer,
+and a service call is not an answer for somebody looking at the week in a card.
+
+So the calendar takes the edits, and the rule that was feared is stated instead:
+an event is one slot, and the slot it needs after it. Creating an event drops a
+slot at its start, and a second one at its end carrying whatever the day held
+there — which is exactly the block that was drawn, and leaves the rest of the
+day as it was. An event ending at midnight, or running into the next day, adds
+nothing: the last slot of a day already runs to the end of it.
+
+Deleting an event removes its slot, except the one at 00:00 : `build_matrix`
+refuses a day that does not begin at midnight, so that slot is retitled, never
+deleted. Moving an event off its weekday deletes it on the old day and creates
+it on the new one — two writes, and two capabilities, which is what a weekday
+is here.
+
+The setpoint is read from the event title, since that is the only field the
+calendar dialog offers : anything that parses as a number, so "19", "19 °C" and
+"19,5" all land. A title with no number is refused rather than guessed at.
+
+The week repeats, so every edit is permanent from that weekday on ; there is no
+"only this occurrence", and `recurrence_id` and `recurrence_range` are ignored
+for the same reason. Writing stays gated on `WRITABLE_PROGRAM_BLOCKS`, so the
+hot-water block is still read-only until a capture confirms its encoding, and
+`slot_limit` still caps how many slots a day may hold.
 
 The entity's state is not the useful part : a program that covers the whole day
 means `event` is never None, so the entity sits at `on` for good. What is
