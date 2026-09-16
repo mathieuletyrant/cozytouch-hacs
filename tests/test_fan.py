@@ -17,13 +17,29 @@ runs or does not rather than getting an invented three-speed scale.
 import asyncio
 from types import SimpleNamespace
 
-from custom_components.cozytouch.fan import (
-    AIR_CIRCULATION,
-    AIR_CIRCULATION_SPEED,
-    CozytouchAirCirculationFan,
-)
+from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.fan import CozytouchFan
+from custom_components.cozytouch.infos import CapabilityType
+from custom_components.cozytouch.model import get_model_infos
+
+# The air circulation of a room air conditioner, which is the one device type
+# that reports it. The capability is read from the mapping rather than
+# restated, so a row that stops describing a fan fails these.
+AIR_CIRCULATION = 102024
+AIR_CIRCULATION_SPEED = 102004
+AC_MODEL = 557
 
 SPEEDS = {1: "low", 2: "medium", 3: "high"}
+
+
+def capability_infos(speeds):
+    """What the mapping makes of 102024 on a model naming these speeds."""
+    modelInfos = get_model_infos(AC_MODEL, None, None)
+    modelInfos.AirCirculationSpeeds = dict(speeds)
+
+    return modelInfos, get_capability_infos(
+        modelInfos, AIR_CIRCULATION, "1", {AIR_CIRCULATION, AIR_CIRCULATION_SPEED}
+    )
 
 
 def make_fan(on=True, speed="2", speeds=SPEEDS):
@@ -38,22 +54,37 @@ def make_fan(on=True, speed="2", speeds=SPEEDS):
     async def async_request_refresh():
         return None
 
+    modelInfos, capability = capability_infos(speeds)
+
     coordinator = SimpleNamespace(
         get_capability_value=lambda capabilityId, default="0": values.get(
             capabilityId, default
         ),
-        get_model_infos=lambda: {"AirCirculationSpeeds": dict(speeds)},
+        get_model_infos=lambda: modelInfos,
         set_capability_value=set_capability_value,
         async_request_refresh=async_request_refresh,
         async_write_ha_state=lambda: None,
     )
 
-    fan = CozytouchAirCirculationFan(
-        coordinator=coordinator, config_uniq_id="sub-1"
+    fan = CozytouchFan(
+        coordinator=coordinator,
+        capability=capability,
+        config_title="Chambre",
+        config_uniq_id="sub-1",
     )
     fan.written = written
 
     return fan
+
+
+def test_the_mapping_is_what_says_this_capability_is_a_fan():
+    """The ids live on the row, not in fan.py: the platform builds whatever
+    the table hands it, so a second fan needs a row and no code.
+    """
+    _, capability = capability_infos(SPEEDS)
+
+    assert capability.type is CapabilityType.FAN
+    assert capability.speedCapabilityId == AIR_CIRCULATION_SPEED
 
 
 def test_the_middle_of_three_speeds_is_two_thirds():

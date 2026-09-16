@@ -1690,7 +1690,9 @@ CAPABILITIES: dict[int, Entity] = {
     102004: Entity(
         name="air_circulation_speed",
         type=CapabilityType.SELECT,
-        enabled_by_default=True,
+        # The fan built from 102024 sets this, so the dropdown is redundant
+        # and arrives switched off. See docs/decisions.md.
+        enabled_by_default=False,
         icon="mdi:fan",
         extra={
             "modelList": "AirCirculationSpeeds",
@@ -1756,9 +1758,15 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     102024: Entity(
         name="air_circulation",
-        type=CapabilityType.SWITCH,
+        # A fan as well as a switch : both platforms read this row, the way
+        # CLIMATE feeds a climate entity and a sensor. See docs/decisions.md.
+        type=CapabilityType.FAN,
         enabled_by_default=True,
         icon="mdi:fan",
+        extra={
+            "speedCapabilityId": 102004,
+            "modelList": "AirCirculationSpeeds",
+        },
     ),
     102025: Entity(
         name="air_circulation_time_min",

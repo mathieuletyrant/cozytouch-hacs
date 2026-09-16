@@ -2253,3 +2253,46 @@ triple, so a sixth language would have been complete in the UI and unchecked in
 CI — which reads exactly like passing. The glob means a contributed file is
 held to the same completeness on arrival, and every capability added afterwards
 has to fill it.
+
+### The air circulation is a fan, declared on its own row
+
+Air circulation is one thing the hardware does -- blow air, at a speed -- and
+was three entities: a switch on 102024, a speed select on 102004, a duration
+on 102021. None of Home Assistant's fan vocabulary reached it: not the card,
+not the voice assistants, not the `fan.*` services.
+
+It is a fan now, and the ids live on the row rather than in the platform:
+
+    102024: Entity(
+        name="air_circulation",
+        type=CapabilityType.FAN,
+        extra={"speedCapabilityId": 102004,
+               "modelList": "AirCirculationSpeeds"},
+    ),
+
+`fan.py` knows no capability id at all, so a second device whose fan is some
+other pair of ids costs a row and no code. The duration is deliberately not on
+that row: a Home Assistant fan has no notion of one, so 102021 stays the
+`DURATION_SELECT` it was, beside the fan rather than inside it.
+
+The speeds come from the model (`AirCirculationSpeeds`), which is what turns
+the API's `1`, `2`, `3` into the 0-100 Home Assistant speaks -- 33, 66, 100.
+A model naming no speeds still gets a fan; it runs or does not, rather than
+being given an invented scale.
+
+Two readings are chosen rather than inherited. A fan that is off reads 0%,
+not its last speed, so a card's slider agrees with the state beside it. And a
+speed asked of a stopped fan starts it, in that order, rather than storing a
+setting that visibly does nothing.
+
+Migration 2.4 is what stops the three lines being four. The switch is
+**removed** from the registry -- the switch platform no longer claims 102024,
+so the entry would sit unavailable forever, which is the same reasoning as 2.3
+and capability 312. The select is **disabled** instead, once and not per
+start, because that entity still exists and somebody who wants the dropdown
+back can have it. A removed entity cannot be re-enabled; a disabled one can.
+
+What this costs: an automation pointing at the old switch stops working, and
+says nothing when it does. That is the same trade 2.2 made for the per-day
+program sensors, and the reason the entity is removed rather than left to rot
+is that an unavailable entity is a worse silence than a missing one.

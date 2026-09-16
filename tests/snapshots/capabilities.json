@@ -414,6 +414,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1381,
     "modelList": "AirCirculationSpeeds",
@@ -481,8 +482,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 1381,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -2285,6 +2288,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1457,
     "modelList": "AirCirculationSpeeds",
@@ -2352,8 +2356,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 1457,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -4152,6 +4158,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1505,
     "modelList": "AirCirculationSpeeds",
@@ -4219,8 +4226,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 1505,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -6011,6 +6020,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1641,
     "modelList": "AirCirculationSpeeds",
@@ -6078,8 +6088,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 1641,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -7878,6 +7890,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 1734,
     "modelList": "AirCirculationSpeeds",
@@ -7945,8 +7958,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 1734,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -9768,6 +9783,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 211,
     "modelList": "AirCirculationSpeeds",
@@ -9835,8 +9851,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 211,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -11613,6 +11631,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 2374,
     "modelList": "AirCirculationSpeeds",
@@ -11680,8 +11699,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 2374,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -13482,6 +13503,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 418,
     "modelList": "AirCirculationSpeeds",
@@ -13549,8 +13571,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 418,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -15342,6 +15366,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 557,
     "modelList": "AirCirculationSpeeds",
@@ -15409,8 +15434,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 557,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -17214,6 +17241,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 56,
     "modelList": "AirCirculationSpeeds",
@@ -17281,8 +17309,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 56,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -19075,6 +19105,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 562,
     "modelList": "AirCirculationSpeeds",
@@ -19142,8 +19173,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 562,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -20942,6 +20975,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 76,
     "modelList": "AirCirculationSpeeds",
@@ -21009,8 +21043,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 76,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
@@ -22803,6 +22839,7 @@
    "102004": {
     "capabilityId": 102004,
     "category": "sensor",
+    "enabled_by_default": false,
     "icon": "mdi:fan",
     "modelId": 999999,
     "modelList": "AirCirculationSpeeds",
@@ -22870,8 +22907,10 @@
     "category": "sensor",
     "icon": "mdi:fan",
     "modelId": 999999,
+    "modelList": "AirCirculationSpeeds",
     "name": "air_circulation",
-    "type": "switch"
+    "speedCapabilityId": 102004,
+    "type": "fan"
    },
    "102025": {
     "capabilityId": 102025,
