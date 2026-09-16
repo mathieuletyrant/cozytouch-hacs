@@ -474,6 +474,10 @@
         }
     },
     "issues": {
+        "device_fault": {
+            "title": "{device_name} signale un défaut",
+            "description": "L'appareil remonte le code défaut `{code}`. Atlantic le nomme ainsi :\n\n**{label}**\n\nLeurs propres instructions de réparation :\n\n{repair}\n\nIl n'y a rien à corriger côté Home Assistant. Cet avis disparaît de lui-même dès que l'appareil cesse de remonter le code."
+        },
         "unknown_model": {
             "title": "{device_name} est un modèle que cette intégration ne connaît pas",
             "fix_flow": {

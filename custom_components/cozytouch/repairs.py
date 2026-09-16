@@ -25,6 +25,10 @@ ISSUE_FORM = "unmapped_model.yml"
 
 UNKNOWN_MODEL_ISSUE = "unknown_model_{modelId}"
 
+# One issue per device and code, so two faults on one boiler read as two and
+# a cleared one goes away on its own. See docs/decisions.md.
+FAULT_ISSUE = "fault_{subentry_id}_{code}"
+
 # Where the acknowledgement is kept, so the issue does not come back at each
 # restart at someone who already did their part. See docs/decisions.md.
 REPORTED_MODELS = "reported_models"
@@ -139,6 +143,57 @@ def async_check_model_mapping(hass: HomeAssistant, entry: ConfigEntry) -> None:
             },
             data={"entry_id": entry.entry_id, "model_id": modelId},
         )
+
+
+@callback
+def async_check_faults(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Raise, or clear, an issue per fault the account's devices report.
+
+    Not fixable : nothing Home Assistant does settles a hydraulic pressure
+    fault. The issue is there to say, in the vendor's words, what the device
+    is complaining about. See docs/decisions.md.
+    """
+    raised: set[str] = set()
+
+    for subentry_id, hub in entry.runtime_data.hubs.items():
+        subentry = entry.subentries.get(subentry_id)
+        for described in hub.get_faults().values():
+            for fault in described:
+                issue_id = FAULT_ISSUE.format(
+                    subentry_id=subentry_id, code=fault["code"]
+                )
+                raised.add(issue_id)
+                ir.async_create_issue(
+                    hass,
+                    DOMAIN,
+                    issue_id,
+                    is_fixable=False,
+                    severity=ir.IssueSeverity.ERROR,
+                    translation_key="device_fault",
+                    translation_placeholders={
+                        "device_name": subentry.title if subentry else "",
+                        "code": fault["code"],
+                        "label": fault["label"],
+                        # Kept on one line: a repair card renders markdown, and
+                        # the vendor's newlines turn into one run-on paragraph
+                        # either way.
+                        "repair": fault["repair"] or "-",
+                    },
+                )
+
+    # A fault that cleared, or a device that left, takes its issue with it.
+    for issue_id in _fault_issues(hass) - raised:
+        ir.async_delete_issue(hass, DOMAIN, issue_id)
+
+
+def _fault_issues(hass: HomeAssistant) -> set[str]:
+    """Every fault issue this integration currently has open."""
+    registry = ir.async_get(hass)
+    return {
+        issue_id
+        for (domain, issue_id) in registry.issues
+        if domain == DOMAIN and issue_id.startswith("fault_")
+    }
 
 
 class UnknownModelRepairFlow(RepairsFlow):

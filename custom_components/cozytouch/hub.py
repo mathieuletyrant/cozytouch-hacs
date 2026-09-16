@@ -18,6 +18,7 @@ from homeassistant.helpers.update_coordinator import (
 )
 from homeassistant.util import dt as dt_util
 
+from . import faults
 from .account import (
     API_DECLARED_FIELDS,
     CozytouchAccount,
@@ -28,6 +29,7 @@ from .capability import get_capability_infos
 from .const import DOMAIN
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
 from .model import CozytouchDeviceType, get_device_model_infos, get_model_infos
+from .repairs import async_check_faults
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -115,6 +117,7 @@ class AccountCoordinator(DataUpdateCoordinator):
         )
         self._account = account
         self._hubs = hubs
+        self._entry = config_entry
 
         # Without a listener of its own, this coordinator never reschedules
         # and no poll follows setup's first one. See docs/decisions.md.
@@ -149,6 +152,11 @@ class AccountCoordinator(DataUpdateCoordinator):
         """Tell every hub its device has a fresh capability list."""
         for hub in self._hubs.values():
             await hub.async_account_updated()
+
+        # Once the hubs have read the poll, not once per hub: the check looks
+        # at the whole account, and only once it has one to look at.
+        if getattr(self._entry, "runtime_data", None) is not None:
+            async_check_faults(self.hass, self._entry)
 
     def _publish_error(self, err: Exception) -> None:
         """Mark every device unavailable, since the account they share failed."""
@@ -216,6 +224,10 @@ class Hub(DataUpdateCoordinator):
         self._subentry_id = subentry_id
         self._deviceId = deviceId
         self._create_unknown = False
+        # What the vendor's table says about the faults this device is
+        # reporting now, per capability id. Empty on a healthy device, which
+        # is what spends no request. See docs/decisions.md.
+        self._faults: dict[int, list[dict]] = {}
 
         # Staged rather than sent, so both ends can be set before either is
         # committed. See docs/decisions.md.
@@ -253,7 +265,51 @@ class Hub(DataUpdateCoordinator):
         Nothing left to fetch : the values are already on `account.devices`.
         """
         await self._commit_staged_away_mode()
+        await self._refresh_faults()
         self.async_set_updated_data(None)
+
+    async def _refresh_faults(self) -> None:
+        """Name the faults the device reports, in the vendor's own words.
+
+        Reads the table only when a code is actually active, so a healthy
+        account never asks for one. See docs/decisions.md.
+        """
+        active = {
+            capabilityId: rows
+            for capabilityId in faults.FAULT_CAPABILITIES
+            if (
+                rows := faults.active_rows(
+                    self.get_capability_value(capabilityId, None)
+                )
+            )
+        }
+
+        if not active:
+            self._faults = {}
+            return
+
+        modelId = self.get_model_id()
+        table = (
+            await self._account.fetch_fault_table(modelId)
+            if modelId is not None
+            else []
+        )
+
+        self._faults = {
+            capabilityId: described
+            for capabilityId, rows in active.items()
+            if (
+                described := [
+                    fault
+                    for row in rows
+                    if (fault := faults.describe(table, row)) is not None
+                ]
+            )
+        }
+
+    def get_faults(self) -> dict[int, list[dict]]:
+        """The named faults this device is reporting, per capability id."""
+        return self._faults
 
     async def _async_update_data(self):
         """Fetch this one device, for a refresh that could not wait.
@@ -284,6 +340,7 @@ class Hub(DataUpdateCoordinator):
 
         self._account.store_capabilities(self._deviceId, capabilities)
         await self._commit_staged_away_mode()
+        await self._refresh_faults()
 
     async def _commit_staged_away_mode(self) -> None:
         """Send the away window once both ends have stopped moving.

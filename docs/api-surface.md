@@ -87,7 +87,7 @@ because they all went under `refs/` and `capabilities/`:
 | Route | What it answers |
 | ----- | --------------- |
 | `GET /magellan/productmodels/models/{modelId}` | 200 with `longName`, `name`, `commercialReference`, `productId`; 404 `Model Id 'N' not found.` otherwise |
-| `GET /magellan/productmodels/models/{modelId}/detailederrors` | 400 asking for `ParentErrorCode` and `ChildErrorCode`; not pursued |
+| `GET /magellan/productmodels/models/{modelId}/detailederrors` | **used.** The model's whole fault table, labels included. The parameters the 400 asks for are optional; see below |
 
 It is keyed on a *model* id rather than a device, and is not scoped to the
 account asking -- a model nobody on the account owns answers the same way.
@@ -108,6 +108,42 @@ branches: of the 110 mapped ids the catalogue also names, 65 carry the vendor's
 name character for character, seven disagreed on a point of fact and were
 changed, and the rest are the room and interface slots and the readable names
 this table keeps where the catalogue has an internal reference.
+
+### detailederrors answers the whole table, and the codes match (16/09/2026)
+
+The 400 above names `ParentErrorCode` and `ChildErrorCode`, which reads like a
+lookup taking two required parameters. It is not one: called with neither, the
+route answers **every** fault row the model has -- 59 for the Naema 2 Micro 25
+(modelId 56), 43 for the Alfea Extensa Duo AI UE (76). Passing parameters
+changes nothing in the answer.
+
+A row carries `parentErrorLabel`, `probableCauseErrorLabel` and
+`repairInstructionsLabel`, plus a child triplet for the sub-faults of one
+parent -- which is how the heat pump's outdoor-unit errors are written.
+
+What makes it usable is that `parentProductErrorCode` is the fault-code matrix
+row, packed. The row is `[system, majorCode, minorCode, level]`, the vendor's
+interface displays it dotted, and the table carries the four fields one per
+byte:
+
+    40.13.0.3  ->  (40<<24)|(13<<16)|(0<<8)|3  =  671940611
+    40.01.0.3  ->                                 671154179
+    10.15.0.3  ->                                 168755203
+
+Three codes on two models, all three exact. That is what the integration looks
+a fault up by (`faults.py`).
+
+Three limits, measured:
+
+- **Air conditioners have no table.** 557 and 1758 answer 404
+  `ErrorCodeNotFound`. This is boiler, heat-pump and water-heater territory,
+  which is also where the `ERROR_CODE` capabilities live.
+- **The language is the account's.** `Accept-Language: en-GB` returns the same
+  French labels. Nothing tried so far changes it, and no non-French account
+  has been seen.
+- **Two code spaces coexist.** Most rows carry a small `parentProductErrorCode`
+  (4 to 516) with an empty `parentIhmErrorCode` -- generator codes rather than
+  interface ones, and nothing yet says which capability reports them.
 
 ## There is no capability catalogue
 

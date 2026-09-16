@@ -474,6 +474,10 @@
         }
     },
     "issues": {
+        "device_fault": {
+            "title": "{device_name} segnala un guasto",
+            "description": "Il dispositivo segnala il codice di guasto `{code}`. Atlantic lo chiama:\n\n**{label}**\n\nLe loro istruzioni di riparazione:\n\n{repair}\n\nNon c'è nulla da correggere in Home Assistant. Questo avviso scompare da solo quando il dispositivo smette di segnalare il codice."
+        },
         "unknown_model": {
             "title": "{device_name} è un modello che questa integrazione non conosce",
             "fix_flow": {

@@ -183,6 +183,8 @@ def coordinator_over(account, hubs):
     coordinator = object.__new__(AccountCoordinator)
     coordinator._account = account
     coordinator._hubs = hubs
+    # No entry, so the poll publishes without looking for faults to report.
+    coordinator._entry = None
 
     return coordinator
 

@@ -474,6 +474,10 @@
         }
     },
     "issues": {
+        "device_fault": {
+            "title": "{device_name} reports a fault",
+            "description": "The device is reporting fault code `{code}`. Atlantic names it:\n\n**{label}**\n\nTheir own repair instructions:\n\n{repair}\n\nThere is nothing for Home Assistant to fix here. This notice clears by itself once the device stops reporting the code."
+        },
         "unknown_model": {
             "title": "{device_name} is a model this integration does not know",
             "fix_flow": {

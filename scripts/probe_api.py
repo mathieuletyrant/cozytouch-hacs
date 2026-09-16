@@ -15,7 +15,16 @@ Run from the repository root:
     COZYTOUCH_USER=you@example.com \     # shell history
       COZYTOUCH_PASS_FILE=~/.cozytouch-pass \
       python3 scripts/probe_api.py [--new-routes] [--explore] [--cadence]
+                                   [--errors [modelId]]
     rm -f ~/.cozytouch-pass
+
+`--errors` asks whether the vendor will name a fault code. The fault-code
+matrix is decoded but never translated (docs/decisions.md), because the
+string table is Atlantic's. `productmodels/models/{id}/detailederrors` answers
+400 naming `ParentErrorCode` and `ChildErrorCode` -- which are the matrix row's
+`majorCode` and `minorCode` -- so their server may name the one code a device
+is actually reporting, with nothing redistributed. It needs no fault of your
+own: the model catalogue is not scoped to the account asking.
 
 `--cadence` answers a different question from the rest: not what a route
 returns but how *fresh* it is. It compares `modificationDate` between the setup
@@ -138,15 +147,15 @@ def token() -> str:
         )
 
 
-def get(url: str, access_token: str):
+def get(url: str, access_token: str, language: str | None = None):
     """GET a route, returning (status, parsed body or error text)."""
-    req = urllib.request.Request(
-        url,
-        headers={
-            "Authorization": f"Bearer {access_token}",
-            "Content-Type": "application/json",
-        },
-    )
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+    }
+    if language:
+        headers["Accept-Language"] = language
+    req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=20) as response:
             return response.status, json.loads(response.read().decode())
@@ -275,6 +284,58 @@ def cadence(access_token: str, deviceId: int, rounds: int, every: int) -> None:
     )
 
 
+# One of each family the account or the table can speak for: a gas boiler, a
+# heat pump, a room air conditioner, a hub. Overridden by the ids after
+# --errors.
+ERRORS_MODELS = (56, 76, 557, 1758)
+
+_ERRORS_BASE = "/magellan/productmodels/models/{model}/detailederrors"
+
+# The pair a matrix row would be looked up by, twice over: the vendor ships a
+# product code and an IHM code and nothing yet says which one the fault-code
+# capability carries.
+ERRORS_CODE_FIELDS = (
+    "parentProductErrorCode",
+    "parentIhmErrorCode",
+    "childProductErrorCode",
+    "childIhmErrorCode",
+)
+
+
+def detailed_errors(access_token: str, models: tuple[int, ...]) -> None:
+    """Dump the vendor's fault table for each model, and ask what language.
+
+    The route takes no parameters -- it answers the whole table -- so this is
+    one read per model. What it has to settle is which of the two code fields
+    a matrix row's majorCode/minorCode matches, and whether the labels follow
+    Accept-Language or the account's own country.
+    """
+    for model in models:
+        route = API + _ERRORS_BASE.format(model=model)
+        status, body = get(route, access_token)
+        print(f"=== detailederrors: model {model} -> {status}")
+
+        if not isinstance(body, list):
+            print(f"  {str(body)[:200]}\n")
+            continue
+
+        print(f"  {len(body)} rows")
+        for row in body:
+            codes = " ".join(
+                f"{field.replace('ErrorCode', '')}={row.get(field)}"
+                for field in ERRORS_CODE_FIELDS
+            )
+            label = (row.get("parentErrorLabel") or "").strip()
+            child = (row.get("childErrorLabel") or "").strip()
+            print(f"    {codes} | {label}" + (f" / {child}" if child else ""))
+
+        # Same table in English, or the same French either way.
+        _, english = get(route, access_token, language="en-GB")
+        if isinstance(english, list) and english:
+            print(f"  en-GB first label: {english[0].get('parentErrorLabel')!r}")
+        print()
+
+
 def main() -> None:
     """Probe the setup view, then each route in turn."""
     if not os.environ.get("COZYTOUCH_USER"):
@@ -319,6 +380,13 @@ def main() -> None:
     else:
         print(f"  unexpected payload: {str(setup)[:200]}")
     print()
+
+    if "--errors" in sys.argv:
+        after = [arg for arg in sys.argv[sys.argv.index("--errors") + 1:]
+                 if arg.isdigit()]
+        models = tuple(int(arg) for arg in after) or ERRORS_MODELS
+        detailed_errors(access_token, models)
+        return
 
     if "--cadence" in sys.argv and device_ids:
         cadence(access_token, device_ids[0], rounds=40, every=15)
