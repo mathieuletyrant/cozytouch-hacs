@@ -324,7 +324,7 @@ sensor, *turned on* from the away-mode switch, *HVAC mode changed* from the
 climate entity. Conditions and actions about presets come from the `climate`
 domain the same way.
 
-### Seeing the program
+### Seeing and editing the program
 
 A device that holds a program also gets a calendar entity for it -- *Heating
 Program*, *Cooling Program*, *Hot Water Program*, whichever of the three it
@@ -338,10 +338,21 @@ rows per air conditioner said the same thing worse. Nothing is removed -- a
 dashboard or template that reads one can have it back from the device page,
 under the disabled entities, and it stays enabled from then on.
 
-They are read-only : a calendar event has a start and an end, a program slot
-has only a start, so writing one back would mean deciding what happens to the
-slots after it. `Cozytouch: Set a day program` is where that decision is
-spelled out.
+The heating and cooling calendars are editable from the card itself, which is
+the point of them : add an event and that slot is added, drag or resize one and
+it moves, delete one and it goes. The title is the target temperature -- "19",
+"19 °C" and "19,5" all work, a title with no number in it is refused.
+
+Two things follow from a slot having only a start. An event that ends before
+the end of the day adds a second slot there, putting back whatever the day held
+after it, so the block drawn is the block that runs. And the slot at 00:00
+cannot be deleted, since the beginning of a day must have a setpoint : retitle
+it instead.
+
+Every edit lands on that weekday for good -- the week repeats, there is no
+"only this occurrence". The hot water calendar stays read-only until somebody
+captures how that block is written ; `Cozytouch: Set a day program` remains the
+way to write several days at once from an automation.
 
 What they are good for besides looking at them is the `calendar` triggers,
 since an event starting *is* the program moving to its next setpoint :

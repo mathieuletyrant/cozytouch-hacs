@@ -91,8 +91,12 @@ GET_SCHEDULE_SCHEMA = vol.Schema(
 )
 
 
-def _build_matrix(slots: list[dict]) -> str:
-    """Turn slots into the [[minutes,temperature],...] string the device stores."""
+def build_matrix(slots: list[dict]) -> str:
+    """Turn slots into the [[minutes,temperature],...] string the device stores.
+
+    Public because calendar.py writes programs through it too, so the two
+    cannot disagree about what a day may hold.
+    """
     entries = sorted(
         (
             (slot["time"].hour * 60 + slot["time"].minute, slot["temperature"])
@@ -155,8 +159,10 @@ def parse_slots(value: str | None, capabilityId: int | None = None) -> list[dict
     return slots
 
 
-def _slot_limit(hub) -> int:
+def slot_limit(hub) -> int:
     """How many slots a day may hold on this device.
+
+    Public for the same reason as build_matrix above.
 
     Capability 306 is self-describing and its encoding is unverified, so it is
     trusted only when it reads as a plain count, and only to lower the ceiling.
@@ -221,13 +227,13 @@ def async_register_services(hass: HomeAssistant) -> None:
     async def async_set_schedule(call: ServiceCall) -> None:
         """Write the same day program to every requested day."""
         slots = call.data["slots"]
-        value = _build_matrix(slots)
+        value = build_matrix(slots)
         first = WRITABLE_PROGRAM_BLOCKS[call.data["program"]]
 
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
 
-            limit = _slot_limit(hub)
+            limit = slot_limit(hub)
             if len(slots) > limit:
                 raise ServiceValidationError(
                     f"{entity_id} holds {limit} slots a day at most, "

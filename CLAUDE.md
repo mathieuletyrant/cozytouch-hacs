@@ -146,7 +146,10 @@ capture, so a test going green says "nobody changed this by accident", never
   the week repeats over a range, that a slot which began before the window is
   still the one in charge at its start, and that a calendar exists only for a
   block the device reports in full -- one case per block, since the three runs
-  (196, 203, 237) are the whole of what it reads. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
+  (196, 203, 237) are the whole of what it reads. Its second half is the
+  editing : what an event created, moved or deleted from a card writes into the
+  day's matrix, the slot at 00:00 that cannot be deleted, and the hot-water
+  block still refusing to be written. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
   test process, which is what makes the expected datetimes readable.
 - `tests/test_prog_visibility.py` — the per-day program sensors giving way to
   the calendar : that a whole block's days arrive disabled by default and a
