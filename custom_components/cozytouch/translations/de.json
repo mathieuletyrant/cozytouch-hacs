@@ -181,6 +181,9 @@
             "away_mode_start":  { "name": "Beginn Abwesenheitsmodus" },
             "away_mode_stop":   { "name": "Ende Abwesenheitsmodus" }
         },
+        "fan": {
+            "air_circulation":  { "name": "Luftumwälzung" }
+        },
         "number": {
             "away_mode_temperature":      { "name": "Temperatur im Abwesenheitsmodus" },
             "boost_timeout_max":          { "name": "Max. Boost-Dauer" },

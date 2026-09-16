@@ -181,6 +181,9 @@
             "away_mode_start":  { "name": "Away Mode Start" },
             "away_mode_stop":   { "name": "Away Mode Stop" }
         },
+        "fan": {
+            "air_circulation":  { "name": "Air Circulation" }
+        },
         "number": {
             "away_mode_temperature":      { "name": "Away Mode Temperature" },
             "boost_timeout_max":          { "name": "Boost Timeout Max." },
