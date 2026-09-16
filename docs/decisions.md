@@ -2356,3 +2356,91 @@ What this costs: an automation pointing at the old switch stops working, and
 says nothing when it does. That is the same trade 2.2 made for the per-day
 program sensors, and the reason the entity is removed rather than left to rot
 is that an unavailable entity is a worse silence than a missing one.
+
+## `custom_components/cozytouch/www/cozytouch-schedule-card.js`
+
+The calendar came first and is the wrong shape for this. Home Assistant's
+calendar card draws a week as a diary : one column per day, events as boxes,
+and the setpoint typed into an event's *title* because a calendar event has
+nowhere else to put a number. It works, and every one of those is a
+concession. Nothing stops a title being "lunch", nothing shows Tuesday and
+Wednesday differ at a glance, and copying a day means retyping it.
+
+What a weekly program actually is, is a 7×24 grid. So the card draws that.
+A cell is an hour, coloured by the setpoint in charge then; clicking one
+paints the current brush onto it. That is the whole interaction, and it works
+on a phone, which a drag-and-resize calendar does not.
+
+### Why it ships inside the integration
+
+`nielsfaber/scheduler-card` is the obvious alternative and cannot do this. It
+schedules from Home Assistant : it calls `climate.set_temperature` when a
+cron-ish trigger fires, so the program lives in Home Assistant's database and
+stops when Home Assistant stops. This card writes capabilities 196-202 or
+203-209 through `cozytouch.set_schedule`, which is the program the device runs
+on its own. The distinction is not academic -- a house heats correctly through
+a Home Assistant upgrade only in the second case.
+
+That is also why the card is a file in `www/` served by the integration,
+rather than a separate HACS frontend plugin. The card and the service it
+writes through are one thing; shipping them apart means a version pair that
+can be wrong, and a second HACS repo to keep for one file. The static path is
+registered once per Home Assistant, not per config entry.
+
+### Served, not loaded
+
+`add_extra_js_url` would load it automatically, and is the sanctioned way to
+do that -- its docstring in `frontend/__init__.py` says in as many words that
+it exists for custom integrations, and no core integration calls it. It is
+still not used here. It loads the file on *every* frontend page for *every*
+user of the installation, and this card is for the households that edit a
+program, which is not all of them. 11 KB is nothing; a script in everyone's
+page that most of them will never render is not nothing.
+
+So the integration serves the URL and stops there. Somebody who wants the
+card adds `/cozytouch/cozytouch-schedule-card.js` as a dashboard resource,
+once. That is one manual step at install against no cost for anyone who skips
+it, and it is the step every HACS frontend plugin asks for anyway.
+
+The static path is registered with `cache_headers=False`. The alternative was
+a `?v=` carrying the manifest version, which works only while the integration
+writes the url itself -- here the user typed it, and an update must not need
+them to retype it. Revalidating an 11 KB file the browser only fetches on a
+dashboard load is cheaper than that trap.
+
+### The rules the grid enforces
+
+An hour owns its cell. Painting hour 7 replaces anything that started between
+07:00 and 07:59, rather than adding a second slot the grid could not draw --
+otherwise a program edited through the card and the same program edited
+through `set_schedule` would drift into shapes the card renders as a lie.
+
+A day holds ten slots, mirroring `MAX_SLOTS` in `services.py`. The card checks
+before painting rather than letting the service refuse, because a refusal
+after seven days were edited loses the other six. It does **not** read
+capability 306 : the frontend has no hub, and 306 only ever tightens the
+ceiling, so the worst case is the service refusing what the card allowed.
+
+00:00 cannot be erased, for the reason `build_matrix` refuses it -- the
+beginning of a day must have a setpoint. Repainting it is allowed, which is
+the thing somebody erasing it actually wanted.
+
+Edits are local until *Save*, and only the touched days are written. A paint
+is one click and a write is an API call per day; writing on every click would
+be seven calls to move one boundary, against an API that answers a poll with
+429 often enough that `hub.py` has a backoff for it.
+
+### The colour scale
+
+Hue runs across the setpoints the program actually uses, not across the card's
+`min` and `max`. A week between 19 and 21 would otherwise be three shades of
+the same blue, which is exactly the week somebody opens the card to inspect.
+
+### What is not tested by CI
+
+`tests/test_schedule_card.mjs` holds `applyPaint` and `inChargeAt` to the
+rules above and runs under `node --test`. CI has no javascript job and is not
+getting one for two functions, so it is run by hand. The two functions are
+exported, and the class extends a `CardBase` that falls back to a bare class
+outside a browser, purely so that file can import them without a DOM. The
+rendering is not covered.

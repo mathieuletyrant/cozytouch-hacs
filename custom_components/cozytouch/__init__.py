@@ -1,6 +1,9 @@
 """The Atlantic Cozytouch integration."""
 from __future__ import annotations
 
+from pathlib import Path
+
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -33,6 +36,32 @@ PLATFORMS: list[Platform] = [
 ]
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+CARD_URL = f"/{DOMAIN}/cozytouch-schedule-card.js"
+CARD_SERVED = f"{DOMAIN}_card_served"
+
+
+async def _async_serve_card(hass: HomeAssistant) -> None:
+    """Serve the schedule card, once for all config entries.
+
+    Served but not loaded : somebody who wants it adds CARD_URL as a
+    dashboard resource. See docs/decisions.md.
+    """
+    if hass.data.get(CARD_SERVED):
+        return
+
+    hass.data[CARD_SERVED] = True
+    await hass.http.async_register_static_paths(
+        [
+            StaticPathConfig(
+                CARD_URL,
+                str(Path(__file__).parent / "www" / "cozytouch-schedule-card.js"),
+                # Not cached, so an update lands without anyone editing the
+                # resource url they typed once. See docs/decisions.md.
+                False,
+            )
+        ]
+    )
 
 
 def _setting(entry: ConfigEntry, key: str) -> bool:
@@ -165,6 +194,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
 
     entry.async_on_unload(entry.add_update_listener(_async_entry_updated))
     async_register_services(hass)
+    await _async_serve_card(hass)
 
     # Retried with backoff until the network is back ; a refused password
     # comes out as ConfigEntryAuthFailed instead. See docs/decisions.md.

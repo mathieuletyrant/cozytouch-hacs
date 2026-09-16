@@ -373,6 +373,46 @@ The times are read in Home Assistant's own timezone. The device stores minutes
 past midnight and nothing in the API says which clock those belong to, so a hub
 in a different timezone from the house it heats would show the program shifted.
 
+### The schedule card
+
+A calendar is a diary, and a weekly program is a grid. The integration ships
+a card that draws it as one -- seven rows, twenty-four columns, each cell
+coloured by the setpoint in charge at that hour:
+
+```yaml
+type: custom:cozytouch-schedule-card
+entity: climate.salon
+program: cooling     # or heating ; heating is the default
+title: Salon cooling # optional
+```
+
+No HACS frontend repository to add : the integration serves the card itself.
+Declare it once, in **Settings → Dashboards → ⋮ → Resources → Add**, as a
+**JavaScript module**:
+
+```
+/cozytouch/cozytouch-schedule-card.js
+```
+
+Restart Home Assistant first if the integration was just installed -- the URL
+only exists once it has started. The file is served uncached, so an update
+arrives on a browser refresh and the resource never needs editing again.
+
+Pick a temperature -- one of the swatches, which are the setpoints the program
+already uses, or the box beside them -- and click cells to paint it. **Erase**
+turns clicking into removing the slot that starts in that hour. The ⧉ at the
+end of a row copies that day over the rest of the week. Nothing is sent until
+**Save**, which writes only the days that changed.
+
+The same two rules the service has apply : a day holds ten slots at most, and
+the slot at 00:00 cannot be removed, only repainted. Heating and cooling only,
+for the same reason `set_schedule` covers those two.
+
+This writes the program **into the device**, which is the difference between
+it and `scheduler-card` or a Home Assistant automation : those fire a service
+call at a time of day, so they stop working when Home Assistant does. What
+this card writes is what the unit runs on its own.
+
 ## 🏷️ Versioning
 
 Releases use CalVer : `YEAR.MONTH.PATCH` (ex : `2026.8.0`).
