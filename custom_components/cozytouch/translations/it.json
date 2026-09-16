@@ -181,6 +181,9 @@
             "away_mode_start":  { "name": "Inizio modalità assenza" },
             "away_mode_stop":   { "name": "Fine modalità assenza" }
         },
+        "fan": {
+            "air_circulation":  { "name": "Circolazione dell'aria" }
+        },
         "number": {
             "away_mode_temperature":      { "name": "Temperatura modalità assenza" },
             "boost_timeout_max":          { "name": "Durata max. Boost" },

@@ -32,6 +32,7 @@ class CapabilityType(StrEnum):
     CLIMATE = "climate"
     DURATION_SELECT = "duration_select"
     ENERGY = "energy"
+    FAN = "fan"
     ERROR_CODE = "error_code"
     HOURS_ADJUSTMENT_NUMBER = "hours_adjustment_number"
     INT = "int"

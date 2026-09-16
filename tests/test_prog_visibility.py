@@ -254,7 +254,7 @@ def test_the_migration_disables_a_covered_block_and_bumps_the_entry(monkeypatch)
     result, registry, bumps = migrate(monkeypatch, make_entry(), entities)
 
     assert result is True
-    assert bumps == [2, 3]
+    assert bumps == [2, 3, 4]
     assert sorted(registry.disabled) == [
         (f"sensor.{uid}", er.RegistryEntryDisabler.INTEGRATION)
         for uid in sorted(block_uids(SUBENTRY_ID, 196))
@@ -277,7 +277,7 @@ def test_an_entry_already_at_2_2_is_never_disabled_again(monkeypatch):
     """The one-shot promise: somebody who re-enabled a sensor after the
     migration must never find it disabled again on the next start.
 
-    It still moves to 2.3, which is a different step and touches nothing here.
+    It still moves through the later steps, which touch nothing here.
     """
     entities = [registered(uid) for uid in block_uids(SUBENTRY_ID, 196)]
 
@@ -287,7 +287,7 @@ def test_an_entry_already_at_2_2_is_never_disabled_again(monkeypatch):
 
     assert result is True
     assert registry.disabled == []
-    assert bumps == [3]
+    assert bumps == [3, 4]
 
 
 def test_a_version_1_entry_still_asks_to_be_added_again(monkeypatch):
@@ -320,10 +320,10 @@ def test_the_migration_drops_the_number_312_used_to_build(monkeypatch):
 
     assert result is True
     assert registry.removed == [f"number.{DOMAIN}_{SUBENTRY_ID}_312"]
-    assert bumps == [3]
+    assert bumps == [3, 4]
 
 
-def test_an_entry_already_at_2_3_is_left_alone(monkeypatch):
+def test_an_entry_already_at_2_3_only_moves_on(monkeypatch):
     entities = [registered(f"{DOMAIN}_{SUBENTRY_ID}_312", domain="number")]
 
     result, registry, bumps = migrate(
@@ -332,4 +332,62 @@ def test_an_entry_already_at_2_3_is_left_alone(monkeypatch):
 
     assert result is True
     assert registry.removed == []
+    assert bumps == [4]
+
+
+# --- 2.4 : the air circulation became a fan -------------------------------
+
+
+def test_the_migration_drops_the_switch_the_fan_replaced(monkeypatch):
+    """Removed rather than disabled: the switch platform no longer claims
+    102024 at all, so its registry entry would sit unavailable forever.
+    """
+    entities = [
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_switch_102024", domain="switch"),
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_switch_40", domain="switch"),
+    ]
+
+    result, registry, bumps = migrate(
+        monkeypatch, make_entry(minor_version=3), entities
+    )
+
+    assert result is True
+    assert registry.removed == [f"switch.{DOMAIN}_{SUBENTRY_ID}_switch_102024"]
+    assert bumps == [4]
+
+
+def test_the_migration_disables_the_speed_select_rather_than_dropping_it(
+    monkeypatch,
+):
+    """The select still exists, so somebody who wants the dropdown back can
+    have it. A removed entity cannot be re-enabled.
+    """
+    entities = [
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_select_102004", domain="select")
+    ]
+
+    result, registry, _ = migrate(
+        monkeypatch, make_entry(minor_version=3), entities
+    )
+
+    assert result is True
+    assert registry.removed == []
+    assert registry.disabled == [
+        (
+            f"select.{DOMAIN}_{SUBENTRY_ID}_select_102004",
+            er.RegistryEntryDisabler.INTEGRATION,
+        )
+    ]
+
+
+def test_a_speed_select_re_enabled_after_2_4_stays_re_enabled(monkeypatch):
+    entities = [
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_select_102004", domain="select")
+    ]
+
+    _, registry, bumps = migrate(
+        monkeypatch, make_entry(minor_version=4), entities
+    )
+
+    assert registry.disabled == []
     assert bumps == []

@@ -108,7 +108,7 @@ class ConfigFlow(BaseConfigFlow, domain=DOMAIN):
     # 2.2: the per-day program sensors of a calendar-covered block are
     # disabled by default, and async_migrate_entry disables the ones an
     # existing install already registered. See docs/decisions.md.
-    MINOR_VERSION = 3
+    MINOR_VERSION = 4
 
     def __init__(self) -> None:
         """Init the flow."""

@@ -66,6 +66,7 @@ MODEL_IDS = (56, 76, 211, 235, 418, 557, 1457, 1641, 1734)
 PLATFORMS = (
     "climate.py",
     "datetime.py",
+    "fan.py",
     "number.py",
     "select.py",
     "sensor.py",

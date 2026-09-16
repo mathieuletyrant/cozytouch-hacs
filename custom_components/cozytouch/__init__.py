@@ -25,6 +25,7 @@ PLATFORMS: list[Platform] = [
     Platform.CALENDAR,
     Platform.CLIMATE,
     Platform.DATETIME,
+    Platform.FAN,
     Platform.NUMBER,
     Platform.SELECT,
     Platform.SENSOR,
@@ -87,7 +88,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     A version 1 entry keeps landing in MIGRATION_ERROR, as it always has. 2.2
     disables the per-day program sensors a calendar makes redundant, once and
     not per start. 2.3 drops the number entity capability 312 used to build.
-    See docs/decisions.md.
+    2.4 drops the air-circulation switch and disables its speed select, both
+    of which the fan now is. See docs/decisions.md.
     """
     if entry.version != 2:
         return False
@@ -120,6 +122,29 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 registry.async_remove(entity.entity_id)
 
         hass.config_entries.async_update_entry(entry, minor_version=3)
+
+    if entry.minor_version < 4:
+        # The fan is the switch and the speed both. The switch is gone from
+        # the platform, so its registry entry would sit unavailable forever;
+        # the select still exists and is disabled instead, once, so somebody
+        # who turns it back on keeps it. See docs/decisions.md.
+        registry = er.async_get(hass)
+        for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+            if entity.domain == "switch" and entity.unique_id.endswith(
+                "_switch_102024"
+            ):
+                registry.async_remove(entity.entity_id)
+            elif (
+                entity.domain == "select"
+                and entity.unique_id.endswith("_select_102004")
+                and entity.disabled_by is None
+            ):
+                registry.async_update_entity(
+                    entity.entity_id,
+                    disabled_by=er.RegistryEntryDisabler.INTEGRATION,
+                )
+
+        hass.config_entries.async_update_entry(entry, minor_version=4)
 
     return True
 
