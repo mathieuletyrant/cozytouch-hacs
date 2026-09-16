@@ -1718,6 +1718,16 @@ child whose gateway nobody added. None rather than a guess matters : HA logs a
 warning when `via_device` names a device that is not in the registry. The
 registry-id spelling is covered under `__init__.py` above.
 
+### An unset absence window reads as unknown, not as a word of our own
+
+The pair reads `[0,0]` until somebody sets a window, and the sensor answered
+that with the literal string "Undefined" — untranslated, so a French install
+showed an English word, and a state a template had to compare against by
+spelling. `None` is what Home Assistant already has for this : the frontend
+renders it in the reader's language, `states()` gives `unknown`, and the
+`unknown` / `unavailable` distinction other integrations rely on starts
+working. The datetime entities on the same capability already returned None.
+
 ## `custom_components/cozytouch/calendar.py`
 
 ### The program is a calendar

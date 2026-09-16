@@ -279,11 +279,10 @@ def in_timezone(monkeypatch):
     time.tzset()
 
 
-def test_an_unset_window_reads_as_undefined(in_timezone):
+def test_an_unset_window_reads_as_unknown(in_timezone):
+    """None, so Home Assistant says it in the reader's language."""
     in_timezone("UTC")
-    assert CozytouchAwayModeTimestampSensor.get_value(timestamp_sensor("[0,0]")) == (
-        "Undefined"
-    )
+    assert CozytouchAwayModeTimestampSensor.get_value(timestamp_sensor("[0,0]")) is None
 
 
 def test_a_window_that_is_not_reported_is_none(in_timezone):
