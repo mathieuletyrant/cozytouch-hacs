@@ -474,6 +474,10 @@
         }
     },
     "issues": {
+        "device_fault": {
+            "title": "{device_name} informa de un fallo",
+            "description": "El aparato informa del código de fallo `{code}`. Atlantic lo denomina:\n\n**{label}**\n\nSus propias instrucciones de reparación:\n\n{repair}\n\nNo hay nada que Home Assistant pueda corregir aquí. Este aviso desaparece solo cuando el aparato deja de informar del código."
+        },
         "unknown_model": {
             "title": "{device_name} es un modelo que esta integración no conoce",
             "fix_flow": {

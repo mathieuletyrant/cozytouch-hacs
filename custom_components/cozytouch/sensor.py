@@ -27,6 +27,7 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
+from . import faults
 from .capability import describe_capability_value, read_setpoint
 from .const import DOMAIN, CozytouchCapabilityVariableType
 from .hub import (
@@ -40,37 +41,20 @@ from .infos import CapabilityCategory, CapabilityType
 _LOGGER = logging.getLogger(__name__)
 
 
-# The value a healthy fault code reads as, and the one an empty slot carries.
-# See docs/decisions.md.
-ERROR_CODE_HEALTHY = "OK"
-ERROR_CODE_EMPTY_SLOT = 255
-
-
 def decode_error_code(raw: str | None) -> str | None:
     """Turn a fault-code matrix into the codes that are actually active.
 
-    A row is a fault only when it is neither all-zero nor carrying the
-    empty-slot sentinel. The raw string comes back unchanged when it does not
-    parse. See docs/decisions.md.
+    The raw string comes back unchanged when it does not parse. See
+    docs/decisions.md.
     """
     if raw is None:
         return None
 
-    try:
-        matrix = json.loads(raw)
-        rows = [[int(field) for field in row] for row in matrix]
-    except (ValueError, TypeError):
+    rows = faults.active_rows(raw)
+    if rows is None:
         return raw
 
-    codes = []
-    for row in rows:
-        if not any(row) or ERROR_CODE_EMPTY_SLOT in row:
-            continue
-        code = "_".join(str(field) for field in row)
-        if code not in codes:
-            codes.append(code)
-
-    return ", ".join(codes) if codes else ERROR_CODE_HEALTHY
+    return ", ".join(faults.code_of(row) for row in rows) or faults.HEALTHY
 
 
 # config flow setup
@@ -506,6 +490,30 @@ class CozytouchErrorCodeSensor(CozytouchSensor):
         """Retrieve value from hub and decode the fault matrix."""
         value = self.coordinator.get_capability_value(self._capability.capabilityId)
         return decode_error_code(value)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """What the vendor's table says about the codes that are active.
+
+        Attributes rather than the state, which stays the code : a label runs
+        past what a state may hold, and the state is what automations already
+        match on. See docs/decisions.md.
+        """
+        described = self.coordinator.get_faults().get(
+            self._capability.capabilityId
+        )
+        if not described:
+            return None
+
+        return {
+            "error_label": "\n".join(fault["label"] for fault in described),
+            "probable_cause": "\n".join(
+                fault["cause"] for fault in described if fault["cause"]
+            ),
+            "repair_instructions": "\n".join(
+                fault["repair"] for fault in described if fault["repair"]
+            ),
+        }
 
 
 class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):

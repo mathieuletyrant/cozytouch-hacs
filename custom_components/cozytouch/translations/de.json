@@ -474,6 +474,10 @@
         }
     },
     "issues": {
+        "device_fault": {
+            "title": "{device_name} meldet eine Störung",
+            "description": "Das Gerät meldet den Fehlercode `{code}`. Atlantic bezeichnet ihn als:\n\n**{label}**\n\nIhre eigenen Reparaturhinweise:\n\n{repair}\n\nFür Home Assistant gibt es hier nichts zu beheben. Dieser Hinweis verschwindet von selbst, sobald das Gerät den Code nicht mehr meldet."
+        },
         "unknown_model": {
             "title": "{device_name} ist ein Modell, das diese Integration nicht kennt",
             "fix_flow": {

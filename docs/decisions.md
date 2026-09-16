@@ -1143,14 +1143,39 @@ empty slot. The sentinel is well-supported -- whole accounts report the same
 not ten identical faults. The `0xFF` reading is the app's, confirmed against
 that repetition.
 
-Two limits are deliberate. No capture has ever shown an *active* fault row,
-so the `system_major_minor_level` join is derived from the format, not from a
+One limit is deliberate. No capture has ever shown an *active* fault row, so
+the `system_major_minor_level` join is derived from the format, not from a
 decoded example -- if a real fault ever legitimately carried a `255`, this
-would read it as empty. And the code is shown, never its meaning: mapping a
-code to its human text needs Atlantic's fault-string table, which is theirs
-to ship and is kept out of this repository. `OK` is a plain, language-neutral
-token rather than a translated state, matching the raw-string diagnostic
-sensors around it.
+would read it as empty. `OK` is a plain, language-neutral token rather than a
+translated state, matching the raw-string diagnostic sensors around it.
+
+The other limit -- that the code was shown and never its meaning -- has since
+been lifted; the entry below says how.
+
+### The fault's meaning is fetched, not shipped
+
+Mapping a code to its human text needs Atlantic's fault-string table, and that
+table is theirs. It is now read from them at the moment it is needed rather
+than copied here: `productmodels/models/{modelId}/detailederrors` answers the
+whole table for one model, and `parentProductErrorCode` is the matrix row
+packed one field per byte (`docs/api-surface.md`, 16/09/2026). So the lookup
+is exact rather than heuristic, and nothing of theirs sits in this repository.
+
+What it costs a household is the point of the shape. The table is read only
+when a row is actually active, which on a healthy account is never, and it is
+cached per model for the session -- including the empty table a failure
+yields, so a route that keeps refusing is asked once rather than once a poll.
+An air conditioner has no table at all (404), which is why the fetch treats
+"no answer" as an ordinary outcome and not an error.
+
+The label lands in the sensor's *attributes*, not its state. The state stays
+the code: it is what automations already match on, a label runs past what a
+state may reasonably hold, and a lookup that misses then degrades to exactly
+the behaviour that came before. Beside it, a repair notice is raised per
+device and per code, `is_fixable=False` -- nothing Home Assistant does settles
+a hydraulic pressure fault, and the notice exists to say, in the vendor's
+words, what the hardware is complaining about. It clears itself when the code
+stops being reported.
 
 ### The last-poll sensor stays available through the failure it dates
 

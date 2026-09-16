@@ -131,6 +131,10 @@ class CozytouchAccount:
         # as (deviceId, capabilityId) -> (value, expiry). See
         # docs/decisions.md.
         self._pending_writes: dict[tuple[int, int], tuple[str, float]] = {}
+        # The vendor's fault table per model id, read once and kept. An empty
+        # list is an answer -- most models have no table. See
+        # docs/decisions.md.
+        self._fault_tables: dict[int, list] = {}
 
     @property
     def account_id(self) -> str:
@@ -431,6 +435,49 @@ class CozytouchAccount:
         for key, (_, expiry) in list(self._pending_writes.items()):
             if now >= expiry:
                 del self._pending_writes[key]
+
+    async def fetch_fault_table(self, modelId: int) -> list:
+        """The vendor's fault table for one model, cached for the session.
+
+        Nothing here is redistributed : the table is read from Atlantic, for
+        the one model a device reporting a fault actually is. A failure is not
+        worth an outage -- the codes still read -- so every one of them caches
+        an empty table and moves on. See docs/decisions.md.
+        """
+        if modelId in self._fault_tables:
+            return self._fault_tables[modelId]
+
+        # Cached before the request, so a route that keeps failing is asked
+        # once rather than once per poll.
+        self._fault_tables[modelId] = []
+
+        if self.backoff_remaining:
+            del self._fault_tables[modelId]
+            return []
+
+        try:
+            async with self._session.get(
+                COZYTOUCH_ATLANTIC_API
+                + f"/magellan/productmodels/models/{modelId}/detailederrors",
+                headers=self._headers(),
+                timeout=REQUEST_TIMEOUT,
+            ) as response:
+                if response.status != 200:
+                    _LOGGER.debug(
+                        "No fault table for model %d (%d)", modelId, response.status
+                    )
+                    return []
+
+                table = await response.json()
+        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
+            _LOGGER.debug("Fault table for model %d failed: %s", modelId, err)
+            return []
+
+        if not isinstance(table, list):
+            return []
+
+        self._fault_tables[modelId] = table
+        return table
 
     async def fetch_capabilities(self, deviceId: int) -> list:
         """GET the capability list of one device, to confirm a write.
