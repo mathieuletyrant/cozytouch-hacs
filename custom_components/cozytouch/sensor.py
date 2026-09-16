@@ -305,7 +305,10 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
 
                     return ts.strftime("%H:%M %d/%m/%Y")
 
-                return "Undefined"
+                # None rather than a word of our own: Home Assistant already
+                # has one for a state it does not know, in every language it
+                # ships. See docs/decisions.md.
+                return None
 
         return None
 
