@@ -380,6 +380,9 @@ edits it as one -- a chip per slot, carrying the time it starts and the
 setpoint it asks for. Closed, it shows the setpoint the program holds right
 now; click the header to edit the week :
 
+![The schedule card, one program open and one closed.](docs/images/schedule-card.png)
+
+
 ```yaml
 type: custom:cozytouch-schedule-card
 entity: climate.salon
