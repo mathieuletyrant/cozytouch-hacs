@@ -23,6 +23,7 @@ from test_services import FakeHub, make_hass
 import voluptuous as vol
 
 from custom_components.cozytouch import llm, services
+from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.llm import LLM_API_ASSIST, ToolInput
 
 # Cooling, whose seven days start here.
@@ -64,9 +65,43 @@ class WritingHub(FakeHub):
         self.values[capabilityId] = value
 
 
+def registries(monkeypatch, entity_id="climate.salon", platform="cozytouch"):
+    """The registries `_programmable` walks to list what Assist may reach."""
+    entry = SimpleNamespace(
+        entity_id=entity_id,
+        domain=entity_id.split(".")[0],
+        platform=platform,
+        name=None,
+        original_name="Climatisation",
+        area_id="salon",
+        device_id=None,
+    )
+    monkeypatch.setattr(
+        llm,
+        "er",
+        SimpleNamespace(
+            async_get=lambda hass: SimpleNamespace(entities={entity_id: entry})
+        ),
+    )
+    monkeypatch.setattr(
+        llm,
+        "ar",
+        SimpleNamespace(
+            async_get=lambda hass: SimpleNamespace(
+                async_get_area=lambda area_id: SimpleNamespace(name="Salon")
+            )
+        ),
+    )
+    monkeypatch.setattr(
+        llm, "dr", SimpleNamespace(async_get=lambda hass: SimpleNamespace())
+    )
+    monkeypatch.setattr(llm, "async_should_expose", lambda hass, assistant, eid: True)
+
+
 @pytest.fixture
 def hass(monkeypatch):
     hub = WritingHub({FIRST + index: WEEK for index in range(7)})
+    registries(monkeypatch)
     return bus(make_hass(monkeypatch, hub)), hub
 
 
@@ -82,8 +117,26 @@ def test_another_api_is_offered_nothing(hass):
     assert llm.async_get_tools(hass[0], CONTEXT, "some-other-api") is None
 
 
-def test_an_account_less_install_is_offered_nothing(hass):
-    hass[0].config_entries.async_entries = lambda domain: []
+def test_an_install_with_no_reachable_device_is_offered_nothing(monkeypatch, hass):
+    registries(monkeypatch, platform="somebody_else")
+    assert llm.async_get_tools(hass[0], CONTEXT, LLM_API_ASSIST) is None
+
+
+def test_the_prompt_names_the_devices_and_where_they_are(hass):
+    """A model told no entity id writes the one it would have chosen."""
+    tools = llm.async_get_tools(hass[0], CONTEXT, LLM_API_ASSIST)
+    assert "- climate.salon: Climatisation, Salon" in tools.prompt
+
+
+def test_an_id_that_does_not_exist_is_refused_with_the_ones_that_do(hass):
+    """The first real call invented an id; the error has to make a retry work."""
+    with pytest.raises(ServiceValidationError, match=r"climate\.salon"):
+        call(llm.ReadSchedule(), hass[0],
+             entity_id="climate.clim_chambre_parents", program="cooling")
+
+
+def test_an_entity_kept_from_assist_is_not_named_either(monkeypatch, hass):
+    monkeypatch.setattr(llm, "async_should_expose", lambda hass, a, eid: False)
     assert llm.async_get_tools(hass[0], CONTEXT, LLM_API_ASSIST) is None
 
 

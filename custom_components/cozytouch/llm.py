@@ -21,9 +21,16 @@ from typing import Any
 
 import voluptuous as vol
 
+from homeassistant.components.homeassistant import async_should_expose
 from homeassistant.components.llm import LLMTools
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers import config_validation as cv
+from homeassistant.exceptions import ServiceValidationError
+from homeassistant.helpers import (
+    area_registry as ar,
+    config_validation as cv,
+    device_registry as dr,
+    entity_registry as er,
+)
 from homeassistant.helpers.llm import LLM_API_ASSIST, LLMContext, Tool, ToolInput
 from homeassistant.util.json import JsonObjectType
 
@@ -61,6 +68,56 @@ _DAYS = vol.Required(
 )
 
 
+def _programmable(hass: HomeAssistant, llm_context: LLMContext) -> dict[str, str]:
+    """The devices these tools can reach, as entity id to where it lives.
+
+    Both tools take an entity id, and a language model that has not been told
+    one will write the id it would have chosen -- which is how the first real
+    call went, `climate.clim_chambre_parents` for an entity actually called
+    `climate.chambre_parents_clim_chambre_parents_climatisation`. So the list
+    goes in the prompt, and in the error when an id is wrong anyway.
+
+    Only what the assistant is allowed to see : an entity kept from Assist
+    should not be named by a tool description either.
+    """
+    entities = er.async_get(hass)
+    areas = ar.async_get(hass)
+    devices = dr.async_get(hass)
+
+    found: dict[str, str] = {}
+    for entry in entities.entities.values():
+        if entry.platform != DOMAIN or entry.domain != "climate":
+            continue
+        if llm_context.assistant and not async_should_expose(
+            hass, llm_context.assistant, entry.entity_id
+        ):
+            continue
+
+        area_id = entry.area_id
+        if area_id is None and entry.device_id:
+            device = devices.async_get(entry.device_id)
+            area_id = device.area_id if device else None
+        area = areas.async_get_area(area_id) if area_id else None
+
+        name = entry.name or entry.original_name or entry.entity_id
+        found[entry.entity_id] = f"{name}, {area.name}" if area else name
+
+    return found
+
+
+def _checked(hass: HomeAssistant, llm_context: LLMContext, entity_id: str) -> str:
+    """Refuse an unknown id with the ids that do exist, so a retry can work."""
+    known = _programmable(hass, llm_context)
+    if entity_id in known:
+        return entity_id
+
+    listed = "; ".join(f"{eid} ({what})" for eid, what in known.items())
+    raise ServiceValidationError(
+        f"There is no Cozytouch device called {entity_id}. "
+        + (f"The ones there are: {listed}" if listed else "This account has none.")
+    )
+
+
 class ReadSchedule(Tool):
     """Read a device's weekly program back."""
 
@@ -79,7 +136,8 @@ class ReadSchedule(Tool):
     ) -> JsonObjectType:
         """Answer with the program, as the device holds it."""
         args = self.parameters(tool_input.tool_args)
-        return await _read(hass, llm_context, args["entity_id"], args["program"])
+        entity_id = _checked(hass, llm_context, args["entity_id"])
+        return await _read(hass, llm_context, entity_id, args["program"])
 
 
 class SetPeriod(Tool):
@@ -122,7 +180,8 @@ class SetPeriod(Tool):
     ) -> JsonObjectType:
         """Merge the period into each day, then write the days that changed."""
         args = self.parameters(tool_input.tool_args)
-        entity_id, program = args["entity_id"], args["program"]
+        entity_id = _checked(hass, llm_context, args["entity_id"])
+        program = args["program"]
 
         stored = (await _read(hass, llm_context, entity_id, program))["days"]
 
@@ -182,7 +241,15 @@ def async_get_tools(
     hass: HomeAssistant, llm_context: LLMContext, api_id: str
 ) -> LLMTools | None:
     """Offer the program tools to Assist, and only where there is a device."""
-    if api_id != LLM_API_ASSIST or not hass.config_entries.async_entries(DOMAIN):
+    if api_id != LLM_API_ASSIST:
         return None
 
-    return LLMTools(tools=[ReadSchedule(), SetPeriod()], prompt=PROMPT)
+    known = _programmable(hass, llm_context)
+    if not known:
+        return None
+
+    listed = "\n".join(f"- {eid}: {what}" for eid, what in known.items())
+    return LLMTools(
+        tools=[ReadSchedule(), SetPeriod()],
+        prompt=f"{PROMPT}\nThe devices with a program, by entity id:\n{listed}",
+    )
