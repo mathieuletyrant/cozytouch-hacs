@@ -244,12 +244,12 @@ def test_a_single_slot_sent_as_a_mapping_is_still_a_list():
 )
 def test_a_group_stands_for_the_days_it_covers(group, expected):
     """The shortcut is expanded here so a YAML automation gets it too."""
-    assert services._expand_days([group]) == expected
+    assert services.expand_days([group]) == expected
 
 
 def test_the_groups_and_the_literal_days_can_be_mixed():
     """Whatever the picker was clicked in, the write order is the week's."""
-    assert services._expand_days(["weekend", "monday"]) == [
+    assert services.expand_days(["weekend", "monday"]) == [
         "monday",
         "saturday",
         "sunday",
@@ -258,7 +258,7 @@ def test_the_groups_and_the_literal_days_can_be_mixed():
 
 def test_a_day_named_twice_is_written_once():
     """Two writes to one capability is two calls to the cloud for nothing."""
-    assert len(services._expand_days(["all", "monday"])) == 7
+    assert len(services.expand_days(["all", "monday"])) == 7
 
 
 @pytest.mark.parametrize("days", [[], ["someday"]])
@@ -514,3 +514,90 @@ def test_the_service_strings_cover_the_same_keys(path):
     custom integration : a missing key here shows the raw id to the user.
     """
     assert service_keys(path) == service_keys(TRANSLATIONS[0])
+
+
+# --- a period laid over a day -------------------------------------------
+
+
+DAY = [
+    {"time": "00:00", "temperature": 26},
+    {"time": "07:00", "temperature": 24},
+    {"time": "22:00", "temperature": 26},
+]
+
+
+def clock(slots):
+    """The slots as pairs, so a case reads like the program it describes."""
+    return [(slot["time"].isoformat(timespec="minutes"), slot["temperature"])
+            for slot in slots]
+
+
+def test_a_period_puts_back_what_ran_after_it():
+    assert clock(services.apply_period(DAY, "09:00", "17:00", 21)) == [
+        ("00:00", 26),
+        ("07:00", 24),
+        ("09:00", 21),
+        # 24 is what the day held at 17:00 before the period was laid over it.
+        ("17:00", 24),
+        ("22:00", 26),
+    ]
+
+
+def test_a_period_replaces_the_slots_it_covers():
+    """Otherwise a slot inside the period would take charge in the middle."""
+    assert clock(services.apply_period(DAY, "06:00", "23:00", 20)) == [
+        ("00:00", 26),
+        ("06:00", 20),
+        ("23:00", 26),
+    ]
+
+
+def test_a_period_ending_at_midnight_ends_the_day():
+    assert clock(services.apply_period(DAY, "22:00", "00:00", 18)) == [
+        ("00:00", 26),
+        ("07:00", 24),
+        ("22:00", 18),
+    ]
+
+
+def test_a_period_starting_at_midnight_keeps_the_day_startable():
+    """00:00 is the one slot build_matrix insists on, so it is replaced."""
+    assert clock(services.apply_period(DAY, "00:00", "07:00", 20)) == [
+        ("00:00", 20),
+        ("07:00", 24),
+        ("22:00", 26),
+    ]
+
+
+def test_a_period_ending_where_the_day_already_turns_writes_one_slot():
+    """A second slot at 07:00 is what build_matrix refuses outright."""
+    assert clock(services.apply_period(DAY, "05:00", "07:00", 21)) == [
+        ("00:00", 26),
+        ("05:00", 21),
+        ("07:00", 24),
+        ("22:00", 26),
+    ]
+
+
+def test_a_period_asking_for_what_already_runs_costs_no_slot():
+    """A day holds ten, so a slot that changes nothing is one too few."""
+    assert clock(services.apply_period(DAY, "09:00", "17:00", 24)) == [
+        ("00:00", 26),
+        ("07:00", 24),
+        ("22:00", 26),
+    ]
+
+
+def test_what_a_period_produces_can_be_written():
+    """The point of the helper : build_matrix has to accept its output."""
+    slots = services.apply_period(DAY, "09:00", "17:00", 21)
+    assert json.loads(services.build_matrix(slots))[:3] == [
+        [0, 26],
+        [420, 24],
+        [540, 21],
+    ]
+
+
+def test_a_period_that_ends_before_it_starts_is_refused():
+    with pytest.raises(ServiceValidationError):
+        services.apply_period(DAY, "17:00", "09:00", 21)

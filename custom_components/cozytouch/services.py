@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import time
 import json
 import logging
 from typing import Any
@@ -44,8 +45,11 @@ MAX_SLOTS = 10
 SLOTS_PER_DAY_CAPABILITY = 306
 
 
-def _expand_days(days: list[str]) -> list[str]:
+def expand_days(days: list[str]) -> list[str]:
     """Turn the group shortcuts into the days they stand for.
+
+    Public because llm.py merges a period into one day at a time, so it needs
+    the days a shortcut stands for before it can read them.
 
     Runs as the last step of the validator so that everything downstream only
     ever sees a day name, and so "weekend" plus "sunday" -- or "monday" twice
@@ -66,7 +70,7 @@ SET_SCHEDULE_SCHEMA = vol.Schema(
             cv.ensure_list,
             vol.Length(min=1),
             [vol.In([*PROGRAM_DAYS, *DAY_GROUPS])],
-            _expand_days,
+            expand_days,
         ),
         vol.Required("slots"): vol.All(
             cv.ensure_list,
@@ -89,6 +93,15 @@ GET_SCHEDULE_SCHEMA = vol.Schema(
         vol.Required("program"): vol.In(WRITABLE_PROGRAM_BLOCKS),
     }
 )
+
+
+def _as_time(value: time | str) -> time:
+    """A slot time, however the caller holds it.
+
+    `parse_slots` renders "HH:MM" because that is what a service response and
+    the card speak; `build_matrix` and the calendar hold a `time`.
+    """
+    return value if isinstance(value, time) else time.fromisoformat(value)
 
 
 def build_matrix(slots: list[dict]) -> str:
@@ -157,6 +170,75 @@ def parse_slots(value: str | None, capabilityId: int | None = None) -> list[dict
         slots.append({"time": f"{hours:02d}:{minutes:02d}", "temperature": temperature})
 
     return slots
+
+
+def in_charge_at(slots: list[dict], moment: time) -> float | None:
+    """The setpoint a day holds at a time, which is the last slot before it."""
+    held = None
+    for slot in slots:
+        if _as_time(slot["time"]) <= moment:
+            held = slot["temperature"]
+
+    return held
+
+
+def apply_period(
+    slots: list[dict],
+    start: time | str,
+    end: time | str,
+    temperature: float,
+) -> list[dict]:
+    """Hold one temperature between two times, leaving the rest of the day.
+
+    A device stores a whole day and a person asks about a stretch of one, so
+    what this is really for is the slots *outside* the stretch : they have to
+    survive being asked about the ones inside it. The slot that closes the
+    stretch carries whatever was in charge there before, which is what makes
+    "24 degrees until 17:00" leave 17:00 onwards alone.
+
+    Midnight as an end means the end of the day, since a stretch that runs to
+    00:00 is the last one and has nothing to put back after it.
+    """
+    started, ended = _as_time(start), _as_time(end)
+    closes_the_day = ended == time(0, 0)
+    if not closes_the_day and ended <= started:
+        raise ServiceValidationError(
+            f"A period has to end after it starts, and {ended:%H:%M} is not "
+            f"after {started:%H:%M}"
+        )
+
+    # Read before the edit : it is what the day held where the period stops.
+    held = in_charge_at(slots, ended)
+
+    kept = [
+        {"time": _as_time(slot["time"]), "temperature": slot["temperature"]}
+        for slot in slots
+        if not (
+            _as_time(slot["time"]) >= started
+            and (closes_the_day or _as_time(slot["time"]) < ended)
+        )
+    ]
+    kept.append({"time": started, "temperature": temperature})
+    # A day that already turns at the end of the period needs nothing put
+    # back, and a second slot at that time is what build_matrix refuses.
+    if (
+        not closes_the_day
+        and held is not None
+        and not any(slot["time"] == ended for slot in kept)
+    ):
+        kept.append({"time": ended, "temperature": held})
+
+    ordered = sorted(kept, key=lambda slot: slot["time"])
+
+    # A day holds ten slots, so a slot asking for what is already running is
+    # not free : it is one fewer left for a period that would change
+    # something. The 00:00 slot is never the redundant one -- nothing runs
+    # before it.
+    return [
+        slot
+        for index, slot in enumerate(ordered)
+        if index == 0 or slot["temperature"] != ordered[index - 1]["temperature"]
+    ]
 
 
 def slot_limit(hub) -> int:

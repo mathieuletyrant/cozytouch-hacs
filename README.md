@@ -413,6 +413,31 @@ start at the same time, and the slot at 00:00 cannot be removed -- only given
 another setpoint. Heating and cooling only, for the same reason `set_schedule`
 covers those two.
 
+### Changing the program by voice
+
+If you run Assist with a conversation agent that can use tools -- any of the
+LLM integrations -- the program is one of the things you can simply ask for :
+
+> Set the living room air conditioning to 24 between 9am and 5pm on weekdays
+
+> What is the bedroom heating programmed to on Tuesday?
+
+Nothing to configure : the integration offers Assist two tools, one that
+reads a week and one that holds a temperature over a stretch of a day, as
+soon as a Cozytouch account is set up. The device and its climate entity have
+to be exposed to Assist, which is the usual **Settings → Voice assistants →
+Expose**.
+
+The writing tool changes only the stretch you name. It reads the day first,
+puts back whatever was running when the period ends, and leaves every other
+slot alone -- so asking for an afternoon does not cost you your evening. It
+still cannot get past what the device holds : ten slots a day, one of them at
+00:00.
+
+Needs a Home Assistant recent enough to have the `llm` integration platform;
+on an older one the tools are simply not offered, and everything else works
+as before.
+
 Day names follow the language set in your Home Assistant profile, and the
 times display in your browser's own format.
 
