@@ -2363,13 +2363,31 @@ The calendar came first and is the wrong shape for this. Home Assistant's
 calendar card draws a week as a diary : one column per day, events as boxes,
 and the setpoint typed into an event's *title* because a calendar event has
 nowhere else to put a number. It works, and every one of those is a
-concession. Nothing stops a title being "lunch", nothing shows Tuesday and
-Wednesday differ at a glance, and copying a day means retyping it.
+concession. Nothing stops a title being "lunch", and nothing shows Tuesday and
+Wednesday differ at a glance.
 
-What a weekly program actually is, is a 7×24 grid. So the card draws that.
-A cell is an hour, coloured by the setpoint in charge then; clicking one
-paints the current brush onto it. That is the whole interaction, and it works
-on a phone, which a drag-and-resize calendar does not.
+A 7×24 grid came second, and was built as far as painting a span with the
+pointer. It reads beautifully and it edits badly, for one reason that never
+went away : a cell is an hour and a device stores slots, so every gesture had
+to be translated. Painting one hour meant writing that hour *and* a second
+slot to close it, a day holds ten of them, and the ceiling arrived without
+warning in the middle of an edit. What the grid was good at -- seeing the
+shape of a week -- is not what somebody opens the card to do.
+
+So the card is the list the device actually holds. A day is its slots, each
+one a chip carrying the two things a slot is : when it starts and what it asks
+for. Ten chips is the ceiling, and ten chips is what you see. The grid is in
+the history if it is ever wanted back.
+
+Closed, the card is one line : what the program is asking for at this minute,
+on today's day. That is what a dashboard is read for -- the week is what it is
+opened for, so it sits behind a click. The reading is `inChargeAt` on today's
+slots, which is already what the calendar and the editor agree on, and the
+clock comes from the browser rather than from a timer : nothing is focused
+while the card is closed, so redrawing on a Home Assistant state update keeps
+the head current without the card owning an interval. A card left open on a
+dirty day stays open whatever the caret says, since a hidden Save is a lost
+edit.
 
 ### Why it ships inside the integration
 
@@ -2402,45 +2420,103 @@ card adds `/cozytouch/cozytouch-schedule-card.js` as a dashboard resource,
 once. That is one manual step at install against no cost for anyone who skips
 it, and it is the step every HACS frontend plugin asks for anyway.
 
-The static path is registered with `cache_headers=False`. The alternative was
-a `?v=` carrying the manifest version, which works only while the integration
-writes the url itself -- here the user typed it, and an update must not need
-them to retype it. Revalidating an 11 KB file the browser only fetches on a
-dashboard load is cheaper than that trap.
+The card is served by a `HomeAssistantView`, not by a static path, for one
+header. `async_register_static_paths(cache_headers=False)` sends *no*
+`Cache-Control` at all -- `_serve_file` in `http/server.py` returns a bare
+`FileResponse` -- and a browser given no instruction caches on its own
+heuristic. The symptom was a card that had been replaced on disk still drawing
+the old grid after a hard reload, which reads exactly like a failed copy. The
+view answers with `Cache-Control: no-cache`, so the browser revalidates and
+gets a 304 for the usual case.
 
-### The rules the grid enforces
+The alternative was a `?v=` carrying the manifest version, which works only
+while the integration writes the url itself -- here the user typed it, and an
+update must not need them to retype it.
 
-An hour owns its cell. Painting hour 7 replaces anything that started between
-07:00 and 07:59, rather than adding a second slot the grid could not draw --
-otherwise a program edited through the card and the same program edited
-through `set_schedule` would drift into shapes the card renders as a lie.
+### The rules the list enforces
 
-A day holds ten slots, mirroring `MAX_SLOTS` in `services.py`. The card checks
-before painting rather than letting the service refuse, because a refusal
-after seven days were edited loses the other six. It does **not** read
-capability 306 : the frontend has no hub, and 306 only ever tightens the
+`checked` refuses what `build_matrix` refuses, on the spot rather than at
+Save : two slots at the same time, and a day that no longer begins at 00:00.
+The reason to duplicate the check rather than let the service answer is that
+Save writes a day at a time, so a refusal on Thursday arrives with Monday to
+Wednesday already written.
+
+The 00:00 chip has no remove button at all, rather than a button that always
+refuses. Its setpoint is editable like any other, which is what somebody
+reaching for its remove button actually wanted.
+
+A day holds ten slots, mirroring `MAX_SLOTS` in `services.py`, and the `+`
+disables itself on the tenth with the reason in its tooltip. It does **not**
+read capability 306 : the frontend has no hub, and 306 only ever tightens the
 ceiling, so the worst case is the service refusing what the card allowed.
 
-00:00 cannot be erased, for the reason `build_matrix` refuses it -- the
-beginning of a day must have a setpoint. Repainting it is allowed, which is
-the thing somebody erasing it actually wanted.
+`addSlot` puts a new slot in the middle of the longest stretch the day leaves
+empty, rounded to the half hour, holding whatever was already in charge
+there. Adding a slot therefore changes nothing until somebody sets it to
+something, which is the only behaviour that cannot surprise -- and the widest
+gap is where a slot is most likely wanted.
 
-Edits are local until *Save*, and only the touched days are written. A paint
-is one click and a write is an API call per day; writing on every click would
-be seven calls to move one boundary, against an API that answers a poll with
-429 often enough that `hub.py` has a backoff for it.
+The times are `<input type="time">` and the setpoints `<input type="number">`.
+Both bring the platform's own picker and the phone's own keyboard, and the
+time input displays in the browser's format while its value stays `HH:MM`,
+which is the format `set_schedule` takes. The minute precision is the device's
+own : the grid could only ever write on the hour.
+
+Edits are local until *Save*, and only the touched days are written. A day
+edited back to what it already was is not marked dirty. Writing on every
+keystroke would be an API call per chip, against an API that answers a poll
+with 429 often enough that `hub.py` has a backoff for it.
+
+### The card's own language
+
+`hass.language` is the language the user picked in their profile, and it
+arrives with every `hass` assignment. The day names come from
+`Intl.DateTimeFormat` with it. The times need no help at all : an
+`<input type="time">` already displays in the browser's format, which is how
+the same card reads `7:00 AM` in English and `07:00` in French without the
+card knowing either.
+
+The words that are not dates -- seven of them, plus three refusals -- sit in a
+`STRINGS` table in the card, in the five languages `translations/` ships. That
+duplicates a mechanism the integration already has, and the reason is that the
+frontend cannot reach it : Home Assistant serves an integration's translations
+to the frontend under a fixed set of sections, none of which is "a card's
+buttons", and inventing one fails hassfest. A table of seven words against a
+fetch and a schema fight.
+
+The refusals `checked` and `addSlot` throw carry a `code`, since the message
+they raise is written in English and the card says it in the reader's
+language. Anything coming back from Home Assistant or the network is repeated
+as it arrived.
 
 ### The colour scale
 
-Hue runs across the setpoints the program actually uses, not across the card's
-`min` and `max`. A week between 19 and 21 would otherwise be three shades of
-the same blue, which is exactly the week somebody opens the card to inspect.
+A chip is tinted by its setpoint, across the setpoints the program actually
+uses rather than the card's `min` and `max`. A week between 19 and 21 would
+otherwise be three shades of the same blue, which is exactly the week somebody
+opens the card to inspect.
+
+It interpolates between three fixed colours -- blue, sand, red -- rather than
+sweeping a hue. Sweeping was the first version, and a week of five setpoints
+came out as a rainbow : blue, green, yellow, orange, red, with green reading
+as its own category rather than as one step warmer than blue. The middle stop
+is sand and not grey because grey is what a chip with no setpoint would be
+drawn in, and on most weeks the middle stop is the setpoint the week mostly
+sits at.
+
+Two setpoints, which is what most programs have, land on the two ends and the
+middle never shows.
 
 ### What is not tested by CI
 
-`tests/test_schedule_card.mjs` holds `applyPaint` and `inChargeAt` to the
-rules above and runs under `node --test`. CI has no javascript job and is not
-getting one for two functions, so it is run by hand. The two functions are
+`tests/test_schedule_card.mjs` holds `writeSlot`, `addSlot` and `inChargeAt`
+to the rules above and runs under `node --test`. CI has no javascript job and
+is not getting one for three functions, so it is run by hand. The three are
 exported, and the class extends a `CardBase` that falls back to a bare class
-outside a browser, purely so that file can import them without a DOM. The
-rendering is not covered.
+outside a browser, purely so that file can import them without a DOM.
+
+The rendering is not covered there, and was checked instead by loading the
+card into headless Chrome against a stubbed `hass`, driving the real inputs
+with real events and reading back what the day became. That harness is not in
+the repository : it is fifty lines of scaffolding for a check that is run when
+the card changes and never otherwise.
