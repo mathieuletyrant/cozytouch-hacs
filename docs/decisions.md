@@ -2406,11 +2406,10 @@ the device once per call, and "every day" would otherwise be seven refreshes
 for one sentence.
 
 Exercised on 2026-09-17 against a real conversation agent (OpenRouter, Home
-Assistant 2026.9.2) : reading a room's cooling program back works. The first
-call there is what produced the device list in the prompt -- the model asked
-for `climate.clim_chambre_parents`, the entity being
-`climate.chambre_parents_clim_chambre_parents_climatisation`. Writing a
-period has not been exercised that way yet.
+Assistant 2026.9.2) : reading a program back and writing a period both work,
+on heating and on cooling. The first call there is what produced the device
+list in the prompt -- the model asked for `climate.clim_chambre_parents`, the
+entity being `climate.chambre_parents_clim_chambre_parents_climatisation`.
 
 The platform is newer than the Home Assistant version `hacs.json` declares.
 Nothing guards the import, and nothing needs to : an install without the
