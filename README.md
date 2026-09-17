@@ -375,9 +375,10 @@ in a different timezone from the house it heats would show the program shifted.
 
 ### The schedule card
 
-A calendar is a diary, and a weekly program is a grid. The integration ships
-a card that draws it as one -- seven rows, twenty-four columns, each cell
-coloured by the setpoint in charge at that hour:
+A weekly program is a list of slots, and the integration ships a card that
+edits it as one -- a chip per slot, carrying the time it starts and the
+setpoint it asks for. Closed, it shows the setpoint the program holds right
+now; click the header to edit the week :
 
 ```yaml
 type: custom:cozytouch-schedule-card
@@ -395,18 +396,22 @@ Declare it once, in **Settings → Dashboards → ⋮ → Resources → Add**, a
 ```
 
 Restart Home Assistant first if the integration was just installed -- the URL
-only exists once it has started. The file is served uncached, so an update
-arrives on a browser refresh and the resource never needs editing again.
+only exists once it has started. The card is served with `Cache-Control:
+no-cache`, so an update arrives on a browser refresh and the resource never
+needs editing again.
 
-Pick a temperature -- one of the swatches, which are the setpoints the program
-already uses, or the box beside them -- and click cells to paint it. **Erase**
-turns clicking into removing the slot that starts in that hour. The ⧉ at the
-end of a row copies that day over the rest of the week. Nothing is sent until
-**Save**, which writes only the days that changed.
+Edit a time or a setpoint straight in its chip, **×** removes a slot and **+**
+adds one, in the middle of the longest stretch the day leaves free and at
+whatever was already in charge there. Nothing is sent until **Save**, which
+writes only the days that changed.
 
-The same two rules the service has apply : a day holds ten slots at most, and
-the slot at 00:00 cannot be removed, only repainted. Heating and cooling only,
-for the same reason `set_schedule` covers those two.
+The same rules the service has apply : a day holds ten slots at most, no two
+start at the same time, and the slot at 00:00 cannot be removed -- only given
+another setpoint. Heating and cooling only, for the same reason `set_schedule`
+covers those two.
+
+Day names follow the language set in your Home Assistant profile, and the
+times display in your browser's own format.
 
 This writes the program **into the device**, which is the difference between
 it and `scheduler-card` or a Home Assistant automation : those fire a service

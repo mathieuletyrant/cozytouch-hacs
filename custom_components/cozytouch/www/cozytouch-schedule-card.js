@@ -1,6 +1,7 @@
 /*
- * Cozytouch schedule card : a week of a device's own weekly program, painted
- * by the hour and written back through cozytouch.set_schedule.
+ * Cozytouch schedule card : a device's own weekly program, edited as the list
+ * of slots the device actually stores and written back through
+ * cozytouch.set_schedule.
  *
  * The program lives in the device, not in Home Assistant, so what this draws
  * is what runs when Home Assistant is off.
@@ -20,44 +21,136 @@ const DAYS = [
 // MAX_SLOTS in services.py; the service refuses anything longer anyway.
 const MAX_SLOTS = 10;
 
-const LABELS = {
-  monday: "Mon",
-  tuesday: "Tue",
-  wednesday: "Wed",
-  thursday: "Thu",
-  friday: "Fri",
-  saturday: "Sat",
-  sunday: "Sun",
+/* The day names are the browser's, in Home Assistant's language :
+ * `hass.language` is what the user picked in their profile, and Intl already
+ * knows how every locale abbreviates a weekday. The times need no help at
+ * all -- an <input type="time"> displays and parses in the browser's own
+ * format while its value stays "HH:MM".
+ *
+ * The handful of words that are not a date live in STRINGS, in the five
+ * languages the integration itself ships. They are here rather than in
+ * translations/ because a dashboard card cannot read an integration's
+ * translation files -- Home Assistant does not serve them to the frontend.
+ */
+const dayNames = (language) => {
+  const format = new Intl.DateTimeFormat(language, {
+    weekday: "short",
+    timeZone: "UTC",
+  });
+  // 2024-01-01 was a Monday, so day n of that week is DAYS[n - 1].
+  return Object.fromEntries(
+    DAYS.map((day, index) => [day, format.format(Date.UTC(2024, 0, index + 1))])
+  );
+};
+
+const STRINGS = {
+  en: { save: "Save", reload: "Reload", loading: "Loading…",
+        writing: "Writing…", written: "Written to the device",
+        add: "Add a slot", remove: "Remove this slot",
+        midnight: "A day has to start at 00:00",
+        duplicate: "Two slots cannot start at the same time",
+        full: "A day holds %s slots at most" },
+  fr: { save: "Enregistrer", reload: "Recharger", loading: "Chargement…",
+        writing: "Écriture…", written: "Écrit dans l'appareil",
+        add: "Ajouter un créneau", remove: "Supprimer ce créneau",
+        midnight: "Une journée doit commencer à 00:00",
+        duplicate: "Deux créneaux ne peuvent pas commencer à la même heure",
+        full: "Un jour ne tient que %s créneaux" },
+  es: { save: "Guardar", reload: "Recargar", loading: "Cargando…",
+        writing: "Escribiendo…", written: "Escrito en el dispositivo",
+        add: "Añadir una franja", remove: "Eliminar esta franja",
+        midnight: "El día tiene que empezar a las 00:00",
+        duplicate: "Dos franjas no pueden empezar a la misma hora",
+        full: "Un día admite %s franjas como máximo" },
+  de: { save: "Speichern", reload: "Neu laden", loading: "Wird geladen…",
+        writing: "Wird geschrieben…", written: "Auf das Gerät geschrieben",
+        add: "Zeitfenster hinzufügen", remove: "Dieses Zeitfenster entfernen",
+        midnight: "Ein Tag muss um 00:00 beginnen",
+        duplicate: "Zwei Zeitfenster können nicht gleichzeitig beginnen",
+        full: "Ein Tag fasst höchstens %s Zeitfenster" },
+  it: { save: "Salva", reload: "Ricarica", loading: "Caricamento…",
+        writing: "Scrittura…", written: "Scritto sul dispositivo",
+        add: "Aggiungi una fascia", remove: "Rimuovi questa fascia",
+        midnight: "Una giornata deve iniziare alle 00:00",
+        duplicate: "Due fasce non possono iniziare alla stessa ora",
+        full: "Un giorno tiene al massimo %s fasce" },
 };
 
 const STYLE = `
-  ha-card { padding: 12px 16px 16px; }
-  h2 { font-size: 16px; font-weight: 500; margin: 4px 0 12px;
-       text-transform: capitalize; }
-  .bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-         margin-bottom: 12px; }
-  .swatch { width: 30px; height: 28px; border-radius: 4px; cursor: pointer;
-            border: 2px solid transparent; font-size: 11px; color: #222;
-            display: flex; align-items: center; justify-content: center; }
-  .swatch.on { border-color: var(--primary-text-color); }
-  input[type=number] { width: 62px; padding: 4px; }
-  button { cursor: pointer; border-radius: 4px; padding: 5px 10px;
-           border: 1px solid var(--divider-color);
-           background: var(--card-background-color);
-           color: var(--primary-text-color); font-size: 13px; }
-  button.on { background: var(--primary-color); color: var(--text-primary-color); }
-  button[disabled] { opacity: .45; cursor: default; }
-  .grid { display: grid; grid-template-columns: 34px repeat(24, 1fr) 26px;
-          gap: 1px; }
-  .hour { font-size: 9px; text-align: center; white-space: nowrap;
+  :host {
+    /* Mushroom's own token where a mushroom theme defines it, Home
+     * Assistant's own where it does not, so the card is as round as whatever
+     * it is sitting between. */
+    --radius: var(--mush-border-radius, var(--ha-card-border-radius, 12px));
+    /* A chip is small enough that the card's own radius would swallow it, so
+     * it takes a fraction of it : the default theme lands back on the 8px
+     * these were written at, and a rounder theme rounds them too. */
+    --chip-radius: calc(var(--radius) * .7);
+    --chip-height: 32px;
+    --fill: rgba(var(--rgb-primary-text-color, 0, 0, 0), .08);
+  }
+  ha-card { padding: 16px; border-radius: var(--radius); }
+  h2 { font-size: 15px; font-weight: 600; letter-spacing: .01em;
+       margin: 0; text-transform: capitalize;
+       color: var(--primary-text-color); }
+
+  /* The head is what the card says when it is closed : what the program is
+   * asking for right now. The week is the editor behind it. */
+  .head { display: flex; align-items: center; gap: 10px; cursor: pointer;
+          user-select: none; }
+  .head h2 { flex: 1; }
+  .now { display: flex; align-items: center; gap: 6px; height: var(--chip-height);
+         border-radius: var(--chip-radius); padding: 0 9px; color: rgba(0, 0, 0, .78);
+         font-size: 12px; font-weight: 700; }
+  .now .at { font-weight: 500; opacity: .75; }
+  .caret { color: var(--secondary-text-color); font-size: 11px; width: 10px; }
+  .week { margin-top: 14px; }
+
+  /* The day name owns a column of its own : a day with more slots than the
+   * card is wide wraps under its own chips, and a wrapped line that started
+   * under the name would read as another day. */
+  .day { display: grid; grid-template-columns: 34px 1fr; gap: 6px;
+         align-items: start; margin-bottom: 6px; }
+  .name { font-size: 12px; font-weight: 500; line-height: var(--chip-height);
           color: var(--secondary-text-color); }
-  .day { font-size: 11px; line-height: 22px; color: var(--secondary-text-color); }
-  .cell { height: 22px; cursor: pointer; }
-  .cell:hover { outline: 2px solid var(--primary-text-color); outline-offset: -2px; }
-  .copy { font-size: 13px; line-height: 22px; text-align: center; cursor: pointer;
-          color: var(--secondary-text-color); }
-  .foot { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-  .msg { font-size: 12px; flex: 1; }
+  .slots { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* A slot is one chip carrying the two things it is : when it starts and
+   * what it asks for. The inputs are native, so the time picker and the
+   * number keyboard are the ones the phone already has. */
+  .slot { display: flex; align-items: center; height: var(--chip-height);
+          border-radius: var(--chip-radius); padding: 0 2px 0 7px; color: rgba(0, 0, 0, .78);
+          font-size: 12px; font-weight: 600; }
+  .slot input { appearance: none; border: none; background: transparent;
+                font: inherit; color: inherit; padding: 0; }
+  .slot input[type=time] { width: 44px; min-width: 0; font-weight: 700;
+                           opacity: .8; }
+  .slot input[type=time]::-webkit-calendar-picker-indicator { display: none; }
+  .slot input[type=number] { width: 24px; min-width: 0; text-align: right;
+                             margin-left: 6px; -moz-appearance: textfield; }
+  .slot input[type=number]::-webkit-inner-spin-button,
+  .slot input[type=number]::-webkit-outer-spin-button { appearance: none; }
+  .slot .unit { padding-right: 2px; }
+  .slot button { border: none; background: transparent; cursor: pointer;
+                 color: rgba(0, 0, 0, .45); font-size: 15px; line-height: 1;
+                 width: 20px; padding: 0; }
+  .slot button:hover { color: rgba(0, 0, 0, .8); }
+  .slot.fixed { padding-right: 8px; }
+
+  .add { width: 30px; height: var(--chip-height); border-radius: var(--chip-radius);
+         border: none; cursor: pointer; background: var(--fill);
+         color: var(--secondary-text-color); font-size: 16px; font-family: inherit; }
+  .add[disabled] { opacity: .35; cursor: default; }
+
+  .foot { display: flex; align-items: center; gap: 8px; margin-top: 14px; }
+  button.action { height: var(--chip-height); padding: 0 14px; border: none;
+           border-radius: var(--chip-radius); cursor: pointer; font-family: inherit;
+           font-size: 12px; font-weight: 500; background: var(--fill);
+           color: var(--primary-text-color); }
+  button.action[disabled] { opacity: .4; cursor: default; }
+  button#save:not([disabled]) { background: var(--primary-color);
+           color: var(--text-primary-color); }
+  .msg { font-size: 12px; flex: 1; color: var(--secondary-text-color); }
   .msg.error { color: var(--error-color); }
   .msg.ok { color: var(--success-color, green); }
   .msg.warn { color: var(--warning-color, orange); }
@@ -73,6 +166,8 @@ const toClock = (minutes) =>
     minutes % 60
   ).padStart(2, "0")}`;
 
+const refuse = (code, message) => Object.assign(new Error(message), { code });
+
 /* The setpoint a day holds at a minute, which is the last slot before it. */
 export const inChargeAt = (slots, minute) => {
   let held = null;
@@ -82,34 +177,70 @@ export const inChargeAt = (slots, minute) => {
   return held;
 };
 
-/* Painting an hour owns that hour : anything already starting inside it is
- * replaced, so a cell and a slot stay the same thing. Erasing 00:00 is
- * refused for the reason build_matrix refuses it -- the beginning of a day
- * must have a setpoint.
- *
- * Pure, and exported, so tests/test_schedule_card.mjs can hold it to that
- * without a browser.
+/* Where the week is now : which day it is and how far into it, in the
+ * browser's own clock. getDay() counts from Sunday, DAYS from Monday. */
+export const nowInWeek = (date = new Date()) => ({
+  day: DAYS[(date.getDay() + 6) % 7],
+  minute: date.getHours() * 60 + date.getMinutes(),
+});
+
+/* The three rules build_matrix enforces, enforced here too so a day is
+ * refused while it is still on screen rather than after Save has written the
+ * six days before it.
  */
-export const applyPaint = (slots, hour, temperature) => {
-  const start = hour * 60;
-  const kept = slots.filter(
-    (slot) => toMinutes(slot.time) < start || toMinutes(slot.time) >= start + 60
-  );
+const checked = (slots) => {
+  const times = slots.map((slot) => slot.time);
+  if (new Set(times).size !== times.length) {
+    throw refuse("duplicate", "Two slots cannot start at the same time");
+  }
+  if (!times.includes("00:00")) {
+    throw refuse("midnight", "A day has to start at 00:00");
+  }
+  return [...slots].sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
+};
 
-  if (temperature === null) {
-    if (hour === 0) {
-      throw new Error("00:00 must keep a setpoint : repaint it instead");
+/* Change one slot, or drop it when `change` is null. Pure, and exported, so
+ * tests/test_schedule_card.mjs can hold these to the rules without a
+ * browser. */
+export const writeSlot = (slots, index, change) => {
+  const next = slots.map((slot) => ({ ...slot }));
+  if (change === null) {
+    next.splice(index, 1);
+  } else {
+    next[index] = { ...next[index], ...change };
+  }
+  return checked(next);
+};
+
+/* A new slot lands in the middle of the longest stretch the day leaves
+ * empty, holding whatever was already in charge there : adding one should
+ * change nothing until somebody sets it to something. */
+export const addSlot = (slots) => {
+  if (slots.length >= MAX_SLOTS) {
+    throw refuse("full", `A day holds ${MAX_SLOTS} slots at most`);
+  }
+
+  const starts = slots.map((slot) => toMinutes(slot.time)).sort((a, b) => a - b);
+  const bounds = [...starts, 24 * 60];
+  let widest = 0;
+  let at = 0;
+  for (let index = 0; index < starts.length; index++) {
+    const gap = bounds[index + 1] - bounds[index];
+    if (gap > widest) {
+      widest = gap;
+      // Rounded to the half hour, which is how a program is usually written,
+      // and never onto the slot that opens the gap.
+      at = Math.max(
+        bounds[index] + 1,
+        Math.round((bounds[index] + gap / 2) / 30) * 30
+      );
     }
-    return kept;
   }
 
-  if (kept.length + 1 > MAX_SLOTS) {
-    throw new Error(`A day holds ${MAX_SLOTS} slots at most`);
-  }
-
-  return [...kept, { time: toClock(start), temperature }].sort(
-    (a, b) => toMinutes(a.time) - toMinutes(b.time)
-  );
+  return checked([
+    ...slots,
+    { time: toClock(at), temperature: inChargeAt(slots, at) },
+  ]);
 };
 
 // The card's base in a browser, and something importable outside one : the
@@ -122,25 +253,31 @@ class CozytouchScheduleCard extends CardBase {
     if (!config.entity) {
       throw new Error("cozytouch-schedule-card needs an `entity`");
     }
-    this._config = {
-      program: "heating",
-      min: 5,
-      max: 30,
-      step: 1,
-      ...config,
-    };
+    this._config = { program: "heating", min: 5, max: 30, step: 0.5, ...config };
     this._days = null;
+    this._language = null;
+    this._open = false;
     this._dirty = new Set();
-    this._brush = null;
-    this._erasing = false;
     this._status = "";
   }
 
   /* Rendering is driven by edits, not by state changes : a rebuild on every
-   * poll would take the focus out of the brush while somebody is typing. */
+   * poll would take the focus out of the field while somebody is typing. */
   set hass(hass) {
+    const language = hass.language || "en";
+    if (language !== this._language) {
+      this._language = language;
+      this._labels = dayNames(language);
+      // Anything before the dash is a language Home Assistant offers and the
+      // card does not : fr-CA falls back to fr before it falls back to en.
+      this._t = STRINGS[language] || STRINGS[language.split("-")[0]] || STRINGS.en;
+    }
+
     this._hass = hass;
+    // Closed, the head is a clock : nothing is focused, so redrawing it on a
+    // state update is what keeps it from going stale without a timer.
     if (this._days === null) this._load();
+    else if (!this._open) this._render();
   }
 
   getCardSize() {
@@ -159,11 +296,20 @@ class CozytouchScheduleCard extends CardBase {
         return_response: true,
       });
       this._days = result.response[this._config.entity].days;
-      this._brush = this._temperaturesInUse()[0] ?? 19;
     } catch (err) {
-      this._status = `error|${err.message || err}`;
+      this._status = `error|${this._say(err)}`;
     }
     this._render();
+  }
+
+  /* An error the card raised itself carries a code and is said in the
+   * reader's language; anything from Home Assistant or the network is
+   * repeated as it came. */
+  _say(err) {
+    const template = err.code && this._t[err.code];
+    return template
+      ? template.replace("%s", MAX_SLOTS)
+      : err.message || String(err);
   }
 
   _temperaturesInUse() {
@@ -174,47 +320,43 @@ class CozytouchScheduleCard extends CardBase {
     return [...seen].sort((a, b) => a - b);
   }
 
-  /* Blue where it is coldest, red where it is warmest, across whatever this
-   * program actually spans rather than across the config's min and max --
-   * a week between 19 and 21 would otherwise be seven shades of the same. */
+  /* Blue where it is coldest, red where it is warmest, through sand rather
+   * than through the spectrum, and across the setpoints the program actually
+   * uses rather than the config's min and max. See docs/decisions.md. */
   _colour(temperature) {
     if (temperature === null) return "var(--divider-color)";
+
+    const COLD = [124, 165, 214];
+    const MID = [240, 213, 138];
+    const WARM = [214, 106, 84];
+
     const used = this._temperaturesInUse();
     const low = Math.min(...used, temperature);
     const high = Math.max(...used, temperature);
-    const ratio = high === low ? 0.5 : (temperature - low) / (high - low);
-    return `hsl(${210 - 200 * ratio}, 70%, ${72 - 16 * ratio}%)`;
+    const ratio = high === low ? 0 : (temperature - low) / (high - low);
+
+    const [from, to, t] =
+      ratio < 0.5 ? [COLD, MID, ratio * 2] : [MID, WARM, (ratio - 0.5) * 2];
+    const mix = from.map((v, i) => Math.round(v + (to[i] - v) * t));
+    return `rgb(${mix.join(",")})`;
   }
 
-  _paint(day, hour) {
+  _apply(day, produce) {
+    const before = JSON.stringify(this._days[day]);
     try {
-      this._days[day] = applyPaint(
-        this._days[day] || [],
-        hour,
-        this._erasing ? null : this._brush
-      );
+      this._days[day] = produce(this._days[day]);
     } catch (err) {
-      this._status = `warn|${err.message}`;
+      this._status = `warn|${this._say(err)}`;
       return this._render();
     }
 
-    this._dirty.add(day);
-    this._status = "";
-    this._render();
-  }
-
-  _copyTo(day, targets) {
-    for (const target of targets) {
-      if (target === day) continue;
-      this._days[target] = this._days[day].map((slot) => ({ ...slot }));
-      this._dirty.add(target);
-    }
+    if (JSON.stringify(this._days[day]) !== before) this._dirty.add(day);
     this._status = "";
     this._render();
   }
 
   async _save() {
-    this._status = "busy|Writing…";
+    this._status = `busy|${this._t.writing}`;
     this._render();
     try {
       for (const day of this._dirty) {
@@ -226,9 +368,9 @@ class CozytouchScheduleCard extends CardBase {
         });
       }
       this._dirty.clear();
-      this._status = "ok|Written to the device";
+      this._status = `ok|${this._t.written}`;
     } catch (err) {
-      this._status = `error|${err.message || err}`;
+      this._status = `error|${this._say(err)}`;
     }
     this._render();
   }
@@ -239,99 +381,128 @@ class CozytouchScheduleCard extends CardBase {
     const [kind, message] = this._status.split("|");
     const days = DAYS.filter((day) => this._days[day]);
     const title = this._config.title || `${this._config.program} program`;
+    const body =
+      days.length === 0 ? this._empty(kind, message) : this._week(days, kind, message);
 
     this._shadow.innerHTML = `
       <style>${STYLE}</style>
       <ha-card>
-        <h2>${title}</h2>
-        ${days.length === 0 ? this._empty(kind, message) : this._week(days, kind, message)}
+        <div class="head" id="head">
+          <h2>${title}</h2>
+          ${this._nowChip()}
+          <span class="caret">${this._open ? "\u25B2" : "\u25BC"}</span>
+        </div>
+        ${this._open || this._dirty.size ? `<div class="week">${body}</div>` : ""}
       </ha-card>`;
 
-    this._bind(days);
+    this._bind();
+  }
+
+  /* What the program holds at this minute, on today's day. Absent while the
+   * card is still loading, or for a program the device reports without the
+   * day we are in. */
+  _nowChip() {
+    const { day, minute } = nowInWeek();
+    const slots = this._days?.[day];
+    if (!slots) return "";
+    const temperature = inChargeAt(slots, minute);
+    if (temperature === null) return "";
+    return `<div class="now" style="background:${this._colour(temperature)}">
+      <span class="at">${toClock(minute)}</span>
+      <span>${temperature.toLocaleString(this._language)}°</span>
+    </div>`;
   }
 
   _empty(kind, message) {
-    return `<div class="msg ${kind || ""}">${message || "Loading…"}</div>`;
+    return `<div class="msg ${kind || ""}">${message || this._t.loading}</div>`;
   }
 
   _week(days, kind, message) {
-    const swatches = this._temperaturesInUse()
-      .map((t) => {
-        const on = t === this._brush && !this._erasing ? "on" : "";
-        return `<div class="swatch ${on}" data-brush="${t}" style="background:${this._colour(t)}">${t}</div>`;
-      })
-      .join("");
-
-    const hours = [...Array(24).keys()]
-      .map((h) => `<div class="hour">${h % 3 === 0 ? h : ""}</div>`)
-      .join("");
-
-    const rows = days.map((day) => this._row(day)).join("");
     const pending = this._dirty.size;
-
     return `
-      <div class="bar">
-        ${swatches}
-        <input type="number" id="brush" value="${this._brush}"
-               min="${this._config.min}" max="${this._config.max}"
-               step="${this._config.step}">
-        <button id="erase" class="${this._erasing ? "on" : ""}">Erase</button>
-      </div>
-      <div class="grid">
-        <div></div>${hours}<div></div>
-        ${rows}
-      </div>
+      ${days.map((day) => this._row(day)).join("")}
       <div class="foot">
-        <button id="save" ${pending ? "" : "disabled"}>Save${pending ? ` (${pending})` : ""}</button>
-        <button id="reload">Reload</button>
+        <button class="action" id="save" ${pending ? "" : "disabled"}>${
+          this._t.save
+        }${pending ? ` (${pending})` : ""}</button>
+        <button class="action" id="reload">${this._t.reload}</button>
         <div class="msg ${kind || ""}">${message || ""}</div>
       </div>`;
   }
 
   _row(day) {
-    const cells = [...Array(24).keys()]
-      .map((h) => {
-        const t = inChargeAt(this._days[day], h * 60);
-        const clock = `${String(h).padStart(2, "0")}:00`;
-        const reads = t === null ? "—" : `${t} °C`;
-        return `<div class="cell" data-day="${day}" data-hour="${h}"
-                  title="${LABELS[day]} ${clock} — ${reads}"
-                  style="background:${this._colour(t)}"></div>`;
+    const slots = this._days[day];
+    const chips = slots
+      .map((slot, index) => {
+        // 00:00 is the one slot build_matrix insists on, so it has no
+        // remove button rather than a button that always refuses.
+        const fixed = slot.time === "00:00";
+        return `<div class="slot ${fixed ? "fixed" : ""}"
+                  style="background:${this._colour(slot.temperature)}">
+          <input type="time" value="${slot.time}"
+                 data-day="${day}" data-index="${index}" data-field="time">
+          <input type="number" value="${slot.temperature}"
+                 min="${this._config.min}" max="${this._config.max}"
+                 step="${this._config.step}"
+                 data-day="${day}" data-index="${index}" data-field="temperature">
+          <span class="unit">°</span>
+          ${
+            fixed
+              ? ""
+              : `<button data-drop="${day}" data-index="${index}"
+                   title="${this._t.remove}">×</button>`
+          }
+        </div>`;
       })
       .join("");
 
-    return `<div class="day">${LABELS[day]}</div>${cells}
-      <div class="copy" data-copy="${day}" title="Copy this day to the rest of the week">⧉</div>`;
+    const full = slots.length >= MAX_SLOTS;
+    return `<div class="day">
+      <div class="name">${this._labels[day]}</div>
+      <div class="slots">
+        ${chips}
+        <button class="add" data-add="${day}" ${full ? "disabled" : ""}
+                title="${full ? this._t.full.replace("%s", MAX_SLOTS) : this._t.add}"
+                >+</button>
+      </div>
+    </div>`;
   }
 
-  _bind(days) {
+  _bind() {
     const root = this._shadow;
 
-    root.querySelectorAll("[data-brush]").forEach((el) =>
-      el.addEventListener("click", () => {
-        this._brush = Number(el.dataset.brush);
-        this._erasing = false;
-        this._render();
+    root.querySelectorAll("input[data-field]").forEach((el) =>
+      el.addEventListener("change", () => {
+        const { day, index, field } = el.dataset;
+        const value = field === "time" ? el.value : Number(el.value);
+        // An emptied time field parses as "", which would leave the day
+        // without the slot the user is still editing.
+        if (field === "time" && !value) return this._render();
+        this._apply(day, (slots) =>
+          writeSlot(slots, Number(index), { [field]: value })
+        );
       })
     );
-    root.querySelectorAll(".cell").forEach((el) =>
+
+    root.querySelectorAll("[data-drop]").forEach((el) =>
       el.addEventListener("click", () =>
-        this._paint(el.dataset.day, Number(el.dataset.hour))
+        this._apply(el.dataset.drop, (slots) =>
+          writeSlot(slots, Number(el.dataset.index), null)
+        )
       )
     );
-    root.querySelectorAll("[data-copy]").forEach((el) =>
-      el.addEventListener("click", () => this._copyTo(el.dataset.copy, days))
+
+    root.querySelectorAll("[data-add]").forEach((el) =>
+      el.addEventListener("click", () =>
+        this._apply(el.dataset.add, (slots) => addSlot(slots))
+      )
     );
 
-    root.getElementById("brush")?.addEventListener("change", (event) => {
-      this._brush = Number(event.target.value);
-      this._erasing = false;
+    root.getElementById("head").addEventListener("click", () => {
+      this._open = !this._open;
       this._render();
     });
-    root.getElementById("erase")?.addEventListener("click", () => {
-      this._erasing = !this._erasing;
-      this._render();
-    });
+
     root.getElementById("save")?.addEventListener("click", () => this._save());
     root.getElementById("reload")?.addEventListener("click", () => {
       this._days = null;
@@ -351,6 +522,6 @@ if (typeof customElements !== "undefined") {
   window.customCards.push({
     type: "cozytouch-schedule-card",
     name: "Cozytouch Schedule",
-    description: "Paint a device's own weekly heating or cooling program",
+    description: "Edit a device's own weekly heating or cooling program",
   });
 }

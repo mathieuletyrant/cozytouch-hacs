@@ -3,7 +3,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from homeassistant.components.http import StaticPathConfig
+from aiohttp import web
+
+from homeassistant.components.http import HomeAssistantView
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -41,6 +43,25 @@ CARD_URL = f"/{DOMAIN}/cozytouch-schedule-card.js"
 CARD_SERVED = f"{DOMAIN}_card_served"
 
 
+CARD_PATH = Path(__file__).parent / "www" / "cozytouch-schedule-card.js"
+
+
+class CozytouchCardView(HomeAssistantView):
+    """Serve the schedule card, revalidated on every load.
+
+    A static path cannot set a header, and without one a browser caches the
+    file on its own guess and keeps an old card. See docs/decisions.md.
+    """
+
+    url = CARD_URL
+    name = f"{DOMAIN}:schedule-card"
+    requires_auth = False
+
+    async def get(self, request: web.Request) -> web.FileResponse:
+        """Answer with the card, telling the browser to check every time."""
+        return web.FileResponse(CARD_PATH, headers={"Cache-Control": "no-cache"})
+
+
 async def _async_serve_card(hass: HomeAssistant) -> None:
     """Serve the schedule card, once for all config entries.
 
@@ -51,17 +72,7 @@ async def _async_serve_card(hass: HomeAssistant) -> None:
         return
 
     hass.data[CARD_SERVED] = True
-    await hass.http.async_register_static_paths(
-        [
-            StaticPathConfig(
-                CARD_URL,
-                str(Path(__file__).parent / "www" / "cozytouch-schedule-card.js"),
-                # Not cached, so an update lands without anyone editing the
-                # resource url they typed once. See docs/decisions.md.
-                False,
-            )
-        ]
-    )
+    hass.http.register_view(CozytouchCardView)
 
 
 def _setting(entry: ConfigEntry, key: str) -> bool:
