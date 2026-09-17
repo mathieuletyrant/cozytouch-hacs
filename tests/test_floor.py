@@ -36,6 +36,9 @@ MODULES = (
     "sensor",
     "services",
     "switch",
+    # "llm" is deliberately absent : the platform it is written against is
+    # newer than the floor, and an install without it never imports the
+    # module. tests/test_llm_tools.py skips itself for the same reason.
 )
 
 

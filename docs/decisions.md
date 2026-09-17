@@ -2357,6 +2357,62 @@ says nothing when it does. That is the same trade 2.2 made for the per-day
 program sensors, and the reason the entity is removed rather than left to rot
 is that an unavailable entity is a worse silence than a missing one.
 
+## `custom_components/cozytouch/llm.py`
+
+A weekly program is the thing in this integration a person is most likely to
+want to say out loud -- "hold 21 in the morning", "stop heating the bedroom
+after ten" -- and the least likely to want to click through seven days for.
+Home Assistant's `llm` integration platform is what makes that possible
+without anything registering anything : the `llm` component imports
+`<integration>/llm.py` from every loaded integration and asks it for tools.
+
+The two tools are deliberately **not** the two services.
+
+`set_schedule` writes a whole day, because a whole day is what the device
+stores : ten slots, the first at 00:00, and writing one replaces the lot.
+Handing that to a language model means asking it to copy the eight slots it
+was not asked about back out, unchanged, every time. It will usually manage.
+The time it does not, the day that gets written is the day it remembered, and
+nothing in Home Assistant can tell that apart from a day somebody meant. That
+is a heating program silently losing its evening, found a week later.
+
+So the writing tool is a *period* -- entity, program, days, start, end,
+temperature -- and the merge happens in `apply_period`, in Python. The model
+says what to change; what not to change is not its problem. The reading tool
+stays raw, since reading cannot lose anything.
+
+`apply_period` is in `services.py` rather than here for two reasons : it is
+the same operation `calendar.async_create_event` already performs when an
+event is drawn over a day, and it has to stay testable on an install too old
+for the `llm` platform. It is not yet wired into the calendar -- that path
+has its own pinned behaviour around overlapping events, and changing it is a
+separate change with its own evidence.
+
+Three rules it enforces that the raw service cannot :
+
+- the slots the period covers are *replaced*, not kept, or a slot inside the
+  period would take charge in the middle of it
+- the slot closing the period carries what was in charge there before, which
+  is what makes "21 until 17:00" leave 17:00 onwards alone
+- a slot asking for what is already running is dropped, because a day holds
+  ten and one that changes nothing is one fewer for a period that would
+
+Midnight as an end means the end of the day. A person saying "22:00 to
+midnight" is describing the last stretch of the day, and the last slot of a
+day already runs to its end, so there is nothing to put back after it.
+
+Days that come out identical are written in one call : the service refreshes
+the device once per call, and "every day" would otherwise be seven refreshes
+for one sentence.
+
+The platform is newer than the Home Assistant version `hacs.json` declares.
+Nothing guards the import, and nothing needs to : an install without the
+`llm` component never imports this module. What does need saying is that
+`tests/test_floor.py` imports every module, so `llm` is named as absent from
+its list, and `tests/test_llm_tools.py` skips itself where the platform is
+missing.
+
+
 ## `custom_components/cozytouch/www/cozytouch-schedule-card.js`
 
 The calendar came first and is the wrong shape for this. Home Assistant's
