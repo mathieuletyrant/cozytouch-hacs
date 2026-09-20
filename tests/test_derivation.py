@@ -113,3 +113,28 @@ def test_a_gateway_is_not_typed_by_the_installation_it_fronts():
     infos = get_model_infos(4242, productId=96, modelFamily="Air_Conditioning")
 
     assert infos["type"] is CozytouchDeviceType.HUB
+
+
+def test_a_derived_gateway_gets_no_absence_setpoint():
+    """The gateway reports the away mode; it cannot hold a temperature for it.
+
+    A flag left off is taken as held, so this is silent when wrong: the entity
+    appears, and writing to it goes nowhere.
+    """
+    infos = get_model_infos(4242, productId=96)
+
+    assert infos["type"] is CozytouchDeviceType.HUB
+    assert infos["awayModeTemperatureAvailable"] is False
+
+
+def test_a_derived_room_inherits_its_gateway_flags():
+    """A room behind a clim gateway has no absence setpoint either."""
+    behind = [
+        device(1, 4242, productId=26, masterDeviceId=2),
+        device(2, 4243, productId=96),
+    ]
+
+    assert (
+        get_device_model_infos(behind, behind[0])["awayModeTemperatureAvailable"]
+        is False
+    )

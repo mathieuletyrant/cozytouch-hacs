@@ -448,6 +448,21 @@ MODEL_FAMILIES: dict[str | None, CozytouchDeviceType] = {
 }
 
 
+# The flags a derived device needs beyond its type. A gateway fronting an air
+# conditioning installation reports the away mode itself -- capability 152 sits
+# on it and on nothing else -- but has no absence *setpoint*, which is what the
+# mapped gateway branches say too. Left off means `capability.py` takes the
+# flag as held, so a gateway missing from here grows a setpoint it cannot
+# drive. See docs/decisions.md.
+DERIVED_FLAGS: dict[str | None, dict[str, bool]] = {
+    "NAVI_HUB": {"awayModeTemperatureAvailable": False},
+    "ZONI_CLIM_HUB": {"awayModeTemperatureAvailable": False},
+    "SPLIT_3S_HUB": {"awayModeTemperatureAvailable": False},
+    "S_HUB": {"awayModeTemperatureAvailable": False},
+    "AIR_CONDITIONER": {"awayModeTemperatureAvailable": False},
+}
+
+
 def product_type(productId: int | None) -> str | None:
     """The vendor's name for what a productId is, or None for one it skips."""
     if productId is None:
@@ -459,20 +474,21 @@ def product_type(productId: int | None) -> str | None:
 
 def derive(
     productId: int | None, modelFamily: str | None, masterProductId: int | None
-) -> tuple[CozytouchDeviceType, dict]:
+) -> tuple[CozytouchDeviceType, dict, dict[str, bool]]:
     """What a device says it is, for a model id no branch names.
 
     The table stays the override layer : this only answers where it said
     nothing. See docs/decisions.md.
     """
     kind = product_type(productId)
+    flags = DERIVED_FLAGS.get(kind, {})
     if kind == "ROOM":
-        return ROOM_BEHIND.get(
-            product_type(masterProductId), (CozytouchDeviceType.UNKNOWN, OFF_HEAT)
-        )
+        parent = product_type(masterProductId)
+        found = ROOM_BEHIND.get(parent, (CozytouchDeviceType.UNKNOWN, OFF_HEAT))
+        return *found, DERIVED_FLAGS.get(parent, {})
     if kind in DERIVED_TYPES:
-        return DERIVED_TYPES[kind]
-    return MODEL_FAMILIES.get(modelFamily, CozytouchDeviceType.UNKNOWN), OFF_HEAT
+        return *DERIVED_TYPES[kind], flags
+    return MODEL_FAMILIES.get(modelFamily, CozytouchDeviceType.UNKNOWN), OFF_HEAT, {}
 
 
 def get_device_model_infos(
@@ -888,8 +904,10 @@ def get_model_infos(  # noqa: C901
         modelInfos.name = MODEL_CATALOGUE.get(
             modelId, "Unknown product (" + str(modelId) + ")"
         )
-        modelInfos.type, modelInfos.HVACModes = derive(
+        modelInfos.type, modelInfos.HVACModes, flags = derive(
             productId, modelFamily, masterProductId
         )
+        for flag, held in flags.items():
+            setattr(modelInfos, flag, held)
 
     return modelInfos
