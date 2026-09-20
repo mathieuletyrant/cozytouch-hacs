@@ -121,6 +121,26 @@ MODEL_GROUPS = [
         },
     ),
     (
+        1691,
+        {
+            "modelId": 1691,
+            "HVACModesCapabilityId": set(),
+            "name": "ALFEA EXCELLIA S",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {},
+        },
+    ),
+    (
+        1391,
+        {
+            "modelId": 1391,
+            "HVACModesCapabilityId": set(),
+            "name": "Generator",
+            "type": CozytouchDeviceType.HEAT_PUMP,
+            "HVACModes": {},
+        },
+    ),
+    (
         235,
         {
             "modelId": 235,
@@ -1120,7 +1140,7 @@ def test_a_room_slot_without_its_zone_is_numbered_like_the_air_conditioners():
     assert get_model_infos(560, None, "ROOM_3", 2447)["name"] == "Radiator (#4)"
 
 
-@pytest.mark.parametrize("masterModelId", [2295, 2303, 2317])
+@pytest.mark.parametrize("masterModelId", [2295, 2303, 2317, 1691, 1692])
 @pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
 def test_a_room_slot_behind_an_alfea_is_a_heating_circuit(modelId, masterModelId):
     """The third master the same room index arrives behind : a heat pump's
@@ -1273,7 +1293,8 @@ def test_the_towel_rack_table_keeps_the_names_the_mapped_ids_had():
 
 
 @pytest.mark.parametrize(
-    "modelId", [*range(2295, 2318), *range(2326, 2329)]
+    "modelId",
+    [*range(2295, 2318), *range(2326, 2329), *range(1691, 1693)],
 )
 def test_every_alfea_extensa_s_id_resolves_off_the_catalogue(modelId):
     """The branch names these out of MODEL_CATALOGUE rather than a table of
@@ -1298,6 +1319,18 @@ def test_a_heating_circuit_slot_is_named_after_its_zone():
         == "Heating circuit (Circuit 1)"
     )
     assert get_model_infos(1389)["name"] == "Heating circuit (#2)"
+
+
+def test_the_generator_slot_is_the_generator_under_another_name():
+    """An Alfea Excellia S reports its generator as the slot 1391 rather than
+    as a catalogue id, so it cannot be named off the catalogue the way the
+    Extensa S halves are. Issue gduteil/cozytouch#173.
+    """
+    infos = get_model_infos(1391)
+
+    assert infos["name"] == "Generator"
+    assert infos["type"] == CozytouchDeviceType.HEAT_PUMP
+    assert infos["HVACModesCapabilityId"] == set()
 
 
 # ------------------------------------------------ the fourth ACI HYB badge

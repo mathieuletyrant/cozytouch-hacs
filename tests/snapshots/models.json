@@ -317,6 +317,13 @@
   "name": "Heating circuit (#3)",
   "type": "zone"
  },
+ "1391": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 1391,
+  "name": "Generator",
+  "type": "heat_pump"
+ },
  "1444": {
   "HVACModes": {
    "0": "off",
@@ -1518,6 +1525,20 @@
   "modelId": 1681,
   "name": "HUB Navizone",
   "type": "hub"
+ },
+ "1691": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 1691,
+  "name": "ALFEA EXCELLIA S",
+  "type": "heat_pump"
+ },
+ "1692": {
+  "HVACModes": {},
+  "HVACModesCapabilityId": [],
+  "modelId": 1692,
+  "name": "ALFEA EXCELLIA S TRI",
+  "type": "heat_pump"
  },
  "1734": {
   "AirCirculationSpeeds": {
