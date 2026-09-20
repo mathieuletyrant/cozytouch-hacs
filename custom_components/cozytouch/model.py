@@ -454,12 +454,16 @@ MODEL_FAMILIES: dict[str | None, CozytouchDeviceType] = {
 # mapped gateway branches say too. Left off means `capability.py` takes the
 # flag as held, so a gateway missing from here grows a setpoint it cannot
 # drive. See docs/decisions.md.
+# A room inherits these from its gateway, so the eco suppression the mapped
+# rooms carry reaches a derived one too. On the gateway itself it says the same
+# thing and costs nothing : a box reports neither capability.
+_AC_GATEWAY = {"awayModeTemperatureAvailable": False, "ecoModeAvailable": False}
 DERIVED_FLAGS: dict[str | None, dict[str, bool]] = {
-    "NAVI_HUB": {"awayModeTemperatureAvailable": False},
-    "ZONI_CLIM_HUB": {"awayModeTemperatureAvailable": False},
-    "SPLIT_3S_HUB": {"awayModeTemperatureAvailable": False},
-    "S_HUB": {"awayModeTemperatureAvailable": False},
-    "AIR_CONDITIONER": {"awayModeTemperatureAvailable": False},
+    "NAVI_HUB": _AC_GATEWAY,
+    "ZONI_CLIM_HUB": _AC_GATEWAY,
+    "SPLIT_3S_HUB": _AC_GATEWAY,
+    "S_HUB": _AC_GATEWAY,
+    "AIR_CONDITIONER": _AC_GATEWAY,
 }
 
 
@@ -716,10 +720,10 @@ def get_model_infos(  # noqa: C901
         modelInfos.quietModeAvailable = True
         modelInfos.awayModeTemperatureAvailable = False
 
-        # 557-561 report 100507 and the app offers no eco mode for them;
-        # 1734-1737 are left alone -- see docs/decisions.md.
-        if modelId <= 561:
-            modelInfos.ecoModeAvailable = False
+        # Every room reports 100507 and the app offers an eco mode for none
+        # of them, both ranges checked in the one household that has both.
+        # See docs/decisions.md.
+        modelInfos.ecoModeAvailable = False
 
         # Air circulation speed, all three values seen on the wire against the
         # app's "Lente", "Moyenne" and "Rapide".

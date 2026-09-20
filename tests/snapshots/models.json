@@ -1559,6 +1559,7 @@
    8
   ],
   "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
   "fanModes": {
    "1": "low",
    "2": "medium",
@@ -1595,6 +1596,7 @@
    8
   ],
   "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
   "fanModes": {
    "1": "low",
    "2": "medium",
@@ -1631,6 +1633,7 @@
    8
   ],
   "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
   "fanModes": {
    "1": "low",
    "2": "medium",
@@ -1667,6 +1670,7 @@
    8
   ],
   "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
   "fanModes": {
    "1": "low",
    "2": "medium",
@@ -1703,6 +1707,7 @@
    8
   ],
   "awayModeTemperatureAvailable": false,
+  "ecoModeAvailable": false,
   "fanModes": {
    "1": "low",
    "2": "medium",

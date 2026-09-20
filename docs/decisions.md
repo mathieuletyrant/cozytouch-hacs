@@ -291,12 +291,23 @@ hub child always carries a zone name and that is what the entity is called.
 Limits. The range stops at 1737 because that is where this household stops ;
 a tenth room would arrive unmapped and ask for its own report, which is the
 right failure -- the ids are not known to be per-slot the way the THZONE ones
-are. The eco gate that 557-561 carry (`ecoModeAvailable = False`, because the
-app offers none for them) is *not* extended : this report attaches the dump
-in place of what the app shows, so there is still no statement either way for
-1734-1737, and they stay on the default as 1734 already did. Reading 100507
-at 0 on every one of them, next to 557-561 also at 0, says nothing about
-whether the app exposes it. The `(#n)` numbering was left alone rather than
+are. The eco gate that 557-561 carry (`ecoModeAvailable = False`) now covers
+1734-1737 too. It was held back here for want of a statement about what the
+app shows, since reading 100507 at 0 on every one of them says nothing about
+whether the app exposes it. The statement came from the same household, which
+owns both ranges : no eco mode appears on any of its rooms. Two other things
+agree with it -- the two ranges declare identical feature bitfields (100002
+`ventilation_options_supported` 111, 100021 `ventilation_controls_supported`
+201, 100004 `ventilation_controls_available` 197), so they are one class as
+far as the vendor is concerned ; and the app has no availability data for the
+eco mode at all, where every neighbouring feature has an Available/Supported
+pair -- `IVentilationFeature` declares `isSavingEnergyModeEnabled()` alone,
+and neither `VentilationOption` nor `VentilationControls` names an energy
+member. So this is not derivable from a capability, and the flag stays.
+
+An eco switch disappears from an install that has 1734-1737. It wrote to a
+capability the vendor's own app does not offer, which is the reason to take
+the removal rather than keep a control that looks like it does something. The `(#n)` numbering was left alone rather than
 made to read `#6` for 1734 : it would rename an existing model's fallback on
 the strength of one household's slot order.
 

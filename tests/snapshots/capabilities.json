@@ -7839,14 +7839,7 @@
     "name": "presence_mode",
     "type": "switch"
    },
-   "100507": {
-    "capabilityId": 100507,
-    "category": "sensor",
-    "icon": "mdi:flower-outline",
-    "modelId": 1734,
-    "name": "eco_mode",
-    "type": "switch"
-   },
+   "100507": {},
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -9232,7 +9225,6 @@
     "capabilityId": 7,
     "category": "sensor",
     "currentValueCapabilityId": 117,
-    "ecoCapabilityId": 100507,
     "fanModeCapabilityId": 100801,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
@@ -9269,7 +9261,6 @@
     "capabilityId": 8,
     "category": "sensor",
     "currentValueCapabilityId": 117,
-    "ecoCapabilityId": 100507,
     "fanModeCapabilityId": 100801,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,

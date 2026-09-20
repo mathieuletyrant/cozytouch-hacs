@@ -474,6 +474,7 @@ MODEL_GROUPS = [
             "type": CozytouchDeviceType.AC,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
+            "ecoModeAvailable": False,
             "AirCirculationSpeeds": {
                 1: AIR_CIRCULATION_SPEED_LOW,
                 2: AIR_CIRCULATION_SPEED_MEDIUM,
@@ -505,6 +506,7 @@ MODEL_GROUPS = [
             "type": CozytouchDeviceType.AC,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
+            "ecoModeAvailable": False,
             "AirCirculationSpeeds": {
                 1: AIR_CIRCULATION_SPEED_LOW,
                 2: AIR_CIRCULATION_SPEED_MEDIUM,

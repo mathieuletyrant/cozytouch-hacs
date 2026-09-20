@@ -22,7 +22,8 @@ from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
 AIR_CONDITIONERS = {557, 558, 559, 560, 561}
-# The rooms a gateway numbers past its fifth, same branch without the eco gate.
+# The rooms a gateway numbers past its fifth, same branch and now the same
+# eco gate : the household that has both ranges sees an eco mode on neither.
 SECOND_BLOCK_AIR_CONDITIONERS = {1734, 1735, 1736, 1737}
 
 # Every model id the table maps, as opposed to the ones it sends to UNKNOWN.
@@ -86,7 +87,7 @@ def test_a_zone_maps_to_nothing_at_all():
             | SECOND_BLOCK_AIR_CONDITIONERS
             | {556, 1681, 1758, 2447, 2448, 2449, 2450},
         ),
-        ("ecoModeAvailable", AIR_CONDITIONERS),
+        ("ecoModeAvailable", AIR_CONDITIONERS | SECOND_BLOCK_AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),
         ("currentTemperatureAvailableZ1", {76, 211, 219, 418}),
         ("currentTemperatureAvailableZ2", {76, 211, 219, 418}),
