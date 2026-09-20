@@ -162,8 +162,10 @@ ALFEA_EXTENSA_DUO_AI_3 = {
 }
 
 # The heating circuit slots the catalogue calls TESC_0 to TESC_2, one
-# productId each. See docs/decisions.md.
+# productId each, and the GENERATOR_0 slot that sits beside them.
+# See docs/decisions.md.
 TESC_SLOTS = range(1388, 1391)
+GENERATOR_SLOT = 1391
 
 # The Alfea Extensa S, which reports itself as two devices : the connected
 # interface and the generator under it. The catalogue's own productId is what
@@ -171,6 +173,16 @@ TESC_SLOTS = range(1388, 1391)
 # See docs/decisions.md.
 ALFEA_EXTENSA_S_INTERFACES = range(2295, 2318)
 ALFEA_EXTENSA_S_GENERATORS = range(2326, 2329)
+
+# The Alfea Excellia S, the same shape with its generator reported as a slot
+# rather than as a catalogue id. See docs/decisions.md.
+ALFEA_EXCELLIA_S_INTERFACES = range(1691, 1693)
+
+# Every interface a room slot can hang off, which is what makes that slot a
+# heating circuit rather than an air conditioner.
+ALFEA_S_INTERFACES = frozenset(
+    (*ALFEA_EXTENSA_S_INTERFACES, *ALFEA_EXCELLIA_S_INTERFACES)
+)
 
 # One water heater platform, coded TD <volume> VS <brand> <power>M TYB V5S,
 # with SERP for the tank that carries a coil; the grid is volume x coil x
@@ -422,12 +434,20 @@ def get_model_infos(  # noqa: C901
 
         modelInfos.exhaustTemperatureAvailable = False
 
-    elif modelId in ALFEA_EXTENSA_S_INTERFACES:
+    elif modelId in ALFEA_S_INTERFACES:
         # The connected interface of the appliance, not a circuit : it reports
         # the whole-appliance readings and no setpoint, the control living on
         # the room and hot water slots under it. Capability 8 is on it and is
         # not a mode here -- see docs/decisions.md.
         modelInfos.name = MODEL_CATALOGUE[modelId]
+        modelInfos.type = CozytouchDeviceType.HEAT_PUMP
+        modelInfos.HVACModesCapabilityId = set()
+        modelInfos.HVACModes = {}
+
+    elif modelId == GENERATOR_SLOT:
+        # The same generator, reported as a slot beside the circuits rather
+        # than as a product of its own. See docs/decisions.md.
+        modelInfos.name = "Generator"
         modelInfos.type = CozytouchDeviceType.HEAT_PUMP
         modelInfos.HVACModesCapabilityId = set()
         modelInfos.HVACModes = {}
@@ -505,7 +525,7 @@ def get_model_infos(  # noqa: C901
         modelInfos.type = CozytouchDeviceType.RADIATOR
         modelInfos.HVACModes = OFF_HEAT
 
-    elif masterModelId in ALFEA_EXTENSA_S_INTERFACES and 557 <= modelId <= 561:
+    elif masterModelId in ALFEA_S_INTERFACES and 557 <= modelId <= 561:
         # The same room index behind a heat pump rather than an AC hub, so it
         # is the room control of a heating circuit. Its modes are the app's
         # OFF / ON / AUTO -- frost protection, heating, and heating driven by

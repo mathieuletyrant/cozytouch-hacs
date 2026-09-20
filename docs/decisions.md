@@ -574,6 +574,43 @@ circuit that does not offer cooling, and a report saying so is what would
 settle it. The two tiles the app draws for this household -- Circuit 1 and
 the hot water -- are what the mapping now produces.
 
+### The Alfea Excellia S is the Extensa S with its generator as a slot
+
+Issue gduteil/cozytouch#173 reports an Alfea Excellia S with two heating
+circuits, and the dump is the Extensa S of issue #93 with two of its five
+devices numbered differently:
+
+| device | slot | modelId | mapped as |
+| ------ | ---- | ------: | --------- |
+| interface | `CESA V2` | 1691 | `ALFEA EXCELLIA S`, `HEAT_PUMP` |
+| generator | `GENERATOR_0` | 1391 | `Generator`, `HEAT_PUMP` |
+| circuit 1 | `TESC_0` | 1388 | `Heating circuit (Circuit 1)`, `ZONE` |
+| circuit 2 | `TESC_1` | 1389 | `Heating circuit (Circuit 2)`, `ZONE` |
+| room | `ROOM_0` | 557 | `Heating circuit (Chambres)`, `THERMOSTAT` |
+
+Two things follow. The interface ids, 1691 and 1692 (`ALFEA EXCELLIA S TRI`),
+are catalogue products like the Extensa S ones and join that branch, so
+`ALFEA_S_INTERFACES` is what the room slot is now read against -- a `ROOM_n`
+behind either line is a heating circuit, with the same OFF / AUTO / HEAT the
+app offers. Capability 166 reads **21** on this unit as it did on the Extensa
+S, which is that table exactly, and 100022 reads **29** again: the line does
+cooling, this installation does not have the kit.
+
+The generator is the difference. The Extensa S reports it as a catalogue id
+(2326-2328) and the Excellia S as `GENERATOR_0`, slot 1391, which the
+catalogue does not carry -- so it cannot be named off `MODEL_CATALOGUE` the
+way that branch does, and gets the literal name `Generator`. One slot, not a
+range: 1388-1390 are three because the catalogue lists `TESC_0` to `TESC_2`,
+and nothing says how many generators a slot block allows.
+
+**What is left open is capability 109.** The reporter reads it as an ambient
+temperature on the two circuit slots -- 23.07 and 22.01 against a room at
+22.69 -- where the table names it `boiler_water_temperature`, and asks for the
+gate 116 has. The dump was taken in September with the heating off, when a
+circuit's water and the room it heats read the same, so it does not separate
+the two readings. The table is left alone until a winter dump says which it
+is; a reading of 45 on a circuit would settle it in one line.
+
 ### The two app tiles are five devices, and one of them is a pair
 
 Worth writing down, because it reads as a bug. The app draws two tiles and the

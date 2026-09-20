@@ -86,6 +86,7 @@ rooms in.
 | Alfea | 76 | Alfea Extensa Duo AI UE |
 | Alfea | 211 | Alfea Extensa Duo A.I. 3 R32 |
 | Alfea | 219 | Alfea Extensa Duo A.I. 3 R32 Thermor |
+| Alfea | 1691, 1692 | Alfea Excellia S, S Tri (interface) |
 | Alfea | 2295-2317 | Alfea Extensa S, S Duo, S Duo XL (interface) |
 | Alfea | 2326-2328 | Alfea Extensa S, S Duo, S Duo XL (generator) |
 
@@ -149,11 +150,13 @@ first five rooms, 1734-1737 for the next four.
 | ------: | ---- | ------ | --------- |
 | 557-561 | `ROOM_0`-`ROOM_4` | a CozyBox (2447-2450) | Radiator |
 | 557-561 | `ROOM_0`-`ROOM_4` | an Alfea Extensa S interface (2295-2317) | Heating circuit |
+| 557-561 | `ROOM_0`-`ROOM_4` | an Alfea Excellia S interface (1691, 1692) | Heating circuit |
 | 557-561 | `ROOM_0`-`ROOM_4` | a Naviclim (556) or Navizone (1681, 1758) | Air conditioner |
 | 1734-1737 | `ROOM_5`-`ROOM_8` | a HUB Cozytouch (1457) | Air conditioner |
 | 562-570 | `UI_0`-`UI_8` | any of the above | Air conditioner user interface |
 | 1376 | `DHW_0` | an appliance that heats water | Domestic hot water |
 | 1388-1390 | `TESC_0`-`TESC_2` | an appliance that heats | Heating circuit |
+| 1391 | `GENERATOR_0` | an appliance that heats | Generator |
 
 A room slot behind a gateway this table does not know falls through to the air
 conditioner mapping, which is what the first five ids were read as before the
