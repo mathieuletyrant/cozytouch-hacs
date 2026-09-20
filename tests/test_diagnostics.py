@@ -83,12 +83,18 @@ def test_a_zone_is_not_offered_when_adding_the_integration():
     assert [dev["name"] for dev in summaries] == ["ROOM_0"]
 
 
-def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):
+def device(
+    deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904, productId=0
+):
+    """A device the API could send. `productId` 0 is the value Atlantic leaves
+    on a model it assigns no product type, so the default classifies nothing
+    and a case that wants the derivation to fire passes its own.
+    """
     return {
         "deviceId": deviceId,
         "name": name,
         "modelId": modelId,
-        "productId": 65,
+        "productId": productId,
         "zoneId": zoneId,
         "gatewaySerialNumber": "3022-6760-8541",
         "tags": [],

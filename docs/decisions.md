@@ -694,6 +694,31 @@ capture has it as `---` on the three zone devices, so `productId` is the field
 to read. What a live CozyBox account sends is
 unknown until somebody dumps one, so the id set that names it stays.
 
+### The fall-through derives, and the table stays the override layer
+
+`derive()` in `model.py` is that reading turned on, in the one place it cannot
+regress anything : the `else` at the end of `get_model_infos`, reached only by
+a model id no branch names. A mapped id is answered by its branch exactly as
+before, whatever the device declares, which is what keeps the deliberate
+suppressions -- `ecoModeAvailable` False on 557-561 among them -- out of reach
+of a number on the wire. `tests/test_derivation.py` pins that order first.
+
+It reads three things, in that order : the `productId` against the ranges
+above, the parent's `productId` where the first said `ROOM`, and `modelFamily`
+where Atlantic assigned no `productId` at all. A room whose parent is not on
+the account stays UNKNOWN rather than being guessed at, since guessing is what
+handed every unmapped room to the air conditioner branch.
+
+Measured over the catalogue: 234 model ids typed before, 1184 after -- 360
+towel racks, 183 heat pumps, 165 boilers, 99 thermostats, 96 water heaters.
+The five mode tables the mapped ids use are the five this lookup returns, so
+the modes come with the type rather than needing a branch of their own.
+
+The dump follows: `isMapped` now reports what the *table* names, not what the
+device declares, because a dump is read to find what the table does not have.
+The repair goes quiet for a derived device, which is the point -- it existed
+because the classification was keyed on the wrong field.
+
 ## `custom_components/cozytouch/climate.py`
 
 ### The mode list is the model's table, narrowed by what the unit reports

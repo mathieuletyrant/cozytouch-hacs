@@ -544,7 +544,10 @@ class Hub(DataUpdateCoordinator):
                     "model": {
                         "name": modelInfos.name,
                         "type": str(modelInfos.type),
-                        "isMapped": modelInfos.type
+                        # The table alone, not what the device declares
+                        # about itself : a dump is read to find what the
+                        # table does not name. See docs/decisions.md.
+                        "isMapped": get_model_infos(dev["modelId"]).type
                         is not CozytouchDeviceType.UNKNOWN,
                         "infos": {
                             key: str(value)

@@ -338,6 +338,130 @@ NAEMA_NAIA_BOILERS = {
 }
 
 
+# What Atlantic's own app classifies on. `ProductType.java` in the decompiled
+# client holds these ranges ; the setup view sends the `productId` they index,
+# and `account.py` already stores it per device. See docs/decisions.md.
+PRODUCT_TYPES: dict[str, frozenset[int]] = {
+    "ROOM": frozenset((*range(26, 31), *range(97, 112))),
+    "AIR_CONDITIONER_UI": frozenset(range(31, 41)),
+    "TH_ZONE": frozenset(range(65, 95)),
+    "CESA_V2_MAIN_COMPONENT": frozenset({54}),
+    "CESA_V2_GENERATOR": frozenset(range(58, 62)),
+    "DHW": frozenset({47, 62}),
+    "AIR_CONDITIONER": frozenset({25}),
+    "NAVI_HUB": frozenset({63}),
+    "ZONI_CLIM_HUB": frozenset({96}),
+    "SPLIT_3S_HUB": frozenset({95}),
+    "S_HUB": frozenset({98}),
+    "DISCOVER_MASTER": frozenset({6, 44, 112, 113}),
+    "HDG2": frozenset({7}),
+    "DARWIN_BOILER": frozenset({4}),
+    "TD1": frozenset({53}),
+    "BD0": frozenset({41}),
+    "HE3Z": frozenset({64}),
+    "PASS_APC_BOILER": frozenset({1}),
+    "PASS_APC_HEAT_PUMP": frozenset({2}),
+    "PASS_APC_HYBRID": frozenset({3}),
+    "UNDERFLOOR_HEATER": frozenset({121}),
+    "CONSOLE": frozenset({122}),
+    "WALL_AIR_CONDITIONER": frozenset({123}),
+    "REMOTE_CONTROL": frozenset({124}),
+}
+
+# The modes a room air conditioner offers, shared by the mapped branch and the
+# derivation below.
+AC_HVAC_MODES = {
+    0: HVACMode.OFF,
+    1: HVACMode.AUTO,
+    3: HVACMode.COOL,
+    4: HVACMode.HEAT,
+    7: HVACMode.FAN_ONLY,
+    8: HVACMode.DRY,
+}
+
+# The room control of a heating circuit : the app's OFF / ON / AUTO.
+CIRCUIT_HVAC_MODES = {
+    0: HVACMode.OFF,
+    1: HVACMode.AUTO,
+    4: HVACMode.HEAT,
+}
+
+# What each ProductType is, and the modes that go with it. Five tables cover
+# every mapped model, which is why this is a lookup and not a branch.
+DERIVED_TYPES: dict[str, tuple[CozytouchDeviceType, dict]] = {
+    "AIR_CONDITIONER_UI": (CozytouchDeviceType.AC_CONTROLLER, OFF_ONLY),
+    "TH_ZONE": (CozytouchDeviceType.ZONE, {}),
+    "CESA_V2_MAIN_COMPONENT": (CozytouchDeviceType.HEAT_PUMP, {}),
+    "CESA_V2_GENERATOR": (CozytouchDeviceType.HEAT_PUMP, {}),
+    "DHW": (CozytouchDeviceType.WATER_HEATER, OFF_HEAT),
+    "AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+    "NAVI_HUB": (CozytouchDeviceType.HUB, OFF_ONLY),
+    "ZONI_CLIM_HUB": (CozytouchDeviceType.HUB, OFF_ONLY),
+    "SPLIT_3S_HUB": (CozytouchDeviceType.HUB, OFF_ONLY),
+    "S_HUB": (CozytouchDeviceType.HUB, OFF_ONLY),
+    "DISCOVER_MASTER": (CozytouchDeviceType.HUB, OFF_ONLY),
+    "HDG2": (CozytouchDeviceType.WATER_HEATER, OFF_HEAT),
+    "DARWIN_BOILER": (CozytouchDeviceType.THERMOSTAT, OFF_HEAT),
+    "TD1": (CozytouchDeviceType.TOWEL_RACK, OFF_HEAT),
+    "BD0": (CozytouchDeviceType.RADIATOR, OFF_HEAT),
+    "HE3Z": (CozytouchDeviceType.THERMOSTAT, OFF_HEAT),
+    "PASS_APC_BOILER": (CozytouchDeviceType.GAZ_BOILER, OFF_HEAT),
+    "PASS_APC_HEAT_PUMP": (CozytouchDeviceType.HEAT_PUMP, OFF_HEAT),
+    "PASS_APC_HYBRID": (CozytouchDeviceType.HEAT_PUMP, OFF_HEAT),
+    "UNDERFLOOR_HEATER": (CozytouchDeviceType.RADIATOR, OFF_HEAT),
+    "CONSOLE": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+    "WALL_AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+}
+
+# The interfaces a room hangs off, and what a room behind each one is. The id
+# alone is a room index ; the parent says what is in the room.
+ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict]] = {
+    "CESA_V2_MAIN_COMPONENT": (CozytouchDeviceType.THERMOSTAT, CIRCUIT_HVAC_MODES),
+    "AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+    "ZONI_CLIM_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+    "SPLIT_3S_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+}
+
+# The families the setup view sends where no productId is assigned. Fewer
+# devices have been seen carrying these than carrying a productId, so they are
+# read only after it. See docs/decisions.md.
+MODEL_FAMILIES: dict[str | None, CozytouchDeviceType] = {
+    "Boiler": CozytouchDeviceType.GAZ_BOILER,
+    "Water_Heater": CozytouchDeviceType.WATER_HEATER,
+    "Heat_Pump": CozytouchDeviceType.HEAT_PUMP,
+    "Hybrid_Heat_Pump": CozytouchDeviceType.HEAT_PUMP,
+    "Connectivity_Box": CozytouchDeviceType.HUB,
+}
+
+
+def product_type(productId: int | None) -> str | None:
+    """The vendor's name for what a productId is, or None for one it skips."""
+    if productId is None:
+        return None
+    return next(
+        (name for name, ids in PRODUCT_TYPES.items() if productId in ids), None
+    )
+
+
+def derive(
+    productId: int | None, modelFamily: str | None, masterProductId: int | None
+) -> tuple[CozytouchDeviceType, dict]:
+    """What a device says it is, for a model id no branch names.
+
+    The table stays the override layer : this only answers where it said
+    nothing. See docs/decisions.md.
+    """
+    kind = product_type(productId)
+    if kind == "ROOM":
+        return ROOM_BEHIND.get(
+            product_type(masterProductId), (CozytouchDeviceType.UNKNOWN, OFF_HEAT)
+        )
+    if kind in DERIVED_TYPES:
+        return DERIVED_TYPES[kind]
+    return MODEL_FAMILIES.get(modelFamily, CozytouchDeviceType.UNKNOWN), OFF_HEAT
+
+
 def get_device_model_infos(
     devices: list[dict], dev: dict, zoneName: str | None = None
 ) -> ModelInfos:
@@ -350,16 +474,19 @@ def get_device_model_infos(
     that passed the model id alone got the wrong one of those, silently.
     """
     masterDeviceId = dev.get("masterDeviceId")
-    masterModelId = next(
-        (
-            master["modelId"]
-            for master in devices
-            if master["deviceId"] == masterDeviceId
-        ),
-        None,
+    master = next(
+        (found for found in devices if found["deviceId"] == masterDeviceId), None
     )
 
-    return get_model_infos(dev["modelId"], zoneName, dev.get("name"), masterModelId)
+    return get_model_infos(
+        dev["modelId"],
+        zoneName,
+        dev.get("name"),
+        master["modelId"] if master else None,
+        productId=dev.get("productId"),
+        modelFamily=dev.get("modelFamily"),
+        masterProductId=master.get("productId") if master else None,
+    )
 
 
 def get_model_infos(  # noqa: C901
@@ -367,12 +494,21 @@ def get_model_infos(  # noqa: C901
     zoneName: str | None = None,
     deviceName: str | None = None,
     masterModelId: int | None = None,
+    *,
+    productId: int | None = None,
+    modelFamily: str | None = None,
+    masterProductId: int | None = None,
 ) -> ModelInfos:
     """Return infos from model ID.
 
     `deviceName` and `masterModelId` are the two inputs that are not the id : a
     zone is recognised by its name, and a room slot by the hub it hangs off.
-    See docs/decisions.md.
+
+    The three keyword inputs are what the device itself declares, and they are
+    read only by the fall-through : a model id the table names is answered by
+    the table, unchanged. `get_device_model_infos` fills them in ; a caller
+    that has a model id and nothing else leaves them out and gets what it
+    always got. See docs/decisions.md.
     """
     modelInfos = ModelInfos(modelId=modelId, HVACModesCapabilityId={7, 8})
 
@@ -536,11 +672,7 @@ def get_model_infos(  # noqa: C901
             else "Heating circuit (#" + str(modelId - 556) + ")"
         )
         modelInfos.type = CozytouchDeviceType.THERMOSTAT
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            1: HVACMode.AUTO,
-            4: HVACMode.HEAT,
-        }
+        modelInfos.HVACModes = CIRCUIT_HVAC_MODES
 
     elif 557 <= modelId <= 561 or 1734 <= modelId <= 1737:
         name = "Air Conditioner "
@@ -582,14 +714,7 @@ def get_model_infos(  # noqa: C901
             4: SWING_MODE_DOWN,
         }
 
-        modelInfos.HVACModes = {
-            0: HVACMode.OFF,
-            1: HVACMode.AUTO,
-            3: HVACMode.COOL,
-            4: HVACMode.HEAT,
-            7: HVACMode.FAN_ONLY,
-            8: HVACMode.DRY,
-        }
+        modelInfos.HVACModes = AC_HVAC_MODES
 
     elif modelId >= 562 and modelId <= 570:
         name = "Air Conditioner User Interface "
@@ -744,12 +869,14 @@ def get_model_infos(  # noqa: C901
         modelInfos.HeatingModes = MANUAL_ECO_PROG
 
     else:
-        # A catalogue name where there is one; the type stays UNKNOWN
-        # either way. See docs/decisions.md.
+        # No branch names this model id, so the device is asked instead : what
+        # it reports classifies it where the table said nothing, and the name
+        # still comes from the catalogue. See docs/decisions.md.
         modelInfos.name = MODEL_CATALOGUE.get(
             modelId, "Unknown product (" + str(modelId) + ")"
         )
-        modelInfos.type = CozytouchDeviceType.UNKNOWN
-        modelInfos.HVACModes = OFF_HEAT
+        modelInfos.type, modelInfos.HVACModes = derive(
+            productId, modelFamily, masterProductId
+        )
 
     return modelInfos
