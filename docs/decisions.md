@@ -733,6 +733,15 @@ towel racks, 183 heat pumps, 165 boilers, 99 thermostats, 96 water heaters.
 The five mode tables the mapped ids use are the five this lookup returns, so
 the modes come with the type rather than needing a branch of their own.
 
+It names the device too. `hub.py` registers a device under `modelInfos.name`,
+so hardware the catalogue does not list read as `Unknown product (1234)` in
+Home Assistant -- for a working appliance. A derived room is now named the way
+a mapped one is, from the zone the account gives it and otherwise from the
+vendor's own index (`productId` 101 is `ROOM_9`), and anything else falls back
+to the `longName` the setup view sends, then `customName`. `longName` comes
+first because the vendor sends `---` in it for zone devices, which is read as
+nothing.
+
 The dump follows: `isMapped` now reports what the *table* names, not what the
 device declares, because a dump is read to find what the table does not have.
 The repair goes quiet for a derived device, which is the point -- it existed

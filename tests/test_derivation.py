@@ -27,6 +27,8 @@ def device(deviceId, modelId, productId, masterDeviceId=None, modelFamily=None):
         "productId": productId,
         "masterDeviceId": masterDeviceId,
         "modelFamily": modelFamily,
+        "longName": None,
+        "customName": None,
         "name": "",
     }
 
@@ -138,3 +140,35 @@ def test_a_derived_room_inherits_its_gateway_flags():
         get_device_model_infos(behind, behind[0])["awayModeTemperatureAvailable"]
         is False
     )
+
+
+def test_a_derived_room_is_named_after_its_room():
+    """Named the way the mapped rooms are, since that is what a user sees.
+
+    The index is the vendor's own -- productId 101 is `ROOM_9` -- rather than a
+    count of our own, so two accounts describe the same room the same way.
+    """
+    behind = [
+        device(1, 9999, productId=101, masterDeviceId=2),
+        device(2, 9998, productId=96),
+    ]
+
+    assert get_device_model_infos(behind, behind[0], "Chambre")["name"] == (
+        "Air Conditioner (Chambre)"
+    )
+    assert get_device_model_infos(behind, behind[0])["name"] == "Air Conditioner (#9)"
+
+
+def test_a_device_the_catalogue_does_not_name_reads_as_the_api_calls_it():
+    """"Unknown product (9997)" was the name a user saw for working hardware.
+
+    The setup view says what the device is called, and `longName` is checked
+    before `customName` because the vendor sends `---` in it for some slots.
+    """
+    dev = device(1, 9997, productId=0, modelFamily="Water_Heater")
+    dev["longName"] = "Aquastyle 300L"
+
+    infos = get_device_model_infos([dev], dev)
+
+    assert infos["name"] == "Aquastyle 300L"
+    assert infos["type"] is CozytouchDeviceType.WATER_HEATER

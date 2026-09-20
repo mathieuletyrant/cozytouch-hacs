@@ -413,14 +413,19 @@ DERIVED_TYPES: dict[str, tuple[CozytouchDeviceType, dict]] = {
     "WALL_AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
 }
 
-# The interfaces a room hangs off, and what a room behind each one is. The id
-# alone is a room index ; the parent says what is in the room.
-ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict]] = {
-    "CESA_V2_MAIN_COMPONENT": (CozytouchDeviceType.THERMOSTAT, CIRCUIT_HVAC_MODES),
-    "AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
-    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
-    "ZONI_CLIM_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
-    "SPLIT_3S_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
+# The interfaces a room hangs off, and what a room behind each one is: its
+# type, its modes, and the word it is named by. The id alone is a room index ;
+# the parent says what is in the room.
+ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict, str]] = {
+    "CESA_V2_MAIN_COMPONENT": (
+        CozytouchDeviceType.THERMOSTAT,
+        CIRCUIT_HVAC_MODES,
+        "Heating circuit",
+    ),
+    "AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
+    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
+    "ZONI_CLIM_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
+    "SPLIT_3S_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
 }
 
 # The other half of the vendor's classification : `productId` says which part
@@ -476,23 +481,63 @@ def product_type(productId: int | None) -> str | None:
     )
 
 
+def room_index(productId: int) -> int:
+    """The number Atlantic gives a room : `ROOM_0` to `ROOM_19`.
+
+    Two blocks, 26-30 and 97-111, which the vendor numbers as one run.
+    """
+    return productId - 26 if productId <= 30 else productId - 92
+
+
 def derive(
-    productId: int | None, modelFamily: str | None, masterProductId: int | None
-) -> tuple[CozytouchDeviceType, dict, dict[str, bool]]:
-    """What a device says it is, for a model id no branch names.
+    modelInfos: ModelInfos,
+    productId: int | None,
+    modelFamily: str | None,
+    masterProductId: int | None,
+    zoneName: str | None,
+    fallbackName: str | None,
+) -> None:
+    """Fill in what a device says about itself, for an id no branch names.
 
     The table stays the override layer : this only answers where it said
     nothing. See docs/decisions.md.
     """
     kind = product_type(productId)
-    flags = DERIVED_FLAGS.get(kind, {})
-    if kind == "ROOM":
+    label = None
+    if kind == "ROOM" and productId is not None:
         parent = product_type(masterProductId)
-        found = ROOM_BEHIND.get(parent, (CozytouchDeviceType.UNKNOWN, OFF_HEAT))
-        return *found, DERIVED_FLAGS.get(parent, {})
-    if kind in DERIVED_TYPES:
-        return *DERIVED_TYPES[kind], flags
-    return MODEL_FAMILIES.get(modelFamily, CozytouchDeviceType.UNKNOWN), OFF_HEAT, {}
+        deviceType, modes, label = ROOM_BEHIND.get(
+            parent, (CozytouchDeviceType.UNKNOWN, OFF_HEAT, "")
+        )
+        flags = DERIVED_FLAGS.get(parent, {})
+        if label:
+            label += f" (#{room_index(productId)})"
+        else:
+            label = None
+    elif kind in DERIVED_TYPES:
+        deviceType, modes = DERIVED_TYPES[kind]
+        flags = DERIVED_FLAGS.get(kind, {})
+    else:
+        deviceType = MODEL_FAMILIES.get(modelFamily, CozytouchDeviceType.UNKNOWN)
+        modes, flags = OFF_HEAT, {}
+
+    modelInfos.type = deviceType
+    modelInfos.HVACModes = modes
+    for flag, held in flags.items():
+        setattr(modelInfos, flag, held)
+
+    if label is not None:
+        # Named after its room the way the mapped ones are, with the vendor's
+        # own index where the account names no zone.
+        modelInfos.name = f"{label.split(' (#')[0]} ({zoneName})" if zoneName else label
+    else:
+        # The catalogue names the product ; where it does not, the device does.
+        # Nobody should read "Unknown product" for hardware the API describes.
+        modelInfos.name = (
+            MODEL_CATALOGUE.get(modelInfos.modelId)
+            or fallbackName
+            or "Unknown product (" + str(modelInfos.modelId) + ")"
+        )
 
 
 def get_device_model_infos(
@@ -519,6 +564,17 @@ def get_device_model_infos(
         productId=dev.get("productId"),
         modelFamily=dev.get("modelFamily"),
         masterProductId=master.get("productId") if master else None,
+        # What the API calls the device, for hardware the catalogue does not
+        # name. "---" is what it sends for a zone rather than leaving the
+        # field out, so it is read as nothing. See docs/decisions.md.
+        fallbackName=next(
+            (
+                found
+                for found in (dev.get("longName"), dev.get("customName"))
+                if found and found != "---"
+            ),
+            None,
+        ),
     )
 
 
@@ -531,6 +587,7 @@ def get_model_infos(  # noqa: C901
     productId: int | None = None,
     modelFamily: str | None = None,
     masterProductId: int | None = None,
+    fallbackName: str | None = None,
 ) -> ModelInfos:
     """Return infos from model ID.
 
@@ -903,15 +960,9 @@ def get_model_infos(  # noqa: C901
 
     else:
         # No branch names this model id, so the device is asked instead : what
-        # it reports classifies it where the table said nothing, and the name
-        # still comes from the catalogue. See docs/decisions.md.
-        modelInfos.name = MODEL_CATALOGUE.get(
-            modelId, "Unknown product (" + str(modelId) + ")"
+        # it reports classifies it, and names it. See docs/decisions.md.
+        derive(
+            modelInfos, productId, modelFamily, masterProductId, zoneName, fallbackName
         )
-        modelInfos.type, modelInfos.HVACModes, flags = derive(
-            productId, modelFamily, masterProductId
-        )
-        for flag, held in flags.items():
-            setattr(modelInfos, flag, held)
 
     return modelInfos
