@@ -28,6 +28,7 @@ from custom_components.cozytouch.const import (
     SWING_MODE_UP,
 )
 from custom_components.cozytouch.model import (
+    MODEL_NAMES,
     CozytouchDeviceType,
     get_device_model_infos,
     get_model_infos,
@@ -77,7 +78,7 @@ MODEL_GROUPS = [
         {
             "modelId": 76,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Alfea Extensa Duo AI UE",
+            "name": "Alfea Extensa Duo AI UE: 6kW, 8kW, 10kW App: 3kW",
             "type": CozytouchDeviceType.HEAT_PUMP,
             "currentTemperatureAvailableZ1": False,
             "currentTemperatureAvailableZ2": True,
@@ -305,7 +306,7 @@ MODEL_GROUPS = [
         {
             "modelId": 418,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Loria 3 Duo R32",
+            "name": "LORIA 3 DUO R32",
             "type": CozytouchDeviceType.THERMOSTAT,
             "exhaustTemperatureAvailable": True,
             "currentTemperatureAvailableZ1": True,
@@ -330,7 +331,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1457,
             "HVACModesCapabilityId": {7, 8},
-            "name": "HUB Cozytouch",
+            "name": "HUB ATLANTIC COZYTOUCH",
             "type": CozytouchDeviceType.HUB,
             "HVACModes": {0: HVACMode.OFF},
         },
@@ -362,7 +363,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2448,
             "HVACModesCapabilityId": {7, 8},
-            "name": "CozyBox",
+            "name": "Hub IO Thermor",
             "type": CozytouchDeviceType.HUB,
             "awayModeTemperatureAvailable": False,
             "HVACModes": {0: HVACMode.OFF},
@@ -373,7 +374,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2449,
             "HVACModesCapabilityId": {7, 8},
-            "name": "CozyBox",
+            "name": "Hub IO Atlantic",
             "type": CozytouchDeviceType.HUB,
             "awayModeTemperatureAvailable": False,
             "HVACModes": {0: HVACMode.OFF},
@@ -384,7 +385,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2450,
             "HVACModesCapabilityId": {7, 8},
-            "name": "CozyBox",
+            "name": "Hub IO Inter",
             "type": CozytouchDeviceType.HUB,
             "awayModeTemperatureAvailable": False,
             "HVACModes": {0: HVACMode.OFF},
@@ -395,7 +396,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2447,
             "HVACModesCapabilityId": {7, 8},
-            "name": "CozyBox",
+            "name": "Hub IO Sauter",
             "type": CozytouchDeviceType.HUB,
             "awayModeTemperatureAvailable": False,
             "HVACModes": {0: HVACMode.OFF},
@@ -564,7 +565,7 @@ MODEL_GROUPS = [
         {
             "modelId": 754,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso SPLIT VM 200L",
+            "name": "CALYPSO SPLIT VM 200L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -594,7 +595,7 @@ MODEL_GROUPS = [
         {
             "modelId": 664,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso Split",
+            "name": "CALYPSO SPLIT VS 270L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -609,7 +610,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1369,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso Split",
+            "name": "Calypso SPLIT VS 270L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -639,7 +640,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1371,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Aeromax SPLIT 3",
+            "name": "Aeromax SPLIT 3 VM 200L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -654,7 +655,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1372,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Aeromax SPLIT 3",
+            "name": "Aeromax SPLIT 3 VS 270L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -679,7 +680,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1382,
             "HVACModesCapabilityId": {7, 8},
-            "name": "KELUD 1750W Anthracite Standard",
+            "name": "KELUD 1750W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -709,7 +710,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1588,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Doris étroit 1500W BLC",
+            "name": "DORIS ETROIT 1500W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -719,7 +720,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1595,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Doris étroit 1300W CARAT",
+            "name": "DORIS ETROIT 1300W CARAT",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -729,7 +730,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1444,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Naema 3 Micro 25",
+            "name": "NAEMA 3 MICRO 25",
             "type": CozytouchDeviceType.GAZ_BOILER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -739,7 +740,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1447,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Naema 3 Duo 25",
+            "name": "NAEMA 3 DUO 25",
             "type": CozytouchDeviceType.GAZ_BOILER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -749,7 +750,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1543,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II 1750W Blanc",
+            "name": "ASAMA CONNECTE II 1750W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -759,7 +760,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1546,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II 1500W ANTH",
+            "name": "ASAMA CONNECTE II 1500W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -769,7 +770,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1547,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II 1750W ANTH",
+            "name": "ASAMA CONNECTE II 1750W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -779,7 +780,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1551,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Asama Connecté II 1750W Noir",
+            "name": "ASAMA CONNECTE II 1750W NOIR",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -789,7 +790,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1622,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Riva 5 étroit 1300W BLC",
+            "name": "RIVA 5 ETROIT 1300W BLC BRI",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
         },
@@ -799,7 +800,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1641,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Atlantic Explorer V5 (200L)",
+            "name": "TD 200 VS ATE 1200M TYB V5S",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -814,7 +815,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1642,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Atlantic Explorer V5 (270L)",
+            "name": "TD 270 VS ATE 1200M TYB V5S",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -829,7 +830,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1644,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Atlantic Explorer V5 (240L)",
+            "name": "TD 240 VS ATE 1200M TYB V5S SERP",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -844,7 +845,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1645,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Atlantic Explorer V5 (270L with coil)",
+            "name": "TD 270 VS ATE 1200M TYB V5S SERP",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -859,7 +860,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1656,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Aeromax 6",
+            "name": "TD 240 VS TH 1200M TYB V5S",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -874,7 +875,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1669,
             "HVACModesCapabilityId": {7, 8},
-            "name": "CV5 Aeromax Premium 100L",
+            "name": "THE CV5 AEROMAX PREMIUM WH 100L NP",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -889,7 +890,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1657,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso 200L",
+            "name": "TD 200 VS AT 1200M TYB V5S - LRY 1007",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -904,7 +905,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1658,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Calypso connecté",
+            "name": "TD 240 VS AT 1200M TYB V5S - LRY 1007",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -929,7 +930,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1962,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Thermor Malicio 3 65L",
+            "name": "MALICIO 3 MP 065L 2250W",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -944,7 +945,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1966,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Thermor Malicio 3 120L",
+            "name": "MALICIO 3 VM 120L 2400W",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -970,7 +971,7 @@ MODEL_GROUPS = [
         {
             "modelId": 1010,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Egeo VS 250L",
+            "name": "EGEO VS 250L",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -985,7 +986,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2346,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Egeo VS 250L",
+            "name": "TD 250 VS ATL 1800M TYB CA",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -1000,7 +1001,7 @@ MODEL_GROUPS = [
         {
             "modelId": 2374,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Explorer EVO 3 (270L)",
+            "name": "AE CV5 DACH FS 270L PE COIL (DE)",
             "type": CozytouchDeviceType.WATER_HEATER,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
             "HeatingModes": {
@@ -1088,12 +1089,16 @@ def test_a_zone_claims_no_hvac_mode():
     assert get_model_infos(424242)["HVACModes"] != {}
 
 
-def test_an_id_on_its_own_is_not_a_zone():
-    """The limit of keying on the name: a caller that does not pass one gets
-    the fall-through, which is why hub.py hands the device name to every
-    lookup it makes.
+def test_a_zone_id_is_a_zone_without_being_told():
+    """1505-1509 carry productId 65-69, which the vendor calls TH_ZONE.
+
+    The name test stays for the household of issue #93, whose zones arrive
+    under their parent's model id and so have no productId of their own --
+    which is why hub.py hands the device name to every lookup it makes.
     """
-    assert get_model_infos(1505)["type"] is CozytouchDeviceType.UNKNOWN
+    assert get_model_infos(1505)["type"] is CozytouchDeviceType.ZONE
+    assert get_model_infos(76)["type"] is CozytouchDeviceType.HEAT_PUMP
+    assert get_model_infos(76, None, "THZONE_2")["type"] is CozytouchDeviceType.ZONE
 
 
 def test_an_unmapped_model_falls_through_to_unknown():
@@ -1112,10 +1117,18 @@ def test_an_unmapped_model_the_vendor_names_arrives_under_that_name():
     assert infos["type"] == CozytouchDeviceType.UNKNOWN
 
 
-def test_a_mapped_model_ignores_the_catalogue():
-    """The branches win : several spell a name the vendor's table does not."""
-    assert MODEL_CATALOGUE[1457] == "HUB ATLANTIC COZYTOUCH"
-    assert get_model_infos(1457)["name"] == "HUB Cozytouch"
+def test_the_catalogue_names_a_mapped_model_too():
+    """The vendor spells its own products, and this project no longer does.
+
+    The names written here used to differ on 91 ids, and were often less
+    precise -- three Aeromax SPLIT 3 volumes shared one string where the
+    catalogue names each. Six ids keep a name of their own, and only because
+    the catalogue carries none. See docs/decisions.md.
+    """
+    assert get_model_infos(1457)["name"] == MODEL_CATALOGUE[1457]
+    assert 1457 not in MODEL_NAMES
+    assert get_model_infos(1376)["name"] == "Domestic hot water"
+    assert 1376 not in MODEL_CATALOGUE
 
 
 # --------------------------------------------------------- the room slots
@@ -1124,14 +1137,31 @@ def test_a_mapped_model_ignores_the_catalogue():
 @pytest.mark.parametrize("masterModelId", [2447, 2448, 2449, 2450])
 @pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
 def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId, masterModelId):
-    """557-561 is the room's index under a hub and says nothing about the
+    """557-561 is the room's index under a gateway and says nothing about the
     hardware : the same ids, productIds and ROOM_n names arrive behind a
     Navizone driving air conditioners and behind a CozyBox driving connected
     electric radiators. gduteil/cozytouch#172 is the second case.
+
+    The gateway is read by what it declares, not by a list of its badges: the
+    vendor assigns the CozyBox no productId and it sends `Connectivity_Box`,
+    which is what that report shows. A fifth badge needs no code.
     """
-    infos = get_model_infos(
-        modelId, "Billard R-1", f"ROOM_{modelId - 557}", masterModelId
-    )
+    box = {
+        "deviceId": 2,
+        "modelId": masterModelId,
+        "productId": 0,
+        "modelFamily": "Connectivity_Box",
+        "name": "",
+    }
+    room = {
+        "deviceId": 1,
+        "modelId": modelId,
+        "productId": modelId - 531,
+        "masterDeviceId": 2,
+        "name": f"ROOM_{modelId - 557}",
+    }
+
+    infos = get_device_model_infos([box, room], room, "Billard R-1")
 
     assert infos["type"] is CozytouchDeviceType.RADIATOR
     assert infos["name"] == "Radiator (Billard R-1)"
@@ -1139,7 +1169,10 @@ def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId, masterModelId):
 
 
 def test_a_room_slot_without_its_zone_is_numbered_like_the_air_conditioners():
-    assert get_model_infos(560, None, "ROOM_3", 2447)["name"] == "Radiator (#4)"
+    box = {"deviceId": 2, "modelId": 2447, "modelFamily": "Connectivity_Box"}
+    room = {"deviceId": 1, "modelId": 560, "productId": 29, "masterDeviceId": 2}
+
+    assert get_device_model_infos([box, room], room)["name"] == "Radiator (#4)"
 
 
 @pytest.mark.parametrize("masterModelId", [2295, 2303, 2317, 1691, 1692])
@@ -1187,7 +1220,12 @@ def test_the_hub_a_device_hangs_off_is_read_off_the_account():
     resolved through it -- a child whose hub is not on the account falls back
     to the answer the id alone gives.
     """
-    cozybox = {"deviceId": 28008536, "modelId": 2447, "name": "CozyBox"}
+    cozybox = {
+        "deviceId": 28008536,
+        "modelId": 2447,
+        "name": "CozyBox",
+        "modelFamily": "Connectivity_Box",
+    }
     room = {
         "deviceId": 28008564,
         "modelId": 560,
@@ -1251,12 +1289,12 @@ def test_the_catalogue_boilers_do_not_shadow_a_mapped_model():
 @pytest.mark.parametrize(
     ("modelId", "name"),
     [
-        (1540, "Asama Connecté II 500W BLC"),
-        (1555, "Asama Connecté II 1750W CAPP"),
-        (1562, "Doris étroit 300W BLC"),
-        (1600, "Doris étroit 1500W NOIR"),
-        (1623, "Riva 5 étroit 1500W BLC"),
-        (1635, "Riva 5 étroit 1500W CARBONE"),
+        (1540, "ASAMA CONNECTE II 0500W BLC"),
+        (1555, "ASAMA CONNECTE II 1750W CAPP"),
+        (1562, "DORIS ETROIT 0300W BLC"),
+        (1600, "DORIS ETROIT 1500W NOIR"),
+        (1623, "RIVA 5 ETROIT 1500W BLC BRI"),
+        (1635, "RIVA 5 ETROIT 1500W CARBONE"),
     ],
 )
 def test_a_towel_rack_variant_is_named_and_typed(modelId, name):
@@ -1278,17 +1316,16 @@ def test_a_towel_rack_variant_is_named_and_typed(modelId, name):
     }
 
 
-def test_the_towel_rack_table_keeps_the_names_the_mapped_ids_had():
-    """Eight of these were mapped one branch at a time and reach the device
-    registry under those names, inconsistencies included. Folding them into a
-    table must not rename somebody's radiator.
+@pytest.mark.parametrize("modelId", [1543, 1551, 1546, 1595, 1588, 1622])
+def test_a_towel_rack_is_named_by_the_vendor(modelId):
+    """These were spelled here once, in the house style, and are not any more.
+
+    The vendor's own string is what the app shows and what the catalogue
+    carries ; it is louder -- ASAMA CONNECTE II 1750W BLC -- and it is the
+    same product. See docs/decisions.md.
     """
-    assert get_model_infos(1543)["name"] == "Asama Connecté II 1750W Blanc"
-    assert get_model_infos(1551)["name"] == "Asama Connecté II 1750W Noir"
-    assert get_model_infos(1546)["name"] == "Asama Connecté II 1500W ANTH"
-    assert get_model_infos(1595)["name"] == "Doris étroit 1300W CARAT"
-    assert get_model_infos(1588)["name"] == "Doris étroit 1500W BLC"
-    assert get_model_infos(1622)["name"] == "Riva 5 étroit 1300W BLC"
+    assert get_model_infos(modelId)["name"] == MODEL_CATALOGUE[modelId]
+    assert get_model_infos(modelId)["type"] is CozytouchDeviceType.TOWEL_RACK
 
 
 # ------------------------------------------------ the Alfea Extensa S halves
@@ -1365,7 +1402,7 @@ def test_the_explorer_v5_coil_variant_reads_like_its_siblings():
     """
     infos = get_model_infos(1643)
 
-    assert infos["name"] == "Atlantic Explorer V5 (200L with coil)"
+    assert infos["name"] == MODEL_CATALOGUE[1643]
     assert infos == {**get_model_infos(1641), "modelId": 1643, "name": infos["name"]}
 
 
@@ -1391,17 +1428,17 @@ def test_another_badge_of_the_explorer_platform_is_still_a_water_heater(modelId)
     ("modelId", "sibling", "name"),
     [
         (227, 54, "Naema 2 30"),
-        (1445, 1444, "Naema 3 Micro 30"),
-        (1446, 1444, "Naema 3 Micro 35"),
-        (1448, 1447, "Naema 3 Duo 35"),
-        (957, 1010, "Egeo VS 200L"),
+        (1445, 1444, "NAEMA 3 MICRO 30"),
+        (1446, 1444, "NAEMA 3 MICRO 35"),
+        (1448, 1447, "NAEMA 3 DUO 35"),
+        (957, 1010, "EGEO VS 200L"),
         (1367, 1368, "Calypso SPLIT VM 150L"),
-        (1670, 1669, "CV5 Aeromax Premium 150L"),
+        (1670, 1669, "THE CV5 AEROMAX PREMIUM WH 150L NP"),
         (1954, 1957, "LINEO CONNECTE MP 040L 2250W"),
-        (1961, 1962, "Thermor Malicio 3 40L"),
-        (1967, 1966, "Thermor Malicio 3 150L"),
-        (2345, 2346, "Egeo VS 200L"),
-        (2375, 2374, "Explorer EVO 3 (270L)"),
+        (1961, 1962, "MALICIO 3 MP 040L 2250W"),
+        (1967, 1966, "MALICIO 3 VM 150L 2400W"),
+        (2345, 2346, "TD 200 VS ATL 1800M TYB CA"),
+        (2375, 2374, "AE CV5 DACH FS 270L PE (DE)"),
         (219, 211, "Alfea Extensa Duo A.I. 3 R32 Thermor"),
     ],
 )
@@ -1420,8 +1457,9 @@ def test_the_two_hundred_litre_malicio_says_which_form_factor_it_is():
     """MP and VM both exist at 100L and the captured names drop that letter.
     Dropping it here would give two products one name.
     """
-    assert get_model_infos(1964)["name"] == "Thermor Malicio 3 MP 100L"
-    assert get_model_infos(1965)["name"] == "Thermor Malicio 3 VM 100L"
+    assert "MP" in get_model_infos(1964)["name"]
+    assert "VM" in get_model_infos(1965)["name"]
+    assert get_model_infos(1964)["name"] != get_model_infos(1965)["name"]
 
 
 def test_the_lineo_volumes_inherit_the_missing_prog_mode():

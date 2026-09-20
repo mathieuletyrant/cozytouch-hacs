@@ -24,7 +24,9 @@ from custom_components.cozytouch.model import CozytouchDeviceType, get_model_inf
 AIR_CONDITIONERS = {557, 558, 559, 560, 561}
 # The rooms a gateway numbers past its fifth, same branch and now the same
 # eco gate : the household that has both ranges sees an eco mode on neither.
-SECOND_BLOCK_AIR_CONDITIONERS = {1734, 1735, 1736, 1737}
+# ROOM runs to productId 111, which is modelId 1748 -- `ROOM_19`. The branch
+# this replaced stopped at 1737 because that is where one household stopped.
+SECOND_BLOCK_AIR_CONDITIONERS = set(range(1734, 1749))
 
 # Every model id the table maps, as opposed to the ones it sends to UNKNOWN.
 MAPPED_MODEL_IDS = frozenset(
@@ -85,7 +87,10 @@ def test_a_zone_maps_to_nothing_at_all():
             "awayModeTemperatureAvailable",
             AIR_CONDITIONERS
             | SECOND_BLOCK_AIR_CONDITIONERS
-            | {556, 1681, 1758, 2447, 2448, 2449, 2450},
+            # The gateways, which report the away mode and hold no setpoint
+            # for it. 1680 joins its sibling 1681 now that the productId the
+            # vendor gives it is read rather than a hand-written id list.
+            | {556, 1680, 1681, 1758, 2447, 2448, 2449, 2450},
         ),
         ("ecoModeAvailable", AIR_CONDITIONERS | SECOND_BLOCK_AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),

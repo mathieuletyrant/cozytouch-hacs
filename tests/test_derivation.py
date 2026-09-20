@@ -33,17 +33,19 @@ def device(deviceId, modelId, productId, masterDeviceId=None, modelFamily=None):
     }
 
 
-def test_the_table_wins_over_what_the_device_declares():
-    """The table is the override layer, which is the whole safety of this.
+def test_an_override_wins_over_what_the_device_declares():
+    """The overrides are the whole safety of this : the device answers first,
+    and the twenty-seven ids measured to need a correction get it last.
 
-    1656 is a mapped water heater. A `productId` claiming it is a room air
-    conditioner has to change nothing, or every deliberate suppression the
-    table carries could be undone by a number on the wire.
+    556 is the case. Atlantic's catalogue calls the Naviclim box an air
+    conditioner -- productId 25 -- which is what makes a room behind it a
+    clim. The box drives one rather than being one.
     """
-    infos = get_model_infos(1656, productId=26, masterProductId=96)
+    infos = get_model_infos(556)
 
-    assert infos["type"] is CozytouchDeviceType.WATER_HEATER
-    assert infos["name"] == "Aeromax 6"
+    assert infos["type"] is CozytouchDeviceType.HUB
+    assert infos["HVACModes"] == {0: "off"}
+    assert "fanModes" not in infos
 
 
 def test_an_unmapped_model_is_typed_by_its_product_id():
@@ -75,18 +77,16 @@ def test_a_room_is_typed_by_the_interface_it_hangs_off():
     )
 
 
-def test_a_room_with_no_parent_stays_unknown():
-    """Without the parent the id says only that it is a room somewhere.
+def test_a_room_with_no_parent_reads_as_an_air_conditioner():
+    """A gateway that is not on the account leaves the room unattributed.
 
-    Guessing here is what the old fall-through effectively did by handing every
-    557-561 to the air conditioner branch, and a radiator read as a clim.
+    It is answered as a clim, which is what the branch this replaced did and
+    what a room is far more often than not. Refusing to answer would drop the
+    entities of anybody whose gateway was never added. See docs/decisions.md.
     """
     orphan = [device(1, 4242, productId=26, masterDeviceId=99)]
 
-    assert (
-        get_device_model_infos(orphan, orphan[0])["type"]
-        is CozytouchDeviceType.UNKNOWN
-    )
+    assert get_device_model_infos(orphan, orphan[0])["type"] is CozytouchDeviceType.AC
 
 
 def test_model_family_answers_where_no_product_id_is_assigned():
@@ -145,8 +145,9 @@ def test_a_derived_room_inherits_its_gateway_flags():
 def test_a_derived_room_is_named_after_its_room():
     """Named the way the mapped rooms are, since that is what a user sees.
 
-    The index is the vendor's own -- productId 101 is `ROOM_9` -- rather than a
-    count of our own, so two accounts describe the same room the same way.
+    The index counts from one inside its own block, which is what the branches
+    did and what an existing install already shows : productId 97 is the first
+    room of the second block, not the sixth of one long run.
     """
     behind = [
         device(1, 9999, productId=101, masterDeviceId=2),
@@ -156,7 +157,7 @@ def test_a_derived_room_is_named_after_its_room():
     assert get_device_model_infos(behind, behind[0], "Chambre")["name"] == (
         "Air Conditioner (Chambre)"
     )
-    assert get_device_model_infos(behind, behind[0])["name"] == "Air Conditioner (#9)"
+    assert get_device_model_infos(behind, behind[0])["name"] == "Air Conditioner (#5)"
 
 
 def test_a_device_the_catalogue_does_not_name_reads_as_the_api_calls_it():

@@ -747,6 +747,44 @@ device declares, because a dump is read to find what the table does not have.
 The repair goes quiet for a derived device, which is the point -- it existed
 because the classification was keyed on the wrong field.
 
+### The device answers first, and twenty-seven ids correct it
+
+The derivation started as the fall-through and is now the whole of it. Every
+branch is gone : `model.py` holds one `elif`, for the zone recognised by its
+name, and what is left is data.
+
+    model_product_ids.py   168 runs, modelId -> productId, generated
+    PRODUCT_TYPES          the vendor's ranges, from ProductType.java
+    DERIVED_TYPES          what each of those is, and the modes that go with it
+    OVERRIDES              27 ids the device gets wrong or cannot say
+    MODEL_NAMES            6 names the catalogue does not carry
+
+627 lines deleted, 227 added. The 27 were not chosen : each is the measured
+difference between what the branch answered and what the device declares, so
+the set is the honest size of what this project knew that the API does not
+say. Four shapes account for all of them -- ids the vendor assigns no
+productId (the Naema 3s, the TESC circuits, the CozyBox badges), the two Alfea
+3s whose modes sit on capabilities 1 and 2, the LINEO volumes with no prog
+mode, and the Naviclim box, which the catalogue calls an air conditioner
+because it drives one.
+
+Equivalence was checked id by id against the branches, not by the snapshots
+alone : of the 234 models the table mapped, **every one answers identically**
+apart from the name. 950 that answered UNKNOWN now answer.
+
+Two things the branches did that the data does now. A room behind a CozyBox is
+a radiator because the box sends `modelFamily` `Connectivity_Box` (issue
+#172), not because four badges are listed here -- a fifth needs no code. And
+`productId` 0 is read as absent rather than as a value, since that is what the
+vendor leaves on a model it assigns no type.
+
+The names were the one deliberate loss. 91 models took the catalogue's string
+in place of one written here, which is louder -- `ASAMA CONNECTE II 0500W BLC`
+for `Asama Connecté II 500W BLC` -- and more precise: three Aeromax SPLIT 3
+volumes shared one name here where the catalogue names each. A device rename
+changes what Home Assistant displays and nothing else; the unique ids are
+keyed on the capability id.
+
 ## `custom_components/cozytouch/climate.py`
 
 ### The mode list is the model's table, narrowed by what the unit reports
