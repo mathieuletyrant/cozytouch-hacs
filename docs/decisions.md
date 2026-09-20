@@ -628,6 +628,72 @@ not offered when adding devices, so what an owner picks from is the room slot
 and the hot water -- the two tiles -- plus the two technical halves the app
 keeps in its settings.
 
+## What classifies a device is `productId`, not the model id
+
+Every branch in `model.py` that tests a model id range against the device tree
+-- `557 <= modelId <= 561`, `1734-1737`, `TESC_SLOTS`, `GENERATOR_SLOT`, the
+two `ALFEA_*_INTERFACES` -- is a reconstruction of a field the API already
+sends and `account.py` already stores. The Android app reads that field and
+nothing else.
+
+`GacomaDeviceFactory.createDevice` (decompiled, in `research/`) takes the
+device's `productId`, maps it to a `ProductType`, does the same for the parent
+named by `masterDeviceId`, and picks a class from the *pair* :
+
+    (ROOM, CESA_V2_MAIN_COMPONENT)     -> CesaV2Room
+    (ROOM, AIR_CONDITIONER)            -> AirConditionerRoom
+    (ROOM, ZONI_CLIM_HUB | NAVI_HUB)   -> TransverseRoom
+    (ROOM, SPLIT_3S_HUB)               -> Split3SRoom
+    (DHW,  CESA_V2_MAIN_COMPONENT)     -> CesaV2DHW
+    (DHW,  no parent at all)           -> CethiV5
+
+So the question a room slot poses is not what kind of link `masterDeviceId` is.
+It is what the parent's `ProductType` is, and the pair answers.
+
+`ProductType` is an enum of about twenty members, each holding the `productId`
+values it covers. The ones this integration meets :
+
+| ProductType | productId |
+| ----------- | --------- |
+| `ROOM` | 26-30 and 97-111 |
+| `AIR_CONDITIONER_UI` | 31-40 |
+| `TH_ZONE` | 65-94 |
+| `CESA_V2_MAIN_COMPONENT` | 54 |
+| `CESA_V2_GENERATOR` | 58-61 |
+| `DHW` | 47, 62 |
+| `AIR_CONDITIONER` | 25 |
+| `NAVI_HUB`, `ZONI_CLIM_HUB`, `SPLIT_3S_HUB`, `S_HUB` | 63, 96, 95, 98 |
+| `DISCOVER_MASTER` | 6, 44, 112, 113 |
+| `HDG2`, `DARWIN_BOILER`, `TD1`, `BD0`, `HE3Z` | 7, 4, 53, 41, 64 |
+
+The Navizone capture in `research/capability-corpus/local/` shows the field
+arriving per device, beside two more the setup view sends : 1758 is
+`productId` 96 with `modelFamily` `Air_Conditioning`, its rooms are 26, 27, 28,
+and its zones 65, 66, 67. `API_DECLARED_FIELDS` in `account.py` already keeps
+`longName`, `modelFamily` and `productRange` -- the comment above it says
+"carried to the diagnostics dump, read by nothing", and that is exactly what
+happened. `productId` is not even in the list.
+
+What the ranges settle, read against what the branches say today : `ROOM` runs
+to `productId` 111, which is `ROOM_19`, where the branches stop at `ROOM_8` ;
+`TH_ZONE` is a `productId` range, not the name test `get_model_infos` does ;
+and `CESA_V2_MAIN_COMPONENT` / `CESA_V2_GENERATOR` are one fact each, where the
+table carries `ALFEA_EXTENSA_S_INTERFACES`, `ALFEA_EXCELLIA_S_INTERFACES`,
+`ALFEA_EXTENSA_S_GENERATORS` and `GENERATOR_SLOT` to say the same thing in two
+encodings.
+
+What it does not settle. The modes, the flags and the commercial name stay
+ours : `ProductType` says what part a device is, never what it can do, and the
+app's own classes carry the behaviour. Two `productId` values this
+integration maps have no `ProductType` at all : 55-57, the `TESC` heating
+circuits, and 0, which the CozyBox carries -- `fromProductId` falls through to
+`UNKNOWN` and the app builds a `GacomaUnknownDevice`, so the app classifies
+less than the table does, and the table's answer for those two is not a
+reconstruction of anything. `longName` is not a substitute -- the
+capture has it as `---` on the three zone devices, so `productId` is the field
+to read. What a live CozyBox account sends is
+unknown until somebody dumps one, so the id set that names it stays.
+
 ## `custom_components/cozytouch/climate.py`
 
 ### The mode list is the model's table, narrowed by what the unit reports
