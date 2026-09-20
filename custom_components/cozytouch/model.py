@@ -423,15 +423,28 @@ ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict]] = {
     "SPLIT_3S_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES),
 }
 
-# The families the setup view sends where no productId is assigned. Fewer
-# devices have been seen carrying these than carrying a productId, so they are
-# read only after it. See docs/decisions.md.
+# The other half of the vendor's classification : `productId` says which part
+# of an appliance a device is, `modelFamily` says what it heats or cools. Both
+# are enums of Atlantic's own -- this is `ModelFamily.java`, every member of
+# it. It is read only after `productId`, which is what keeps a gateway from
+# being typed by the installation it fronts : the Navizone sends
+# `Air_Conditioning` and is a hub. See docs/decisions.md.
+#
+# `Heat_Interface_Unit` and `Double_Flow_Ventilation` are the two members left
+# out : nothing here is either, and guessing a type for hardware nobody has
+# reported is how a device ends up with entities it cannot drive.
 MODEL_FAMILIES: dict[str | None, CozytouchDeviceType] = {
+    "Air_Conditioning": CozytouchDeviceType.AC,
     "Boiler": CozytouchDeviceType.GAZ_BOILER,
-    "Water_Heater": CozytouchDeviceType.WATER_HEATER,
+    "Connectivity_Box": CozytouchDeviceType.HUB,
     "Heat_Pump": CozytouchDeviceType.HEAT_PUMP,
     "Hybrid_Heat_Pump": CozytouchDeviceType.HEAT_PUMP,
-    "Connectivity_Box": CozytouchDeviceType.HUB,
+    "Radiator": CozytouchDeviceType.RADIATOR,
+    "Thermodynamic_Water_Heater": CozytouchDeviceType.WATER_HEATER,
+    "Thermostat": CozytouchDeviceType.THERMOSTAT,
+    "Towel_Dryer": CozytouchDeviceType.TOWEL_RACK,
+    "Underfloor_Heater": CozytouchDeviceType.RADIATOR,
+    "Water_Heater": CozytouchDeviceType.WATER_HEATER,
 }
 
 

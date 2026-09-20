@@ -101,3 +101,15 @@ def test_a_device_that_declares_nothing_reads_as_it_always_did():
     assert infos["type"] is CozytouchDeviceType.UNKNOWN
     assert infos["name"] == "Unknown product (424242)"
     assert infos["HVACModes"] == {0: "off", 4: "heat"}
+
+
+def test_a_gateway_is_not_typed_by_the_installation_it_fronts():
+    """Order of the two signals, and the case that makes it matter.
+
+    The Navizone sends `modelFamily` `Air_Conditioning` -- the installation
+    it drives -- while its own `productId` says it is a hub. Reading the
+    family first would turn every gateway into a climate entity.
+    """
+    infos = get_model_infos(4242, productId=96, modelFamily="Air_Conditioning")
+
+    assert infos["type"] is CozytouchDeviceType.HUB

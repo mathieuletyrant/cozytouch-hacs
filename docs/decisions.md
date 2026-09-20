@@ -709,6 +709,14 @@ where Atlantic assigned no `productId` at all. A room whose parent is not on
 the account stays UNKNOWN rather than being guessed at, since guessing is what
 handed every unmapped room to the air conditioner branch.
 
+`modelFamily` is an enum of the vendor's own, `ModelFamily.java`, and its
+thirteen members are the other axis: `productId` says which part of an
+appliance a device is, `modelFamily` says what it heats or cools. All thirteen
+are in the table except `Heat_Interface_Unit` and `Double_Flow_Ventilation`,
+which nothing here is. The order between the two signals is not arbitrary --
+the Navizone sends `Air_Conditioning`, the installation it fronts, and is a
+hub; reading the family first would turn every gateway into a climate entity.
+
 Measured over the catalogue: 234 model ids typed before, 1184 after -- 360
 towel racks, 183 heat pumps, 165 boilers, 99 thermostats, 96 water heaters.
 The five mode tables the mapped ids use are the five this lookup returns, so
