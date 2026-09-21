@@ -80,6 +80,10 @@ SERVICE_VALUES = {
     "9": "sleep",
 }
 
+# The value a service capability carries when a room is switched off, which
+# is the one service value that is the room's own. See docs/decisions.md.
+SERVICE_OFF = "0"
+
 HVAC_MODE_BITS = (
     (1, "off"),
     (6, "auto"),

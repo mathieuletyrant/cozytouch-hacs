@@ -155,6 +155,11 @@ def _climate_entity(
     if 102024 in availableCapabilityIds:
         capability.airCirculationCapabilityId = 102024
 
+    # The service the whole system runs, which is what a mode change writes.
+    # See docs/decisions.md.
+    if 102020 in availableCapabilityIds:
+        capability.systemServiceCapabilityId = 102020
+
     # TEMPERATURE_UPDATE_STEP: the device states the setpoint granularity
     if 294 in availableCapabilityIds:
         capability.stepCapabilityId = 294

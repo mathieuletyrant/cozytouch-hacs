@@ -182,6 +182,7 @@ class CapabilityInfos(AttributeDict):
     hvacActionCapabilityId: int
     heatingActiveCapabilityId: int
     airCirculationCapabilityId: int
+    systemServiceCapabilityId: int
     progCapabilityId: int
     progOverrideCapabilityId: int
     progOverrideTotalTimeCapabilityId: int
