@@ -784,6 +784,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 1381,
     "name": "temperature_adjustment_min",
@@ -792,13 +793,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 1381,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -2670,6 +2669,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 1457,
     "name": "temperature_adjustment_min",
@@ -2678,13 +2678,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 1457,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -4537,6 +4535,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 1505,
     "name": "temperature_adjustment_min",
@@ -4545,13 +4544,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 1505,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -6411,6 +6408,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 1641,
     "name": "temperature_adjustment_min",
@@ -6419,13 +6417,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 1641,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -8286,6 +8282,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 1734,
     "name": "temperature_adjustment_min",
@@ -8294,13 +8291,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 1734,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -10186,6 +10181,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 211,
     "name": "temperature_adjustment_min",
@@ -10194,13 +10190,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 211,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -12051,6 +12045,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 2374,
     "name": "temperature_adjustment_min",
@@ -12059,13 +12054,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 2374,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -13935,6 +13928,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 418,
     "name": "temperature_adjustment_min",
@@ -13943,13 +13937,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 418,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -15810,6 +15802,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 557,
     "name": "temperature_adjustment_min",
@@ -15818,13 +15811,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 557,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -17699,6 +17690,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 56,
     "name": "temperature_adjustment_min",
@@ -17707,13 +17699,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 56,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -19575,6 +19565,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 562,
     "name": "temperature_adjustment_min",
@@ -19583,13 +19574,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 562,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -21451,6 +21440,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 76,
     "name": "temperature_adjustment_min",
@@ -21459,13 +21449,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 76,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,
@@ -23333,6 +23321,7 @@
    "160": {
     "capabilityId": 160,
     "category": "diag",
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-down",
     "modelId": 999999,
     "name": "temperature_adjustment_min",
@@ -23341,13 +23330,11 @@
    "161": {
     "capabilityId": 161,
     "category": "diag",
-    "highest_value": 28,
+    "enabled_by_default": false,
     "icon": "mdi:thermometer-chevron-up",
-    "lowest_value": 19,
     "modelId": 999999,
     "name": "temperature_adjustment_max",
-    "step": 0.5,
-    "type": "temperature_adjustment_number"
+    "type": "temperature"
    },
    "162": {
     "capabilityId": 162,

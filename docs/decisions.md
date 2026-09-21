@@ -3001,3 +3001,20 @@ is what said so -- it holds the types the platforms consume and the types the
 mapping produces to the same set, and failed the moment 158 moved. The class
 and its `CapabilityType` member are deleted rather than left waiting for a
 second user.
+
+## Capabilities 160 and 161 are bounds, not controls
+
+`temperature_adjustment_max` (161) arrived as a writable number with a
+hardcoded 19-28 range, while its counterpart `temperature_adjustment_min`
+(160) was a plain sensor. The pair reads as one thing and behaved as two.
+
+Nothing ever said 161 was writable. The Cozytouch app shows no control for
+it : on a room air conditioner it reports exactly 28, which is the ceiling
+the app applies to its own setpoint slider. That is what the pair is -- the
+window the setpoint may move in, which the app reads and never offers. A
+number entity over it writes into the void at best.
+
+So 161 becomes a `TEMPERATURE` sensor like 160, its invented bounds go, and
+its translation moves from the `number` section to `sensor` in all six
+files. Both are `enabled_by_default=False` : a bound nobody reads yet is
+diagnostic, and it was showing up on cards as a thermostat you could drag.

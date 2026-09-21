@@ -592,21 +592,16 @@ CAPABILITIES: dict[int, Entity] = {
     160: Entity(
         name="temperature_adjustment_min",
         type=CapabilityType.TEMPERATURE,
-        enabled_by_default=True,
+        enabled_by_default=False,
         category=CapabilityCategory.DIAG,
         icon="mdi:thermometer-chevron-down",
     ),
     161: Entity(
         name="temperature_adjustment_max",
-        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
-        enabled_by_default=True,
+        type=CapabilityType.TEMPERATURE,
+        enabled_by_default=False,
         category=CapabilityCategory.DIAG,
         icon="mdi:thermometer-chevron-up",
-        extra={
-            "lowest_value": 19,
-            "highest_value": 28,
-            "step": 0.5,
-        },
     ),
     162: Entity(
         # The cooling counterpart of the 160/161 heating bounds. Two independent

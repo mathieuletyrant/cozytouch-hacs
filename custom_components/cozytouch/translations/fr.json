@@ -226,8 +226,7 @@
             "target_temperature_eco_z1":  { "name": "Température Consigne Eco Z1" },
             "target_temperature_eco_z2":  { "name": "Température Consigne Eco Z2" },
             "v40_applied_setpoint":       { "name": "Consigne V40 Appliquée" },
-            "v40_setpoint_filled_by_user": { "name": "Consigne V40 Saisie" },
-            "temperature_adjustment_max": { "name": "Température Maximale" }
+            "v40_setpoint_filled_by_user": { "name": "Consigne V40 Saisie" }
         },
         "select": {
             "air_circulation_speed":
@@ -466,6 +465,7 @@
             "target_temperature_max":   { "name": "Consigne max" },
             "target_temperature_min":   { "name": "Consigne min" },
             "target_temperature_step":  { "name": "Pas de la température de consigne" },
+            "temperature_adjustment_max": { "name": "Température Maximale" },
             "temperature_adjustment_min": { "name": "Température Minimale" },
             "thermostat_temperature_z1":{ "name": "Température Thermostat Z1" },
             "thermostat_temperature_z2":{ "name": "Température Thermostat Z2" },
