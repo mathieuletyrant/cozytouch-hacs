@@ -1675,7 +1675,11 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     102020: Entity(
-        name="air_circulation_current_mode",
+        # Named `AIR_MIXING_ACTUAL_MODE` by the vendor and read as air
+        # circulation here for a year : it is the service the whole system
+        # runs, and writing it is what moves every room. See
+        # docs/decisions.md.
+        name="system_service",
         type=CapabilityType.STRING,
         reads_as={
             "0": "off",
