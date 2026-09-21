@@ -845,10 +845,43 @@ nothing; what it buys is that a device nobody can explain can at least be
 looked at. The config flow keeps its own filter, which is a different
 question -- adding a zone still makes a device with an empty page behind it.
 
-What this does not settle: whether a `TESC` should be offered as a device of
-its own. It reports two things worth reading, and on an account where the same
-circuit also has a room slot it would appear twice. That needs a dump showing
-what the hidden device actually is, which is what this change makes possible.
+### A circuit that holds its own setpoint is a device (issue #110)
+
+The dump above answered the question it was written to make askable. The two
+hidden devices are `TESC` slots, 1388 and 1389, and the account has one of
+each kind : 1388 shares its circuit with a room slot, 1389 is alone.
+
+Capability 106000 tells them apart, and so does the setpoint :
+
+| circuit | a room slot for it | 106000 | setpoint |
+| ------- | ------------------ | ------ | -------- |
+| issue #110, `Chambres` | yes | 1 | 0.0 |
+| issue #110, `Pièces de vie` | no | 0 | 20.0 |
+| issue #93, `Circuit 1` | yes | 1 | 0.0 |
+| gduteil i63, c88, c125 | yes | 1 | — |
+| gduteil i142 | no | 0 | — |
+
+Seven circuits over five accounts, no counter-example, and two signals that
+agree without being the same signal: a circuit reads 0 for its own setpoint
+exactly when something else holds it. So 106000 is named
+`circuit_driven_by_room`, and a `TESC` reading 0 there is retyped from `ZONE`
+to `THERMOSTAT` -- which is to say, offered as a device, since the config flow
+filters on `ZONE` and nothing else.
+
+The name is ours. The vendor's app has no capability 106000 in its enum and no
+`ProductType` covering 55-57 at all, so it neither confirms nor contradicts
+this; it builds an unknown device for these circuits and never polls them. The
+row is `DIAG` and off by default for that reason: it is read to decide what
+the device *is*, and it is nobody's control.
+
+What the circuit gets is two readings -- its setpoint and the temperature of
+its own water -- and no climate entity, since it reports no mode capability.
+Read-only: capability 19 is typed as a temperature, and nothing shows it can
+be written.
+
+A device with no capabilities yet stays `ZONE`. That is the state between
+setup and the first poll, and a device offered on the strength of nothing is
+worse than one offered a poll later.
 
 ## `custom_components/cozytouch/climate.py`
 

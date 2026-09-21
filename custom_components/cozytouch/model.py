@@ -450,10 +450,10 @@ MODEL_NAMES: dict[int, str] = {
 }
 
 
-def narrow_by_capabilities(
+def apply_capabilities(
     modelInfos: ModelInfos, capabilities: dict[int, str]
 ) -> None:
-    """Let the device have the last word on the modes it offers.
+    """Let the device have the last word about itself.
 
     Two readings, both of them the device's own. It reports capability 100022
     as a bitmask over the mode values, which is a complete answer and needs no
@@ -464,7 +464,22 @@ def narrow_by_capabilities(
     # `account.py` creates one that way and fills it on the first poll -- and
     # not a device that reports nothing. Reading it as the latter drops the
     # modes of every device between setup and the first poll.
-    if not capabilities or not modelInfos.HVACModes:
+    if not capabilities:
+        return
+
+    # A heating circuit whose setpoint is held by a room slot is that room's
+    # business, and offering it as a device of its own would put the same
+    # circuit on the account twice. One that holds its own is the only control
+    # there is, and was invisible until now (issue #110). The device says
+    # which it is on 106000. See docs/decisions.md.
+    if modelInfos.type is CozytouchDeviceType.ZONE and modelInfos.name.startswith(
+        "Heating circuit"
+    ):
+        if capabilities.get(106000) == "0":
+            modelInfos.type = CozytouchDeviceType.THERMOSTAT
+        return
+
+    if not modelInfos.HVACModes:
         return
 
     if not modelInfos.HVACModesCapabilityId & capabilities.keys():
@@ -579,7 +594,7 @@ def get_model_infos(
     # which is the whole direction of this. A caller with no device beside the
     # id passes nothing and keeps the table's answer.
     if capabilities is not None:
-        narrow_by_capabilities(modelInfos, capabilities)
+        apply_capabilities(modelInfos, capabilities)
 
     # What the device gets wrong about itself, and what it cannot say. Every
     # entry was measured against the branch it replaced ; `None` removes a
