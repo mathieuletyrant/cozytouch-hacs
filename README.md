@@ -61,10 +61,11 @@ Open a [device report](https://github.com/mathieuletyrant/cozytouch-hacs/issues/
 The form asks for three things, and all three matter:
 
 - **a diagnostics dump** --
-  `Settings -> Devices & Services -> Atlantic Cozytouch -> ⋮ -> Download
-  diagnostics`. One file per device: it carries the capability values of the
-  device it came from, and identity only for the rest of the account. Your
-  credentials and address are stripped out before it is written.
+  `Settings -> Devices & Services -> Cozytouch -> ⋮ -> Download
+  diagnostics`. One file covers the whole account: every device the API
+  returns, with what it says about each and the value of every capability it
+  reports -- including the devices you have not added. Your credentials and
+  address are stripped out before it is written.
 - **screenshots of the Cozytouch app** -- its home screen, the device's own
   screen, and the screens behind it. The dump says what a device *reports*;
   only these say what you can actually *do* with it, and the two are not the

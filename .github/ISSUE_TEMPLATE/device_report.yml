@@ -87,9 +87,10 @@ body:
         before the file is written.
 
 
-        One file per device, please : a dump carries the capability values of
-        the device it was downloaded from, and identity only for the rest of
-        the account.
+        One file covers the whole account, so one is enough however many
+        devices this report is about : it carries every device the API
+        returns, with the value of every capability each one reports --
+        including the devices you have not added.
     validations:
       required: true
 
