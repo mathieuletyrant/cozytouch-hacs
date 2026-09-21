@@ -1794,9 +1794,11 @@ in the hundred lines around those three. The bound alone, four lines of
 `if value < min ... elif value > max`, was written eight times: once per read
 and once per write in each class.
 
-They are now one base class and four subclasses carrying `_from_api`,
-`_to_api` and their own declarations, which is 134 lines less. The four names
-survive because `async_setup_entry` dispatches on them, and every one of them
+They are now one base class and its subclasses carrying `_from_api`,
+`_to_api` and their own declarations, which is 134 lines less. Three are left
+-- `HoursAdjustmentNumber` went with the override duration below, since it was
+the only row that produced it. The names survive because `async_setup_entry`
+dispatches on them, and every one of them
 claims the same unique id it always did (`..._number_<capabilityId>`), so no
 install wakes up with a renamed entity. That is what made the merge safe, and
 `tests/test_number.py` pins it -- along with what each one reads and writes,
@@ -2965,3 +2967,25 @@ just falls through `describe_capability_value` to `None` and the entity reads
 as the raw number, same as a value a `bits` row does not name. `category=DIAG`
 and `enabled_by_default=False` stay the defaults for a partly-verified row,
 the same shape 230 uses for the same reason.
+
+### The override duration is a list of hours, not a slider
+
+Capability 158 was a number entity in hours, which Home Assistant draws as a
+slider: a bar with no marks, the entity name truncated to make room for it,
+and a value that can be dragged to 1.4 hours. The Cozytouch app offers whole
+hours from one to twenty-four and nothing between, so the slider promised a
+precision the device does not have and spent a card row saying so.
+
+It is a `DURATION_SELECT` now, on the same grid the app offers -- 60 to 1440
+minutes by 60 -- which is the same control the air-circulation duration
+beside it already uses, and which puts the name on its own line.
+
+The raw value was always minutes: the old class divided by 60 to display and
+multiplied back to write, and the select writes the minutes an option stands
+for. So the device sees the same numbers it always did.
+
+`HoursAdjustmentNumber` had no other row, and `tests/test_capability_coverage.py`
+is what said so -- it holds the types the platforms consume and the types the
+mapping produces to the same set, and failed the moment 158 moved. The class
+and its `CapabilityType` member are deleted rather than left waiting for a
+second user.

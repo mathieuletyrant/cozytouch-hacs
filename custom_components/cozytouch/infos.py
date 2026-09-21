@@ -34,7 +34,6 @@ class CapabilityType(StrEnum):
     ENERGY = "energy"
     FAN = "fan"
     ERROR_CODE = "error_code"
-    HOURS_ADJUSTMENT_NUMBER = "hours_adjustment_number"
     INT = "int"
     MINUTES_ADJUSTMENT_NUMBER = "minutes_adjustment_number"
     PERCENTAGE = "percentage"

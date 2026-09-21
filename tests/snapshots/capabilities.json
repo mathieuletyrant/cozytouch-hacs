@@ -765,12 +765,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 1381,
     "name": "override_total_time",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -2650,12 +2651,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 1457,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -4516,12 +4518,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 1505,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -6389,12 +6392,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 1641,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -8263,12 +8267,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 1734,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -10162,12 +10167,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 211,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -12026,12 +12032,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 2374,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -13909,12 +13916,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 418,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -15783,12 +15791,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 557,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -17671,12 +17680,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 56,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -19546,12 +19556,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 562,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -21421,12 +21432,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 76,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,
@@ -23302,12 +23314,13 @@
    "158": {
     "capabilityId": 158,
     "category": "sensor",
-    "highest_value": 24,
+    "highest_value": 1440,
     "icon": "mdi:clock-outline",
-    "lowest_value": 1,
+    "lowest_value": 60,
     "modelId": 999999,
     "name": "override_total_time_z1",
-    "type": "hours_adjustment_number"
+    "step": 60,
+    "type": "duration_select"
    },
    "159": {
     "capabilityId": 159,

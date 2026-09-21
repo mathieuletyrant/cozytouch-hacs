@@ -32,7 +32,6 @@ async def async_setup_entry(
             CapabilityType.TEMPERATURE_PERCENT_ADJUSTMENT_NUMBER: (
                 TemperaturePercentAdjustmentNumber
             ),
-            CapabilityType.HOURS_ADJUSTMENT_NUMBER: HoursAdjustmentNumber,
             CapabilityType.MINUTES_ADJUSTMENT_NUMBER: MinutesAdjustmentNumber,
         },
     )
@@ -174,25 +173,6 @@ class TemperaturePercentAdjustmentNumber(CozytouchAdjustmentNumber):
 
     def _to_api(self, value: float) -> str:
         return str((value - self._attr_native_min_value) * 100 / self._range)
-
-
-class HoursAdjustmentNumber(CozytouchAdjustmentNumber):
-    """Hours adjustment number class."""
-
-    def __init__(self, coordinator: Hub, capability, **kwargs) -> None:
-        """Initialize a Number entity."""
-        super().__init__(coordinator=coordinator, capability=capability, **kwargs)
-        self._attr_device_class = None
-        self._attr_native_unit_of_measurement = UnitOfTime.HOURS
-        self._attr_native_step = capability.get("step", 1)
-        self._attr_native_min_value = capability.get("lowest_value", 0)
-        self._attr_native_max_value = capability.get("highest_value", 100)
-
-    def _from_api(self, value: float) -> float:
-        return value / 60.0
-
-    def _to_api(self, value: float) -> str:
-        return str(int(value * 60))
 
 
 class MinutesAdjustmentNumber(CozytouchAdjustmentNumber):

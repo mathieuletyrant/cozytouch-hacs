@@ -573,11 +573,13 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     158: Entity(
+        # An hour at a time, from one to twenty-four, which is the grid the
+        # Cozytouch app offers. See docs/decisions.md.
         name="override_total_time_z1",
-        type=CapabilityType.HOURS_ADJUSTMENT_NUMBER,
+        type=CapabilityType.DURATION_SELECT,
         enabled_by_default=True,
         icon="mdi:clock-outline",
-        extra={"lowest_value": 1, "highest_value": 24},
+        extra={"lowest_value": 60, "highest_value": 1440, "step": 60},
         per_type={ELECTRIC_HEATERS: {"name": "override_total_time"}},
     ),
     159: Entity(
