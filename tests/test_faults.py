@@ -221,10 +221,19 @@ def test_a_fault_that_cleared_takes_its_notice_with_it(monkeypatch):
     assert registry.deleted == ["fault_sub-1_40_13_0_3"]
 
 
+def test_the_sweep_clears_the_repair_that_no_longer_exists(monkeypatch):
+    """`unknown_model_` notices were raised by an older version and nothing
+    creates them now : a device is typed from what it reports, so the dialog
+    that asked someone to find a model id has no question left. Without this
+    they would sit in Repairs forever.
+    """
+    registry = check_faults(monkeypatch, {}, open_issues=("unknown_model_99999",))
+
+    assert registry.deleted == ["unknown_model_99999"]
+
+
 def test_an_unrelated_issue_is_left_alone(monkeypatch):
-    """The sweep clears fault notices, not the unmapped-model ask beside them."""
-    registry = check_faults(
-        monkeypatch, {}, open_issues=("unknown_model_99999",)
-    )
+    """The sweep knows the two prefixes it owns and touches nothing else."""
+    registry = check_faults(monkeypatch, {}, open_issues=("something_else",))
 
     assert registry.deleted == []

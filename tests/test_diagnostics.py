@@ -102,14 +102,17 @@ def device(
     }
 
 
-def test_an_unmapped_model_is_reported_as_unmapped():
-    """The whole point of a dump is to name what the table does not."""
+def test_a_device_nothing_can_type_reads_as_unknown():
+    """What a dump is read for. There used to be an `isMapped` beside this,
+    from when a hand-written table was the only thing that could answer; the
+    type says it now, and says it for a device the table never named.
+    """
     hub = make_hub([device(1, 9999)], deviceId=1)
 
     reported = Hub.get_diagnostics(hub)["devices"][0]
 
     assert reported["modelId"] == 9999
-    assert reported["model"]["isMapped"] is False
+    assert reported["model"]["type"] == "unknown"
     assert reported["model"]["name"] == "Unknown product (9999)"
 
 
@@ -118,7 +121,6 @@ def test_a_mapped_model_carries_its_name_and_type():
 
     reported = Hub.get_diagnostics(hub)["devices"][0]
 
-    assert reported["model"]["isMapped"] is True
     assert reported["model"]["name"] == "Room (#1)"
     assert reported["model"]["type"] == "room"
 

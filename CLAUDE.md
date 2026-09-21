@@ -211,46 +211,59 @@ is a new set of entities. `account.py` owns everything the account declares —
 the session, the token, the setup view, the device list — and `hub.py` is one
 coordinator per device on top of it.
 
-## Adding a device
+## Answering a device report
 
-1. `custom_components/cozytouch/model.py` — a branch in `get_model_infos`
-   returning at minimum `name`, `type` and `HVACModes`. Optional flags are
-   documented in the module docstring; **only declare a flag when the device
-   actually needs it**, because `capability.py` reads them to decide which
-   entities exist, and a flag set on a shared branch reaches every model in it.
-2. `custom_components/cozytouch/capability_table.py` — only if the device
-   reports capability ids nothing maps yet. A row per id ; a device that
-   reads an id differently says so on its row (`absent_on`, `needs_flag`,
-   `per_type`, `per_model`), never by changing the shared default. An id the
-   row cannot decide — it depends on the value, or on what else the device
-   reports — belongs in the chain in `capability.py` instead. A capability whose
-   encoding is unverified still gets a row: named, `type=STRING`,
-   `category=DIAG` and `enabled_by_default=False`, with neither `bits` nor
-   `reads_as`, so it costs nobody anything until someone turns it on to
-   investigate. Claim a type only where the unit is actually known.
-3. Translations — a new capability name needs an entry in **every** one of
+A device is no longer *added*. `model.py` works out what one is from what the
+API sends — its `productId` against the vendor's own ranges, the `productId`
+of the interface it hangs off, and `modelFamily` where Atlantic assigns no
+product id — so hardware nobody has reported still arrives typed, named and
+with the modes capability 100022 says it has. What a report brings is almost
+always the other half : **what the capabilities mean**.
+
+1. `custom_components/cozytouch/capability_table.py` — a row per capability id
+   the dump lists as unmapped. A device that reads an id differently says so
+   on its row (`absent_on`, `needs_flag`, `per_type`, `per_model`), never by
+   changing the shared default. An id the row cannot decide — it depends on
+   the value, or on what else the device reports — belongs in the chain in
+   `capability.py` instead. A capability whose encoding is unverified still
+   gets a row: named, `type=STRING`, `category=DIAG` and
+   `enabled_by_default=False`, with neither `bits` nor `reads_as`, so it costs
+   nobody anything until someone turns it on to investigate. Claim a type only
+   where the unit is actually known.
+2. Translations — a new capability name needs an entry in **every** one of
    `strings.json` and the files under `translations/` (en, fr, es, de, it),
    kept in the alphabetical order and column alignment already in the file.
    The tests glob that directory, so a language added later is held to the
    same completeness without anyone editing them.
-4. Tests — a case in `MODEL_GROUPS`, and the snapshots regenerated in the same
-   commit (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff
-   shows the new model and nothing else.
-5. `README.md` — the table for that device class.
+3. Tests — the snapshots regenerated in the same commit
+   (`UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`) so the diff shows what
+   the change did and nothing else.
+
+`model.py` is edited only when the device is genuinely wrong about itself, and
+then through `OVERRIDES` — nineteen ids, each one a measured difference
+between what a branch used to answer and what the device declares, not a
+backlog of missing rows. `model_product_ids.py` holds `LEARNED_FROM_DUMPS`,
+where a `productId` the vendor's catalogue leaves at 0 is recorded from a live
+payload; that is data, and it is how an override comes down.
 
 `scripts/dump_capability_map.py` prints what the two tables now resolve to, per
 device type. Nothing has to be regenerated — run it when you want the answer.
 A new device *type* needs a probe model id added to it, which is the same edit
 as adding the type to `model.py`.
 
-Devices the integration cannot map fall through to `Unknown product (…)`.
-What a mapping gets built from is the diagnostics dump (`diagnostics.py`, backed
-by `Hub.get_diagnostics`) : every device on the account with its model id,
-whether the table knows it, and the capability ids nothing names yet. Ask a
-reporter for that file before anything else. The older
-`Create entities for unknown capabilities` option still exists and turns each
-unmapped capability into an entity, which is for working out what a value means
-rather than for reporting.
+A device nothing can type still falls through to `Unknown product (…)`, and
+that is now rare enough to be a report in itself. Everything is built from the
+diagnostics dump (`diagnostics.py`, backed by `Hub.get_diagnostics`) : every
+device on the account with what the API says about it and the capability ids
+nothing names yet. Ask a reporter for that file before anything else, and for
+screenshots of their app beside it — the dump says what a device *reports*,
+and only the app says what it lets you *do*, which is the difference between a
+control that works and one that writes into the void.
+`.github/ISSUE_TEMPLATE/device_report.yml` asks for both.
+
+The `Create entities for unknown capabilities` option turns each unnamed
+capability into an entity, which is for working out what a value means rather
+than for reporting.
 
 ## Commit messages
 

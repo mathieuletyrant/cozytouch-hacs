@@ -711,21 +711,6 @@ class CozytouchAccount:
 
         return None
 
-    def get_unmapped_models(self) -> list[int]:
-        """Every model id on the account the table has no branch for.
-
-        The whole account rather than one device, and through the name-aware
-        lookup so a zone is not reported. See docs/decisions.md.
-        """
-        unmapped = {
-            dev["modelId"]
-            for dev in self.devices
-            if get_device_model_infos(self.devices, dev).type
-            is CozytouchDeviceType.UNKNOWN
-        }
-
-        return sorted(unmapped)
-
 
 class CannotConnect(exceptions.HomeAssistantError):
     """Error to indicate we cannot connect."""
