@@ -270,6 +270,7 @@
             "air_circulation_time_min": { "name": "Durée Brassage Min" },
             "air_circulation_time_step": { "name": "Pas Durée Brassage" },
             "absence_dhw_temperature":  { "name": "Température eau chaude absence" },
+            "active_circuit":           { "name": "Circuit Actif" },
             "air_conditioner":          { "name": "Climatisation" },
             "ambient_temperature_available": { "name": "Température ambiante disponible" },
             "antifrost_temperature":    { "name": "Température hors-gel" },

@@ -270,6 +270,7 @@
             "air_circulation_time_min": { "name": "Durata min. circolazione dell'aria" },
             "air_circulation_time_step": { "name": "Passo della durata di circolazione dell'aria" },
             "absence_dhw_temperature":  { "name": "Temperatura ACS in assenza" },
+            "active_circuit":           { "name": "Circuito Attivo" },
             "air_conditioner":          { "name": "Condizionatore" },
             "ambient_temperature_available": { "name": "Temperatura ambiente disponibile" },
             "antifrost_temperature":    { "name": "Temperatura antigelo" },

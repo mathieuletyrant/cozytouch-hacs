@@ -400,6 +400,18 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
+    91: Entity(
+        # the 3-way valve; see docs/decisions.md
+        name="active_circuit",
+        type=CapabilityType.STRING,
+        icon="mdi:valve",
+        reads_as={
+            "1": "heating",
+            "3": "domestic_hot_water",
+        },
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     93: Entity(
         name="zones_count",
         type=CapabilityType.STRING,

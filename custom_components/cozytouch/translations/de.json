@@ -270,6 +270,7 @@
             "air_circulation_time_min": { "name": "Min. Dauer der Luftumwälzung" },
             "air_circulation_time_step": { "name": "Schrittweite der Luftumwälzungsdauer" },
             "absence_dhw_temperature":  { "name": "Warmwassertemperatur bei Abwesenheit" },
+            "active_circuit":           { "name": "Aktiver Kreis" },
             "air_conditioner":          { "name": "Klimagerät" },
             "ambient_temperature_available": { "name": "Umgebungstemperatur verfügbar" },
             "antifrost_temperature":    { "name": "Frostschutztemperatur" },

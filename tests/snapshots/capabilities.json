@@ -1839,6 +1839,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 1381,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -3694,6 +3703,15 @@
     "icon": "mdi:tag",
     "modelId": 1457,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 1457,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -5558,6 +5576,15 @@
     "icon": "mdi:tag",
     "modelId": 1505,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 1505,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -7432,6 +7459,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 1641,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -9304,6 +9340,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 1734,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -11168,6 +11213,15 @@
     "icon": "mdi:tag",
     "modelId": 211,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 211,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -13044,6 +13098,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 2374,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -14914,6 +14977,15 @@
     "icon": "mdi:tag",
     "modelId": 418,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 418,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -16788,6 +16860,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 557,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -18652,6 +18733,15 @@
     "icon": "mdi:tag",
     "modelId": 56,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 56,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -20526,6 +20616,15 @@
     "name": "model_name",
     "type": "string"
    },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 562,
+    "name": "active_circuit",
+    "type": "string"
+   },
    "93": {
     "capabilityId": 93,
     "category": "diag",
@@ -22390,6 +22489,15 @@
     "icon": "mdi:tag",
     "modelId": 76,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 76,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {
@@ -24262,6 +24370,15 @@
     "icon": "mdi:tag",
     "modelId": 999999,
     "name": "model_name",
+    "type": "string"
+   },
+   "91": {
+    "capabilityId": 91,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:valve",
+    "modelId": 999999,
+    "name": "active_circuit",
     "type": "string"
    },
    "93": {

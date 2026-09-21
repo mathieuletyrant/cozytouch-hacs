@@ -2935,3 +2935,33 @@ still a guess about meaning.
 The row is `system_service` now, in all six translation files. The vendor's
 own name is kept in a comment above it, because a report quoting
 `AIR_MIXING_ACTUAL_MODE` still has to lead here.
+
+### Capability 91 is which circuit is active, named for that rather than the valve
+
+Reported against an Alfea Extensa Duo S (September 2026): capability 91 is an
+int, and the app shows 1 while the unit is heating the underfloor circuits and
+3 while it is heating up the domestic hot water tank instead. It is a system
+mode, not a reading of the DHW loop's own state the way capability 230
+(`dhw_operating_mode`) is -- physically it tracks the 3-way valve that sends
+the heat pump's output to one loop or the other, but the row is named
+`active_circuit` for what the value means rather than for the part that
+produces it, so it keeps reading straight whichever of the open guesses below
+turns out right. The valve stays in the comment on the row, since it is
+Atlantic's own word for the mechanism and the one a future search is likely
+to look for. Both readings are confirmed against the app on that one report ;
+0, 2 and anything above 3 are not, since nobody has caught the valve there
+yet.
+
+2 is left out on purpose rather than guessed. Two candidates were raised and
+neither is confirmed : a cooling circuit, or -- since this is the Duo, sold
+with two underfloor heating circuits -- the second of those rather than the
+first. Nothing here picks between them ; whichever a report confirms first is
+what `reads_as` gets.
+
+Mapped as `reads_as={"1": "heating", "3": "domestic_hot_water"}` rather than
+the placeholder shape (`STRING`, `DIAG`, no `reads_as`) CLAUDE.md asks for
+when nothing is known, because here two members are : an unconfirmed 0 or 2
+just falls through `describe_capability_value` to `None` and the entity reads
+as the raw number, same as a value a `bits` row does not name. `category=DIAG`
+and `enabled_by_default=False` stay the defaults for a partly-verified row,
+the same shape 230 uses for the same reason.
