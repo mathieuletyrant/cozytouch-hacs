@@ -825,6 +825,31 @@ The device name follows: `Radiator (Chambre)` and `Air Conditioner (Chambre)`
 both become `Room (Chambre)`. A rename changes what Home Assistant displays
 and nothing else, since the unique ids are keyed on the capability id.
 
+### The dump carries every device, the config flow still chooses (issue #110)
+
+A zone was left out of both the dump and the device list on one argument: a
+dump is read to find hardware that has to be mapped, and a zone is not
+hardware -- it reports two ids that resolve to nothing, one of them declined
+on purpose, which reads exactly like work to do.
+
+That was right about a zone of a ducted heat pump and wrong about everything
+else typed the same way. The `TESC` heating circuits of an Alfea are typed
+`ZONE` too, and one of them reports a setpoint (19) and the temperature of its
+own circuit (109) -- a device with something to say. Issue #110 is a household
+with two circuits where only one has a room slot beside it: the other was
+invisible in the device list, invisible in the dump, and therefore invisible
+in the report they were asked to send, so nobody could find out what it was.
+
+So the dump lists every device the account has. It creates no entity and costs
+nothing; what it buys is that a device nobody can explain can at least be
+looked at. The config flow keeps its own filter, which is a different
+question -- adding a zone still makes a device with an empty page behind it.
+
+What this does not settle: whether a `TESC` should be offered as a device of
+its own. It reports two things worth reading, and on an account where the same
+circuit also has a room slot it would appear twice. That needs a dump showing
+what the hidden device actually is, which is what this change makes possible.
+
 ## `custom_components/cozytouch/climate.py`
 
 ### The mode list is the model's table, narrowed by what the unit reports

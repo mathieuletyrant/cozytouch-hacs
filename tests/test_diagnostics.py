@@ -48,11 +48,17 @@ def make_hub(devices, deviceId, zones=None):
     return hub
 
 
-def test_a_zone_is_not_in_the_dump_at_all():
-    """A dump is read to find hardware that has to be mapped, and a zone is not
-    hardware: it reports two ids that resolve to nothing, one of them declined
-    on purpose, which reads exactly like work to do. It is ignored outright --
-    not offered at setup, not listed here.
+def test_the_dump_carries_every_device_the_account_has():
+    """Including the ones the config flow does not offer.
+
+    A zone used to be left out of both, on the grounds that a dump is read to
+    find hardware that has to be mapped and a zone is not hardware. That held
+    for a zone of a ducted heat pump, which reports two ids resolving to
+    nothing. It did not hold for everything typed the same way, and the cost
+    was paid by somebody whose heating circuit was invisible in the dump, in
+    the device list and in the report they were asked to send -- so there was
+    no way to find out what it even was. A dump says what the account has;
+    what to *offer* is the config flow's question, and it still asks it.
     """
     hub = make_hub(
         [
@@ -64,7 +70,7 @@ def test_a_zone_is_not_in_the_dump_at_all():
 
     reported = Hub.get_diagnostics(hub)
 
-    assert [dev["name"] for dev in reported["devices"]] == ["ROOM_0"]
+    assert [dev["name"] for dev in reported["devices"]] == ["ROOM_0", "THZONE_0"]
 
 
 def test_a_zone_is_not_offered_when_adding_the_integration():
