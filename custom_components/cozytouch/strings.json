@@ -270,6 +270,7 @@
             "air_circulation_time_min": { "name": "Air Circulation Time Min" },
             "air_circulation_time_step": { "name": "Air Circulation Time Step" },
             "absence_dhw_temperature":  { "name": "Absence DHW Temperature" },
+            "active_circuit":           { "name": "Active Circuit" },
             "air_conditioner":          { "name": "Air Conditioner" },
             "ambient_temperature_available": { "name": "Ambient Temperature Available" },
             "antifrost_temperature":    { "name": "Antifrost Temperature" },
