@@ -28,7 +28,7 @@ from .account import (
 from .capability import get_capability_infos
 from .const import DOMAIN
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType
-from .model import CozytouchDeviceType, get_device_model_infos, get_model_infos
+from .model import get_device_model_infos, get_model_infos
 from .repairs import async_check_faults
 
 _LOGGER = logging.getLogger(__name__)
@@ -518,9 +518,6 @@ class Hub(DataUpdateCoordinator):
         devices = []
         for dev in self._account.devices:
             modelInfos = get_device_model_infos(self._account.devices, dev)
-            # Not hardware anybody has to map. See docs/decisions.md.
-            if modelInfos.type is CozytouchDeviceType.ZONE:
-                continue
 
             mapped, unmapped = self.get_capability_names(dev["deviceId"])
 
