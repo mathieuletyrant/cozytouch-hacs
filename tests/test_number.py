@@ -18,7 +18,6 @@ import pytest
 from custom_components.cozytouch import number as number_module
 from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.number import (
-    HoursAdjustmentNumber,
     MinutesAdjustmentNumber,
     TemperatureAdjustmentNumber,
     TemperaturePercentAdjustmentNumber,
@@ -84,7 +83,6 @@ def write(cls, value, **capability_fields):
 ALL_CLASSES = (
     TemperatureAdjustmentNumber,
     TemperaturePercentAdjustmentNumber,
-    HoursAdjustmentNumber,
     MinutesAdjustmentNumber,
 )
 
@@ -146,12 +144,6 @@ def test_a_percent_temperature_is_read_across_its_range():
     )
 
 
-def test_hours_arrive_as_minutes_and_go_back_as_minutes():
-    """The device counts in minutes; the entity is the hours somebody reads."""
-    assert read(HoursAdjustmentNumber, "30") == 0.5
-    assert write(HoursAdjustmentNumber, 12.0) == ([(CAPABILITY_ID, "720")], 1)
-
-
 def test_minutes_are_minutes_but_written_whole():
     assert read(MinutesAdjustmentNumber, "30") == 30.0
     assert write(MinutesAdjustmentNumber, 12.0) == ([(CAPABILITY_ID, "12")], 1)
@@ -165,7 +157,6 @@ def test_minutes_are_minutes_but_written_whole():
     [
         (TemperatureAdjustmentNumber, "°C", "temperature", 0.5, 0, 60.0),
         (TemperaturePercentAdjustmentNumber, "°C", "temperature", 0.5, 0.0, 60.0),
-        (HoursAdjustmentNumber, "h", None, 1, 0, 100),
         (MinutesAdjustmentNumber, "min", None, 1, 0, 60),
     ],
 )
@@ -248,7 +239,6 @@ def test_the_other_three_do_not_go_looking_for_bounds():
     """
     for cls in (
         TemperaturePercentAdjustmentNumber,
-        HoursAdjustmentNumber,
         MinutesAdjustmentNumber,
     ):
         hub = FakeHub({CAPABILITY_ID: "30", 2: "16", 3: "24"})

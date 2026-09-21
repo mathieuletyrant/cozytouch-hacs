@@ -220,9 +220,6 @@
         "number": {
             "away_mode_temperature":      { "name": "Temperatur im Abwesenheitsmodus" },
             "boost_timeout_max":          { "name": "Max. Boost-Dauer" },
-            "override_total_time":        { "name": "Gesamtdauer der Übersteuerung" },
-            "override_total_time_z1":     { "name": "Gesamtdauer der Übersteuerung Z1" },
-            "override_total_time_z2":     { "name": "Gesamtdauer der Übersteuerung Z2" },
             "target_cool_temperature":    { "name": "Soll-Kühltemperatur" },
             "target_temperature":         { "name": "Solltemperatur" },
             "target_temperature_dhw":     { "name": "Solltemperatur Warmwasser" },
@@ -244,6 +241,9 @@
                 }
             },
             "air_circulation_total_time": { "name": "Gesamtdauer der Luftumwälzung" },
+            "override_total_time": { "name": "Gesamtdauer der Übersteuerung" },
+            "override_total_time_z1": { "name": "Gesamtdauer der Übersteuerung Z1" },
+            "override_total_time_z2": { "name": "Gesamtdauer der Übersteuerung Z2" },
             "domestic_hot_water_mode":
             {
                 "name": "Warmwasser-Modus",

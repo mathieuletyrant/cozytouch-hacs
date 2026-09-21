@@ -149,6 +149,36 @@ def test_every_named_capability_has_a_translation(path):
     assert not missing, f"{path} has no name for {sorted(missing)}"
 
 
+@pytest.mark.parametrize("path", TRANSLATIONS)
+def test_every_name_is_translated_under_its_own_platform(path):
+    """Home Assistant looks a name up under the platform that registered the
+    entity, so a key sitting in another section reads as its raw id. The flat
+    check above cannot see that, and it is where `override_total_time_z1`
+    landed the day capability 158 stopped being a number and became a select.
+    """
+    with open(path, encoding="utf-8") as handle:
+        entity = json.load(handle)["entity"]
+
+    consumed = types_the_platforms_consume()
+    missing = []
+    for result in capabilities_the_mapping_produces():
+        name = result.get("name")
+        if not name or PLACEHOLDER.match(name):
+            continue
+
+        # Which sections could carry it: every platform that matches on its
+        # type, since one capability can reach two -- a climate entity and the
+        # raw sensor beside it.
+        sections = {
+            platform.removesuffix(".py")
+            for platform in consumed.get(result.get("type"), ())
+        }
+        if sections and not any(name in entity.get(s, {}) for s in sections):
+            missing.append((name, sorted(sections)))
+
+    assert not missing, f"{path} translates {missing} outside its own section"
+
+
 @pytest.mark.parametrize("path", TRANSLATIONS[1:])
 def test_the_translation_files_cover_the_same_keys(path):
     """A key added to one language and not the other is a silent gap."""
