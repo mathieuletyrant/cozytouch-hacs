@@ -220,9 +220,6 @@
         "number": {
             "away_mode_temperature":      { "name": "Température Absence" },
             "boost_timeout_max":          { "name": "Temporisation Max. Boost" },
-            "override_total_time":        { "name": "Dérogation — durée" },
-            "override_total_time_z1":     { "name": "Dérogation — durée Z1" },
-            "override_total_time_z2":     { "name": "Dérogation — durée Z2" },
             "target_cool_temperature":    { "name": "Température Consigne Cool" },
             "target_temperature":         { "name": "Température Consigne" },
             "target_temperature_dhw":     { "name": "Température Consigne DHW" },
@@ -244,6 +241,9 @@
                 }
             },
             "air_circulation_total_time": { "name": "Durée Brassage Totale" },
+            "override_total_time": { "name": "Dérogation — durée" },
+            "override_total_time_z1": { "name": "Dérogation — durée Z1" },
+            "override_total_time_z2": { "name": "Dérogation — durée Z2" },
             "domestic_hot_water_mode":
             {
                 "name": "Mode eau chaude",

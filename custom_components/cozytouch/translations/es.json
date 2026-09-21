@@ -220,9 +220,6 @@
         "number": {
             "away_mode_temperature":      { "name": "Temperatura del modo ausencia" },
             "boost_timeout_max":          { "name": "Duración máx. del Boost" },
-            "override_total_time":        { "name": "Duración total de la anulación" },
-            "override_total_time_z1":     { "name": "Duración total de la anulación Z1" },
-            "override_total_time_z2":     { "name": "Duración total de la anulación Z2" },
             "target_cool_temperature":    { "name": "Temperatura de consigna en frío" },
             "target_temperature":         { "name": "Temperatura de consigna" },
             "target_temperature_dhw":     { "name": "Temperatura de consigna ACS" },
@@ -244,6 +241,9 @@
                 }
             },
             "air_circulation_total_time": { "name": "Duración total de la circulación de aire" },
+            "override_total_time": { "name": "Duración total de la anulación" },
+            "override_total_time_z1": { "name": "Duración total de la anulación Z1" },
+            "override_total_time_z2": { "name": "Duración total de la anulación Z2" },
             "domestic_hot_water_mode":
             {
                 "name": "Modo de agua caliente sanitaria",

@@ -220,9 +220,6 @@
         "number": {
             "away_mode_temperature":      { "name": "Temperatura modalità assenza" },
             "boost_timeout_max":          { "name": "Durata max. Boost" },
-            "override_total_time":        { "name": "Durata totale della forzatura" },
-            "override_total_time_z1":     { "name": "Durata totale della forzatura Z1" },
-            "override_total_time_z2":     { "name": "Durata totale della forzatura Z2" },
             "target_cool_temperature":    { "name": "Temperatura target raffrescamento" },
             "target_temperature":         { "name": "Temperatura target" },
             "target_temperature_dhw":     { "name": "Temperatura target ACS" },
@@ -244,6 +241,9 @@
                 }
             },
             "air_circulation_total_time": { "name": "Durata totale della circolazione dell'aria" },
+            "override_total_time": { "name": "Durata totale della forzatura" },
+            "override_total_time_z1": { "name": "Durata totale della forzatura Z1" },
+            "override_total_time_z2": { "name": "Durata totale della forzatura Z2" },
             "domestic_hot_water_mode":
             {
                 "name": "Modalità acqua calda sanitaria",

@@ -2984,6 +2984,18 @@ The raw value was always minutes: the old class divided by 60 to display and
 multiplied back to write, and the select writes the minutes an option stands
 for. So the device sees the same numbers it always did.
 
+A name is looked up under the section of the platform that registered the
+entity, so moving a capability between platforms moves its translation too :
+the three `override_total_time*` keys went from `number` to `select` in all
+six files, and until they did the entity read as `override_total_time_z1` on
+the card. `test_every_name_is_translated_under_its_own_platform` is new for
+that -- the completeness check beside it unions every section, so a key filed
+under the wrong one always satisfied it. There are no bounds to read from the
+device, either : the app hardcodes them, `MAX_MINUTE_VALUE = 1440` and
+`MINUTE_SCROLL_STEP = 60` in `BaseCircleDeviceViewModel`, and the capability
+enum has a min/max/step trio for air mixing (102022/102025/102026) and nothing
+of the kind for the override.
+
 `HoursAdjustmentNumber` had no other row, and `tests/test_capability_coverage.py`
 is what said so -- it holds the types the platforms consume and the types the
 mapping produces to the same set, and failed the moment 158 moved. The class
