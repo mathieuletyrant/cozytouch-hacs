@@ -365,7 +365,8 @@
   ],
   "modelId": 1380,
   "name": "Unknown product (1380)",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1381": {
   "HVACModes": {
@@ -378,7 +379,8 @@
   ],
   "modelId": 1381,
   "name": "KELUD 1750W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1382": {
   "HVACModes": {
@@ -391,7 +393,8 @@
   ],
   "modelId": 1382,
   "name": "KELUD 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1383": {
   "HVACModes": {
@@ -404,7 +407,8 @@
   ],
   "modelId": 1383,
   "name": "KELUD ETROIT 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1384": {
   "HVACModes": {
@@ -417,7 +421,8 @@
   ],
   "modelId": 1384,
   "name": "KELUD ETROIT 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1385": {
   "HVACModes": {
@@ -430,7 +435,8 @@
   ],
   "modelId": 1385,
   "name": "KELUD ETROIT 0500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1386": {
   "HVACModes": {
@@ -443,7 +449,8 @@
   ],
   "modelId": 1386,
   "name": "KELUD ETROIT 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1387": {
   "HVACModes": {},
@@ -1581,7 +1588,8 @@
   ],
   "modelId": 1540,
   "name": "ASAMA CONNECTE II 0500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1541": {
   "HVACModes": {
@@ -1594,7 +1602,8 @@
   ],
   "modelId": 1541,
   "name": "ASAMA CONNECTE II 0750W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1542": {
   "HVACModes": {
@@ -1607,7 +1616,8 @@
   ],
   "modelId": 1542,
   "name": "ASAMA CONNECTE II 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1543": {
   "HVACModes": {
@@ -1620,7 +1630,8 @@
   ],
   "modelId": 1543,
   "name": "ASAMA CONNECTE II 1750W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1544": {
   "HVACModes": {
@@ -1633,7 +1644,8 @@
   ],
   "modelId": 1544,
   "name": "ASAMA CONNECTE II 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1545": {
   "HVACModes": {
@@ -1646,7 +1658,8 @@
   ],
   "modelId": 1545,
   "name": "ASAMA CONNECTE II 0750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1546": {
   "HVACModes": {
@@ -1659,7 +1672,8 @@
   ],
   "modelId": 1546,
   "name": "ASAMA CONNECTE II 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1547": {
   "HVACModes": {
@@ -1672,7 +1686,8 @@
   ],
   "modelId": 1547,
   "name": "ASAMA CONNECTE II 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1548": {
   "HVACModes": {
@@ -1685,7 +1700,8 @@
   ],
   "modelId": 1548,
   "name": "ASAMA CONNECTE II 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1549": {
   "HVACModes": {
@@ -1698,7 +1714,8 @@
   ],
   "modelId": 1549,
   "name": "ASAMA CONNECTE II 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1550": {
   "HVACModes": {
@@ -1711,7 +1728,8 @@
   ],
   "modelId": 1550,
   "name": "ASAMA CONNECTE II 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1551": {
   "HVACModes": {
@@ -1724,7 +1742,8 @@
   ],
   "modelId": 1551,
   "name": "ASAMA CONNECTE II 1750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1552": {
   "HVACModes": {
@@ -1737,7 +1756,8 @@
   ],
   "modelId": 1552,
   "name": "ASAMA CONNECTE II 0500W CAPP",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1553": {
   "HVACModes": {
@@ -1750,7 +1770,8 @@
   ],
   "modelId": 1553,
   "name": "ASAMA CONNECTE II 0750W CAPP",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1554": {
   "HVACModes": {
@@ -1763,7 +1784,8 @@
   ],
   "modelId": 1554,
   "name": "ASAMA CONNECTE II 1500W CAPP",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1555": {
   "HVACModes": {
@@ -1776,7 +1798,8 @@
   ],
   "modelId": 1555,
   "name": "ASAMA CONNECTE II 1750W CAPP",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1556": {
   "HVACModes": {
@@ -1789,7 +1812,8 @@
   ],
   "modelId": 1556,
   "name": "DORIS 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1557": {
   "HVACModes": {
@@ -1802,7 +1826,8 @@
   ],
   "modelId": 1557,
   "name": "DORIS 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1558": {
   "HVACModes": {
@@ -1815,7 +1840,8 @@
   ],
   "modelId": 1558,
   "name": "DORIS 1000W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1559": {
   "HVACModes": {
@@ -1828,7 +1854,8 @@
   ],
   "modelId": 1559,
   "name": "RIVA 5 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1560": {
   "HVACModes": {
@@ -1841,7 +1868,8 @@
   ],
   "modelId": 1560,
   "name": "RIVA 5 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1561": {
   "HVACModes": {
@@ -1854,7 +1882,8 @@
   ],
   "modelId": 1561,
   "name": "RIVA 5 1000W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1562": {
   "HVACModes": {
@@ -1867,7 +1896,8 @@
   ],
   "modelId": 1562,
   "name": "DORIS ETROIT 0300W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1563": {
   "HVACModes": {
@@ -1880,7 +1910,8 @@
   ],
   "modelId": 1563,
   "name": "DORIS ETROIT 0500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1564": {
   "HVACModes": {
@@ -1893,7 +1924,8 @@
   ],
   "modelId": 1564,
   "name": "RIVA 5 ETROIT 0300W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1565": {
   "HVACModes": {
@@ -1906,7 +1938,8 @@
   ],
   "modelId": 1565,
   "name": "RIVA 5 ETROIT 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1566": {
   "HVACModes": {
@@ -1919,7 +1952,8 @@
   ],
   "modelId": 1566,
   "name": "DORIS 2000W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1567": {
   "HVACModes": {
@@ -1932,7 +1966,8 @@
   ],
   "modelId": 1567,
   "name": "DORIS 2000W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1568": {
   "HVACModes": {
@@ -1945,7 +1980,8 @@
   ],
   "modelId": 1568,
   "name": "DORIS 2000W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1569": {
   "HVACModes": {
@@ -1958,7 +1994,8 @@
   ],
   "modelId": 1569,
   "name": "DORIS 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1570": {
   "HVACModes": {
@@ -1971,7 +2008,8 @@
   ],
   "modelId": 1570,
   "name": "DORIS 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1571": {
   "HVACModes": {
@@ -1984,7 +2022,8 @@
   ],
   "modelId": 1571,
   "name": "DORIS 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1572": {
   "HVACModes": {
@@ -1997,7 +2036,8 @@
   ],
   "modelId": 1572,
   "name": "DORIS 1750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1573": {
   "HVACModes": {
@@ -2010,7 +2050,8 @@
   ],
   "modelId": 1573,
   "name": "DORIS 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1574": {
   "HVACModes": {
@@ -2023,7 +2064,8 @@
   ],
   "modelId": 1574,
   "name": "DORIS 1750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1575": {
   "HVACModes": {
@@ -2036,7 +2078,8 @@
   ],
   "modelId": 1575,
   "name": "DORIS 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1576": {
   "HVACModes": {
@@ -2049,7 +2092,8 @@
   ],
   "modelId": 1576,
   "name": "DORIS 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1577": {
   "HVACModes": {
@@ -2062,7 +2106,8 @@
   ],
   "modelId": 1577,
   "name": "DORIS 2000W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1578": {
   "HVACModes": {
@@ -2075,7 +2120,8 @@
   ],
   "modelId": 1578,
   "name": "DORIS 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1579": {
   "HVACModes": {
@@ -2088,7 +2134,8 @@
   ],
   "modelId": 1579,
   "name": "DORIS 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1580": {
   "HVACModes": {
@@ -2101,7 +2148,8 @@
   ],
   "modelId": 1580,
   "name": "DORIS 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1581": {
   "HVACModes": {
@@ -2114,7 +2162,8 @@
   ],
   "modelId": 1581,
   "name": "DORIS 0750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1582": {
   "HVACModes": {
@@ -2127,7 +2176,8 @@
   ],
   "modelId": 1582,
   "name": "DORIS 0750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1583": {
   "HVACModes": {
@@ -2140,7 +2190,8 @@
   ],
   "modelId": 1583,
   "name": "DORIS 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1584": {
   "HVACModes": {
@@ -2153,7 +2204,8 @@
   ],
   "modelId": 1584,
   "name": "DORIS 1000W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1585": {
   "HVACModes": {
@@ -2166,7 +2218,8 @@
   ],
   "modelId": 1585,
   "name": "DORIS 1000W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1586": {
   "HVACModes": {
@@ -2179,7 +2232,8 @@
   ],
   "modelId": 1586,
   "name": "DORIS 1000W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1587": {
   "HVACModes": {
@@ -2192,7 +2246,8 @@
   ],
   "modelId": 1587,
   "name": "DORIS ETROIT 1300W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1588": {
   "HVACModes": {
@@ -2205,7 +2260,8 @@
   ],
   "modelId": 1588,
   "name": "DORIS ETROIT 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1589": {
   "HVACModes": {
@@ -2218,7 +2274,8 @@
   ],
   "modelId": 1589,
   "name": "DORIS ETROIT 0300W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1590": {
   "HVACModes": {
@@ -2231,7 +2288,8 @@
   ],
   "modelId": 1590,
   "name": "DORIS ETROIT 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1591": {
   "HVACModes": {
@@ -2244,7 +2302,8 @@
   ],
   "modelId": 1591,
   "name": "DORIS ETROIT 1300W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1592": {
   "HVACModes": {
@@ -2257,7 +2316,8 @@
   ],
   "modelId": 1592,
   "name": "DORIS ETROIT 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1593": {
   "HVACModes": {
@@ -2270,7 +2330,8 @@
   ],
   "modelId": 1593,
   "name": "DORIS ETROIT 0300W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1594": {
   "HVACModes": {
@@ -2283,7 +2344,8 @@
   ],
   "modelId": 1594,
   "name": "DORIS ETROIT 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1595": {
   "HVACModes": {
@@ -2296,7 +2358,8 @@
   ],
   "modelId": 1595,
   "name": "DORIS ETROIT 1300W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1596": {
   "HVACModes": {
@@ -2309,7 +2372,8 @@
   ],
   "modelId": 1596,
   "name": "DORIS ETROIT 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1597": {
   "HVACModes": {
@@ -2322,7 +2386,8 @@
   ],
   "modelId": 1597,
   "name": "DORIS ETROIT 0300W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1598": {
   "HVACModes": {
@@ -2335,7 +2400,8 @@
   ],
   "modelId": 1598,
   "name": "DORIS ETROIT 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1599": {
   "HVACModes": {
@@ -2348,7 +2414,8 @@
   ],
   "modelId": 1599,
   "name": "DORIS ETROIT 1300W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1600": {
   "HVACModes": {
@@ -2361,7 +2428,8 @@
   ],
   "modelId": 1600,
   "name": "DORIS ETROIT 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1601": {
   "HVACModes": {
@@ -2374,7 +2442,8 @@
   ],
   "modelId": 1601,
   "name": "RIVA 5 0500W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1602": {
   "HVACModes": {
@@ -2387,7 +2456,8 @@
   ],
   "modelId": 1602,
   "name": "RIVA 5 0500W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1603": {
   "HVACModes": {
@@ -2400,7 +2470,8 @@
   ],
   "modelId": 1603,
   "name": "RIVA 5 0500W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1604": {
   "HVACModes": {
@@ -2413,7 +2484,8 @@
   ],
   "modelId": 1604,
   "name": "RIVA 5 0750W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1605": {
   "HVACModes": {
@@ -2426,7 +2498,8 @@
   ],
   "modelId": 1605,
   "name": "RIVA 5 0750W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1606": {
   "HVACModes": {
@@ -2439,7 +2512,8 @@
   ],
   "modelId": 1606,
   "name": "RIVA 5 0750W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1607": {
   "HVACModes": {
@@ -2452,7 +2526,8 @@
   ],
   "modelId": 1607,
   "name": "RIVA 5 1000W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1608": {
   "HVACModes": {
@@ -2465,7 +2540,8 @@
   ],
   "modelId": 1608,
   "name": "RIVA 5 1000W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1609": {
   "HVACModes": {
@@ -2478,7 +2554,8 @@
   ],
   "modelId": 1609,
   "name": "RIVA 5 1000W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1610": {
   "HVACModes": {
@@ -2491,7 +2568,8 @@
   ],
   "modelId": 1610,
   "name": "RIVA 5 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1611": {
   "HVACModes": {
@@ -2504,7 +2582,8 @@
   ],
   "modelId": 1611,
   "name": "RIVA 5 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1612": {
   "HVACModes": {
@@ -2517,7 +2596,8 @@
   ],
   "modelId": 1612,
   "name": "RIVA 5 2000W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1613": {
   "HVACModes": {
@@ -2530,7 +2610,8 @@
   ],
   "modelId": 1613,
   "name": "RIVA 5 1500W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1614": {
   "HVACModes": {
@@ -2543,7 +2624,8 @@
   ],
   "modelId": 1614,
   "name": "RIVA 5 1500W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1615": {
   "HVACModes": {
@@ -2556,7 +2638,8 @@
   ],
   "modelId": 1615,
   "name": "RIVA 5 1500W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1616": {
   "HVACModes": {
@@ -2569,7 +2652,8 @@
   ],
   "modelId": 1616,
   "name": "RIVA 5 1750W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1617": {
   "HVACModes": {
@@ -2582,7 +2666,8 @@
   ],
   "modelId": 1617,
   "name": "RIVA 5 1750W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1618": {
   "HVACModes": {
@@ -2595,7 +2680,8 @@
   ],
   "modelId": 1618,
   "name": "RIVA 5 1750W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1619": {
   "HVACModes": {
@@ -2608,7 +2694,8 @@
   ],
   "modelId": 1619,
   "name": "RIVA 5 2000W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1620": {
   "HVACModes": {
@@ -2621,7 +2708,8 @@
   ],
   "modelId": 1620,
   "name": "RIVA 5 2000W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1621": {
   "HVACModes": {
@@ -2634,7 +2722,8 @@
   ],
   "modelId": 1621,
   "name": "RIVA 5 2000W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1622": {
   "HVACModes": {
@@ -2647,7 +2736,8 @@
   ],
   "modelId": 1622,
   "name": "RIVA 5 ETROIT 1300W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1623": {
   "HVACModes": {
@@ -2660,7 +2750,8 @@
   ],
   "modelId": 1623,
   "name": "RIVA 5 ETROIT 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1624": {
   "HVACModes": {
@@ -2673,7 +2764,8 @@
   ],
   "modelId": 1624,
   "name": "RIVA 5 ETROIT 0300W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1625": {
   "HVACModes": {
@@ -2686,7 +2778,8 @@
   ],
   "modelId": 1625,
   "name": "RIVA 5 ETROIT 0300W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1626": {
   "HVACModes": {
@@ -2699,7 +2792,8 @@
   ],
   "modelId": 1626,
   "name": "RIVA 5 ETROIT 0500W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1627": {
   "HVACModes": {
@@ -2712,7 +2806,8 @@
   ],
   "modelId": 1627,
   "name": "RIVA 5 ETROIT 1300W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1628": {
   "HVACModes": {
@@ -2725,7 +2820,8 @@
   ],
   "modelId": 1628,
   "name": "RIVA 5 ETROIT 1500W MENHIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1629": {
   "HVACModes": {
@@ -2738,7 +2834,8 @@
   ],
   "modelId": 1629,
   "name": "RIVA 5 ETROIT 0500W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1630": {
   "HVACModes": {
@@ -2751,7 +2848,8 @@
   ],
   "modelId": 1630,
   "name": "RIVA 5 ETROIT 1300W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1631": {
   "HVACModes": {
@@ -2764,7 +2862,8 @@
   ],
   "modelId": 1631,
   "name": "RIVA 5 ETROIT 1500W ARDOISE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1632": {
   "HVACModes": {
@@ -2777,7 +2876,8 @@
   ],
   "modelId": 1632,
   "name": "RIVA 5 ETROIT 0300W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1633": {
   "HVACModes": {
@@ -2790,7 +2890,8 @@
   ],
   "modelId": 1633,
   "name": "RIVA 5 ETROIT 0500W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1634": {
   "HVACModes": {
@@ -2803,7 +2904,8 @@
   ],
   "modelId": 1634,
   "name": "RIVA 5 ETROIT 1300W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1635": {
   "HVACModes": {
@@ -2816,7 +2918,8 @@
   ],
   "modelId": 1635,
   "name": "RIVA 5 ETROIT 1500W CARBONE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1636": {
   "HVACModes": {
@@ -2829,7 +2932,8 @@
   ],
   "modelId": 1636,
   "name": "TAHUAL H 1000W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1637": {
   "HVACModes": {
@@ -2842,7 +2946,8 @@
   ],
   "modelId": 1637,
   "name": "TAHUAL H 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1638": {
   "HVACModes": {
@@ -2855,7 +2960,8 @@
   ],
   "modelId": 1638,
   "name": "TAHUAL H 2000W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1639": {
   "HVACModes": {
@@ -2868,7 +2974,8 @@
   ],
   "modelId": 1639,
   "name": "TAHUAL V 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1640": {
   "HVACModes": {
@@ -2881,7 +2988,8 @@
   ],
   "modelId": 1640,
   "name": "TAHUAL V 2000W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1641": {
   "HVACModes": {
@@ -5458,7 +5566,8 @@
   ],
   "modelId": 1816,
   "name": "NEFERTITI MATG 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1817": {
   "HVACModes": {
@@ -5471,7 +5580,8 @@
   ],
   "modelId": 1817,
   "name": "NEFERTITI MATG 0500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1818": {
   "HVACModes": {
@@ -5484,7 +5594,8 @@
   ],
   "modelId": 1818,
   "name": "NEFERTITI MATG 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1819": {
   "HVACModes": {
@@ -5497,7 +5608,8 @@
   ],
   "modelId": 1819,
   "name": "NEFERTITI MATG 0500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1820": {
   "HVACModes": {
@@ -5510,7 +5622,8 @@
   ],
   "modelId": 1820,
   "name": "NEFERTITI MATG 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1821": {
   "HVACModes": {
@@ -5523,7 +5636,8 @@
   ],
   "modelId": 1821,
   "name": "NEFERTITI MATG 0500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1822": {
   "HVACModes": {
@@ -5536,7 +5650,8 @@
   ],
   "modelId": 1822,
   "name": "NEFERTITI MATG 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1823": {
   "HVACModes": {
@@ -5549,7 +5664,8 @@
   ],
   "modelId": 1823,
   "name": "NEFERTITI MATG 0500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1824": {
   "HVACModes": {
@@ -5562,7 +5678,8 @@
   ],
   "modelId": 1824,
   "name": "NEFERTITI MATG 0750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1825": {
   "HVACModes": {
@@ -5575,7 +5692,8 @@
   ],
   "modelId": 1825,
   "name": "NEFERTITI MATG 0750W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1826": {
   "HVACModes": {
@@ -5588,7 +5706,8 @@
   ],
   "modelId": 1826,
   "name": "NEFERTITI MATG 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1827": {
   "HVACModes": {
@@ -5601,7 +5720,8 @@
   ],
   "modelId": 1827,
   "name": "NEFERTITI MATG 0750W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1828": {
   "HVACModes": {
@@ -5614,7 +5734,8 @@
   ],
   "modelId": 1828,
   "name": "NEFERTITI MATG 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1829": {
   "HVACModes": {
@@ -5627,7 +5748,8 @@
   ],
   "modelId": 1829,
   "name": "NEFERTITI MATG 0750W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1830": {
   "HVACModes": {
@@ -5640,7 +5762,8 @@
   ],
   "modelId": 1830,
   "name": "NEFERTITI MATG 0750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1831": {
   "HVACModes": {
@@ -5653,7 +5776,8 @@
   ],
   "modelId": 1831,
   "name": "NEFERTITI MATG 0750W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1832": {
   "HVACModes": {
@@ -5666,7 +5790,8 @@
   ],
   "modelId": 1832,
   "name": "NEFERTITI MATG 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1833": {
   "HVACModes": {
@@ -5679,7 +5804,8 @@
   ],
   "modelId": 1833,
   "name": "NEFERTITI MATG 1500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1834": {
   "HVACModes": {
@@ -5692,7 +5818,8 @@
   ],
   "modelId": 1834,
   "name": "NEFERTITI MATG 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1835": {
   "HVACModes": {
@@ -5705,7 +5832,8 @@
   ],
   "modelId": 1835,
   "name": "NEFERTITI MATG 1500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1836": {
   "HVACModes": {
@@ -5718,7 +5846,8 @@
   ],
   "modelId": 1836,
   "name": "NEFERTITI MATG 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1837": {
   "HVACModes": {
@@ -5731,7 +5860,8 @@
   ],
   "modelId": 1837,
   "name": "NEFERTITI MATG 1500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1838": {
   "HVACModes": {
@@ -5744,7 +5874,8 @@
   ],
   "modelId": 1838,
   "name": "NEFERTITI MATG 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1839": {
   "HVACModes": {
@@ -5757,7 +5888,8 @@
   ],
   "modelId": 1839,
   "name": "NEFERTITI MATG 1500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1840": {
   "HVACModes": {
@@ -5770,7 +5902,8 @@
   ],
   "modelId": 1840,
   "name": "NEFERTITI MATG 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1841": {
   "HVACModes": {
@@ -5783,7 +5916,8 @@
   ],
   "modelId": 1841,
   "name": "NEFERTITI MATG 1750W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1842": {
   "HVACModes": {
@@ -5796,7 +5930,8 @@
   ],
   "modelId": 1842,
   "name": "NEFERTITI MATG 1750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1843": {
   "HVACModes": {
@@ -5809,7 +5944,8 @@
   ],
   "modelId": 1843,
   "name": "NEFERTITI MATG 1750W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1844": {
   "HVACModes": {
@@ -5822,7 +5958,8 @@
   ],
   "modelId": 1844,
   "name": "NEFERTITI MATG 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1845": {
   "HVACModes": {
@@ -5835,7 +5972,8 @@
   ],
   "modelId": 1845,
   "name": "NEFERTITI MATG 1750W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1846": {
   "HVACModes": {
@@ -5848,7 +5986,8 @@
   ],
   "modelId": 1846,
   "name": "NEFERTITI MATG 1750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1847": {
   "HVACModes": {
@@ -5861,7 +6000,8 @@
   ],
   "modelId": 1847,
   "name": "NEFERTITI MATG 1750W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1848": {
   "HVACModes": {
@@ -5874,7 +6014,8 @@
   ],
   "modelId": 1848,
   "name": "NEFERTITI MATD 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1849": {
   "HVACModes": {
@@ -5887,7 +6028,8 @@
   ],
   "modelId": 1849,
   "name": "NEFERTITI MATD 0500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1850": {
   "HVACModes": {
@@ -5900,7 +6042,8 @@
   ],
   "modelId": 1850,
   "name": "NEFERTITI MATD 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1851": {
   "HVACModes": {
@@ -5913,7 +6056,8 @@
   ],
   "modelId": 1851,
   "name": "NEFERTITI MATD 0500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1852": {
   "HVACModes": {
@@ -5926,7 +6070,8 @@
   ],
   "modelId": 1852,
   "name": "NEFERTITI MATD 0500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1853": {
   "HVACModes": {
@@ -5939,7 +6084,8 @@
   ],
   "modelId": 1853,
   "name": "NEFERTITI MATD 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1854": {
   "HVACModes": {
@@ -5952,7 +6098,8 @@
   ],
   "modelId": 1854,
   "name": "NEFERTITI MATD 0500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1855": {
   "HVACModes": {
@@ -5965,7 +6112,8 @@
   ],
   "modelId": 1855,
   "name": "NEFERTITI MATD 0750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1856": {
   "HVACModes": {
@@ -5978,7 +6126,8 @@
   ],
   "modelId": 1856,
   "name": "NEFERTITI MATD 0750W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1857": {
   "HVACModes": {
@@ -5991,7 +6140,8 @@
   ],
   "modelId": 1857,
   "name": "NEFERTITI MATD 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1858": {
   "HVACModes": {
@@ -6004,7 +6154,8 @@
   ],
   "modelId": 1858,
   "name": "NEFERTITI MATD 0750W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1859": {
   "HVACModes": {
@@ -6017,7 +6168,8 @@
   ],
   "modelId": 1859,
   "name": "NEFERTITI MATD 0750W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1860": {
   "HVACModes": {
@@ -6030,7 +6182,8 @@
   ],
   "modelId": 1860,
   "name": "NEFERTITI MATD 0750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1861": {
   "HVACModes": {
@@ -6043,7 +6196,8 @@
   ],
   "modelId": 1861,
   "name": "NEFERTITI MATD 0750W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1862": {
   "HVACModes": {
@@ -6056,7 +6210,8 @@
   ],
   "modelId": 1862,
   "name": "NEFERTITI MATD 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1863": {
   "HVACModes": {
@@ -6069,7 +6224,8 @@
   ],
   "modelId": 1863,
   "name": "NEFERTITI MATD 1500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1864": {
   "HVACModes": {
@@ -6082,7 +6238,8 @@
   ],
   "modelId": 1864,
   "name": "NEFERTITI MATD 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1865": {
   "HVACModes": {
@@ -6095,7 +6252,8 @@
   ],
   "modelId": 1865,
   "name": "NEFERTITI MATD 1500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1866": {
   "HVACModes": {
@@ -6108,7 +6266,8 @@
   ],
   "modelId": 1866,
   "name": "NEFERTITI MATD 1500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1867": {
   "HVACModes": {
@@ -6121,7 +6280,8 @@
   ],
   "modelId": 1867,
   "name": "NEFERTITI MATD 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1868": {
   "HVACModes": {
@@ -6134,7 +6294,8 @@
   ],
   "modelId": 1868,
   "name": "NEFERTITI MATD 1500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1869": {
   "HVACModes": {
@@ -6147,7 +6308,8 @@
   ],
   "modelId": 1869,
   "name": "NEFERTITI MATD 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1870": {
   "HVACModes": {
@@ -6160,7 +6322,8 @@
   ],
   "modelId": 1870,
   "name": "NEFERTITI MATD 1750W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1871": {
   "HVACModes": {
@@ -6173,7 +6336,8 @@
   ],
   "modelId": 1871,
   "name": "NEFERTITI MATD 1750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1872": {
   "HVACModes": {
@@ -6186,7 +6350,8 @@
   ],
   "modelId": 1872,
   "name": "NEFERTITI MATD 1750W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1873": {
   "HVACModes": {
@@ -6199,7 +6364,8 @@
   ],
   "modelId": 1873,
   "name": "NEFERTITI MATD 1750W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1874": {
   "HVACModes": {
@@ -6212,7 +6378,8 @@
   ],
   "modelId": 1874,
   "name": "NEFERTITI MATD 1750W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1875": {
   "HVACModes": {
@@ -6225,7 +6392,8 @@
   ],
   "modelId": 1875,
   "name": "NEFERTITI MATD 1750W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1876": {
   "HVACModes": {
@@ -6238,7 +6406,8 @@
   ],
   "modelId": 1876,
   "name": "NEFERTITI MATG ETROIT 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1877": {
   "HVACModes": {
@@ -6251,7 +6420,8 @@
   ],
   "modelId": 1877,
   "name": "NEFERTITI MATG ETROIT 0500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1878": {
   "HVACModes": {
@@ -6264,7 +6434,8 @@
   ],
   "modelId": 1878,
   "name": "NEFERTITI MATG ETROIT 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1879": {
   "HVACModes": {
@@ -6277,7 +6448,8 @@
   ],
   "modelId": 1879,
   "name": "NEFERTITI MATG ETROIT 0500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1880": {
   "HVACModes": {
@@ -6290,7 +6462,8 @@
   ],
   "modelId": 1880,
   "name": "NEFERTITI MATG ETROIT 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1881": {
   "HVACModes": {
@@ -6303,7 +6476,8 @@
   ],
   "modelId": 1881,
   "name": "NEFERTITI MATG ETROIT 0500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1882": {
   "HVACModes": {
@@ -6316,7 +6490,8 @@
   ],
   "modelId": 1882,
   "name": "NEFERTITI MATG ETROIT 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1883": {
   "HVACModes": {
@@ -6329,7 +6504,8 @@
   ],
   "modelId": 1883,
   "name": "NEFERTITI MATG ETROIT 0500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1884": {
   "HVACModes": {
@@ -6342,7 +6518,8 @@
   ],
   "modelId": 1884,
   "name": "NEFERTITI MATG ETROIT 0600W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1885": {
   "HVACModes": {
@@ -6355,7 +6532,8 @@
   ],
   "modelId": 1885,
   "name": "NEFERTITI MATG ETROIT 0600W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1886": {
   "HVACModes": {
@@ -6368,7 +6546,8 @@
   ],
   "modelId": 1886,
   "name": "NEFERTITI MATG ETROIT 0600W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1887": {
   "HVACModes": {
@@ -6381,7 +6560,8 @@
   ],
   "modelId": 1887,
   "name": "NEFERTITI MATG ETROIT 0600W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1888": {
   "HVACModes": {
@@ -6394,7 +6574,8 @@
   ],
   "modelId": 1888,
   "name": "NEFERTITI MATG ETROIT 0600W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1889": {
   "HVACModes": {
@@ -6407,7 +6588,8 @@
   ],
   "modelId": 1889,
   "name": "NEFERTITI MATG ETROIT 0600W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1890": {
   "HVACModes": {
@@ -6420,7 +6602,8 @@
   ],
   "modelId": 1890,
   "name": "NEFERTITI MATG ETROIT 0600W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1891": {
   "HVACModes": {
@@ -6433,7 +6616,8 @@
   ],
   "modelId": 1891,
   "name": "NEFERTITI MATG ETROIT 0600W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1892": {
   "HVACModes": {
@@ -6446,7 +6630,8 @@
   ],
   "modelId": 1892,
   "name": "NEFERTITI MATG ETROIT 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1893": {
   "HVACModes": {
@@ -6459,7 +6644,8 @@
   ],
   "modelId": 1893,
   "name": "NEFERTITI MATG ETROIT 1500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1894": {
   "HVACModes": {
@@ -6472,7 +6658,8 @@
   ],
   "modelId": 1894,
   "name": "NEFERTITI MATG ETROIT 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1895": {
   "HVACModes": {
@@ -6485,7 +6672,8 @@
   ],
   "modelId": 1895,
   "name": "NEFERTITI MATG ETROIT 1500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1896": {
   "HVACModes": {
@@ -6498,7 +6686,8 @@
   ],
   "modelId": 1896,
   "name": "NEFERTITI MATG ETROIT 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1897": {
   "HVACModes": {
@@ -6511,7 +6700,8 @@
   ],
   "modelId": 1897,
   "name": "NEFERTITI MATG ETROIT 1500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1898": {
   "HVACModes": {
@@ -6524,7 +6714,8 @@
   ],
   "modelId": 1898,
   "name": "NEFERTITI MATG ETROIT 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1899": {
   "HVACModes": {
@@ -6537,7 +6728,8 @@
   ],
   "modelId": 1899,
   "name": "NEFERTITI MATG ETROIT 1500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1900": {
   "HVACModes": {
@@ -6550,7 +6742,8 @@
   ],
   "modelId": 1900,
   "name": "NEFERTITI MATG ETROIT 1600W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1901": {
   "HVACModes": {
@@ -6563,7 +6756,8 @@
   ],
   "modelId": 1901,
   "name": "NEFERTITI MATG ETROIT 1600W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1902": {
   "HVACModes": {
@@ -6576,7 +6770,8 @@
   ],
   "modelId": 1902,
   "name": "NEFERTITI MATG ETROIT 1600W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1903": {
   "HVACModes": {
@@ -6589,7 +6784,8 @@
   ],
   "modelId": 1903,
   "name": "NEFERTITI MATG ETROIT 1600W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1904": {
   "HVACModes": {
@@ -6602,7 +6798,8 @@
   ],
   "modelId": 1904,
   "name": "NEFERTITI MATG ETROIT 1600W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1905": {
   "HVACModes": {
@@ -6615,7 +6812,8 @@
   ],
   "modelId": 1905,
   "name": "NEFERTITI MATG ETROIT 1600W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1906": {
   "HVACModes": {
@@ -6628,7 +6826,8 @@
   ],
   "modelId": 1906,
   "name": "NEFERTITI MATG ETROIT 1600W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1907": {
   "HVACModes": {
@@ -6641,7 +6840,8 @@
   ],
   "modelId": 1907,
   "name": "NEFERTITI MATG ETROIT 1600W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1908": {
   "HVACModes": {
@@ -6654,7 +6854,8 @@
   ],
   "modelId": 1908,
   "name": "NEFERTITI MATD ETROIT 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1909": {
   "HVACModes": {
@@ -6667,7 +6868,8 @@
   ],
   "modelId": 1909,
   "name": "NEFERTITI MATD ETROIT 0500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1910": {
   "HVACModes": {
@@ -6680,7 +6882,8 @@
   ],
   "modelId": 1910,
   "name": "NEFERTITI MATD ETROIT 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1911": {
   "HVACModes": {
@@ -6693,7 +6896,8 @@
   ],
   "modelId": 1911,
   "name": "NEFERTITI MATD ETROIT 0500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1912": {
   "HVACModes": {
@@ -6706,7 +6910,8 @@
   ],
   "modelId": 1912,
   "name": "NEFERTITI MATD ETROIT 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1913": {
   "HVACModes": {
@@ -6719,7 +6924,8 @@
   ],
   "modelId": 1913,
   "name": "NEFERTITI MATD ETROIT 0500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1914": {
   "HVACModes": {
@@ -6732,7 +6938,8 @@
   ],
   "modelId": 1914,
   "name": "NEFERTITI MATD ETROIT 0500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1915": {
   "HVACModes": {
@@ -6745,7 +6952,8 @@
   ],
   "modelId": 1915,
   "name": "NEFERTITI MATD ETROIT 0500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1916": {
   "HVACModes": {
@@ -6758,7 +6966,8 @@
   ],
   "modelId": 1916,
   "name": "NEFERTITI MATD ETROIT 0600W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1917": {
   "HVACModes": {
@@ -6771,7 +6980,8 @@
   ],
   "modelId": 1917,
   "name": "NEFERTITI MATD ETROIT 0600W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1918": {
   "HVACModes": {
@@ -6784,7 +6994,8 @@
   ],
   "modelId": 1918,
   "name": "NEFERTITI MATD ETROIT 0600W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1919": {
   "HVACModes": {
@@ -6797,7 +7008,8 @@
   ],
   "modelId": 1919,
   "name": "NEFERTITI MATD ETROIT 0600W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1920": {
   "HVACModes": {
@@ -6810,7 +7022,8 @@
   ],
   "modelId": 1920,
   "name": "NEFERTITI MATD ETROIT 0600W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1921": {
   "HVACModes": {
@@ -6823,7 +7036,8 @@
   ],
   "modelId": 1921,
   "name": "NEFERTITI MATD ETROIT 0600W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1922": {
   "HVACModes": {
@@ -6836,7 +7050,8 @@
   ],
   "modelId": 1922,
   "name": "NEFERTITI MATD ETROIT 0600W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1923": {
   "HVACModes": {
@@ -6849,7 +7064,8 @@
   ],
   "modelId": 1923,
   "name": "NEFERTITI MATD ETROIT 0600W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1924": {
   "HVACModes": {
@@ -6862,7 +7078,8 @@
   ],
   "modelId": 1924,
   "name": "NEFERTITI MATD ETROIT 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1925": {
   "HVACModes": {
@@ -6875,7 +7092,8 @@
   ],
   "modelId": 1925,
   "name": "NEFERTITI MATD ETROIT 1500W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1926": {
   "HVACModes": {
@@ -6888,7 +7106,8 @@
   ],
   "modelId": 1926,
   "name": "NEFERTITI MATD ETROIT 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1927": {
   "HVACModes": {
@@ -6901,7 +7120,8 @@
   ],
   "modelId": 1927,
   "name": "NEFERTITI MATD ETROIT 1500W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1928": {
   "HVACModes": {
@@ -6914,7 +7134,8 @@
   ],
   "modelId": 1928,
   "name": "NEFERTITI MATD ETROIT 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1929": {
   "HVACModes": {
@@ -6927,7 +7148,8 @@
   ],
   "modelId": 1929,
   "name": "NEFERTITI MATD ETROIT 1500W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1930": {
   "HVACModes": {
@@ -6940,7 +7162,8 @@
   ],
   "modelId": 1930,
   "name": "NEFERTITI MATD ETROIT 1500W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1931": {
   "HVACModes": {
@@ -6953,7 +7176,8 @@
   ],
   "modelId": 1931,
   "name": "NEFERTITI MATD ETROIT 1500W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1932": {
   "HVACModes": {
@@ -6966,7 +7190,8 @@
   ],
   "modelId": 1932,
   "name": "NEFERTITI MATD ETROIT 1600W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1933": {
   "HVACModes": {
@@ -6979,7 +7204,8 @@
   ],
   "modelId": 1933,
   "name": "NEFERTITI MATD ETROIT 1600W BEIGE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1934": {
   "HVACModes": {
@@ -6992,7 +7218,8 @@
   ],
   "modelId": 1934,
   "name": "NEFERTITI MATD ETROIT 1600W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1935": {
   "HVACModes": {
@@ -7005,7 +7232,8 @@
   ],
   "modelId": 1935,
   "name": "NEFERTITI MATD ETROIT 1600W BLEU PROFOND",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1936": {
   "HVACModes": {
@@ -7018,7 +7246,8 @@
   ],
   "modelId": 1936,
   "name": "NEFERTITI MATD ETROIT 1600W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1937": {
   "HVACModes": {
@@ -7031,7 +7260,8 @@
   ],
   "modelId": 1937,
   "name": "NEFERTITI MATD ETROIT 1600W GRAPH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1938": {
   "HVACModes": {
@@ -7044,7 +7274,8 @@
   ],
   "modelId": 1938,
   "name": "NEFERTITI MATD ETROIT 1600W CARAT",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1939": {
   "HVACModes": {
@@ -7057,7 +7288,8 @@
   ],
   "modelId": 1939,
   "name": "NEFERTITI MATD ETROIT 1600W VERT D EAU",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "1940": {
   "HVACModes": {},
@@ -8235,7 +8467,8 @@
   ],
   "modelId": 2128,
   "name": "NEFERTITI MATD 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2129": {
   "HVACModes": {
@@ -8248,7 +8481,8 @@
   ],
   "modelId": 2129,
   "name": "NEFERTITI MATD 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2130": {
   "HVACModes": {
@@ -8261,7 +8495,8 @@
   ],
   "modelId": 2130,
   "name": "NEFERTITI MATD 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2131": {
   "HVACModes": {
@@ -8274,7 +8509,8 @@
   ],
   "modelId": 2131,
   "name": "NEFERTITI MATD 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2132": {
   "HVACModes": {},
@@ -8350,7 +8586,8 @@
   ],
   "modelId": 2147,
   "name": "ALLURE 4 0500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2148": {
   "HVACModes": {
@@ -8363,7 +8600,8 @@
   ],
   "modelId": 2148,
   "name": "ALLURE 4 0500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2149": {
   "HVACModes": {
@@ -8376,7 +8614,8 @@
   ],
   "modelId": 2149,
   "name": "ALLURE 4 0500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "215": {
   "HVACModes": {
@@ -8402,7 +8641,8 @@
   ],
   "modelId": 2150,
   "name": "ALLURE 4 0500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2151": {
   "HVACModes": {
@@ -8415,7 +8655,8 @@
   ],
   "modelId": 2151,
   "name": "ALLURE 4 0500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2152": {
   "HVACModes": {
@@ -8428,7 +8669,8 @@
   ],
   "modelId": 2152,
   "name": "ALLURE 4 0500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2153": {
   "HVACModes": {
@@ -8441,7 +8683,8 @@
   ],
   "modelId": 2153,
   "name": "ALLURE 4 0500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2154": {
   "HVACModes": {
@@ -8454,7 +8697,8 @@
   ],
   "modelId": 2154,
   "name": "ALLURE 4 0500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2155": {
   "HVACModes": {
@@ -8467,7 +8711,8 @@
   ],
   "modelId": 2155,
   "name": "ALLURE 4 0500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2156": {
   "HVACModes": {
@@ -8480,7 +8725,8 @@
   ],
   "modelId": 2156,
   "name": "ALLURE 4 0500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2157": {
   "HVACModes": {
@@ -8493,7 +8739,8 @@
   ],
   "modelId": 2157,
   "name": "ALLURE 4 0500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2158": {
   "HVACModes": {
@@ -8506,7 +8753,8 @@
   ],
   "modelId": 2158,
   "name": "ALLURE 4 0500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2159": {
   "HVACModes": {
@@ -8519,7 +8767,8 @@
   ],
   "modelId": 2159,
   "name": "ALLURE 4 0500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "216": {
   "HVACModes": {
@@ -8545,7 +8794,8 @@
   ],
   "modelId": 2160,
   "name": "ALLURE 4 0500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2161": {
   "HVACModes": {
@@ -8558,7 +8808,8 @@
   ],
   "modelId": 2161,
   "name": "ALLURE 4 0500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2162": {
   "HVACModes": {
@@ -8571,7 +8822,8 @@
   ],
   "modelId": 2162,
   "name": "ALLURE 4 0500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2163": {
   "HVACModes": {
@@ -8584,7 +8836,8 @@
   ],
   "modelId": 2163,
   "name": "ALLURE 4 0750W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2164": {
   "HVACModes": {
@@ -8597,7 +8850,8 @@
   ],
   "modelId": 2164,
   "name": "ALLURE 4 0750W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2165": {
   "HVACModes": {
@@ -8610,7 +8864,8 @@
   ],
   "modelId": 2165,
   "name": "ALLURE 4 0750W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2166": {
   "HVACModes": {
@@ -8623,7 +8878,8 @@
   ],
   "modelId": 2166,
   "name": "ALLURE 4 0750W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2167": {
   "HVACModes": {
@@ -8636,7 +8892,8 @@
   ],
   "modelId": 2167,
   "name": "ALLURE 4 0750W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2168": {
   "HVACModes": {
@@ -8649,7 +8906,8 @@
   ],
   "modelId": 2168,
   "name": "ALLURE 4 0750W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2169": {
   "HVACModes": {
@@ -8662,7 +8920,8 @@
   ],
   "modelId": 2169,
   "name": "ALLURE 4 0750W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "217": {
   "HVACModes": {
@@ -8688,7 +8947,8 @@
   ],
   "modelId": 2170,
   "name": "ALLURE 4 0750W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2171": {
   "HVACModes": {
@@ -8701,7 +8961,8 @@
   ],
   "modelId": 2171,
   "name": "ALLURE 4 0750W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2172": {
   "HVACModes": {
@@ -8714,7 +8975,8 @@
   ],
   "modelId": 2172,
   "name": "ALLURE 4 0750W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2173": {
   "HVACModes": {
@@ -8727,7 +8989,8 @@
   ],
   "modelId": 2173,
   "name": "ALLURE 4 0750W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2174": {
   "HVACModes": {
@@ -8740,7 +9003,8 @@
   ],
   "modelId": 2174,
   "name": "ALLURE 4 0750W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2175": {
   "HVACModes": {
@@ -8753,7 +9017,8 @@
   ],
   "modelId": 2175,
   "name": "ALLURE 4 0750W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2176": {
   "HVACModes": {
@@ -8766,7 +9031,8 @@
   ],
   "modelId": 2176,
   "name": "ALLURE 4 0750W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2177": {
   "HVACModes": {
@@ -8779,7 +9045,8 @@
   ],
   "modelId": 2177,
   "name": "ALLURE 4 0750W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2178": {
   "HVACModes": {
@@ -8792,7 +9059,8 @@
   ],
   "modelId": 2178,
   "name": "ALLURE 4 0750W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2179": {
   "HVACModes": {
@@ -8805,7 +9073,8 @@
   ],
   "modelId": 2179,
   "name": "ALLURE 4 1500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "218": {
   "HVACModes": {
@@ -8831,7 +9100,8 @@
   ],
   "modelId": 2180,
   "name": "ALLURE 4 1500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2181": {
   "HVACModes": {
@@ -8844,7 +9114,8 @@
   ],
   "modelId": 2181,
   "name": "ALLURE 4 1500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2182": {
   "HVACModes": {
@@ -8857,7 +9128,8 @@
   ],
   "modelId": 2182,
   "name": "ALLURE 4 1500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2183": {
   "HVACModes": {
@@ -8870,7 +9142,8 @@
   ],
   "modelId": 2183,
   "name": "ALLURE 4 1500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2184": {
   "HVACModes": {
@@ -8883,7 +9156,8 @@
   ],
   "modelId": 2184,
   "name": "ALLURE 4 1500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2185": {
   "HVACModes": {
@@ -8896,7 +9170,8 @@
   ],
   "modelId": 2185,
   "name": "ALLURE 4 1500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2186": {
   "HVACModes": {
@@ -8909,7 +9184,8 @@
   ],
   "modelId": 2186,
   "name": "ALLURE 4 1500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2187": {
   "HVACModes": {
@@ -8922,7 +9198,8 @@
   ],
   "modelId": 2187,
   "name": "ALLURE 4 1500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2188": {
   "HVACModes": {
@@ -8935,7 +9212,8 @@
   ],
   "modelId": 2188,
   "name": "ALLURE 4 1500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2189": {
   "HVACModes": {
@@ -8948,7 +9226,8 @@
   ],
   "modelId": 2189,
   "name": "ALLURE 4 1500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "219": {
   "HVACModes": {
@@ -8981,7 +9260,8 @@
   ],
   "modelId": 2190,
   "name": "ALLURE 4 1500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2191": {
   "HVACModes": {
@@ -8994,7 +9274,8 @@
   ],
   "modelId": 2191,
   "name": "ALLURE 4 1500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2192": {
   "HVACModes": {
@@ -9007,7 +9288,8 @@
   ],
   "modelId": 2192,
   "name": "ALLURE 4 1500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2193": {
   "HVACModes": {
@@ -9020,7 +9302,8 @@
   ],
   "modelId": 2193,
   "name": "ALLURE 4 1500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2194": {
   "HVACModes": {
@@ -9033,7 +9316,8 @@
   ],
   "modelId": 2194,
   "name": "ALLURE 4 1500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2195": {
   "HVACModes": {
@@ -9046,7 +9330,8 @@
   ],
   "modelId": 2195,
   "name": "ALLURE 4 1750W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2196": {
   "HVACModes": {
@@ -9059,7 +9344,8 @@
   ],
   "modelId": 2196,
   "name": "ALLURE 4 1750W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2197": {
   "HVACModes": {
@@ -9072,7 +9358,8 @@
   ],
   "modelId": 2197,
   "name": "ALLURE 4 1750W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2198": {
   "HVACModes": {
@@ -9085,7 +9372,8 @@
   ],
   "modelId": 2198,
   "name": "ALLURE 4 1750W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2199": {
   "HVACModes": {
@@ -9098,7 +9386,8 @@
   ],
   "modelId": 2199,
   "name": "ALLURE 4 1750W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "220": {
   "HVACModes": {
@@ -9124,7 +9413,8 @@
   ],
   "modelId": 2200,
   "name": "ALLURE 4 1750W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2201": {
   "HVACModes": {
@@ -9137,7 +9427,8 @@
   ],
   "modelId": 2201,
   "name": "ALLURE 4 1750W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2202": {
   "HVACModes": {
@@ -9150,7 +9441,8 @@
   ],
   "modelId": 2202,
   "name": "ALLURE 4 1750W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2203": {
   "HVACModes": {
@@ -9163,7 +9455,8 @@
   ],
   "modelId": 2203,
   "name": "ALLURE 4 1750W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2204": {
   "HVACModes": {
@@ -9176,7 +9469,8 @@
   ],
   "modelId": 2204,
   "name": "ALLURE 4 1750W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2205": {
   "HVACModes": {
@@ -9189,7 +9483,8 @@
   ],
   "modelId": 2205,
   "name": "ALLURE 4 1750W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2206": {
   "HVACModes": {
@@ -9202,7 +9497,8 @@
   ],
   "modelId": 2206,
   "name": "ALLURE 4 1750W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2207": {
   "HVACModes": {
@@ -9215,7 +9511,8 @@
   ],
   "modelId": 2207,
   "name": "ALLURE 4 1750W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2208": {
   "HVACModes": {
@@ -9228,7 +9525,8 @@
   ],
   "modelId": 2208,
   "name": "ALLURE 4 1750W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2209": {
   "HVACModes": {
@@ -9241,7 +9539,8 @@
   ],
   "modelId": 2209,
   "name": "ALLURE 4 1750W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2210": {
   "HVACModes": {
@@ -9254,7 +9553,8 @@
   ],
   "modelId": 2210,
   "name": "ALLURE 4 1750W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2211": {
   "HVACModes": {
@@ -9267,7 +9567,8 @@
   ],
   "modelId": 2211,
   "name": "ALLURE 4 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2212": {
   "HVACModes": {
@@ -9280,7 +9581,8 @@
   ],
   "modelId": 2212,
   "name": "ALLURE 4 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2213": {
   "HVACModes": {
@@ -9293,7 +9595,8 @@
   ],
   "modelId": 2213,
   "name": "ALLURE 4 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2214": {
   "HVACModes": {
@@ -9306,7 +9609,8 @@
   ],
   "modelId": 2214,
   "name": "ALLURE 4 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2215": {
   "HVACModes": {
@@ -9319,7 +9623,8 @@
   ],
   "modelId": 2215,
   "name": "ALLURE 4 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2216": {
   "HVACModes": {
@@ -9332,7 +9637,8 @@
   ],
   "modelId": 2216,
   "name": "ALLURE 4 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2217": {
   "HVACModes": {
@@ -9345,7 +9651,8 @@
   ],
   "modelId": 2217,
   "name": "ALLURE 4 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2218": {
   "HVACModes": {
@@ -9358,7 +9665,8 @@
   ],
   "modelId": 2218,
   "name": "ALLURE 4 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2219": {
   "HVACModes": {
@@ -9371,7 +9679,8 @@
   ],
   "modelId": 2219,
   "name": "ALLURE 4 ETR 0500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2220": {
   "HVACModes": {
@@ -9384,7 +9693,8 @@
   ],
   "modelId": 2220,
   "name": "ALLURE 4 ETR 0500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2221": {
   "HVACModes": {
@@ -9397,7 +9707,8 @@
   ],
   "modelId": 2221,
   "name": "ALLURE 4 ETR 0500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2222": {
   "HVACModes": {
@@ -9410,7 +9721,8 @@
   ],
   "modelId": 2222,
   "name": "ALLURE 4 ETR 0500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2223": {
   "HVACModes": {
@@ -9423,7 +9735,8 @@
   ],
   "modelId": 2223,
   "name": "ALLURE 4 ETR 0500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2224": {
   "HVACModes": {
@@ -9436,7 +9749,8 @@
   ],
   "modelId": 2224,
   "name": "ALLURE 4 ETR 0500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2225": {
   "HVACModes": {
@@ -9449,7 +9763,8 @@
   ],
   "modelId": 2225,
   "name": "ALLURE 4 ETR 0500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2226": {
   "HVACModes": {
@@ -9462,7 +9777,8 @@
   ],
   "modelId": 2226,
   "name": "ALLURE 4 ETR 0500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2227": {
   "HVACModes": {
@@ -9475,7 +9791,8 @@
   ],
   "modelId": 2227,
   "name": "ALLURE 4 ETR 0500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2228": {
   "HVACModes": {
@@ -9488,7 +9805,8 @@
   ],
   "modelId": 2228,
   "name": "ALLURE 4 ETR 0500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2229": {
   "HVACModes": {
@@ -9501,7 +9819,8 @@
   ],
   "modelId": 2229,
   "name": "ALLURE 4 ETR 0500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2230": {
   "HVACModes": {
@@ -9514,7 +9833,8 @@
   ],
   "modelId": 2230,
   "name": "ALLURE 4 ETR 0500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2231": {
   "HVACModes": {
@@ -9527,7 +9847,8 @@
   ],
   "modelId": 2231,
   "name": "ALLURE 4 ETR 0500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2232": {
   "HVACModes": {
@@ -9540,7 +9861,8 @@
   ],
   "modelId": 2232,
   "name": "ALLURE 4 ETR 0500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2233": {
   "HVACModes": {
@@ -9553,7 +9875,8 @@
   ],
   "modelId": 2233,
   "name": "ALLURE 4 ETR 0500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2234": {
   "HVACModes": {
@@ -9566,7 +9889,8 @@
   ],
   "modelId": 2234,
   "name": "ALLURE 4 ETR 0500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2235": {
   "HVACModes": {
@@ -9579,7 +9903,8 @@
   ],
   "modelId": 2235,
   "name": "ALLURE 4 ETR 0600W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2236": {
   "HVACModes": {
@@ -9592,7 +9917,8 @@
   ],
   "modelId": 2236,
   "name": "ALLURE 4 ETR 0600W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2237": {
   "HVACModes": {
@@ -9605,7 +9931,8 @@
   ],
   "modelId": 2237,
   "name": "ALLURE 4 ETR 0600W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2238": {
   "HVACModes": {
@@ -9618,7 +9945,8 @@
   ],
   "modelId": 2238,
   "name": "ALLURE 4 ETR 0600W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2239": {
   "HVACModes": {
@@ -9631,7 +9959,8 @@
   ],
   "modelId": 2239,
   "name": "ALLURE 4 ETR 0600W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2240": {
   "HVACModes": {
@@ -9644,7 +9973,8 @@
   ],
   "modelId": 2240,
   "name": "ALLURE 4 ETR 0600W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2241": {
   "HVACModes": {
@@ -9657,7 +9987,8 @@
   ],
   "modelId": 2241,
   "name": "ALLURE 4 ETR 0600W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2242": {
   "HVACModes": {
@@ -9670,7 +10001,8 @@
   ],
   "modelId": 2242,
   "name": "ALLURE 4 ETR 0600W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2243": {
   "HVACModes": {
@@ -9683,7 +10015,8 @@
   ],
   "modelId": 2243,
   "name": "ALLURE 4 ETR 0600W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2244": {
   "HVACModes": {
@@ -9696,7 +10029,8 @@
   ],
   "modelId": 2244,
   "name": "ALLURE 4 ETR 0600W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2245": {
   "HVACModes": {
@@ -9709,7 +10043,8 @@
   ],
   "modelId": 2245,
   "name": "ALLURE 4 ETR 0600W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2246": {
   "HVACModes": {
@@ -9722,7 +10057,8 @@
   ],
   "modelId": 2246,
   "name": "ALLURE 4 ETR 0600W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2247": {
   "HVACModes": {
@@ -9735,7 +10071,8 @@
   ],
   "modelId": 2247,
   "name": "ALLURE 4 ETR 0600W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2248": {
   "HVACModes": {
@@ -9748,7 +10085,8 @@
   ],
   "modelId": 2248,
   "name": "ALLURE 4 ETR 0600W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2249": {
   "HVACModes": {
@@ -9761,7 +10099,8 @@
   ],
   "modelId": 2249,
   "name": "ALLURE 4 ETR 0600W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2250": {
   "HVACModes": {
@@ -9774,7 +10113,8 @@
   ],
   "modelId": 2250,
   "name": "ALLURE 4 ETR 0600W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2251": {
   "HVACModes": {
@@ -9787,7 +10127,8 @@
   ],
   "modelId": 2251,
   "name": "ALLURE 4 ETR 1500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2252": {
   "HVACModes": {
@@ -9800,7 +10141,8 @@
   ],
   "modelId": 2252,
   "name": "ALLURE 4 ETR 1500W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2253": {
   "HVACModes": {
@@ -9813,7 +10155,8 @@
   ],
   "modelId": 2253,
   "name": "ALLURE 4 ETR 1500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2254": {
   "HVACModes": {
@@ -9826,7 +10169,8 @@
   ],
   "modelId": 2254,
   "name": "ALLURE 4 ETR 1500W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2255": {
   "HVACModes": {
@@ -9839,7 +10183,8 @@
   ],
   "modelId": 2255,
   "name": "ALLURE 4 ETR 1500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2256": {
   "HVACModes": {
@@ -9852,7 +10197,8 @@
   ],
   "modelId": 2256,
   "name": "ALLURE 4 ETR 1500W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2257": {
   "HVACModes": {
@@ -9865,7 +10211,8 @@
   ],
   "modelId": 2257,
   "name": "ALLURE 4 ETR 1500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2258": {
   "HVACModes": {
@@ -9878,7 +10225,8 @@
   ],
   "modelId": 2258,
   "name": "ALLURE 4 ETR 1500W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2259": {
   "HVACModes": {
@@ -9891,7 +10239,8 @@
   ],
   "modelId": 2259,
   "name": "ALLURE 4 ETR 1500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2260": {
   "HVACModes": {
@@ -9904,7 +10253,8 @@
   ],
   "modelId": 2260,
   "name": "ALLURE 4 ETR 1500W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2261": {
   "HVACModes": {
@@ -9917,7 +10267,8 @@
   ],
   "modelId": 2261,
   "name": "ALLURE 4 ETR 1500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2262": {
   "HVACModes": {
@@ -9930,7 +10281,8 @@
   ],
   "modelId": 2262,
   "name": "ALLURE 4 ETR 1500W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2263": {
   "HVACModes": {
@@ -9943,7 +10295,8 @@
   ],
   "modelId": 2263,
   "name": "ALLURE 4 ETR 1500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2264": {
   "HVACModes": {
@@ -9956,7 +10309,8 @@
   ],
   "modelId": 2264,
   "name": "ALLURE 4 ETR 1500W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2265": {
   "HVACModes": {
@@ -9969,7 +10323,8 @@
   ],
   "modelId": 2265,
   "name": "ALLURE 4 ETR 1500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2266": {
   "HVACModes": {
@@ -9982,7 +10337,8 @@
   ],
   "modelId": 2266,
   "name": "ALLURE 4 ETR 1500W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2267": {
   "HVACModes": {
@@ -9995,7 +10351,8 @@
   ],
   "modelId": 2267,
   "name": "ALLURE 4 ETR 1600W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2268": {
   "HVACModes": {
@@ -10008,7 +10365,8 @@
   ],
   "modelId": 2268,
   "name": "ALLURE 4 ETR 1600W BLC BRI/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2269": {
   "HVACModes": {
@@ -10021,7 +10379,8 @@
   ],
   "modelId": 2269,
   "name": "ALLURE 4 ETR 1600W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "227": {
   "HVACModes": {
@@ -10047,7 +10406,8 @@
   ],
   "modelId": 2270,
   "name": "ALLURE 4 ETR 1600W BLC MAT/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2271": {
   "HVACModes": {
@@ -10060,7 +10420,8 @@
   ],
   "modelId": 2271,
   "name": "ALLURE 4 ETR 1600W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2272": {
   "HVACModes": {
@@ -10073,7 +10434,8 @@
   ],
   "modelId": 2272,
   "name": "ALLURE 4 ETR 1600W SABLE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2273": {
   "HVACModes": {
@@ -10086,7 +10448,8 @@
   ],
   "modelId": 2273,
   "name": "ALLURE 4 ETR 1600W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2274": {
   "HVACModes": {
@@ -10099,7 +10462,8 @@
   ],
   "modelId": 2274,
   "name": "ALLURE 4 ETR 1600W EUCA/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2275": {
   "HVACModes": {
@@ -10112,7 +10476,8 @@
   ],
   "modelId": 2275,
   "name": "ALLURE 4 ETR 1600W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2276": {
   "HVACModes": {
@@ -10125,7 +10490,8 @@
   ],
   "modelId": 2276,
   "name": "ALLURE 4 ETR 1600W ARDOISE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2277": {
   "HVACModes": {
@@ -10138,7 +10504,8 @@
   ],
   "modelId": 2277,
   "name": "ALLURE 4 ETR 1600W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2278": {
   "HVACModes": {
@@ -10151,7 +10518,8 @@
   ],
   "modelId": 2278,
   "name": "ALLURE 4 ETR 1600W MENHIR/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2279": {
   "HVACModes": {
@@ -10164,7 +10532,8 @@
   ],
   "modelId": 2279,
   "name": "ALLURE 4 ETR 1600W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2280": {
   "HVACModes": {
@@ -10177,7 +10546,8 @@
   ],
   "modelId": 2280,
   "name": "ALLURE 4 ETR 1600W ROCHE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2281": {
   "HVACModes": {
@@ -10190,7 +10560,8 @@
   ],
   "modelId": 2281,
   "name": "ALLURE 4 ETR 1600W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2282": {
   "HVACModes": {
@@ -10203,7 +10574,8 @@
   ],
   "modelId": 2282,
   "name": "ALLURE 4 ETR 1600W CARBONE/CHENE",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2283": {
   "HVACModes": {
@@ -10216,7 +10588,8 @@
   ],
   "modelId": 2283,
   "name": "AMARILIS V MATD 0650W BLC/GRIS",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2284": {
   "HVACModes": {
@@ -10229,7 +10602,8 @@
   ],
   "modelId": 2284,
   "name": "AMARILIS V MATD 0650W GRIS/NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2285": {
   "HVACModes": {
@@ -10242,7 +10616,8 @@
   ],
   "modelId": 2285,
   "name": "AMARILIS V MATD 0650W BEIGE/BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2286": {
   "HVACModes": {
@@ -10255,7 +10630,8 @@
   ],
   "modelId": 2286,
   "name": "AMARILIS V MATG 0650W BLC/GRIS",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2287": {
   "HVACModes": {
@@ -10268,7 +10644,8 @@
   ],
   "modelId": 2287,
   "name": "AMARILIS V MATG 0650W GRIS/NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2288": {
   "HVACModes": {
@@ -10281,7 +10658,8 @@
   ],
   "modelId": 2288,
   "name": "AMARILIS V MATG 0650W BEIGE/BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2289": {
   "HVACModes": {
@@ -10294,7 +10672,8 @@
   ],
   "modelId": 2289,
   "name": "AMARILIS V MATD 0430W BLC/GRIS",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2290": {
   "HVACModes": {
@@ -10307,7 +10686,8 @@
   ],
   "modelId": 2290,
   "name": "AMARILIS V MATD 0430W GRIS/NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2291": {
   "HVACModes": {
@@ -10320,7 +10700,8 @@
   ],
   "modelId": 2291,
   "name": "AMARILIS V MATD 0430W BEIGE/BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2292": {
   "HVACModes": {
@@ -10333,7 +10714,8 @@
   ],
   "modelId": 2292,
   "name": "AMARILIS V MATG 0430W BLC/GRIS",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2293": {
   "HVACModes": {
@@ -10346,7 +10728,8 @@
   ],
   "modelId": 2293,
   "name": "AMARILIS V MATG 0430W GRIS/NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2294": {
   "HVACModes": {
@@ -10359,7 +10742,8 @@
   ],
   "modelId": 2294,
   "name": "AMARILIS V MATG 0430W BEIGE/BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2295": {
   "HVACModes": {},
@@ -11321,7 +11705,8 @@
   ],
   "modelId": 2415,
   "name": "MARAPI 2 0500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2416": {
   "HVACModes": {
@@ -11334,7 +11719,8 @@
   ],
   "modelId": 2416,
   "name": "MARAPI 2 0750W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2417": {
   "HVACModes": {
@@ -11347,7 +11733,8 @@
   ],
   "modelId": 2417,
   "name": "MARAPI 2 1500W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2418": {
   "HVACModes": {
@@ -11360,7 +11747,8 @@
   ],
   "modelId": 2418,
   "name": "MARAPI 2 1750W BLC",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2419": {
   "HVACModes": {
@@ -11373,7 +11761,8 @@
   ],
   "modelId": 2419,
   "name": "MARAPI 2 0500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2420": {
   "HVACModes": {
@@ -11386,7 +11775,8 @@
   ],
   "modelId": 2420,
   "name": "MARAPI 2 0750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2421": {
   "HVACModes": {
@@ -11399,7 +11789,8 @@
   ],
   "modelId": 2421,
   "name": "MARAPI 2 1500W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2422": {
   "HVACModes": {
@@ -11412,7 +11803,8 @@
   ],
   "modelId": 2422,
   "name": "MARAPI 2 1750W ANTH",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2423": {
   "HVACModes": {
@@ -11425,7 +11817,8 @@
   ],
   "modelId": 2423,
   "name": "MARAPI 2 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2424": {
   "HVACModes": {
@@ -11438,7 +11831,8 @@
   ],
   "modelId": 2424,
   "name": "MARAPI 2 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2425": {
   "HVACModes": {
@@ -11451,7 +11845,8 @@
   ],
   "modelId": 2425,
   "name": "MARAPI 2 1500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2426": {
   "HVACModes": {
@@ -11464,7 +11859,8 @@
   ],
   "modelId": 2426,
   "name": "MARAPI 2 1750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2427": {
   "HVACModes": {
@@ -11477,7 +11873,8 @@
   ],
   "modelId": 2427,
   "name": "NEBORA ETROIT 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2428": {
   "HVACModes": {
@@ -11490,7 +11887,8 @@
   ],
   "modelId": 2428,
   "name": "NEBORA 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2429": {
   "HVACModes": {
@@ -11503,7 +11901,8 @@
   ],
   "modelId": 2429,
   "name": "NEBORA 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2430": {
   "HVACModes": {
@@ -11516,7 +11915,8 @@
   ],
   "modelId": 2430,
   "name": "NEBORA 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2431": {
   "HVACModes": {
@@ -11529,7 +11929,8 @@
   ],
   "modelId": 2431,
   "name": "NEBORA 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2432": {
   "HVACModes": {
@@ -11542,7 +11943,8 @@
   ],
   "modelId": 2432,
   "name": "NEBORA 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2433": {
   "HVACModes": {
@@ -11555,7 +11957,8 @@
   ],
   "modelId": 2433,
   "name": "NEBORA 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2434": {
   "HVACModes": {
@@ -11568,7 +11971,8 @@
   ],
   "modelId": 2434,
   "name": "BELLE-\u00ceLE ETROIT 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2435": {
   "HVACModes": {
@@ -11581,7 +11985,8 @@
   ],
   "modelId": 2435,
   "name": "BELLE-\u00ceLE 1750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2436": {
   "HVACModes": {
@@ -11594,7 +11999,8 @@
   ],
   "modelId": 2436,
   "name": "BELLE-\u00ceLE 1500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2437": {
   "HVACModes": {
@@ -11607,7 +12013,8 @@
   ],
   "modelId": 2437,
   "name": "BELLE-\u00ceLE 0750W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2438": {
   "HVACModes": {
@@ -11620,7 +12027,8 @@
   ],
   "modelId": 2438,
   "name": "BELLE-\u00ceLE 0750W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2439": {
   "HVACModes": {
@@ -11633,7 +12041,8 @@
   ],
   "modelId": 2439,
   "name": "BELLE-\u00ceLE 0500W NOIR",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2440": {
   "HVACModes": {
@@ -11646,7 +12055,8 @@
   ],
   "modelId": 2440,
   "name": "BELLE-\u00ceLE 0500W BLC BRI",
-  "type": "towel_rack"
+  "type": "towel_rack",
+  "winkable": true
  },
  "2447": {
   "HVACModes": {
@@ -15309,7 +15719,8 @@
   ],
   "modelId": 562,
   "name": "Air Conditioner User Interface (#1)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "562 zoneName=Salon deviceName=None": {
   "HVACModes": {
@@ -15321,7 +15732,8 @@
   ],
   "modelId": 562,
   "name": "Air Conditioner User Interface (Salon)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "563": {
   "HVACModes": {
@@ -15333,7 +15745,8 @@
   ],
   "modelId": 563,
   "name": "Air Conditioner User Interface (#2)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "564": {
   "HVACModes": {
@@ -15345,7 +15758,8 @@
   ],
   "modelId": 564,
   "name": "Air Conditioner User Interface (#3)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "565": {
   "HVACModes": {
@@ -15357,7 +15771,8 @@
   ],
   "modelId": 565,
   "name": "Air Conditioner User Interface (#4)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "566": {
   "HVACModes": {
@@ -15369,7 +15784,8 @@
   ],
   "modelId": 566,
   "name": "Air Conditioner User Interface (#5)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "567": {
   "HVACModes": {
@@ -15381,7 +15797,8 @@
   ],
   "modelId": 567,
   "name": "Air Conditioner User Interface (#6)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "568": {
   "HVACModes": {
@@ -15393,7 +15810,8 @@
   ],
   "modelId": 568,
   "name": "Air Conditioner User Interface (#7)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "569": {
   "HVACModes": {
@@ -15405,7 +15823,8 @@
   ],
   "modelId": 569,
   "name": "Air Conditioner User Interface (#8)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "57": {
   "HVACModes": {
@@ -15430,7 +15849,8 @@
   ],
   "modelId": 570,
   "name": "Air Conditioner User Interface (#9)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "571": {
   "HVACModes": {
@@ -15442,7 +15862,8 @@
   ],
   "modelId": 571,
   "name": "Air Conditioner User Interface (#10)",
-  "type": "ac_controller"
+  "type": "ac_controller",
+  "winkable": true
  },
  "572": {
   "HVACModes": {
@@ -15455,7 +15876,8 @@
   ],
   "modelId": 572,
   "name": "Unknown product (572)",
-  "type": "radiator"
+  "type": "radiator",
+  "winkable": true
  },
  "58": {
   "HVACModes": {

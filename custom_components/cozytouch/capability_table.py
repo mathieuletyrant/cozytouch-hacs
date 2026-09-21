@@ -1398,10 +1398,13 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     100078: Entity(
+        # A control where the app offers the identify button and a reading
+        # everywhere else, which `winkable` decides. See docs/decisions.md.
         name="identify_request",
         type=CapabilityType.BINARY,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        icon="mdi:bell-ring-outline",
     ),
     100102: Entity(
         name="adaptive_planning",

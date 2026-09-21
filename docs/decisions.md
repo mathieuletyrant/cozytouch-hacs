@@ -3052,3 +3052,102 @@ position, which the app writes and our table does not name at all.
 
 This is what settled 161 : it is read by `ITemperatureFeature` and appears at
 no write call site.
+
+## Two things the app does with capabilities we only read
+
+The sweep of the Android app (September 2026) found no missing ids worth the
+name -- of the 183 capabilities its feature interfaces read, three are absent
+here. What it found instead is behaviour: ids we name, type and then use
+less than the vendor does. Two of them are cheap enough to be worth taking
+on their own.
+
+### 100078 is a control, and `winkable` says where
+
+`identify_request` was a diagnostic binary sensor everywhere.
+`ISettingsFeature` both reads and *writes* it -- `writeWink(true)` makes the
+unit announce itself so somebody standing in the room can tell which of three
+identical boxes they are looking at. In the app's device list the button is
+labelled `report` while idle and `stop` while the unit announces, and it is
+the only control in that card using either string. `startWink` awaits the
+write and returns `Result.isSuccess`, so the label only turns over on a
+server that took it.
+
+Which products get it is not something the device reports.
+`GacomaDeviceFactory` picks a class from the pair (own `productId`,
+parent's) -- the same rule the rest of this integration already lives by --
+and each class carries the answer as a constant. So `model.py` grows
+`winkable`, which reproduces it:
+
+| product | class | winks |
+| ------- | ----- | ----- |
+| `BD0` (41) | `GacomaBD0` | yes |
+| `TD1` (53) | `GacomaTD1` | yes |
+| `AIR_CONDITIONER_UI` (31-40) | `GacomaAirConditionerUI` | yes |
+| `TH_ZONE` (65-94) behind a Navizone, ZoniClim or Split 3S hub | `GacomaTransverseUI`, which extends the above | yes |
+| `TH_ZONE` behind anything else | the factory builds none | no |
+| `ROOM` (26-30, 97-111) behind a bare air conditioner | `GacomaAirConditionerRoom` | no |
+| `ROOM` behind a hub | `GacomaTransverseRoom`, not a settings device at all | no |
+| everything else | `GacomaAirConditioner`, `GacomaHDG2`, `GacomaZoniClimHub`, `GacomaThermostatDarwin`, `GacomaCesaV2Generator` | no |
+
+The flag is set only where it is true, the way the other optional flags
+work, so it changes 422 model ids out of 2500 and `tests/test_model.py` said
+exactly which -- the towel racks, the air conditioner interfaces and the one
+radiator.
+
+Two wrong turns are worth keeping, because both are the mistake capability
+161 was. The first put the switch on every product: the app hides it on
+most. The second put it on `CozytouchDeviceType.ROOM`, reasoning from a
+screenshot of the reporter's settings screen showing the button on three
+cards named after his rooms -- but the cards in that list are the physical
+boxes, `TH_ZONE` devices labelled by their place, and the `ROOM` ids are the
+steering slots behind them. Reading a device type off a label is not reading
+a `productId`.
+
+The `Atlantic*` classes -- `AtlanticElectricalHeater`,
+`AtlanticElectricalTowelDryer` -- also say true and are deliberately not
+here. They are `Device` instances, and for those `startWink` calls
+`startIdentify(120)` rather than writing anything: 100078 is not the
+mechanism, so a switch over it would write into the void.
+
+What the write *does* is a separate question, and the honest answer is that
+nobody here knows. It was accepted on the reporter's account and the wall
+unit in that room did nothing anybody could see or hear. Either the
+indicator is somewhere he was not looking, or the vendor's own control is
+decorative on this hardware. The switch ships because the vendor ships it
+and the server takes the write ; it does not ship because anyone watched a
+light blink. `enabled_by_default=False` is doing some work here.
+
+It stays off either way. The read-only twin sensor.py builds for every
+switch keeps the reading that was there before, so the name needs an entry
+in the `switch` section *and* the `sensor` one -- which is what
+`test_every_switch_key_is_also_a_sensor_key` is for.
+
+### 103150 says whether the ambient reading means anything
+
+`ROOM_AMBIENT_TEMPERATURE` (117) is what the climate entity shows as the
+current temperature, and it was shown whenever the model declared
+`currentTemperatureAvailable` -- a static flag, decided once per model id.
+The app asks the device instead: `isCurrentTemperatureAvailable()` reads
+capability 103150 at each poll, and shows no temperature when it is false.
+
+The difference shows up on hardware whose sensor stops reporting. The static
+flag cannot know, so the entity keeps the last good number for good, which
+on a dashboard is indistinguishable from a live one. `_climate_entity` now
+wires `currentAvailableCapabilityId = 103150` where the device reports it,
+and `current_temperature` reads None while it says no.
+
+Silence is not a no, deliberately, and twice : a device that does not report
+103150 at all is believed, which is every device that predates it, and a
+poll that carries the id with no value is believed too. Only an explicit
+`"0"` hides the reading. The alternative -- treating absence as unavailable
+-- would blank the temperature on every device in the fleet the day the
+capability were mistyped.
+
+### The third one, not taken
+
+103034 `room_controls_capabilities` is a mask whose only named bit is
+`ANTIFROST = 16`, and the app gates its antifrost control on it. Gating
+`antifrost_temperature` (103199) the same way would add nothing: the mapping
+already builds it only for a device that reports 103199, and a device
+without the feature does not report it. The bit is recorded in
+`research/data/android_bitfields_331.tsv` for the day something needs it.

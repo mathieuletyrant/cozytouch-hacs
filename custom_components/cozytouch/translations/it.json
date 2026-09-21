@@ -494,6 +494,7 @@
             "domestic_hot_water": { "name": "Acqua calda sanitaria" },
             "domestic_hot_water_boost": { "name": "Boost acqua calda sanitaria" },
             "eco_mode":           { "name": "Modalità Eco" },
+            "identify_request":   { "name": "Richiesta di identificazione" },
             "powerful_mode":      { "name": "Modalità Powerful" },
             "presence_mode":      { "name": "Modalità presenza" },
             "prog_mode":          { "name": "Modalità programma" },

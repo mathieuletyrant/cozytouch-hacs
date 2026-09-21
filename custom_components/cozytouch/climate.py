@@ -282,8 +282,10 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         # Current value
         currentValueId = self._capability.get("currentValueCapabilityId", None)
         if currentValueId:
-            self._current_value = float(
-                self.coordinator.get_capability_value(currentValueId)
+            self._current_value = (
+                float(self.coordinator.get_capability_value(currentValueId))
+                if self._ambient_temperature_is_available()
+                else None
             )
 
         # Lowest adjustment value
@@ -415,6 +417,19 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 self._attr_preset_mode = PRESET_PROG
 
         self.async_write_ha_state()
+
+    def _ambient_temperature_is_available(self) -> bool:
+        """Whether the ambient reading means anything right now.
+
+        True where the device does not say, which is every device that does
+        not report the capability. See docs/decisions.md.
+        """
+        availableId = self._capability.get("currentAvailableCapabilityId", None)
+        if not availableId:
+            return True
+
+        value = self.coordinator.get_capability_value(availableId)
+        return value is None or str(value) != "0"
 
     @property
     def current_temperature(self):

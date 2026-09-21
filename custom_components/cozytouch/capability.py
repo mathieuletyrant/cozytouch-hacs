@@ -144,6 +144,10 @@ def _climate_entity(
         and 117 in availableCapabilityIds
     ):
         capability.currentValueCapabilityId = 117
+        # The device says, at each poll, whether that reading means anything.
+        # See docs/decisions.md.
+        if 103150 in availableCapabilityIds:
+            capability.currentAvailableCapabilityId = 103150
 
     # 181 carries the mode the device is really running, which is not always
     # the one it was asked for
@@ -297,6 +301,11 @@ def get_capability_infos(
         capability = CAPABILITIES[capabilityId].resolve(
             capability, modelInfos, capabilityValue
         )
+        if capabilityId == 100078 and modelInfos.get("winkable", False):
+            # Writable only where the vendor's app offers the button, which
+            # its device classes decide rather than the device. See
+            # docs/decisions.md.
+            capability.type = CapabilityType.SWITCH
         if hidden_by_a_calendar(capabilityId, availableCapabilityIds):
             capability.enabled_by_default = False
 

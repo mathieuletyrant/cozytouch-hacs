@@ -494,6 +494,7 @@
             "domestic_hot_water": { "name": "Domestic Hot Water" },
             "domestic_hot_water_boost": { "name": "Domestic Hot Water Boost" },
             "eco_mode":           { "name": "Eco Mode" },
+            "identify_request":   { "name": "Identify request" },
             "powerful_mode":      { "name": "Powerful Mode" },
             "presence_mode":      { "name": "Presence Mode" },
             "prog_mode":          { "name": "Prog Mode" },
