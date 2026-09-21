@@ -158,13 +158,13 @@ capture, so a test going green says "nobody changed this by accident", never
   disables what an existing install registered — exactly once, so a re-enabled
   sensor stays re-enabled — targeting the same unique_ids the sensor platform
   actually claims, and that a version 1 entry still refuses to migrate.
-- `tests/test_repairs.py` — the unmapped-model repair : that it asks once per
-  model and about every model the table does not know, whatever the API calls
-  the device, that one dialog's report covers the whole account and answering
-  it settles every repair that report spoke for, that the report carries the
-  model and capability ids and nothing about the household, that its query
-  keys still match the issue form's field ids and that every field they do not
-  fill is required, and that a release mapping a model clears it.
+- `tests/test_derivation.py` — what a device says about itself, and the order
+  of authority : that an override wins over what the device declares, that a
+  room takes its type from the interface it hangs off and is a room behind
+  every other gateway, that `modelFamily` answers where no `productId` is
+  assigned, that a gateway and the rooms behind it get no absence setpoint,
+  and that a device the API describes never reads as `Unknown product`. The
+  seam, not the ranges — `test_model.py` owns what the tables answer.
 - `tests/test_services.py` — the schedule services : the matrix `set_schedule`
   builds, and the round trip that is the promise of `get_schedule`, since what
   it returns has to be writable again unchanged.
