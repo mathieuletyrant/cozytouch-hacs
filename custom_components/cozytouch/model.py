@@ -40,6 +40,7 @@ from .const import (
     HEATING_MODE_ECO_PLUS,
     HEATING_MODE_MANUAL,
     HEATING_MODE_PROG,
+    HVAC_MODE_MASKS,
     SWING_MODE_DOWN,
     SWING_MODE_MIDDLE_DOWN,
     SWING_MODE_MIDDLE_UP,
@@ -469,6 +470,44 @@ MODEL_NAMES: dict[int, str] = {
 }
 
 
+def narrow_by_capabilities(
+    modelInfos: ModelInfos, capabilities: dict[int, str]
+) -> None:
+    """Let the device have the last word on the modes it offers.
+
+    Two readings, both of them the device's own. It reports capability 100022
+    as a bitmask over the mode values, which is a complete answer and needs no
+    table ; and if it reports none of the capabilities its modes would arrive
+    on, it has no modes at all whatever any table says. See docs/decisions.md.
+    """
+    # An empty list is a device whose capabilities have not arrived yet --
+    # `account.py` creates one that way and fills it on the first poll -- and
+    # not a device that reports nothing. Reading it as the latter drops the
+    # modes of every device between setup and the first poll.
+    if not capabilities or not modelInfos.HVACModes:
+        return
+
+    if not modelInfos.HVACModesCapabilityId & capabilities.keys():
+        # Nothing carries a mode here, so there is no climate entity to build.
+        modelInfos.HVACModes = {}
+        return
+
+    supported = capabilities.get(100022)
+    if supported is None:
+        return
+
+    mask = int(float(supported))
+    declared = {
+        value: mode
+        for value, mode in AC_HVAC_MODES.items()
+        if HVAC_MODE_MASKS[value] & mask
+    }
+    # A mask that names nothing is a mask that says nothing : the same refusal
+    # `climate.py` makes, kept here so both halves answer alike.
+    if declared:
+        modelInfos.HVACModes = declared
+
+
 def get_device_model_infos(
     devices: list[dict], dev: dict, zoneName: str | None = None
 ) -> ModelInfos:
@@ -494,6 +533,10 @@ def get_device_model_infos(
         modelFamily=dev.get("modelFamily"),
         masterProductId=master.get("productId") if master else None,
         masterFamily=master.get("modelFamily") if master else None,
+        capabilities={
+            int(found["capabilityId"]): found["value"]
+            for found in dev.get("capabilities") or ()
+        },
         # What the API calls the device, for hardware the catalogue does not
         # name. "---" is what it sends for a zone rather than leaving the
         # field out, so it is read as nothing. See docs/decisions.md.
@@ -519,6 +562,7 @@ def get_model_infos(
     masterProductId: int | None = None,
     masterFamily: str | None = None,
     fallbackName: str | None = None,
+    capabilities: dict[int, str] | None = None,
 ) -> ModelInfos:
     """What this integration knows about one device.
 
@@ -550,6 +594,12 @@ def get_model_infos(
     masterKind = product_type(masterProductId) or masterFamily
 
     derive(modelInfos, productId, modelFamily, masterKind, zoneName, fallbackName)
+
+    # What the device reports outranks what any table guessed for its model,
+    # which is the whole direction of this. A caller with no device beside the
+    # id passes nothing and keeps the table's answer.
+    if capabilities is not None:
+        narrow_by_capabilities(modelInfos, capabilities)
 
     # What the device gets wrong about itself, and what it cannot say. Every
     # entry was measured against the branch it replaced ; `None` removes a

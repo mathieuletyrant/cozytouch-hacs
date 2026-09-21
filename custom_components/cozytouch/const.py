@@ -66,3 +66,36 @@ WRITABLE_PROGRAM_BLOCKS = {
 def program_block(first: int) -> range:
     """The seven consecutive capability ids one weekly program is stored in."""
     return range(first, first + len(PROGRAM_DAYS))
+
+
+SERVICE_VALUES = {
+    "0": "off",
+    "1": "auto",
+    "3": "cool",
+    "4": "heat",
+    "5": "emergency_heat",
+    "6": "pre_cooling",
+    "7": "fan",
+    "8": "dry",
+    "9": "sleep",
+}
+
+HVAC_MODE_BITS = (
+    (1, "off"),
+    (6, "auto"),
+    (8, "cool"),
+    (16, "heat"),
+    (128, "fan"),
+    (256, "dry"),
+)
+
+# The same masks, keyed by the mode value 7 and 8 carry, so the modes a device
+# offers can be read off capability 100022 rather than written per model.
+# Derived rather than written out, so the two cannot drift apart ; a mode the
+# bit table does not name is absent here and narrows nothing.
+HVAC_MODE_MASKS = {
+    int(value): mask
+    for value, name in SERVICE_VALUES.items()
+    for mask, bitName in HVAC_MODE_BITS
+    if bitName == name
+}
