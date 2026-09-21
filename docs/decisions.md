@@ -1718,7 +1718,7 @@ What makes these better evidence than the five above is that
 | 100000 | `THERMAL_ZONE_NUMBER` | `thermal_zones_count` | 1, 2, 3 |
 | 100196 | `PROG_ABSENCE` | `absence_schedule` | nothing |
 | 102006 | `AIR_MIXING_MODES_AVAILABLE` | `air_circulation_available_modes` | 285, on 3 models |
-| 102020 | `AIR_MIXING_ACTUAL_MODE` | `air_circulation_current_mode` | 3, on 3 models |
+| 102020 | `AIR_MIXING_ACTUAL_MODE` | `system_service` | 3, on 3 models |
 | 105636 | `DHW_COMFORT_MODE` | `dhw_comfort_mode` | 0 and 1 |
 
 The six 352-357 are the find. Ten distinct models report them, fifteen
@@ -2926,11 +2926,12 @@ None of these is the difference, and none should be tried again :
 
 The Android app was the map throughout, and it is where the answer was hiding
 in plain sight : its enum names 102020 `AIR_MIXING_ACTUAL_MODE`, this project
-copied that as `air_circulation_current_mode`, and the entry above about the
-capability corpus records it reading 3 and says *"not obviously one member
-either, so it stays raw"*. Its values are the `Service` space exactly -- `0`
+copied that as `air_circulation_current_mode` until this was found, and the
+entry above about the capability corpus records it reading 3 and says *"not
+obviously one member either, so it stays raw"*. Its values are the `Service` space exactly -- `0`
 off, `3` cool, `4` heat, `7` fan, `8` dry. A name taken from the vendor is
 still a guess about meaning.
 
-The row keeps that name for now. Renaming it is a translation change across
-six files and its own commit.
+The row is `system_service` now, in all six translation files. The vendor's
+own name is kept in a comment above it, because a report quoting
+`AIR_MIXING_ACTUAL_MODE` still has to lead here.
