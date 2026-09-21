@@ -1781,6 +1781,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -1809,6 +1810,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -3638,6 +3640,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -3664,6 +3667,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -5500,6 +5504,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -5526,6 +5531,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -7370,6 +7376,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -7396,6 +7403,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -9228,6 +9236,7 @@
     "stepCapabilityId": 294,
     "swingModeCapabilityId": 100803,
     "swingOnCapabilityId": 100804,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
@@ -9265,6 +9274,7 @@
     "stepCapabilityId": 294,
     "swingModeCapabilityId": 100803,
     "swingOnCapabilityId": 100804,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
@@ -9342,6 +9352,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 17,
     "type": "climate"
    },
@@ -10310,6 +10321,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 18,
     "type": "climate"
    },
@@ -12976,6 +12988,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -13002,6 +13015,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -14846,6 +14860,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -14872,6 +14887,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -16704,6 +16720,7 @@
     "stepCapabilityId": 294,
     "swingModeCapabilityId": 100803,
     "swingOnCapabilityId": 100804,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
@@ -16741,6 +16758,7 @@
     "stepCapabilityId": 294,
     "swingModeCapabilityId": 100803,
     "swingOnCapabilityId": 100804,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
@@ -18579,6 +18597,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -18606,6 +18625,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -20450,6 +20470,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -20476,6 +20497,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -22315,6 +22337,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 17,
     "type": "climate"
    },
@@ -22340,6 +22363,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 18,
     "type": "climate"
    },
@@ -24184,6 +24208,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },
@@ -24210,6 +24235,7 @@
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "stepCapabilityId": 294,
+    "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
    },

@@ -21,7 +21,7 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, HVAC_MODE_MASKS
+from .const import DOMAIN, HVAC_MODE_MASKS, SERVICE_OFF
 from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
@@ -466,16 +466,31 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             await self.coordinator.async_request_refresh()
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
-        """Set hvac mode."""
+        """Set hvac mode, on the room or on the system as the app does.
+
+        A mode is the whole system's -- one outdoor unit runs one service --
+        and off is the room's own. So a mode goes to 102020, which every room
+        of the system then follows, and off goes to the room's own service.
+        A room that was off is switched back on beside the mode, which the app
+        needs two gestures for. See docs/decisions.md.
+        """
         HVACModes = self._modelInfos.HVACModes
         for mode in HVACModes:
-            if HVACModes[mode] == hvac_mode:
-                await self.coordinator.set_capability_value(
-                    self._capability.capabilityId,
-                    str(mode),
-                )
-                await self.coordinator.async_request_refresh()
-                break
+            if HVACModes[mode] != hvac_mode:
+                continue
+
+            room = self._capability.capabilityId
+            system = self._capability.get("systemServiceCapabilityId")
+
+            if system is None or hvac_mode == HVACMode.OFF:
+                await self.coordinator.set_capability_value(room, str(mode))
+            else:
+                await self.coordinator.set_capability_value(system, str(mode))
+                if self.coordinator.get_capability_value(room) == SERVICE_OFF:
+                    await self.coordinator.set_capability_value(room, str(mode))
+
+            await self.coordinator.async_request_refresh()
+            break
 
     async def async_set_fan_mode(self, fan_mode) -> None:
         """Set new target fan mode."""

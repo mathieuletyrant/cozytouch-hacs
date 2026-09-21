@@ -51,6 +51,8 @@ Base: `https://apis.groupe-atlantic.com`
 | `GET /magellan/cozytouch/setupviewv2` | used. Everything the integration knows comes from here, and polled every 30s because of it |
 | `GET /magellan/capabilities/?deviceId=` | used, after a write. A subset of the setup view, so no longer the poll |
 | `POST /magellan/executions/writecapability` | used, writes |
+| `POST /magellan/executions/refreshcapability` | works, unused. Body `{deviceId, capabilityId}`, answers 201 + an execution id |
+| `PATCH /magellan/capabilities/{id}?deviceId=` | works, unused. Answers 200 with that one capability, `{capabilityId, modificationDate, value}` |
 | `GET /magellan/executions/{id}` | used, polls a write |
 | `PUT /magellan/v2/setups/{id}/…` | used, away mode |
 | `GET /magellan/cozytouch/setupview` | v1. Dead: 404 + HTML with a token, like refs/countries |
@@ -75,8 +77,14 @@ ruled out:
   machine-readable spec is published
 
 `capabilities/definitions` answers 405, which looks promising and is not:
-`capabilities/123` and `capabilities/foo` answer 405 too. It is the generic
-reply for any sub-path of a collection, not evidence of a route.
+`capabilities/foo` answers 405 too. It is the generic reply for any sub-path
+of a collection, not evidence of a route.
+
+`capabilities/123` was read the same way and should not have been : 405 is
+what a **PATCH-only** route answers a GET, and that is exactly what this one
+is. The app declares it as `RecalculateCapability`, and it answers 200 with
+the one capability re-read. Probed 2026-09-21 ; a method the probes never
+tried is a route they cannot rule out.
 
 ## There is a model catalogue, after all
 

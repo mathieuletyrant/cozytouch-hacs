@@ -2874,3 +2874,63 @@ card into headless Chrome against a stubbed `hass`, driving the real inputs
 with real events and reading back what the day became. That harness is not in
 the repository : it is fifty lines of scaffolding for a check that is run when
 the card changes and never otherwise.
+
+## The service is one house's, and the write is one room's
+
+Capability 7 is the service an air-conditioning room runs -- off, heat, cool,
+auto, dry, fan -- and the climate entity wrote its mode there for as long as
+there has been one. On a system with more than one room that is wrong, and
+visibly so : the outdoor unit runs one service, so a mode set on one room from
+Home Assistant left that room drying while the two others cooled, and ten
+minutes later the house was still split. The Cozytouch app never does that.
+
+What the app writes, captured off the iOS client on a three-room Naviclim
+account, 2026-09-21 :
+
+| Gesture | Write |
+| ------- | ----- |
+| the service dropdown | `{"capabilityId": 102020, "deviceId": <room>, "value": "8"}` |
+| switching a room off | `{"capabilityId": 7, "deviceId": <room>, "value": "0"}` |
+| switching it back on | `{"capabilityId": 7, "deviceId": <room>, "value": "3"}` |
+
+**102020 is the system's service**, and writing it on any one room carries
+every room of the system with it -- which is the propagation that could not be
+found anywhere else. 7 is the room's own state, and the only value that is
+genuinely the room's is `0`. Switching a room back on writes the service the
+house is already running, never one of its own, which is why turning a room on
+*into* a different mode is two gestures there and one write pair here.
+
+So `async_set_hvac_mode` writes 102020 when the device reports it, 7 when the
+mode is off, and both when a room that was off is asked for a mode. A device
+with no 102020 -- a boiler, a towel rail -- keeps the write it always had.
+
+### What it is not, which took the whole investigation
+
+The app's call was assumed to differ from ours, and every way it could was
+probed with `research/probe_write_service.py` before the capture settled it.
+None of these is the difference, and none should be tried again :
+
+- **The body.** `{capabilityId, deviceId, value}`, the three fields we send.
+- **The route.** `/executions/writecapability`, the one we use.
+- **The headers.** The app adds `X-Operation-ID`, `uniqId`,
+  `appInstallNumber` and its own `User-Agent`. Sent byte for byte : the room
+  changed, the house did not.
+- **The device.** Only the rooms implement 7, and the backend decides that by
+  `productId` : the hub answers 404 `NoCapabilityImplementationFound` on
+  product 96, the thermal zone on product 65.
+- **Time.** Ten minutes, unchanged.
+- **A refusal we did not read.** The execution reports `state 3, execution
+  Done`, and a re-read from the backend gives the room's own value back.
+- **A second write in the app.** Nothing overrides `writeCapability` in the
+  Android sources, and every service write goes through one call.
+
+The Android app was the map throughout, and it is where the answer was hiding
+in plain sight : its enum names 102020 `AIR_MIXING_ACTUAL_MODE`, this project
+copied that as `air_circulation_current_mode`, and the entry above about the
+capability corpus records it reading 3 and says *"not obviously one member
+either, so it stays raw"*. Its values are the `Service` space exactly -- `0`
+off, `3` cool, `4` heat, `7` fan, `8` dry. A name taken from the vendor is
+still a guess about meaning.
+
+The row keeps that name for now. Renaming it is a translation change across
+six files and its own commit.
