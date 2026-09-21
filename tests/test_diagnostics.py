@@ -119,8 +119,8 @@ def test_a_mapped_model_carries_its_name_and_type():
     reported = Hub.get_diagnostics(hub)["devices"][0]
 
     assert reported["model"]["isMapped"] is True
-    assert reported["model"]["name"] == "Air Conditioner (#1)"
-    assert reported["model"]["type"] == "ac"
+    assert reported["model"]["name"] == "Room (#1)"
+    assert reported["model"]["type"] == "room"
 
 
 def test_capabilities_split_into_what_is_named_and_what_is_not():

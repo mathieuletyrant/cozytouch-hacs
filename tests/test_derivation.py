@@ -56,8 +56,12 @@ def test_an_unmapped_model_is_typed_by_its_product_id():
     assert infos["HVACModes"] == {0: "off", 4: "heat"}
 
 
-def test_a_room_is_typed_by_the_interface_it_hangs_off():
-    """A room's own id is an index. Its parent says what is in the room."""
+def test_only_a_heat_pump_interface_makes_a_room_something_else():
+    """A room's own id is an index. Its parent is asked once, and only an
+    Alfea's connected interface answers differently : its slots are heating
+    circuits. Every other gateway leaves a room a room, because nothing the
+    slot reports separates a radiator from an air conditioner.
+    """
     behind_a_clim_hub = [
         device(1, 4242, productId=26, masterDeviceId=2),
         device(2, 1758, productId=96),
@@ -69,7 +73,7 @@ def test_a_room_is_typed_by_the_interface_it_hangs_off():
 
     assert (
         get_device_model_infos(behind_a_clim_hub, behind_a_clim_hub[0])["type"]
-        is CozytouchDeviceType.AC
+        is CozytouchDeviceType.ROOM
     )
     assert (
         get_device_model_infos(behind_a_heat_pump, behind_a_heat_pump[0])["type"]
@@ -77,16 +81,16 @@ def test_a_room_is_typed_by_the_interface_it_hangs_off():
     )
 
 
-def test_a_room_with_no_parent_reads_as_an_air_conditioner():
+def test_a_room_with_no_parent_is_still_a_room():
     """A gateway that is not on the account leaves the room unattributed.
 
-    It is answered as a clim, which is what the branch this replaced did and
-    what a room is far more often than not. Refusing to answer would drop the
-    entities of anybody whose gateway was never added. See docs/decisions.md.
+    It is answered as a room like any other, since the gateway would not have
+    changed the answer anyway. Refusing to answer would drop the entities of
+    anybody whose gateway was never added. See docs/decisions.md.
     """
     orphan = [device(1, 4242, productId=26, masterDeviceId=99)]
 
-    assert get_device_model_infos(orphan, orphan[0])["type"] is CozytouchDeviceType.AC
+    assert get_device_model_infos(orphan, orphan[0])["type"] is CozytouchDeviceType.ROOM
 
 
 def test_model_family_answers_where_no_product_id_is_assigned():
@@ -155,9 +159,9 @@ def test_a_derived_room_is_named_after_its_room():
     ]
 
     assert get_device_model_infos(behind, behind[0], "Chambre")["name"] == (
-        "Air Conditioner (Chambre)"
+        "Room (Chambre)"
     )
-    assert get_device_model_infos(behind, behind[0])["name"] == "Air Conditioner (#5)"
+    assert get_device_model_infos(behind, behind[0])["name"] == "Room (#5)"
 
 
 def test_a_device_the_catalogue_does_not_name_reads_as_the_api_calls_it():

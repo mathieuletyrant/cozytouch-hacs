@@ -79,6 +79,39 @@
             "hot_water_program":       { "name": "Programma acqua calda" }
         },
         "climate": {
+            "room":
+            {
+                "name": "Stanza",
+                "state_attributes":
+                {
+                    "fan_mode":
+                    {
+                        "state":
+                        {
+                            "quiet": "Silenzioso"
+                        }
+                    },
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Base",
+                            "prog": "Prog",
+                            "override": "Forzatura"
+                        }
+                    },
+                    "swing_mode":
+                    {
+                        "state":
+                        {
+                            "down": "Basso",
+                            "middle_down": "Medio basso",
+                            "middle_up": "Medio alto",
+                            "up": "Alto"
+                        }
+                    }
+                }
+            },
             "air_conditioner":
             {
                 "name": "Condizionatore",

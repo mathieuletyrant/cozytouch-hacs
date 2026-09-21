@@ -87,6 +87,41 @@ def read_setpoint(capabilityId: int | None, value):
 
 
 
+def _room_entity(
+    capability: CapabilityInfos,
+    modelInfos: ModelInfos,
+    availableCapabilityIds: set[int],
+) -> None:
+    # One room, whatever is in it. The vendor's own client does the same :
+    # a single class behind every gateway, and the capabilities decide
+    # what it offers, because nothing the slot reports says whether the
+    # room holds a radiator or an air conditioner. Every id below is asked
+    # for rather than assumed. See docs/decisions.md.
+    capability.name = "room"
+    capability.icon = "mdi:home-thermometer"
+    if 153 in availableCapabilityIds:
+        capability.heatingActiveCapabilityId = 153
+    if 184 in availableCapabilityIds:
+        capability.progCapabilityId = 184
+    if 157 in availableCapabilityIds:
+        capability.progOverrideCapabilityId = 157
+        capability.progOverrideTotalTimeCapabilityId = 158
+        capability.progOverrideTimeCapabilityId = 159
+    if 177 in availableCapabilityIds:
+        capability.targetCoolCapabilityId = 177
+        capability.lowestCoolValueCapabilityId = 162
+        capability.highestCoolValueCapabilityId = 163
+    if 100506 in availableCapabilityIds:
+        capability.activityCapabilityId = 100506
+    if (
+        modelInfos.get("ecoModeAvailable", True)
+        and 100507 in availableCapabilityIds
+    ):
+        capability.ecoCapabilityId = 100507
+    if 100505 in availableCapabilityIds:
+        capability.boostCapabilityId = 100505
+
+
 def _climate_entity(
     capability: CapabilityInfos,
     capabilityId: int,
@@ -143,6 +178,8 @@ def _climate_entity(
         capability.progOverrideCapabilityId = 157
         capability.progOverrideTotalTimeCapabilityId = 158
         capability.progOverrideTimeCapabilityId = 159
+    elif modelInfos.type == CozytouchDeviceType.ROOM:
+        _room_entity(capability, modelInfos, availableCapabilityIds)
     elif modelInfos.type == CozytouchDeviceType.AC:
         capability.name = "air_conditioner"
         capability.icon = "mdi:air-conditioner"

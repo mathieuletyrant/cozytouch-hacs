@@ -61,6 +61,11 @@ class CozytouchDeviceType(StrEnum):
     WATER_HEATER = "water_heater"
     TOWEL_RACK = "towel_rack"
     RADIATOR = "radiator"
+    # A slot behind a gateway. The vendor builds one class for all of them and
+    # lets the capabilities decide what the screen offers, because nothing a
+    # slot reports says whether the room holds a radiator or an air
+    # conditioner. See docs/decisions.md.
+    ROOM = "room"
     AC = "ac"
     AC_CONTROLLER = "ac_controller"
     HUB = "hub"
@@ -250,9 +255,11 @@ DERIVED_FLAGS: dict[str | None, dict] = {
     "CESA_V2_GENERATOR": _NO_CLIMATE,
 }
 
-# The interfaces a room hangs off, and what a room behind each one is: its
-# type, its modes, and the word it is named by. The id alone is a room index ;
-# the parent says what is in the room.
+# What a room is, given the interface it hangs off. Only the heating circuit
+# of an Alfea is told apart : behind every gateway a room is a room, which is
+# what the vendor's own client does -- one class for the lot, and the
+# capabilities decide what it offers. Nothing a slot reports says whether the
+# room holds a radiator or an air conditioner. See docs/decisions.md.
 ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict, str, dict]] = {
     "CESA_V2_MAIN_COMPONENT": (
         CozytouchDeviceType.THERMOSTAT,
@@ -260,31 +267,10 @@ ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict, str, dict]] = {
         "Heating circuit",
         {},
     ),
-    # Keyed by modelFamily rather than by ProductType : the vendor assigns the
-    # CozyBox no productId, and issue #172 shows it sending Connectivity_Box.
-    # That is the whole of what separates its radiators from a Navizone's air
-    # conditioners. See docs/decisions.md.
-    "Connectivity_Box": (CozytouchDeviceType.RADIATOR, OFF_HEAT, "Radiator", {}),
-    "AIR_CONDITIONER": (
-        CozytouchDeviceType.AC,
-        AC_HVAC_MODES,
-        "Air Conditioner",
-        _AC_ROOM,
-    ),
-    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner", _AC_ROOM),
-    "ZONI_CLIM_HUB": (
-        CozytouchDeviceType.AC,
-        AC_HVAC_MODES,
-        "Air Conditioner",
-        _AC_ROOM,
-    ),
-    "SPLIT_3S_HUB": (
-        CozytouchDeviceType.AC,
-        AC_HVAC_MODES,
-        "Air Conditioner",
-        _AC_ROOM,
-    ),
 }
+
+# Every other interface answers the same : a room.
+ROOM_ANYWHERE = (CozytouchDeviceType.ROOM, AC_HVAC_MODES, "Room", _AC_ROOM)
 
 
 def product_type(productId: int | None) -> str | None:
@@ -340,9 +326,7 @@ def derive(
         # an Alfea has no climate capability and its circuits do, and letting
         # one inherit the other emptied the circuit's modes. See
         # docs/decisions.md.
-        deviceType, modes, label, flags = ROOM_BEHIND.get(
-            parent, ROOM_BEHIND["NAVI_HUB"]
-        )
+        deviceType, modes, label, flags = ROOM_BEHIND.get(parent, ROOM_ANYWHERE)
         if label:
             label += f" (#{room_index(productId)})"
         else:
@@ -450,26 +434,6 @@ OVERRIDES: dict[int, dict] = {
     1955: {"HeatingModes": {0: "manual", 3: "eco_plus"}},
     1956: {"HeatingModes": {0: "manual", 3: "eco_plus"}},
     1957: {"HeatingModes": {0: "manual", 3: "eco_plus"}},
-    2447: {
-        "HVACModes": OFF_ONLY,
-        "awayModeTemperatureAvailable": False,
-        "type": CozytouchDeviceType.HUB,
-    },
-    2448: {
-        "HVACModes": OFF_ONLY,
-        "awayModeTemperatureAvailable": False,
-        "type": CozytouchDeviceType.HUB,
-    },
-    2449: {
-        "HVACModes": OFF_ONLY,
-        "awayModeTemperatureAvailable": False,
-        "type": CozytouchDeviceType.HUB,
-    },
-    2450: {
-        "HVACModes": OFF_ONLY,
-        "awayModeTemperatureAvailable": False,
-        "type": CozytouchDeviceType.HUB,
-    },
 }
 
 # The only names the vendor's catalogue does not carry. Everything else is

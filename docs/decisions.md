@@ -785,6 +785,46 @@ volumes shared one name here where the catalogue names each. A device rename
 changes what Home Assistant displays and nothing else; the unique ids are
 keyed on the capability id.
 
+### A room is a room, and the CozyBox stops being a special case
+
+`557-561` was answered as a radiator behind a CozyBox and an air conditioner
+behind anything else, from the one account that had each. Nothing a slot
+reports separates them, and this was measured three ways: 100022 reads 415 on
+both, the ventilation ids 100800/100802/100804 are reported by the radiators
+and not by a Navizone's air conditioners, and 153 -- the heating element -- is
+reported by both. A cooling setpoint does not split them either: every 557 in
+the corpus reports 177.
+
+The vendor's own client does not try. `GacomaDeviceFactory` builds one
+`TransverseRoom` for every room behind a gateway, whatever it drives, and that
+class is a superset of the air conditioner one -- same ventilation and
+temperature features, plus air mixing, hot water, prog assistant and settings.
+The capabilities decide what the screen offers.
+
+So `CozytouchDeviceType.ROOM` is one type for the lot, `capability.py` gains a
+room branch that is the union of the two it replaces with every id asked for
+rather than assumed, and the entity reads `room` where it read `heat` or
+`air_conditioner`. The Alfea interface stays the exception: its slots are
+heating circuits and its `productId` says so.
+
+What this buys is not tidiness. The CozyBox sends `productId` 63, the same as
+the HUB Cozytouch above it and the same `Connectivity_Box` family, so taking
+its product id would have turned issue #172's radiators back into air
+conditioners -- the box was unusable as data for exactly as long as it decided
+something. It decides nothing now, so 2447-2450 are read like any other
+gateway and their overrides are gone.
+
+The weekly program capabilities lose their per-type names at the same time.
+196-209 were `prog_01_z1` to `prog_14_z2` by default and `prog_heating_monday`
+to `prog_cooling_sunday` on an air conditioner; the vendor's app calls the two
+blocks Heating and Cooling, so the second naming is simply the true one and is
+now everyone's. A radiator never shows the cooling week -- no capture has one
+reporting 203-209.
+
+The device name follows: `Radiator (Chambre)` and `Air Conditioner (Chambre)`
+both become `Room (Chambre)`. A rename changes what Home Assistant displays
+and nothing else, since the unique ids are keyed on the capability id.
+
 ## `custom_components/cozytouch/climate.py`
 
 ### The mode list is the model's table, narrowed by what the unit reports

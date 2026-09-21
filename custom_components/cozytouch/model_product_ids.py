@@ -196,16 +196,23 @@ LEARNED_FROM_DUMPS: dict[int, int] = {
 # fills `productId` on the wire for models its own catalogue leaves at 0, and
 # its app reads nothing else, so a diagnostics dump can correct a row here.
 #
-# Two of them are deliberately *not* here, and the reason is the point of the
-# file. 2447, the CozyBox, sends 63 -- the same as the HUB Cozytouch above it,
-# and the same `Connectivity_Box` family -- while one drives radiators and the
-# other air conditioners; taking its productId would make its rooms read as
-# air conditioners again (issue #172). And 1447 sends 4, which the vendor
-# calls DARWIN_BOILER and builds a thermostat for, where this table has it as
-# a gas boiler. Both stay in OVERRIDES until something separates them.
-# See docs/decisions.md.
+# The CozyBox sends 63, the same as the HUB Cozytouch, and the same
+# `Connectivity_Box` family, while one drives radiators and the other air
+# conditioners. That used to make it unusable here -- taking it would have
+# turned issue #172's radiators into air conditioners. It no longer decides
+# anything about the rooms behind it, so it can be read like any other.
+# 2448-2450 are the same box under three more badges.
+#
+# 1447 is left out : it sends 4, which the vendor calls DARWIN_BOILER and
+# builds a thermostat widget for, where this table has the Naema 3 as a gas
+# boiler. Claiming it would retype the appliance on the strength of a widget
+# name. See docs/decisions.md.
 LEARNED_FROM_DUMPS: dict[int, int] = {
     1457: 63,
+    2447: 63,
+    2448: 63,  # badge only
+    2449: 63,  # badge only
+    2450: 63,  # badge only
 }
 
 PRODUCT_IDS: dict[int, int] = {

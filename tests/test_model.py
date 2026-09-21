@@ -408,8 +408,8 @@ MODEL_GROUPS = [
         {
             "modelId": 557,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Air Conditioner (#1)",
-            "type": CozytouchDeviceType.AC,
+            "name": "Room (#1)",
+            "type": CozytouchDeviceType.ROOM,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
             "ecoModeAvailable": False,
@@ -440,8 +440,8 @@ MODEL_GROUPS = [
         {
             "modelId": 561,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Air Conditioner (#5)",
-            "type": CozytouchDeviceType.AC,
+            "name": "Room (#5)",
+            "type": CozytouchDeviceType.ROOM,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
             "ecoModeAvailable": False,
@@ -472,8 +472,8 @@ MODEL_GROUPS = [
         {
             "modelId": 1734,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Air Conditioner (#1)",
-            "type": CozytouchDeviceType.AC,
+            "name": "Room (#1)",
+            "type": CozytouchDeviceType.ROOM,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
             "ecoModeAvailable": False,
@@ -504,8 +504,8 @@ MODEL_GROUPS = [
         {
             "modelId": 1737,
             "HVACModesCapabilityId": {7, 8},
-            "name": "Air Conditioner (#4)",
-            "type": CozytouchDeviceType.AC,
+            "name": "Room (#4)",
+            "type": CozytouchDeviceType.ROOM,
             "quietModeAvailable": True,
             "awayModeTemperatureAvailable": False,
             "ecoModeAvailable": False,
@@ -1135,23 +1135,33 @@ def test_the_catalogue_names_a_mapped_model_too():
 # --------------------------------------------------------- the room slots
 
 
-@pytest.mark.parametrize("masterModelId", [2447, 2448, 2449, 2450])
+@pytest.mark.parametrize(
+    ("gateway", "family"),
+    [
+        (2447, "Connectivity_Box"),
+        (1457, "Connectivity_Box"),
+        (1758, "Air_Conditioning"),
+    ],
+)
 @pytest.mark.parametrize("modelId", [557, 558, 559, 560, 561])
-def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId, masterModelId):
+def test_a_room_is_a_room_whatever_drives_it(modelId, gateway, family):
     """557-561 is the room's index under a gateway and says nothing about the
     hardware : the same ids, productIds and ROOM_n names arrive behind a
-    Navizone driving air conditioners and behind a CozyBox driving connected
-    electric radiators. gduteil/cozytouch#172 is the second case.
+    Navizone driving air conditioners (Mathieu's account), behind a CozyBox
+    driving connected electric radiators (gduteil/cozytouch#172) and behind a
+    HUB Cozytouch driving air conditioners again. Nothing they report tells
+    the three apart -- 153, 100022 and the ventilation ids were all measured
+    and none of them splits the set.
 
-    The gateway is read by what it declares, not by a list of its badges: the
-    vendor assigns the CozyBox no productId and it sends `Connectivity_Box`,
-    which is what that report shows. A fifth badge needs no code.
+    So this stops trying. The vendor's own client builds one class for every
+    room behind a gateway and lets the capabilities decide what it offers,
+    and so does this. See docs/decisions.md.
     """
     box = {
         "deviceId": 2,
-        "modelId": masterModelId,
+        "modelId": gateway,
         "productId": 0,
-        "modelFamily": "Connectivity_Box",
+        "modelFamily": family,
         "name": "",
     }
     room = {
@@ -1164,16 +1174,8 @@ def test_a_room_slot_behind_a_cozybox_is_a_radiator(modelId, masterModelId):
 
     infos = get_device_model_infos([box, room], room, "Billard R-1")
 
-    assert infos["type"] is CozytouchDeviceType.RADIATOR
-    assert infos["name"] == "Radiator (Billard R-1)"
-    assert infos["HVACModes"] == {0: HVACMode.OFF, 4: HVACMode.HEAT}
-
-
-def test_a_room_slot_without_its_zone_is_numbered_like_the_air_conditioners():
-    box = {"deviceId": 2, "modelId": 2447, "modelFamily": "Connectivity_Box"}
-    room = {"deviceId": 1, "modelId": 560, "productId": 29, "masterDeviceId": 2}
-
-    assert get_device_model_infos([box, room], room)["name"] == "Radiator (#4)"
+    assert infos["type"] is CozytouchDeviceType.ROOM
+    assert infos["name"] == "Room (Billard R-1)"
 
 
 @pytest.mark.parametrize("masterModelId", [2295, 2303, 2317, 1691, 1692])
@@ -1206,14 +1208,18 @@ def test_a_heating_circuit_without_its_zone_is_numbered_like_the_others():
     assert get_model_infos(560, None, "ROOM_3", 2303)["name"] == "Heating circuit (#4)"
 
 
-@pytest.mark.parametrize("masterModelId", [None, 556, 1681, 1758, 2326])
-def test_a_room_slot_behind_anything_else_stays_an_air_conditioner(masterModelId):
-    """The narrow rule is the point : one account is the whole of what says a
-    CozyBox drives radiators, so every other hub keeps the answer it had.
+@pytest.mark.parametrize("masterModelId", [None, 556, 1681, 1758, 2326, 2447])
+def test_a_room_slot_answers_the_same_behind_every_gateway(masterModelId):
+    """Including behind no gateway at all : a room whose interface is not on
+    the account is still a room, where refusing to answer would drop the
+    entities of anybody who never added their box.
+
+    The Alfea interface is the one exception, and it has its own case above :
+    its slots are heating circuits and it says so with a productId of its own.
     """
     infos = get_model_infos(557, "Chambre parentale", "ROOM_0", masterModelId)
 
-    assert infos["type"] is CozytouchDeviceType.AC
+    assert infos["type"] is CozytouchDeviceType.ROOM
 
 
 def test_the_hub_a_device_hangs_off_is_read_off_the_account():
@@ -1236,11 +1242,11 @@ def test_the_hub_a_device_hangs_off_is_read_off_the_account():
 
     assert (
         get_device_model_infos([cozybox, room], room, "Billard R-1")["type"]
-        is CozytouchDeviceType.RADIATOR
+        is CozytouchDeviceType.ROOM
     )
     assert (
         get_device_model_infos([room], room, "Billard R-1")["type"]
-        is CozytouchDeviceType.AC
+        is CozytouchDeviceType.ROOM
     )
 
 
