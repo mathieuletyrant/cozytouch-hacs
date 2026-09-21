@@ -97,7 +97,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     },
                     "swing_mode":
@@ -130,7 +130,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     },
                     "swing_mode":
@@ -156,7 +156,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     }
                 }
@@ -172,7 +172,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     }
                 }
@@ -188,7 +188,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     }
                 }
@@ -204,7 +204,7 @@
                         {
                             "basic": "Basique",
                             "prog": "Prog",
-                            "override": "Délégation"
+                            "override": "Dérogation"
                         }
                     }
                 }
@@ -220,9 +220,9 @@
         "number": {
             "away_mode_temperature":      { "name": "Température Absence" },
             "boost_timeout_max":          { "name": "Temporisation Max. Boost" },
-            "override_total_time":        { "name": "Durée Délégation" },
-            "override_total_time_z1":     { "name": "Durée Délégation Z1" },
-            "override_total_time_z2":     { "name": "Durée Délégation Z2" },
+            "override_total_time":        { "name": "Dérogation — durée" },
+            "override_total_time_z1":     { "name": "Dérogation — durée Z1" },
+            "override_total_time_z2":     { "name": "Dérogation — durée Z2" },
             "target_cool_temperature":    { "name": "Température Consigne Cool" },
             "target_temperature":         { "name": "Température Consigne" },
             "target_temperature_dhw":     { "name": "Température Consigne DHW" },
@@ -353,7 +353,7 @@
             "lifestyle_prog_sunday":    { "name": "Programme Lifestyle (Dim)" },
             "open_window_detection":    { "name": "Détection fenêtre ouverte" },
             "open_window_state":        { "name": "État fenêtre ouverte" },
-            "override_setpoint_activation": { "name": "Activation consigne dérogation" },
+            "override_setpoint_activation": { "name": "Dérogation en cours" },
             "schedule_anticipation":    { "name": "Anticipation du programme" },
             "schedule_anticipation_state": { "name": "État de l'anticipation du programme" },
             "schedule_minimum_interval": { "name": "Intervalle minimum entre créneaux" },
@@ -380,9 +380,9 @@
             "number_of_starts_dhw_pump":{ "name": "Nb démarrages pompe eau chaude" },
             "off_peak_hours":           { "name": "Heures Creuses" },
             "outside_temperature":      { "name": "Température Extérieure" },
-            "override_remain_time":     { "name": "Durée Délégation Restante" },
-            "override_remain_time_z1":  { "name": "Durée Délégation Restante Z1" },
-            "override_remain_time_z2":  { "name": "Durée Délégation Restante Z2" },
+            "override_remain_time":     { "name": "Dérogation — temps restant" },
+            "override_remain_time_z1":  { "name": "Dérogation — temps restant Z1" },
+            "override_remain_time_z2":  { "name": "Dérogation — temps restant Z2" },
             "power_consumption":        { "name": "Consommation" },
             "powerful_mode":            { "name": "Mode Powerful" },
             "presence_mode":            { "name": "Mode Présence" },
