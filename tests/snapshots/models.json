@@ -583,6 +583,7 @@
    7,
    8
   ],
+  "awayModeTemperatureAvailable": false,
   "modelId": 1457,
   "name": "HUB ATLANTIC COZYTOUCH",
   "type": "hub"

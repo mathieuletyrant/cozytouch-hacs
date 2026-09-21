@@ -333,6 +333,7 @@ MODEL_GROUPS = [
             "HVACModesCapabilityId": {7, 8},
             "name": "HUB ATLANTIC COZYTOUCH",
             "type": CozytouchDeviceType.HUB,
+            "awayModeTemperatureAvailable": False,
             "HVACModes": {0: HVACMode.OFF},
         },
     ),

@@ -90,7 +90,7 @@ def test_a_zone_maps_to_nothing_at_all():
             # The gateways, which report the away mode and hold no setpoint
             # for it. 1680 joins its sibling 1681 now that the productId the
             # vendor gives it is read rather than a hand-written id list.
-            | {556, 1680, 1681, 1758, 2447, 2448, 2449, 2450},
+            | {556, 1457, 1680, 1681, 1758, 2447, 2448, 2449, 2450},
         ),
         ("ecoModeAvailable", AIR_CONDITIONERS | SECOND_BLOCK_AIR_CONDITIONERS),
         ("overrideModeAvailable", {418}),

@@ -2729,23 +2729,8 @@
     "name": "radio_signal",
     "type": "percentage"
    },
-   "171": {
-    "capabilityId": 171,
-    "category": "diag",
-    "enabled_by_default": false,
-    "modelId": 1457,
-    "name": "away_mode_cooling_temperature",
-    "type": "temperature"
-   },
-   "172": {
-    "capabilityId": 172,
-    "category": "sensor",
-    "highestValueCapabilityId": 161,
-    "lowestValueCapabilityId": 160,
-    "modelId": 1457,
-    "name": "away_mode_temperature",
-    "type": "temperature_adjustment_number"
-   },
+   "171": {},
+   "172": {},
    "177": {
     "capabilityId": 177,
     "category": "sensor",
