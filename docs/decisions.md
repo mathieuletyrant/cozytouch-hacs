@@ -291,12 +291,23 @@ hub child always carries a zone name and that is what the entity is called.
 Limits. The range stops at 1737 because that is where this household stops ;
 a tenth room would arrive unmapped and ask for its own report, which is the
 right failure -- the ids are not known to be per-slot the way the THZONE ones
-are. The eco gate that 557-561 carry (`ecoModeAvailable = False`, because the
-app offers none for them) is *not* extended : this report attaches the dump
-in place of what the app shows, so there is still no statement either way for
-1734-1737, and they stay on the default as 1734 already did. Reading 100507
-at 0 on every one of them, next to 557-561 also at 0, says nothing about
-whether the app exposes it. The `(#n)` numbering was left alone rather than
+are. The eco gate that 557-561 carry (`ecoModeAvailable = False`) now covers
+1734-1737 too. It was held back here for want of a statement about what the
+app shows, since reading 100507 at 0 on every one of them says nothing about
+whether the app exposes it. The statement came from the same household, which
+owns both ranges : no eco mode appears on any of its rooms. Two other things
+agree with it -- the two ranges declare identical feature bitfields (100002
+`ventilation_options_supported` 111, 100021 `ventilation_controls_supported`
+201, 100004 `ventilation_controls_available` 197), so they are one class as
+far as the vendor is concerned ; and the app has no availability data for the
+eco mode at all, where every neighbouring feature has an Available/Supported
+pair -- `IVentilationFeature` declares `isSavingEnergyModeEnabled()` alone,
+and neither `VentilationOption` nor `VentilationControls` names an energy
+member. So this is not derivable from a capability, and the flag stays.
+
+An eco switch disappears from an install that has 1734-1737. It wrote to a
+capability the vendor's own app does not offer, which is the reason to take
+the removal rather than keep a control that looks like it does something. The `(#n)` numbering was left alone rather than
 made to read `#6` for 1734 : it would rename an existing model's fallback on
 the strength of one household's slot order.
 
@@ -693,6 +704,126 @@ reconstruction of anything. `longName` is not a substitute -- the
 capture has it as `---` on the three zone devices, so `productId` is the field
 to read. What a live CozyBox account sends is
 unknown until somebody dumps one, so the id set that names it stays.
+
+### The fall-through derives, and the table stays the override layer
+
+`derive()` in `model.py` is that reading turned on, in the one place it cannot
+regress anything : the `else` at the end of `get_model_infos`, reached only by
+a model id no branch names. A mapped id is answered by its branch exactly as
+before, whatever the device declares, which is what keeps the deliberate
+suppressions -- `ecoModeAvailable` False on 557-561 among them -- out of reach
+of a number on the wire. `tests/test_derivation.py` pins that order first.
+
+It reads three things, in that order : the `productId` against the ranges
+above, the parent's `productId` where the first said `ROOM`, and `modelFamily`
+where Atlantic assigned no `productId` at all. A room whose parent is not on
+the account stays UNKNOWN rather than being guessed at, since guessing is what
+handed every unmapped room to the air conditioner branch.
+
+`modelFamily` is an enum of the vendor's own, `ModelFamily.java`, and its
+thirteen members are the other axis: `productId` says which part of an
+appliance a device is, `modelFamily` says what it heats or cools. All thirteen
+are in the table except `Heat_Interface_Unit` and `Double_Flow_Ventilation`,
+which nothing here is. The order between the two signals is not arbitrary --
+the Navizone sends `Air_Conditioning`, the installation it fronts, and is a
+hub; reading the family first would turn every gateway into a climate entity.
+
+Measured over the catalogue: 234 model ids typed before, 1184 after -- 360
+towel racks, 183 heat pumps, 165 boilers, 99 thermostats, 96 water heaters.
+The five mode tables the mapped ids use are the five this lookup returns, so
+the modes come with the type rather than needing a branch of their own.
+
+It names the device too. `hub.py` registers a device under `modelInfos.name`,
+so hardware the catalogue does not list read as `Unknown product (1234)` in
+Home Assistant -- for a working appliance. A derived room is now named the way
+a mapped one is, from the zone the account gives it and otherwise from the
+vendor's own index (`productId` 101 is `ROOM_9`), and anything else falls back
+to the `longName` the setup view sends, then `customName`. `longName` comes
+first because the vendor sends `---` in it for zone devices, which is read as
+nothing.
+
+The dump follows: `isMapped` now reports what the *table* names, not what the
+device declares, because a dump is read to find what the table does not have.
+The repair goes quiet for a derived device, which is the point -- it existed
+because the classification was keyed on the wrong field.
+
+### The device answers first, and twenty-seven ids correct it
+
+The derivation started as the fall-through and is now the whole of it. Every
+branch is gone : `model.py` holds one `elif`, for the zone recognised by its
+name, and what is left is data.
+
+    model_product_ids.py   168 runs, modelId -> productId, generated
+    PRODUCT_TYPES          the vendor's ranges, from ProductType.java
+    DERIVED_TYPES          what each of those is, and the modes that go with it
+    OVERRIDES              27 ids the device gets wrong or cannot say
+    MODEL_NAMES            6 names the catalogue does not carry
+
+627 lines deleted, 227 added. The 27 were not chosen : each is the measured
+difference between what the branch answered and what the device declares, so
+the set is the honest size of what this project knew that the API does not
+say. Four shapes account for all of them -- ids the vendor assigns no
+productId (the Naema 3s, the TESC circuits, the CozyBox badges), the two Alfea
+3s whose modes sit on capabilities 1 and 2, the LINEO volumes with no prog
+mode, and the Naviclim box, which the catalogue calls an air conditioner
+because it drives one.
+
+Equivalence was checked id by id against the branches, not by the snapshots
+alone : of the 234 models the table mapped, **every one answers identically**
+apart from the name. 950 that answered UNKNOWN now answer.
+
+Two things the branches did that the data does now. A room behind a CozyBox is
+a radiator because the box sends `modelFamily` `Connectivity_Box` (issue
+#172), not because four badges are listed here -- a fifth needs no code. And
+`productId` 0 is read as absent rather than as a value, since that is what the
+vendor leaves on a model it assigns no type.
+
+The names were the one deliberate loss. 91 models took the catalogue's string
+in place of one written here, which is louder -- `ASAMA CONNECTE II 0500W BLC`
+for `Asama Connecté II 500W BLC` -- and more precise: three Aeromax SPLIT 3
+volumes shared one name here where the catalogue names each. A device rename
+changes what Home Assistant displays and nothing else; the unique ids are
+keyed on the capability id.
+
+### A room is a room, and the CozyBox stops being a special case
+
+`557-561` was answered as a radiator behind a CozyBox and an air conditioner
+behind anything else, from the one account that had each. Nothing a slot
+reports separates them, and this was measured three ways: 100022 reads 415 on
+both, the ventilation ids 100800/100802/100804 are reported by the radiators
+and not by a Navizone's air conditioners, and 153 -- the heating element -- is
+reported by both. A cooling setpoint does not split them either: every 557 in
+the corpus reports 177.
+
+The vendor's own client does not try. `GacomaDeviceFactory` builds one
+`TransverseRoom` for every room behind a gateway, whatever it drives, and that
+class is a superset of the air conditioner one -- same ventilation and
+temperature features, plus air mixing, hot water, prog assistant and settings.
+The capabilities decide what the screen offers.
+
+So `CozytouchDeviceType.ROOM` is one type for the lot, `capability.py` gains a
+room branch that is the union of the two it replaces with every id asked for
+rather than assumed, and the entity reads `room` where it read `heat` or
+`air_conditioner`. The Alfea interface stays the exception: its slots are
+heating circuits and its `productId` says so.
+
+What this buys is not tidiness. The CozyBox sends `productId` 63, the same as
+the HUB Cozytouch above it and the same `Connectivity_Box` family, so taking
+its product id would have turned issue #172's radiators back into air
+conditioners -- the box was unusable as data for exactly as long as it decided
+something. It decides nothing now, so 2447-2450 are read like any other
+gateway and their overrides are gone.
+
+The weekly program capabilities lose their per-type names at the same time.
+196-209 were `prog_01_z1` to `prog_14_z2` by default and `prog_heating_monday`
+to `prog_cooling_sunday` on an air conditioner; the vendor's app calls the two
+blocks Heating and Cooling, so the second naming is simply the true one and is
+now everyone's. A radiator never shows the cooling week -- no capture has one
+reporting 203-209.
+
+The device name follows: `Radiator (Chambre)` and `Air Conditioner (Chambre)`
+both become `Room (Chambre)`. A rename changes what Home Assistant displays
+and nothing else, since the unique ids are keyed on the capability id.
 
 ## `custom_components/cozytouch/climate.py`
 

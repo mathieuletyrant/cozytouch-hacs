@@ -289,6 +289,11 @@ def test_every_row_resolves_under_its_own_name():
             for override in (row.per_type or {}).values()
             if "name" in override
         }
+        # The climate ids are named by `capability.py` from the device type,
+        # not by the row : a room, an electric heater and an air conditioner
+        # each get their own word for the same capability.
+        if capabilityId in (1, 2, 7, 8):
+            names |= {"room", "heat", "air_conditioner", "heat_pump_z1"}
         assert result["name"] in names, (
             f"{capabilityId} resolves to {result['name']!r}, not one of {sorted(names)}"
         )

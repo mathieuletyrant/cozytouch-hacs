@@ -10,7 +10,13 @@ from dataclasses import dataclass
 
 from homeassistant.const import UnitOfEnergy, UnitOfPressure
 
-from .const import PROGRAM_BLOCKS, CozytouchCapabilityVariableType, program_block
+from .const import (
+    HVAC_MODE_BITS,
+    PROGRAM_BLOCKS,
+    SERVICE_VALUES,
+    CozytouchCapabilityVariableType,
+    program_block,
+)
 from .infos import (
     CapabilityCategory,
     CapabilityInfos,
@@ -25,37 +31,6 @@ from .model import CozytouchDeviceType
 # splits them at all.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
-_SERVICE_VALUES = {
-    "0": "off",
-    "1": "auto",
-    "3": "cool",
-    "4": "heat",
-    "5": "emergency_heat",
-    "6": "pre_cooling",
-    "7": "fan",
-    "8": "dry",
-    "9": "sleep",
-}
-
-_HVAC_MODE_BITS = (
-    (1, "off"),
-    (6, "auto"),
-    (8, "cool"),
-    (16, "heat"),
-    (128, "fan"),
-    (256, "dry"),
-)
-
-# The same masks, keyed by the mode value 7 and 8 carry, so the climate entity
-# can narrow a model's mode table by what capability 100022 says this unit
-# supports. Derived rather than written out, so the two cannot drift apart ;
-# a mode the bit table does not name is absent here and narrows nothing.
-HVAC_MODE_MASKS = {
-    int(value): mask
-    for value, name in _SERVICE_VALUES.items()
-    for mask, bitName in _HVAC_MODE_BITS
-    if bitName == name
-}
 
 _CONTROL_MODE_BITS = (
     (1, "basic"),
@@ -271,7 +246,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.CLIMATE,
         enabled_by_default=True,
         icon="mdi:air-conditioner",
-        reads_as=_SERVICE_VALUES,
+        reads_as=SERVICE_VALUES,
     ),
     19: Entity(
         name="temperature_setpoint",
@@ -666,7 +641,7 @@ CAPABILITIES: dict[int, Entity] = {
     166: Entity(
         name="system_operating_mode",
         type=CapabilityType.STRING,
-        bits=_HVAC_MODE_BITS,
+        bits=HVAC_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -729,7 +704,7 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         icon="mdi:air-conditioner",
-        reads_as=_SERVICE_VALUES,
+        reads_as=SERVICE_VALUES,
     ),
     184: Entity(
         name="prog_mode",
@@ -750,102 +725,88 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     196: Entity(
-        name="prog_01_z1",
+        name="prog_heating_monday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_monday"}},
     ),
     197: Entity(
-        name="prog_02_z1",
+        name="prog_heating_tuesday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_tuesday"}},
     ),
     198: Entity(
-        name="prog_03_z1",
+        name="prog_heating_wednesday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_wednesday"}},
     ),
     199: Entity(
-        name="prog_04_z1",
+        name="prog_heating_thursday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_thursday"}},
     ),
     200: Entity(
-        name="prog_05_z1",
+        name="prog_heating_friday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_friday"}},
     ),
     201: Entity(
-        name="prog_06_z1",
+        name="prog_heating_saturday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_saturday"}},
     ),
     202: Entity(
-        name="prog_07_z1",
+        name="prog_heating_sunday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_heating_sunday"}},
     ),
     203: Entity(
-        name="prog_08_z2",
+        name="prog_cooling_monday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_monday"}},
     ),
     204: Entity(
-        name="prog_09_z2",
+        name="prog_cooling_tuesday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_tuesday"}},
     ),
     205: Entity(
-        name="prog_10_z2",
+        name="prog_cooling_wednesday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_wednesday"}},
     ),
     206: Entity(
-        name="prog_11_z2",
+        name="prog_cooling_thursday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_thursday"}},
     ),
     207: Entity(
-        name="prog_12_z2",
+        name="prog_cooling_friday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_friday"}},
     ),
     208: Entity(
-        name="prog_13_z2",
+        name="prog_cooling_saturday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_saturday"}},
     ),
     209: Entity(
-        name="prog_14_z2",
+        name="prog_cooling_sunday",
         type=CapabilityType.PROG,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
-        per_type={(CozytouchDeviceType.AC,): {"name": "prog_cooling_sunday"}},
     ),
     217: Entity(
         name="system_setpoint_mode",
@@ -1409,7 +1370,7 @@ CAPABILITIES: dict[int, Entity] = {
     100022: Entity(
         name="supported_system_operating_modes",
         type=CapabilityType.STRING,
-        bits=_HVAC_MODE_BITS,
+        bits=HVAC_MODE_BITS,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),

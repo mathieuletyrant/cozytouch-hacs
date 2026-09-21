@@ -79,6 +79,39 @@
             "hot_water_program":       { "name": "Warmwasserprogramm" }
         },
         "climate": {
+            "room":
+            {
+                "name": "Raum",
+                "state_attributes":
+                {
+                    "fan_mode":
+                    {
+                        "state":
+                        {
+                            "quiet": "Leise"
+                        }
+                    },
+                    "preset_mode":
+                    {
+                        "state":
+                        {
+                            "basic": "Basis",
+                            "prog": "Prog",
+                            "override": "Übersteuerung"
+                        }
+                    },
+                    "swing_mode":
+                    {
+                        "state":
+                        {
+                            "down": "Unten",
+                            "middle_down": "Mitte unten",
+                            "middle_up": "Mitte oben",
+                            "up": "Oben"
+                        }
+                    }
+                }
+            },
             "air_conditioner":
             {
                 "name": "Klimagerät",

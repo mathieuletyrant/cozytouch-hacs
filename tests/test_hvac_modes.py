@@ -12,8 +12,8 @@ if either of them moves.
 
 import pytest
 
-from custom_components.cozytouch.capability_table import HVAC_MODE_MASKS
 from custom_components.cozytouch.climate import supported_hvac_modes
+from custom_components.cozytouch.const import HVAC_MODE_MASKS
 from homeassistant.components.climate import HVACMode
 
 # The air conditioner table, the widest one the mapping produces.

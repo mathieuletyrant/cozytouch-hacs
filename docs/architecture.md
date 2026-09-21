@@ -17,11 +17,15 @@ records the session that went looking for a catalogue and established there
 isn't one — `refs/` holds only `countries`, and no OpenAPI spec is published.
 
 So the whole integration is one long act of translation: **a numeric model id
-plus a numeric capability id become a Home Assistant entity**, and every rule
-for doing so was reverse-engineered from captures. Two tables carry all of it:
+plus a numeric capability id become a Home Assistant entity**. Two halves
+carry all of it:
 
-- `model.py` — `modelId` → what the product is and what it can do
+- `model.py` — what the API says about a device → what it is and what it can do
 - `capability.py` — `capabilityId` (+ the model's answer) → what entity to build
+
+The first half is read from the payload, the way the vendor's own client reads
+it. The second was reverse-engineered from captures, and still is: a
+capability is a number on the wire with no name and no unit.
 
 Everything else is plumbing around those two.
 
@@ -223,88 +227,99 @@ set both ends before either is sent. The switch entity compensates for the
 API lagging behind by ignoring the reported value for a few reads
 (`_nb_ignore`).
 
-## The model table
+## What a device is
 
-`get_model_infos(modelId, zoneName=None, deviceName=None)` is one long
-`if/elif` returning a `ModelInfos` — a dict whose fields are declared and
-typed in `infos.py`, so the branches write `modelInfos.name = …` and a typo'd
-field raises instead of landing as a silent new key. Consumers keep reading it
-as the dict it still is. 63 model ids are mapped today: 26 water heaters,
-9 towel racks, 9 AC user interfaces, 6 air conditioners, 5 gateways, 4 boilers,
-2 heat pumps, 2 thermostats. Anything else falls through to
-`Unknown product (…)` with a minimal off/heat mapping.
+There is no table of model ids. `get_model_infos` reads what the API sends
+about a device and works the answer out, which is what Atlantic's own client
+does — its `GacomaDeviceFactory` never looks at a model id.
+
+Three inputs, in this order :
+
+- **`productId`**, against the ranges the vendor writes out in its own
+  `ProductType` enum. 26-30 and 97-111 are a room, 31-40 a wall control, 65-94
+  a zone, 54 the connected board of an Alfea, 58-61 its generator, 47 and 62 a
+  hot water tank, 63/95/96/98 the gateways.
+- **the parent's `productId`**, where the first said `ROOM`. A room's own id is
+  an index and says nothing about the hardware in it ; only an Alfea's board
+  answers differently, and its rooms are heating circuits.
+- **`modelFamily`**, where Atlantic assigns no product id at all —
+  `Boiler`, `Water_Heater`, `Heat_Pump`, `Towel_Dryer`, `Connectivity_Box`
+  and the rest of its `ModelFamily` enum.
+
+`model_product_ids.py` answers the same question for a model id with no device
+beside it — a test, a dump read offline — from the vendor's catalogue, as 168
+contiguous runs. Its `LEARNED_FROM_DUMPS` holds what a live payload sent where
+that catalogue leaves a 0, which is how a row gets corrected without touching
+code.
+
+Then the device gets the last word on its modes. `narrow_by_capabilities`
+reads capability 100022, a bitmask over the mode values, and narrows the
+table's modes to what the unit supports ; and if the device reports none of
+the capabilities its modes would arrive on, it has none, whatever any table
+says. An empty capability list means *not known yet* rather than *reports
+nothing* — `account.py` creates a device that way and fills it on the first
+poll.
+
+`OVERRIDES` is what is left : nineteen model ids where the device is wrong
+about itself or cannot say. Each one is a measured difference between what a
+branch used to answer and what the derivation gives, so the set is the honest
+size of what this project knows and the API does not. `MODEL_NAMES` is six
+names the vendor's catalogue does not carry. Nothing else is written per model.
 
 **One device is recognised by its name instead of its id**, and it is the only
 one: a THZONE, which is a zone of a ducted heat pump rather than a product. The
-check runs before the id chain, so `deviceName` starting with `THZONE` wins over
-any id — including an id that also belongs to a real product.
-
-Keying on the name is not a shortcut, it is what the payload supports. A capture
-pairs model id 1505 with the device the API calls `THZONE_0`, 1506 with
-`THZONE_1`, and so on: the ids count the zones rather than name a product, so a
-household with more zones than the captured one walks off the end of any range
-guessed from it. The API's `name` is read rather than `customName`, since
-renaming a zone in the Cozytouch app is a thing people do.
+check runs first, so `deviceName` starting with `THZONE` wins over any id —
+including an id that also belongs to a real product. Keying on the name is not
+a shortcut, it is what the payload supports: a capture pairs model id 1505 with
+the device the API calls `THZONE_0`, and issue #93's household reports a zone
+under its parent's id, which has no product id of its own. The API's `name` is
+read rather than `customName`, since renaming a zone in the Cozytouch app is a
+thing people do.
 
 A zone reports two capabilities, neither of which resolves to anything, and no
 climate capability. So it is **ignored, not surfaced**:
 `CozytouchAccount.device_summaries` leaves it out of what the config flow
-offers, and `get_diagnostics` leaves it out of the dump. Adding one would create a device with an empty page behind it, and a
-dump is read to find hardware that has to be mapped — listing a zone put two
-ids that resolve to nothing, one of them declined on purpose, in front of
-whoever reads it, which reads exactly like work to do. The raw setup view still
-holds them and the `dump_json` option writes it out, which is the way back if
+offers, and `get_diagnostics` leaves it out of the dump. Adding one would
+create a device with an empty page behind it. The raw setup view still holds
+them and the `dump_json` option writes it out, which is the way back if
 anybody needs to see what a zone reports.
 
-Recognising the model is still what makes that possible, and it is what stopped
-the noise it used to make: unmapped, a zone read as `Unknown product (1505)`
-*and* raised an unmapped-model repair per zone, asking six times for a dump
-about hardware working as designed. `HVACModes` is empty on purpose — the
-fall-through's off/heat pair is what made a zone look like a thermostat that
-could heat. Capability 218 is declined too: a zone reads "0" for it while the
-API calls the zone available, so the sensor would contradict its own device.
-
-The consequence to know: every lookup passes `dev["name"]`, because one without
-it answers `Unknown product` for a zone — which would put the repair back. That
-is `hub.py` for the capability walks and the dump, and `account.py` for the
-unmapped-model scan, which is where the account-wide question lives now.
+Every lookup passes `dev["name"]`, because one without it cannot recognise a
+zone. That is `hub.py` for the capability walks and the dump.
 
 `get_zone_name` answers **None** when the account does not name a zone, where it
 used to answer the id as a string. Every caller puts the result in front of
 somebody — a device name, a line in a dump — and `Zone (1030104)` is a worse
 name than no name: the id is ours to join on, not a room anybody recognises. A
-zone with no room falls back to the name the app shows (`THZONE_0`), and an air
-conditioner to its position (`Air Conditioner (#1)`), which is what that branch
-already did for a device with no zone at all.
+zone with no room falls back to the name the app shows (`THZONE_0`), and a room
+to its position (`Room (#1)`).
 
 Three kinds of key come back:
 
 - **Identity** — `name`, `type`, `modelId`.
 - **Enumerations** — `HVACModes`, `HeatingModes`, `fanModes`, `swingModes`,
   `AirCirculationSpeeds`. Each maps the integer the device reports to the
-  Home Assistant constant. These are per-model because the same integer means
-  different things on different products.
+  Home Assistant constant.
 - **Flags** — `ecoModeAvailable`, `awayModeTemperatureAvailable`,
   `quietModeAvailable`, `overrideModeAvailable`, `exhaustTemperatureAvailable`,
   `currentTemperatureAvailable{,Z1,Z2}`.
 
 The flags are the dangerous part, and `tests/test_capability.py` exists
 because of it. A flag is read by `capability.py` to decide whether an entity
-exists at all, so setting one on a branch shared by nine model ids removes or
-adds an entity on all nine. Worse, most flags default to `True` when absent,
-so flipping a default in `capability.py` changes every model at once while
-leaving `model.py` — and every case in `test_model.py` — untouched. The
-isolation tests walk the whole table and assert which model ids declare each
-flag, which is the only place that catches it.
+exists at all, and most of them default to `True` when absent — so a flag
+nobody sets is a flag that lets an entity through, and a default flipped in
+`capability.py` changes every device at once. The isolation tests walk the
+whole id range and assert which ids declare each flag, which is the only place
+that catches it.
 
 `HVACModesCapabilityId` is the subtlest entry. It says which capability id
-carries the mode for this product: `{7, 8}` by default, but `{1, 2}` for the
-Alfea Extensa Duo A.I. 3 R32 (211). The same physical function, a different
-number, on two models of the same product family.
+carries the mode for this product: `{7, 8}` by default, `{1, 2}` for the Alfea
+Extensa Duo A.I. 3 R32, and empty for the half of an appliance that drives
+nothing. The same physical function, a different number, on two models of the
+same product family.
 
-`zoneName` is threaded in for one purpose: air conditioners and their user
-interfaces are named `Air Conditioner (Salon)` rather than
-`Air Conditioner (#1)` when the zone is known. `Hub.get_model_infos` resolves
+`zoneName` is threaded in for one purpose: a room is named `Room (Salon)`
+rather than `Room (#1)` when the zone is known. `Hub.get_model_infos` resolves
 the zone, following the `iothubChildrenIds` tag to a master device's zone for
 sub-devices.
 
@@ -602,9 +617,11 @@ from it when a change makes an entry untrue.
 - **Do not fetch a capability catalogue.** There isn't one.
   `docs/api-surface.md` records roughly 90 paths already ruled out; read it
   before probing anything.
-- **Do not widen a shared model branch to fix one product.** Nine ids share
-  the ACI HYB branch and six share the air-conditioner branch. Model-specific
-  behaviour goes behind `if modelId == …`.
+- **Do not add a model id to make one product work.** The device says what it
+  is ; if it comes out wrong, the question is which of `productId`,
+  `modelFamily` or the parent is being misread, and the answer is usually a
+  row in `model_product_ids.py` that a dump can correct. `OVERRIDES` is for a
+  device that is wrong about itself, and every entry in it was measured.
 - **Do not claim a type for a capability whose encoding is unverified.** Its
   row says `STRING`, `DIAG` and `enabled_by_default=False`, and sets neither
   `bits` nor `reads_as`: named, raw, off by default. 30 rows read that way

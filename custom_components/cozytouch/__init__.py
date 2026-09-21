@@ -22,7 +22,6 @@ from .hub import (
     Hub,
     device_info_for,
 )
-from .repairs import async_check_model_mapping
 from .services import async_register_services
 
 PLATFORMS: list[Platform] = [
@@ -240,7 +239,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: CozytouchConfigEntry) ->
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # Only for a setup that got this far : a failed one is not worth a word.
-    async_check_model_mapping(hass, entry)
 
     return True
 

@@ -21,8 +21,7 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .capability_table import HVAC_MODE_MASKS
-from .const import DOMAIN
+from .const import DOMAIN, HVAC_MODE_MASKS
 from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor

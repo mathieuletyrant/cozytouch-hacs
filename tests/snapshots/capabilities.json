@@ -926,7 +926,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -934,7 +934,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -942,7 +942,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -950,7 +950,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -959,7 +959,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -967,7 +967,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -975,7 +975,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -983,7 +983,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -991,7 +991,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -999,7 +999,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -1007,7 +1007,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -1015,7 +1015,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -1023,7 +1023,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -1031,7 +1031,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -2729,23 +2729,8 @@
     "name": "radio_signal",
     "type": "percentage"
    },
-   "171": {
-    "capabilityId": 171,
-    "category": "diag",
-    "enabled_by_default": false,
-    "modelId": 1457,
-    "name": "away_mode_cooling_temperature",
-    "type": "temperature"
-   },
-   "172": {
-    "capabilityId": 172,
-    "category": "sensor",
-    "highestValueCapabilityId": 161,
-    "lowestValueCapabilityId": 160,
-    "modelId": 1457,
-    "name": "away_mode_temperature",
-    "type": "temperature_adjustment_number"
-   },
+   "171": {},
+   "172": {},
    "177": {
     "capabilityId": 177,
     "category": "sensor",
@@ -2800,7 +2785,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -2808,7 +2793,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -2816,7 +2801,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -2824,7 +2809,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -2833,7 +2818,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -2841,7 +2826,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -2849,7 +2834,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -2857,7 +2842,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -2865,7 +2850,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -2873,7 +2858,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -2881,7 +2866,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -2889,7 +2874,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -2897,7 +2882,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -2905,7 +2890,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -4670,7 +4655,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -4678,7 +4663,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -4686,7 +4671,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -4694,7 +4679,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -4703,7 +4688,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -4711,7 +4696,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -4719,7 +4704,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -4727,7 +4712,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -4735,7 +4720,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -4743,7 +4728,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -4751,7 +4736,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -4759,7 +4744,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -4767,7 +4752,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -4775,7 +4760,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -6532,7 +6517,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -6540,7 +6525,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -6548,7 +6533,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -6556,7 +6541,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -6565,7 +6550,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -6573,7 +6558,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -6581,7 +6566,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -6589,7 +6574,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -6597,7 +6582,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -6605,7 +6590,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -6613,7 +6598,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -6621,7 +6606,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -6629,7 +6614,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -6637,7 +6622,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -7839,14 +7824,7 @@
     "name": "presence_mode",
     "type": "switch"
    },
-   "100507": {
-    "capabilityId": 100507,
-    "category": "sensor",
-    "icon": "mdi:flower-outline",
-    "modelId": 1734,
-    "name": "eco_mode",
-    "type": "switch"
-   },
+   "100507": {},
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -9232,16 +9210,16 @@
     "capabilityId": 7,
     "category": "sensor",
     "currentValueCapabilityId": 117,
-    "ecoCapabilityId": 100507,
     "fanModeCapabilityId": 100801,
+    "heatingActiveCapabilityId": 153,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
     "hvacActionCapabilityId": 181,
-    "icon": "mdi:air-conditioner",
+    "icon": "mdi:home-thermometer",
     "lowestCoolValueCapabilityId": 162,
     "lowestValueCapabilityId": 160,
     "modelId": 1734,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
@@ -9269,16 +9247,16 @@
     "capabilityId": 8,
     "category": "sensor",
     "currentValueCapabilityId": 117,
-    "ecoCapabilityId": 100507,
     "fanModeCapabilityId": 100801,
+    "heatingActiveCapabilityId": 153,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
     "hvacActionCapabilityId": 181,
-    "icon": "mdi:air-conditioner",
+    "icon": "mdi:home-thermometer",
     "lowestCoolValueCapabilityId": 162,
     "lowestValueCapabilityId": 160,
     "modelId": 1734,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
@@ -10291,7 +10269,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -10299,7 +10277,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -10307,7 +10285,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -10315,7 +10293,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {
@@ -10340,7 +10318,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -10348,7 +10326,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -10356,7 +10334,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -10364,7 +10342,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -10372,7 +10350,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -10380,7 +10358,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -10388,7 +10366,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -10396,7 +10374,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -10404,7 +10382,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -10412,7 +10390,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -12143,7 +12121,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -12151,7 +12129,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -12159,7 +12137,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -12167,7 +12145,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -12176,7 +12154,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -12184,7 +12162,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -12192,7 +12170,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -12200,7 +12178,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -12208,7 +12186,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -12216,7 +12194,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -12224,7 +12202,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -12232,7 +12210,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -12240,7 +12218,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -12248,7 +12226,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -14015,7 +13993,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -14023,7 +14001,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -14031,7 +14009,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -14039,7 +14017,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -14048,7 +14026,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -14056,7 +14034,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -14064,7 +14042,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -14072,7 +14050,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -14080,7 +14058,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -14088,7 +14066,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -14096,7 +14074,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -14104,7 +14082,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -14112,7 +14090,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -14120,7 +14098,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -16709,14 +16687,15 @@
     "category": "sensor",
     "currentValueCapabilityId": 117,
     "fanModeCapabilityId": 100801,
+    "heatingActiveCapabilityId": 153,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
     "hvacActionCapabilityId": 181,
-    "icon": "mdi:air-conditioner",
+    "icon": "mdi:home-thermometer",
     "lowestCoolValueCapabilityId": 162,
     "lowestValueCapabilityId": 160,
     "modelId": 557,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
@@ -16745,14 +16724,15 @@
     "category": "sensor",
     "currentValueCapabilityId": 117,
     "fanModeCapabilityId": 100801,
+    "heatingActiveCapabilityId": 153,
     "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
     "hvacActionCapabilityId": 181,
-    "icon": "mdi:air-conditioner",
+    "icon": "mdi:home-thermometer",
     "lowestCoolValueCapabilityId": 162,
     "lowestValueCapabilityId": 160,
     "modelId": 557,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
@@ -17745,7 +17725,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -17753,7 +17733,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -17761,7 +17741,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -17769,7 +17749,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -17778,7 +17758,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -17786,7 +17766,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -17794,7 +17774,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -17802,7 +17782,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -17810,7 +17790,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -17818,7 +17798,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -17826,7 +17806,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -17834,7 +17814,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -17842,7 +17822,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -17850,7 +17830,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -19617,7 +19597,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -19625,7 +19605,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -19633,7 +19613,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -19641,7 +19621,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -19650,7 +19630,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -19658,7 +19638,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -19666,7 +19646,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -19674,7 +19654,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -19682,7 +19662,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -19690,7 +19670,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -19698,7 +19678,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -19706,7 +19686,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -19714,7 +19694,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -19722,7 +19702,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -21483,7 +21463,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -21491,7 +21471,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -21499,7 +21479,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -21507,7 +21487,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -21516,7 +21496,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -21524,7 +21504,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -21532,7 +21512,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -21540,7 +21520,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -21548,7 +21528,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -21556,7 +21536,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -21564,7 +21544,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -21572,7 +21552,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -21580,7 +21560,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -21588,7 +21568,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -23351,7 +23331,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_01_z1",
+    "name": "prog_heating_monday",
     "type": "prog"
    },
    "197": {
@@ -23359,7 +23339,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_02_z1",
+    "name": "prog_heating_tuesday",
     "type": "prog"
    },
    "198": {
@@ -23367,7 +23347,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_03_z1",
+    "name": "prog_heating_wednesday",
     "type": "prog"
    },
    "199": {
@@ -23375,7 +23355,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_04_z1",
+    "name": "prog_heating_thursday",
     "type": "prog"
    },
    "2": {},
@@ -23384,7 +23364,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_05_z1",
+    "name": "prog_heating_friday",
     "type": "prog"
    },
    "201": {
@@ -23392,7 +23372,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_06_z1",
+    "name": "prog_heating_saturday",
     "type": "prog"
    },
    "202": {
@@ -23400,7 +23380,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_07_z1",
+    "name": "prog_heating_sunday",
     "type": "prog"
    },
    "203": {
@@ -23408,7 +23388,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_08_z2",
+    "name": "prog_cooling_monday",
     "type": "prog"
    },
    "204": {
@@ -23416,7 +23396,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_09_z2",
+    "name": "prog_cooling_tuesday",
     "type": "prog"
    },
    "205": {
@@ -23424,7 +23404,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_10_z2",
+    "name": "prog_cooling_wednesday",
     "type": "prog"
    },
    "206": {
@@ -23432,7 +23412,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_11_z2",
+    "name": "prog_cooling_thursday",
     "type": "prog"
    },
    "207": {
@@ -23440,7 +23420,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_12_z2",
+    "name": "prog_cooling_friday",
     "type": "prog"
    },
    "208": {
@@ -23448,7 +23428,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_13_z2",
+    "name": "prog_cooling_saturday",
     "type": "prog"
    },
    "209": {
@@ -23456,7 +23436,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "prog_14_z2",
+    "name": "prog_cooling_sunday",
     "type": "prog"
    },
    "217": {
@@ -24429,37 +24409,31 @@
    "7": {
     "capabilityId": 7,
     "category": "sensor",
-    "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
-    "icon": "mdi:air-conditioner",
-    "lowestCoolValueCapabilityId": 162,
+    "icon": "mdi:home-thermometer",
     "lowestValueCapabilityId": 160,
     "modelId": 1734,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "targetCapabilityId": 40,
-    "targetCoolCapabilityId": 177,
     "type": "climate"
    },
    "8": {
     "capabilityId": 8,
     "category": "sensor",
-    "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
-    "icon": "mdi:air-conditioner",
-    "lowestCoolValueCapabilityId": 162,
+    "icon": "mdi:home-thermometer",
     "lowestValueCapabilityId": 160,
     "modelId": 1734,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "targetCapabilityId": 40,
-    "targetCoolCapabilityId": 177,
     "type": "climate"
    }
   },
@@ -24565,37 +24539,31 @@
    "7": {
     "capabilityId": 7,
     "category": "sensor",
-    "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
-    "icon": "mdi:air-conditioner",
-    "lowestCoolValueCapabilityId": 162,
+    "icon": "mdi:home-thermometer",
     "lowestValueCapabilityId": 160,
     "modelId": 557,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "targetCapabilityId": 40,
-    "targetCoolCapabilityId": 177,
     "type": "climate"
    },
    "8": {
     "capabilityId": 8,
     "category": "sensor",
-    "highestCoolValueCapabilityId": 163,
     "highestValueCapabilityId": 161,
-    "icon": "mdi:air-conditioner",
-    "lowestCoolValueCapabilityId": 162,
+    "icon": "mdi:home-thermometer",
     "lowestValueCapabilityId": 160,
     "modelId": 557,
-    "name": "air_conditioner",
+    "name": "room",
     "progCapabilityId": 184,
     "progOverrideCapabilityId": 157,
     "progOverrideTimeCapabilityId": 159,
     "progOverrideTotalTimeCapabilityId": 158,
     "targetCapabilityId": 40,
-    "targetCoolCapabilityId": 177,
     "type": "climate"
    }
   },

@@ -370,10 +370,6 @@ class Hub(DataUpdateCoordinator):
         """Get zone infos."""
         return self._account.get_zone_name(zoneId)
 
-    def get_unmapped_models(self) -> list[int]:
-        """Every model id on the account the table has no branch for."""
-        return self._account.get_unmapped_models()
-
     def get_model_infos(self, deviceId: int | None = None) -> str:
         """Get model infos."""
         dev = device_of(self, deviceId)
@@ -544,8 +540,6 @@ class Hub(DataUpdateCoordinator):
                     "model": {
                         "name": modelInfos.name,
                         "type": str(modelInfos.type),
-                        "isMapped": modelInfos.type
-                        is not CozytouchDeviceType.UNKNOWN,
                         "infos": {
                             key: str(value)
                             for key, value in modelInfos.items()

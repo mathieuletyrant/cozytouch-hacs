@@ -83,12 +83,18 @@ def test_a_zone_is_not_offered_when_adding_the_integration():
     assert [dev["name"] for dev in summaries] == ["ROOM_0"]
 
 
-def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):
+def device(
+    deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904, productId=0
+):
+    """A device the API could send. `productId` 0 is the value Atlantic leaves
+    on a model it assigns no product type, so the default classifies nothing
+    and a case that wants the derivation to fire passes its own.
+    """
     return {
         "deviceId": deviceId,
         "name": name,
         "modelId": modelId,
-        "productId": 65,
+        "productId": productId,
         "zoneId": zoneId,
         "gatewaySerialNumber": "3022-6760-8541",
         "tags": [],
@@ -96,14 +102,17 @@ def device(deviceId, modelId, capabilities=None, name="ROOM_0", zoneId=991904):
     }
 
 
-def test_an_unmapped_model_is_reported_as_unmapped():
-    """The whole point of a dump is to name what the table does not."""
+def test_a_device_nothing_can_type_reads_as_unknown():
+    """What a dump is read for. There used to be an `isMapped` beside this,
+    from when a hand-written table was the only thing that could answer; the
+    type says it now, and says it for a device the table never named.
+    """
     hub = make_hub([device(1, 9999)], deviceId=1)
 
     reported = Hub.get_diagnostics(hub)["devices"][0]
 
     assert reported["modelId"] == 9999
-    assert reported["model"]["isMapped"] is False
+    assert reported["model"]["type"] == "unknown"
     assert reported["model"]["name"] == "Unknown product (9999)"
 
 
@@ -112,9 +121,8 @@ def test_a_mapped_model_carries_its_name_and_type():
 
     reported = Hub.get_diagnostics(hub)["devices"][0]
 
-    assert reported["model"]["isMapped"] is True
-    assert reported["model"]["name"] == "Air Conditioner (#1)"
-    assert reported["model"]["type"] == "ac"
+    assert reported["model"]["name"] == "Room (#1)"
+    assert reported["model"]["type"] == "room"
 
 
 def test_capabilities_split_into_what_is_named_and_what_is_not():
