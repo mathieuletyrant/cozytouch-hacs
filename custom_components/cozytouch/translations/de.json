@@ -284,6 +284,7 @@
             "away_mode_start":          { "name": "Beginn Abwesenheitsmodus" },
             "away_mode_stop":           { "name": "Ende Abwesenheitsmodus" },
             "ble_pairing_compatibility": { "name": "BLE-Kopplungskompatibilität" },
+            "circuit_driven_by_room":   { "name": "Kreis von einem Raum gesteuert" },
             "boiler_or_heat_pump":      { "name": "Kessel oder Wärmepumpe" },
             "boiler_water_temperature": { "name": "Kesselwassertemperatur" },
             "boost_mode":               { "name": "Boost-Modus" },

@@ -1858,4 +1858,16 @@ CAPABILITIES: dict[int, Entity] = {
             "temperatureMax": 65.0,
         },
     ),
+    # Whether a room slot holds this circuit's setpoint. Named from what it
+    # coincides with rather than from anything the vendor says -- see
+    # docs/decisions.md for the seven circuits it was read on. Diagnostic and
+    # off by default: it is read to decide whether the circuit is a device of
+    # its own, and it is nobody's control.
+    106000: Entity(
+        name="circuit_driven_by_room",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        icon="mdi:home-thermometer",
+    ),
 }

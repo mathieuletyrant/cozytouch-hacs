@@ -284,6 +284,7 @@
             "away_mode_start":          { "name": "Away Mode Start" },
             "away_mode_stop":           { "name": "Away Mode Stop" },
             "ble_pairing_compatibility": { "name": "BLE Pairing Compatibility" },
+            "circuit_driven_by_room":   { "name": "Circuit Driven By Room" },
             "boiler_or_heat_pump":      { "name": "Boiler Or Heat Pump" },
             "boiler_water_temperature": { "name": "Boiler Water Temperature" },
             "boost_mode":               { "name": "Boost Mode" },

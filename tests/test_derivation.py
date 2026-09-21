@@ -177,3 +177,57 @@ def test_a_device_the_catalogue_does_not_name_reads_as_the_api_calls_it():
 
     assert infos["name"] == "Aquastyle 300L"
     assert infos["type"] is CozytouchDeviceType.WATER_HEATER
+
+
+def circuit(deviceId, modelId, driven_by_room):
+    """A TESC heating circuit slot, as issue #110's account reports one."""
+    return {
+        "deviceId": deviceId,
+        "modelId": modelId,
+        "productId": modelId - 1333,
+        "name": "",
+        "capabilities": [
+            {"capabilityId": 19, "value": "0.0" if driven_by_room else "20.0"},
+            {"capabilityId": 109, "value": "22.28"},
+            {"capabilityId": 106000, "value": "1" if driven_by_room else "0"},
+        ],
+    }
+
+
+def test_a_circuit_that_holds_its_own_setpoint_is_a_device():
+    """Issue #110 : two circuits on one appliance, and only one of them has a
+    room slot beside it. The other was typed ZONE, which the config flow
+    filters, so it was invisible everywhere -- and it is the only control that
+    circuit has.
+
+    The device says which it is. 106000 reads 1 on the five circuits in the
+    corpus that have a room slot and 0 on the two that do not, and the
+    setpoint agrees: 0 where a room holds it, a real temperature where the
+    circuit does. See docs/decisions.md.
+    """
+    alone = circuit(1, 1389, driven_by_room=False)
+
+    assert get_device_model_infos([alone], alone, "Pièces de vie") == {
+        **get_device_model_infos([alone], alone, "Pièces de vie"),
+        "type": CozytouchDeviceType.THERMOSTAT,
+        "name": "Heating circuit (Pièces de vie)",
+    }
+
+
+def test_a_circuit_a_room_drives_stays_out_of_the_way():
+    """Offering it would put the same circuit on the account twice."""
+    doubled = circuit(1, 1388, driven_by_room=True)
+
+    assert (
+        get_device_model_infos([doubled], doubled, "Chambres")["type"]
+        is CozytouchDeviceType.ZONE
+    )
+
+
+def test_a_circuit_with_no_capabilities_yet_stays_out_of_the_way():
+    """Between setup and the first poll nothing is known, and a device offered
+    on nothing is worse than one offered a poll later.
+    """
+    infos = get_model_infos(1389)
+
+    assert infos["type"] is CozytouchDeviceType.ZONE
