@@ -3018,3 +3018,37 @@ So 161 becomes a `TEMPERATURE` sensor like 160, its invented bounds go, and
 its translation moves from the `number` section to `sensor` in all six
 files. Both are `enabled_by_default=False` : a bound nobody reads yet is
 diagnostic, and it was showing up on cards as a thermostat you could drag.
+
+## What the Android app is willing to write
+
+Nothing on the wire says a capability is writable. `CapabilityEntity` is
+`(capabilityId, value, modificationDate)` and `WriteCapabilityInput` is
+`(value, deviceId, capabilityId)` -- no flag either way, which matches what
+`capability.py` receives. There is no read-only bit to read.
+
+What the app has instead is its own call sites. `IGacomaDevice` exposes
+`getCapabilityValue` and `writeCapabilitySuspend`, both taking a
+`Capabilities` enum member, so every capability the app ever writes appears
+as a literal next to a write call. Collecting them gives 87 ids, recorded in
+`research/data/android_writable_capabilities.tsv` :
+
+    grep -rh writeCapabilit sources/ | grep -v @Metadata |
+      grep -oE 'Capabilities\.[A-Z_0-9]+'
+
+Read it as a lower bound with one gap : jadx folds a few enum values into
+unrelated constants it found with the same number (`NSType.TKEY` for 249,
+`ScanQRCodeFragment.IOT_HUB_ERROR_RESULT` for 198), so six ids are recovered
+from their neighbours in the enum's declaration order rather than read off.
+An id absent from the list is not proved unwritable -- it is only never
+written by this version of the app, 3.31.0.
+
+Against our own mapping that leaves six capabilities we offer as controls and
+the app only reads : 22, 41, 42 (`target_temperature_dhw` and the two eco
+setpoints), 152 (`away_mode`), 104047 (`boost_timeout_max`) and 105907
+(`v40_setpoint_filled_by_user`). None is on hardware anyone here has, so they
+stay as they are until somebody reports one writing into the void. Two ids
+run the other way -- 100801 and 100803, ventilation speed and shutter
+position, which the app writes and our table does not name at all.
+
+This is what settled 161 : it is read by `ITemperatureFeature` and appears at
+no write call site.
