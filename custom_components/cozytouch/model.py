@@ -301,6 +301,23 @@ def room_index(productId: int) -> int:
     return productId - 25 if productId <= 30 else productId - 96
 
 
+# Whether the vendor's own app offers this product the identify button. It is
+# not a capability the device reports : `GacomaDeviceFactory` picks a class
+# from the pair (own productId, parent's) and each class carries the answer as
+# a constant. See docs/decisions.md.
+WINKABLE_KINDS = frozenset({"BD0", "TD1", "AIR_CONDITIONER_UI"})
+WINKABLE_HUBS = frozenset({"NAVI_HUB", "ZONI_CLIM_HUB", "SPLIT_3S_HUB"})
+
+
+def winkable(kind: str | None, masterKind: str | None) -> bool:
+    """Whether capability 100078 is a control here rather than a reading."""
+    if kind == "TH_ZONE":
+        # Behind one of those hubs it is a TransverseUI, which winks ; behind
+        # anything else the factory builds nothing at all.
+        return masterKind in WINKABLE_HUBS
+    return kind in WINKABLE_KINDS
+
+
 def derive(
     modelInfos: ModelInfos,
     productId: int | None,
@@ -315,6 +332,8 @@ def derive(
     nothing. See docs/decisions.md.
     """
     kind = product_type(productId)
+    if winkable(kind, masterKind):
+        modelInfos.winkable = True
     label = None
     if kind == "ROOM" and productId is not None:
         parent = masterKind

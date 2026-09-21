@@ -539,6 +539,7 @@ MODEL_GROUPS = [
             "name": "Air Conditioner User Interface (#1)",
             "type": CozytouchDeviceType.AC_CONTROLLER,
             "HVACModes": {0: HVACMode.OFF},
+            "winkable": True,
         },
     ),
     (
@@ -549,6 +550,7 @@ MODEL_GROUPS = [
             "name": "Air Conditioner User Interface (#9)",
             "type": CozytouchDeviceType.AC_CONTROLLER,
             "HVACModes": {0: HVACMode.OFF},
+            "winkable": True,
         },
     ),
     (
@@ -674,6 +676,7 @@ MODEL_GROUPS = [
             "name": "KELUD 1750W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -684,6 +687,7 @@ MODEL_GROUPS = [
             "name": "KELUD 1750W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -714,6 +718,7 @@ MODEL_GROUPS = [
             "name": "DORIS ETROIT 1500W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -724,6 +729,7 @@ MODEL_GROUPS = [
             "name": "DORIS ETROIT 1300W CARAT",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -754,6 +760,7 @@ MODEL_GROUPS = [
             "name": "ASAMA CONNECTE II 1750W BLC",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -764,6 +771,7 @@ MODEL_GROUPS = [
             "name": "ASAMA CONNECTE II 1500W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -774,6 +782,7 @@ MODEL_GROUPS = [
             "name": "ASAMA CONNECTE II 1750W ANTH",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -784,6 +793,7 @@ MODEL_GROUPS = [
             "name": "ASAMA CONNECTE II 1750W NOIR",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -794,6 +804,7 @@ MODEL_GROUPS = [
             "name": "RIVA 5 ETROIT 1300W BLC BRI",
             "type": CozytouchDeviceType.TOWEL_RACK,
             "HVACModes": {0: HVACMode.OFF, 4: HVACMode.HEAT},
+            "winkable": True,
         },
     ),
     (
@@ -1320,6 +1331,7 @@ def test_a_towel_rack_variant_is_named_and_typed(modelId, name):
         "name",
         "type",
         "HVACModes",
+        "winkable",
     }
 
 

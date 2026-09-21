@@ -137,6 +137,7 @@ class ModelInfos(AttributeDict):
     awayModeTemperatureAvailable: bool
     ecoModeAvailable: bool
     overrideModeAvailable: bool
+    winkable: bool
 
 
 class CapabilityInfos(AttributeDict):
@@ -173,6 +174,7 @@ class CapabilityInfos(AttributeDict):
     targetCapabilityId: int
     targetCoolCapabilityId: int
     currentValueCapabilityId: int | None
+    currentAvailableCapabilityId: int
     lowestValueCapabilityId: int
     highestValueCapabilityId: int
     lowestCoolValueCapabilityId: int

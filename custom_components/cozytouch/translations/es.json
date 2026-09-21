@@ -226,8 +226,7 @@
             "target_temperature_eco_z1":  { "name": "Temperatura de consigna Eco Z1" },
             "target_temperature_eco_z2":  { "name": "Temperatura de consigna Eco Z2" },
             "v40_applied_setpoint":       { "name": "Consigna V40 aplicada" },
-            "v40_setpoint_filled_by_user": { "name": "Consigna V40 introducida por el usuario" },
-            "temperature_adjustment_max": { "name": "Temperatura máxima" }
+            "v40_setpoint_filled_by_user": { "name": "Consigna V40 introducida por el usuario" }
         },
         "select": {
             "air_circulation_speed":
@@ -466,6 +465,7 @@
             "target_temperature_max":   { "name": "Temperatura de consigna máx." },
             "target_temperature_min":   { "name": "Temperatura de consigna mín." },
             "target_temperature_step":  { "name": "Paso de la temperatura de consigna" },
+            "temperature_adjustment_max": { "name": "Temperatura máxima" },
             "temperature_adjustment_min": { "name": "Temperatura mínima" },
             "thermostat_temperature_z1":{ "name": "Temperatura del termostato Z1" },
             "thermostat_temperature_z2":{ "name": "Temperatura del termostato Z2" },
@@ -494,6 +494,7 @@
             "domestic_hot_water": { "name": "Agua caliente sanitaria" },
             "domestic_hot_water_boost": { "name": "Boost de agua caliente sanitaria" },
             "eco_mode":           { "name": "Modo Eco" },
+            "identify_request":   { "name": "Solicitud de identificación" },
             "powerful_mode":      { "name": "Modo Powerful" },
             "presence_mode":      { "name": "Modo presencia" },
             "prog_mode":          { "name": "Modo programa" },

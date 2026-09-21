@@ -236,9 +236,11 @@ def test_a_row_that_says_off_arrives_off(capabilityId):
         # reads as temperatures.
         (352, "temperature"),
         (103199, "temperature"),
-        # Flags the corpus reads as 0 on every capture, so only the app says
-        # they have a high state at all.
+        # A flag the corpus reads as 0 on every capture, so only the app says
+        # it has a high state at all.
         (104051, "binary"),
+        # 557 is a room, and a room only reads this one. Which products get
+        # it as a control is test_identify_request.py.
         (100078, "binary"),
         # Still a raw string: the app reads these through a mask or a parser
         # nothing here mirrors.

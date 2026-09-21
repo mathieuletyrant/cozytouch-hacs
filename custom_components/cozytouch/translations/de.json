@@ -226,8 +226,7 @@
             "target_temperature_eco_z1":  { "name": "Solltemperatur Eco Z1" },
             "target_temperature_eco_z2":  { "name": "Solltemperatur Eco Z2" },
             "v40_applied_setpoint":       { "name": "Angewendeter V40-Sollwert" },
-            "v40_setpoint_filled_by_user": { "name": "Vom Benutzer eingegebener V40-Sollwert" },
-            "temperature_adjustment_max": { "name": "Maximaltemperatur" }
+            "v40_setpoint_filled_by_user": { "name": "Vom Benutzer eingegebener V40-Sollwert" }
         },
         "select": {
             "air_circulation_speed":
@@ -466,6 +465,7 @@
             "target_temperature_max":   { "name": "Max. Solltemperatur" },
             "target_temperature_min":   { "name": "Min. Solltemperatur" },
             "target_temperature_step":  { "name": "Schrittweite der Solltemperatur" },
+            "temperature_adjustment_max": { "name": "Maximaltemperatur" },
             "temperature_adjustment_min": { "name": "Mindesttemperatur" },
             "thermostat_temperature_z1":{ "name": "Thermostattemperatur Z1" },
             "thermostat_temperature_z2":{ "name": "Thermostattemperatur Z2" },
@@ -494,6 +494,7 @@
             "domestic_hot_water": { "name": "Warmwasser" },
             "domestic_hot_water_boost": { "name": "Warmwasser-Boost" },
             "eco_mode":           { "name": "Eco-Modus" },
+            "identify_request":   { "name": "Identifikationsanforderung" },
             "powerful_mode":      { "name": "Powerful-Modus" },
             "presence_mode":      { "name": "Anwesenheitsmodus" },
             "prog_mode":          { "name": "Programmmodus" },
