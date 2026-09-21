@@ -174,25 +174,6 @@ DERIVED_TYPES: dict[str, tuple[CozytouchDeviceType, dict]] = {
     "WALL_AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES),
 }
 
-# The interfaces a room hangs off, and what a room behind each one is: its
-# type, its modes, and the word it is named by. The id alone is a room index ;
-# the parent says what is in the room.
-ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict, str]] = {
-    "CESA_V2_MAIN_COMPONENT": (
-        CozytouchDeviceType.THERMOSTAT,
-        CIRCUIT_HVAC_MODES,
-        "Heating circuit",
-    ),
-    # Keyed by modelFamily rather than by ProductType : the vendor assigns the
-    # CozyBox no productId, and issue #172 shows it sending Connectivity_Box.
-    # That is the whole of what separates its radiators from a Navizone's air
-    # conditioners. See docs/decisions.md.
-    "Connectivity_Box": (CozytouchDeviceType.RADIATOR, OFF_HEAT, "Radiator"),
-    "AIR_CONDITIONER": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
-    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
-    "ZONI_CLIM_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
-    "SPLIT_3S_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner"),
-}
 
 # The other half of the vendor's classification : `productId` says which part
 # of an appliance a device is, `modelFamily` says what it heats or cools. Both
@@ -269,6 +250,42 @@ DERIVED_FLAGS: dict[str | None, dict] = {
     "CESA_V2_GENERATOR": _NO_CLIMATE,
 }
 
+# The interfaces a room hangs off, and what a room behind each one is: its
+# type, its modes, and the word it is named by. The id alone is a room index ;
+# the parent says what is in the room.
+ROOM_BEHIND: dict[str | None, tuple[CozytouchDeviceType, dict, str, dict]] = {
+    "CESA_V2_MAIN_COMPONENT": (
+        CozytouchDeviceType.THERMOSTAT,
+        CIRCUIT_HVAC_MODES,
+        "Heating circuit",
+        {},
+    ),
+    # Keyed by modelFamily rather than by ProductType : the vendor assigns the
+    # CozyBox no productId, and issue #172 shows it sending Connectivity_Box.
+    # That is the whole of what separates its radiators from a Navizone's air
+    # conditioners. See docs/decisions.md.
+    "Connectivity_Box": (CozytouchDeviceType.RADIATOR, OFF_HEAT, "Radiator", {}),
+    "AIR_CONDITIONER": (
+        CozytouchDeviceType.AC,
+        AC_HVAC_MODES,
+        "Air Conditioner",
+        _AC_ROOM,
+    ),
+    "NAVI_HUB": (CozytouchDeviceType.AC, AC_HVAC_MODES, "Air Conditioner", _AC_ROOM),
+    "ZONI_CLIM_HUB": (
+        CozytouchDeviceType.AC,
+        AC_HVAC_MODES,
+        "Air Conditioner",
+        _AC_ROOM,
+    ),
+    "SPLIT_3S_HUB": (
+        CozytouchDeviceType.AC,
+        AC_HVAC_MODES,
+        "Air Conditioner",
+        _AC_ROOM,
+    ),
+}
+
 
 def product_type(productId: int | None) -> str | None:
     """The vendor's name for what a productId is, or None for one it skips."""
@@ -319,10 +336,13 @@ def derive(
         # what the branch this replaced did. A room is a clim far more often
         # than not, and refusing to answer would drop the entities of anyone
         # whose gateway is not set up. See docs/decisions.md.
-        deviceType, modes, label = ROOM_BEHIND.get(parent, ROOM_BEHIND["NAVI_HUB"])
-        flags = {**_AC_ROOM, **DERIVED_FLAGS.get(parent, {})} if deviceType is (
-            CozytouchDeviceType.AC
-        ) else DERIVED_FLAGS.get(parent, {})
+        # A room carries its own flags, never its parent's : the interface of
+        # an Alfea has no climate capability and its circuits do, and letting
+        # one inherit the other emptied the circuit's modes. See
+        # docs/decisions.md.
+        deviceType, modes, label, flags = ROOM_BEHIND.get(
+            parent, ROOM_BEHIND["NAVI_HUB"]
+        )
         if label:
             label += f" (#{room_index(productId)})"
         else:
@@ -499,8 +519,8 @@ def narrow_by_capabilities(
     mask = int(float(supported))
     declared = {
         value: mode
-        for value, mode in AC_HVAC_MODES.items()
-        if HVAC_MODE_MASKS[value] & mask
+        for value, mode in modelInfos.HVACModes.items()
+        if value not in HVAC_MODE_MASKS or HVAC_MODE_MASKS[value] & mask
     }
     # A mask that names nothing is a mask that says nothing : the same refusal
     # `climate.py` makes, kept here so both halves answer alike.
