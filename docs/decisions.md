@@ -3758,3 +3758,45 @@ start time and an extension, and no capture here has one to check a decoding
 against.
 
 This leaves the SIF family, fifty-nine ids, which is the whole of what is left.
+
+### The SIF family, forty-one ids, and the end of the pass
+
+The last of the catalogue. What is left after it is 1, 2 and 8, and those are
+the chain's, not the table's.
+
+Ten of the forty-one are `HOME_FirstErrorCodeTable` through
+`HOME_TenthErrorCodeTable`: a fixed ten-slot list of active faults, beside the
+count in 182 and the most important one in 328. They arrive as numbers. The
+fault table in `faults.py` decodes 150, and whether these ten carry the same
+encoding is a question for a device that reports one, not for a row.
+
+**210 to 216 look like a program block and are not.** Seven consecutive
+capabilities, Monday first, named `DHW_ComfortScheduleMonday` and so on: the
+exact shape `PROGRAM_BLOCKS` holds for 196, 203 and 237. The structures
+endpoint says otherwise. The three blocks the calendar builds from use struct
+1, `ScheduleTransition`, which is a time and a setpoint. These use struct 3,
+`ScheduleTimetable`, which is a start and an end and carries no temperature at
+all. They are comfort *windows* rather than setpoint transitions, and the
+calendar platform, the program sensors and the writing services all assume the
+other shape. So they are plain readings, and adding a fourth block to
+`PROGRAM_BLOCKS` would need a decoding nobody has a capture for.
+
+The heating curve comes with its two anchor points named after the outside
+temperature they are measured at -- the flow temperature at -10 °C and at
+20 °C, and two more for cooling at 25 °C and 35 °C -- which is how the vendor
+names them and how an installer reads a curve.
+
+### What the pass covered
+
+Every capability in Atlantic's catalogue now has a row, 405 of them, against
+the 240 the table held when it started. Nothing that was added is enabled by
+default and nothing is writable: the catalogue says what a capability *is*,
+and what the vendor's app lets anybody *do* with it is still only answered by
+a screenshot.
+
+Three ids are deliberately outside it. 1, 2 and 8 are among the four the chain
+reads as carrying an HVAC mode, and a row for one would be unreachable wherever
+the chain claims it. Three more go the other way -- 233, 103450 and 104047 are
+in the table and not in the catalogue, all three seen in real dumps -- which is
+what the notice about unnamed capabilities now means: not "nobody has got to
+this yet" but "no source names this, Atlantic's own included".
