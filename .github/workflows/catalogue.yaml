@@ -27,10 +27,14 @@ jobs:
           python-version: "3.14"
 
       # The script says what it found through its exit code : 0 unchanged,
-      # 1 changed, 2 the fetch failed. Captured here rather than let the step
-      # fail, so the run is red only for 2 -- and so the catalogue is read
-      # once. A retry is a second login, and repeated failed logins are what
-      # could lock the account.
+      # 10 changed, 2 the fetch failed. Captured here rather than let the step
+      # fail, so the run is red only when something is wrong -- and so the
+      # catalogue is read once. A retry is a second login, and repeated failed
+      # logins are what could lock the account.
+      #
+      # "Changed" is 10 and not 1 because Python exits 1 on an uncaught
+      # traceback. It did, on the first run : the import reached for aiohttp,
+      # which a bare runner does not have, and the empty diff opened #144.
       - name: Re-read the catalogue
         id: check
         run: |
@@ -47,8 +51,19 @@ jobs:
           echo "Credentials, or Atlantic is down. Nothing was rewritten."
           exit 1
 
+      # Anything that is not one of the three is the script crashing, and a
+      # crash must not pass for an answer.
+      - name: Fail on an exit code that means nothing
+        if: >-
+          steps.check.outputs.status != '0' &&
+          steps.check.outputs.status != '2' &&
+          steps.check.outputs.status != '10'
+        run: |
+          echo "check_capability_catalogue.py exited ${{ steps.check.outputs.status }}."
+          exit 1
+
       - name: Open an issue with the diff
-        if: steps.check.outputs.status == '1'
+        if: steps.check.outputs.status == '10'
         run: |
           git diff --stat -- scripts/capability_catalogue.jsonl | tail -1
           {
@@ -68,6 +83,7 @@ jobs:
           } > body.md
           gh issue create \
             --title "Atlantic changed the capability catalogue" \
+            --assignee mathieuletyrant \
             --body-file body.md
         env:
           GH_TOKEN: ${{ github.token }}

@@ -18,14 +18,19 @@ from the repository root :
       python3 scripts/check_capability_catalogue.py
     rm -f ~/.cozytouch-pass
 
-Exit code 0 when nothing moved, 1 when the file changed, 2 when the fetch
-itself failed -- which is what `.github/workflows/catalogue.yaml` branches on.
+Exit code 0 when nothing moved, CHANGED when the file changed, UNREACHABLE
+when the fetch itself failed -- which is what `.github/workflows/catalogue.yaml`
+branches on. Neither is 1: Python exits 1 on an uncaught traceback, so a
+crashed run would otherwise read as "Atlantic changed the catalogue" and open
+an issue whose diff is empty. That is exactly what happened on the first run,
+issue #144.
 
 One login, no retry. A refused login is reported and the run stops : repeated
 failed logins are what could lock the account, and a fortnightly job that
 retries is exactly how that would happen unattended.
 """
 
+import importlib.util
 import json
 import os
 import pathlib
@@ -34,13 +39,31 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
-from custom_components.cozytouch.const import (
-    COZYTOUCH_ATLANTIC_API,
-    COZYTOUCH_CLIENT_ID,
-)
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+CATALOGUE = ROOT / "scripts" / "capability_catalogue.jsonl"
 
-CATALOGUE = pathlib.Path(__file__).resolve().parent / "capability_catalogue.jsonl"
+CHANGED = 10
+UNREACHABLE = 2
+
+
+def _const():
+    """`const.py` alone, loaded by path rather than as part of the package.
+
+    Importing `custom_components.cozytouch.const` runs the package's
+    `__init__`, which pulls in aiohttp and Home Assistant. This script runs on
+    a bare runner with neither, and did nothing else for its whole first run.
+    `const.py` itself imports only `enum`.
+    """
+    spec = importlib.util.spec_from_file_location(
+        "cozytouch_const", ROOT / "custom_components" / "cozytouch" / "const.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+COZYTOUCH_ATLANTIC_API = _const().COZYTOUCH_ATLANTIC_API
+COZYTOUCH_CLIENT_ID = _const().COZYTOUCH_CLIENT_ID
 
 
 def password() -> str:
@@ -101,10 +124,10 @@ def main() -> int:
         items = catalogue(token())
     except urllib.error.HTTPError as err:
         print(f"{err.code} from Atlantic: {err.read().decode()[:200]}", file=sys.stderr)
-        return 2
+        return UNREACHABLE
     except OSError as err:
         print(f"could not reach Atlantic: {err}", file=sys.stderr)
-        return 2
+        return UNREACHABLE
 
     # A truncated answer would otherwise land as "Atlantic deleted 300
     # capabilities", which is the one diff nobody should ever be shown.
@@ -113,7 +136,7 @@ def main() -> int:
             f"only {len(items)} capabilities came back; refusing to write.",
             file=sys.stderr,
         )
-        return 2
+        return UNREACHABLE
 
     new = rendered(items)
     old = CATALOGUE.read_text() if CATALOGUE.exists() else ""
@@ -123,7 +146,7 @@ def main() -> int:
 
     CATALOGUE.write_text(new)
     print(f"{len(items)} capabilities, and the catalogue changed.")
-    return 1
+    return CHANGED
 
 
 if __name__ == "__main__":
