@@ -184,7 +184,8 @@ each carrying:
 one filter at a time.
 
 `scripts/fetch_capability_catalogue.py` fetches it, along with the rest of the
-read-only routes of the same three APIs, and saves what answers under `research/data/`,
+read-only routes of the same three APIs, and saves every answer under
+`research/data/endpoints/`, one file per route and the refusals with them,
 which is scratch and not in the repository. What that run established, on 2026-09-22:
 
 | Route | |

@@ -17,10 +17,12 @@ table; re-running this is how to find out whether it still holds.
 Read-only throughout -- every route here is a GET, and the PATCH, PUT, POST and
 DELETE the same APIs declare are deliberately absent.
 
-The catalogues worth keeping are saved under `research/data/`, which is not in
-the repository: they are half a megabyte of vendor JSON that this script
-re-fetches in one call, and what the project keeps is what was *concluded* from
-them, in `docs/decisions.md`. Run from the repository root:
+Every answer is saved under `research/data/endpoints/`, one file per route and
+the refusals with them, because a 403 on the per-device write rule is a finding
+and not a blank. That directory is not in the repository: it is half a megabyte
+of vendor JSON this script re-fetches in one call, and what the project keeps is
+what was *concluded* from it, in `docs/decisions.md`. Run from the repository
+root:
 
     umask 077
     pbpaste > ~/.cozytouch-pass
@@ -37,18 +39,9 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import probe_api
 
-OUT = pathlib.Path(__file__).resolve().parent.parent / "research" / "data"
-
-# What a 200 is worth keeping. The rest are probed for their status and their
-# shape; saving a one-device answer would just age.
-SAVE = {
-    "/magellan/productmodels/capabilities",
-    "/magellan/productmodels/structures",
-    "/magellan/productmodels/families",
-    "/magellan/productmodels/models",
-    "/magellan/productmodels/products",
-    "/magellan/productmodels/productnames",
-}
+OUT = (
+    pathlib.Path(__file__).resolve().parent.parent / "research" / "data" / "endpoints"
+)
 
 # Routes that need nothing but a token.
 FIXED = (
@@ -86,22 +79,36 @@ TEMPLATED = (
 )
 
 
-def report(route: str, status, body) -> None:
-    """Print what a route answered, and save the catalogues worth keeping."""
-    print(f"=== {route} -> {status}")
-    if status != 200 or not isinstance(body, (list, dict)):
-        print(f"    {str(body)[:200]}\n")
-        return
+def filename(route: str) -> str:
+    """One file per route, named after the route itself."""
+    slug = route.strip("/").replace("/", "_").replace("?", "_").replace("=", "-")
+    return slug + ".json"
 
-    if route in SAVE:
-        OUT.mkdir(parents=True, exist_ok=True)
-        name = route.strip("/").replace("/", "_") + ".json"
-        (OUT / name).write_text(json.dumps(body, indent=1, ensure_ascii=False))
-        print(f"    saved -> {OUT.name}/{name}")
+
+def report(route: str, status, body) -> None:
+    """Print what a route answered, and save it whole."""
+    print(f"=== {route} -> {status}")
+
+    OUT.mkdir(parents=True, exist_ok=True)
+    # The status travels with the body: a file holding
+    # `{"code": "900908", ...}` and nothing else does not say whether that was
+    # a refusal or a route answering 200 with a complaint in it.
+    (OUT / filename(route)).write_text(
+        json.dumps(
+            {"route": route, "status": status, "body": body},
+            indent=1,
+            ensure_ascii=False,
+        )
+    )
+
+    if status != 200 or not isinstance(body, (list, dict)):
+        print(f"    {str(body)[:200]}")
+        print(f"    saved -> {filename(route)}\n")
+        return
 
     count = len(body) if isinstance(body, list) else 1
     head = body[0] if isinstance(body, list) and body else body
-    print(f"    {count} items")
+    print(f"    {count} items -> {filename(route)}")
     if isinstance(head, dict):
         print(f"    keys: {sorted(head.keys())}")
         print(f"    sample: {json.dumps(head, ensure_ascii=False)[:300]}")
