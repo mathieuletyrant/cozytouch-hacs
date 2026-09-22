@@ -935,6 +935,12 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:clock-outline",
     ),
+    234: Entity(
+        name="boost_target_temperature",
+        type=CapabilityType.TEMPERATURE,
+        enabled_by_default=True,
+        icon="mdi:thermometer-high",
+    ),
     236: Entity(
         name="max_dhw_schedule_slots_per_day",
         type=CapabilityType.STRING,
@@ -1049,7 +1055,9 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
     ),
     264: Entity(
-        name="condenser_temperature",
+        # Atlantic's own list, and the corpus agrees : 264 < 267 < 266. See
+        # docs/decisions.md.
+        name="tank_bottom_temperature",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
     ),
@@ -1064,7 +1072,7 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
     ),
     267: Entity(
-        name="tank_bottom_temperature",
+        name="tank_average_temperature",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
     ),
@@ -1091,17 +1099,39 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.PERCENTAGE,
         enabled_by_default=True,
     ),
+    278: Entity(
+        # Atlantic names it "puissance electrique instantanee du ballon". One
+        # corpus reading, and it is 0, so the unit is not claimed yet. See
+        # docs/decisions.md.
+        name="dhw_instant_power",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        icon="mdi:flash",
+    ),
     280: Entity(
         name="cold_water_temperature",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
         icon="mdi:coolant-temperature",
     ),
+    281: Entity(
+        name="dhw_heating_demand",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     283: Entity(
         name="off_peak_hours",
         type=CapabilityType.BINARY,
         enabled_by_default=True,
         icon="mdi:clock-outline",
+    ),
+    288: Entity(
+        name="dhw_system_services_state",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     290: Entity(
         name="dhw_error_code",
