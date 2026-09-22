@@ -69,9 +69,19 @@ from custom_components.cozytouch.capability import (
             ),
         ),
         (100004, "49", "temperature, boost_with_fan, boost_without_fan"),
-        # One named bit each, and the corpus only ever shows the others.
+        # Named from the vendor's catalogue, where each of these declares its
+        # whole bit set. Before it, one bit each was named and the rest read
+        # as a count.
         (103034, "16", "antifrost"),
-        (224, "3", "water_flow, unknown (1)"),
+        (
+            103034,
+            "31",
+            (
+                "light_control, restriction_control, central_heating, "
+                "baby_care, antifrost"
+            ),
+        ),
+        (224, "3", "water_temperature, water_flow"),
         # The service space, shared by the id that asks (7) and the one that
         # answers (181). 3 is what an air conditioner cooling reports.
         (7, "3", "cool"),
@@ -97,9 +107,10 @@ from custom_components.cozytouch.capability import (
         (100800, "4", "auto"),
         # Nothing set is a reading of its own, not an empty string.
         (164, "0", "none"),
+        (188, "257", "thermal_comfort, away"),
         # A bit the table does not name is carried through, since these
         # entities exist for the reader chasing exactly that.
-        (188, "257", "thermal_comfort, unknown (256)"),
+        (188, "1025", "thermal_comfort, unknown (1024)"),
         (164, "1040", "electricity_dhw, dhw_production"),
     ],
 )
