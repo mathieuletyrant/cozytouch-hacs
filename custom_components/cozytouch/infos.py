@@ -33,6 +33,7 @@ class CapabilityType(StrEnum):
     DURATION_SELECT = "duration_select"
     ENERGY = "energy"
     FAN = "fan"
+    FLOW_RATE = "flow_rate"
     ERROR_CODE = "error_code"
     INT = "int"
     MINUTES_ADJUSTMENT_NUMBER = "minutes_adjustment_number"
