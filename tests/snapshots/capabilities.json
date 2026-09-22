@@ -86,6 +86,14 @@
     "name": "ventilation_options_available",
     "type": "string"
    },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "zigbee_mac_address",
+    "type": "string"
+   },
    "100078": {
     "capabilityId": 100078,
     "category": "diag",
@@ -331,6 +339,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -388,6 +404,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -435,6 +459,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -570,6 +602,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -594,6 +666,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -601,6 +689,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -754,6 +851,14 @@
     "modelId": 1381,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -1890,6 +1995,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -2065,6 +2187,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -2079,6 +2217,14 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -2153,6 +2299,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -2160,6 +2314,31 @@
     "modelId": 1381,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -2176,6 +2355,14 @@
     "modelId": 1381,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -2360,6 +2547,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -2368,6 +2563,30 @@
     "modelId": 1381,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -2455,12 +2674,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -2470,6 +2705,38 @@
     "modelId": 1381,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -2492,6 +2759,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -2705,6 +2980,14 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -2952,6 +3235,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -3016,6 +3307,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -3063,6 +3362,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -3198,6 +3505,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -3222,6 +3569,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -3229,6 +3592,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -3382,6 +3754,14 @@
     "modelId": 1457,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -4503,6 +4883,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -4678,6 +5075,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -4692,6 +5105,14 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -4766,6 +5187,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -4773,6 +5202,31 @@
     "modelId": 1457,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -4789,6 +5243,14 @@
     "modelId": 1457,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -4973,6 +5435,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -4981,6 +5451,30 @@
     "modelId": 1457,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -5066,12 +5560,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -5081,6 +5591,38 @@
     "modelId": 1457,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -5101,6 +5643,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -5307,6 +5857,14 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -5554,6 +6112,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -5618,6 +6184,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -5665,6 +6239,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -5800,6 +6382,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -5824,6 +6446,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -5831,6 +6469,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -5984,6 +6631,14 @@
     "modelId": 1505,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -7112,6 +7767,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -7287,6 +7959,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -7301,6 +7989,14 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -7375,6 +8071,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -7382,6 +8086,31 @@
     "modelId": 1505,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -7398,6 +8127,14 @@
     "modelId": 1505,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -7582,6 +8319,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -7590,6 +8335,30 @@
     "modelId": 1505,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -7675,12 +8444,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -7690,6 +8475,38 @@
     "modelId": 1505,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -7710,6 +8527,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -7923,6 +8748,14 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -8170,6 +9003,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -8234,6 +9075,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -8281,6 +9130,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -8416,6 +9273,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -8440,6 +9337,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -8447,6 +9360,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -8600,6 +9522,14 @@
     "modelId": 1641,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -9736,6 +10666,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -9911,6 +10858,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -9925,6 +10888,14 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -9999,6 +10970,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -10006,6 +10985,31 @@
     "modelId": 1641,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -10022,6 +11026,14 @@
     "modelId": 1641,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -10206,6 +11218,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -10214,6 +11234,30 @@
     "modelId": 1641,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -10299,12 +11343,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -10314,6 +11374,38 @@
     "modelId": 1641,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -10334,6 +11426,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -10547,6 +11647,14 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -10794,6 +11902,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -10851,6 +11967,14 @@
     "type": "switch"
    },
    "100507": {},
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -10898,6 +12022,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -11033,6 +12165,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -11057,6 +12229,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -11064,6 +12252,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -11217,6 +12414,14 @@
     "modelId": 1734,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -12338,6 +13543,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -12513,6 +13735,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -12527,6 +13765,14 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -12601,6 +13847,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -12608,6 +13862,31 @@
     "modelId": 1734,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -12624,6 +13903,14 @@
     "modelId": 1734,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -12808,6 +14095,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -12816,6 +14111,30 @@
     "modelId": 1734,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -12912,12 +14231,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -12927,6 +14262,38 @@
     "modelId": 1734,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "activityCapabilityId": 100506,
@@ -12958,6 +14325,14 @@
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -13189,6 +14564,14 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -13436,6 +14819,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -13500,6 +14891,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -13547,6 +14946,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -13682,6 +15089,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -13706,6 +15153,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -13713,6 +15176,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -13866,6 +15338,14 @@
     "modelId": 211,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -15016,6 +16496,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -15191,6 +16688,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -15205,6 +16718,14 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -15279,6 +16800,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -15286,6 +16815,31 @@
     "modelId": 211,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -15302,6 +16856,14 @@
     "modelId": 211,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -15486,6 +17048,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -15494,6 +17064,30 @@
     "modelId": 211,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -15560,12 +17154,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -15576,7 +17186,47 @@
     "name": "ambient_compensation_z1",
     "type": "percentage"
    },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
+   },
    "8": {},
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
+   },
    "82": {
     "capabilityId": 82,
     "category": "diag",
@@ -15789,6 +17439,14 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -16036,6 +17694,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -16100,6 +17766,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -16147,6 +17821,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -16282,6 +17964,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -16306,6 +18028,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -16313,6 +18051,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -16466,6 +18213,14 @@
     "modelId": 2374,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -17604,6 +19359,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -17779,6 +19551,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -17793,6 +19581,14 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -17867,6 +19663,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -17874,6 +19678,31 @@
     "modelId": 2374,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -17890,6 +19719,14 @@
     "modelId": 2374,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -18074,6 +19911,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -18082,6 +19927,30 @@
     "modelId": 2374,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -18167,12 +20036,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -18182,6 +20067,38 @@
     "modelId": 2374,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -18202,6 +20119,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -18415,6 +20340,14 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -18662,6 +20595,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -18726,6 +20667,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -18773,6 +20722,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -18908,6 +20865,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -18932,6 +20929,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -18939,6 +20952,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -19092,6 +21114,14 @@
     "modelId": 418,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -20228,6 +22258,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -20403,6 +22450,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -20417,6 +22480,14 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -20491,6 +22562,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -20498,6 +22577,31 @@
     "modelId": 418,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -20514,6 +22618,14 @@
     "modelId": 418,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -20698,6 +22810,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -20706,6 +22826,30 @@
     "modelId": 418,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -20791,12 +22935,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -20806,6 +22966,38 @@
     "modelId": 418,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -20826,6 +23018,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -21039,6 +23239,14 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -21286,6 +23494,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -21343,6 +23559,14 @@
     "type": "switch"
    },
    "100507": {},
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -21390,6 +23614,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -21525,6 +23757,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -21549,6 +23821,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -21556,6 +23844,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -21709,6 +24006,14 @@
     "modelId": 557,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -22830,6 +25135,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -23005,6 +25327,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -23019,6 +25357,14 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -23093,6 +25439,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -23100,6 +25454,31 @@
     "modelId": 557,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -23116,6 +25495,14 @@
     "modelId": 557,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -23300,6 +25687,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -23308,6 +25703,30 @@
     "modelId": 557,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -23404,12 +25823,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -23419,6 +25854,38 @@
     "modelId": 557,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "activityCapabilityId": 100506,
@@ -23450,6 +25917,14 @@
     "targetCapabilityId": 40,
     "targetCoolCapabilityId": 177,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -23663,6 +26138,14 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -23910,6 +26393,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -23974,6 +26465,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -24021,6 +26520,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -24156,6 +26663,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -24180,6 +26727,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -24187,6 +26750,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -24340,6 +26912,14 @@
     "modelId": 56,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -25468,6 +28048,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -25643,6 +28240,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -25657,6 +28270,14 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -25731,6 +28352,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -25738,6 +28367,31 @@
     "modelId": 56,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -25754,6 +28408,14 @@
     "modelId": 56,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -25938,6 +28600,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -25946,6 +28616,30 @@
     "modelId": 56,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -26032,12 +28726,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -26047,6 +28757,38 @@
     "modelId": 56,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -26068,6 +28810,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -26281,6 +29031,14 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -26528,6 +29286,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -26592,6 +29358,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -26639,6 +29413,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -26774,6 +29556,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -26798,6 +29620,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -26805,6 +29643,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -26958,6 +29805,14 @@
     "modelId": 562,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -28094,6 +30949,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -28269,6 +31141,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -28283,6 +31171,14 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -28357,6 +31253,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -28364,6 +31268,31 @@
     "modelId": 562,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -28380,6 +31309,14 @@
     "modelId": 562,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -28564,6 +31501,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -28572,6 +31517,30 @@
     "modelId": 562,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -28657,12 +31626,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -28672,6 +31657,38 @@
     "modelId": 562,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -28692,6 +31709,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -28905,6 +31930,14 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -29152,6 +32185,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -29216,6 +32257,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -29263,6 +32312,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -29398,6 +32455,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -29422,6 +32519,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -29429,6 +32542,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -29582,6 +32704,14 @@
     "modelId": 76,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -30714,6 +33844,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -30889,6 +34036,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -30903,6 +34066,14 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -30977,6 +34148,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -30984,6 +34163,31 @@
     "modelId": 76,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -31000,6 +34204,14 @@
     "modelId": 76,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -31184,6 +34396,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -31192,6 +34412,30 @@
     "modelId": 76,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -31276,12 +34520,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -31291,6 +34551,38 @@
     "modelId": 76,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -31310,6 +34602,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 18,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,
@@ -31523,6 +34823,14 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "ventilation_options_available",
+    "type": "string"
+   },
+   "100044": {
+    "capabilityId": 100044,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "zigbee_mac_address",
     "type": "string"
    },
    "100078": {
@@ -31770,6 +35078,14 @@
     "name": "lifestyle_prog_saturday",
     "type": "string"
    },
+   "100340": {
+    "capabilityId": 100340,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "occupancy_schedule_sunday",
+    "type": "string"
+   },
    "100341": {
     "capabilityId": 100341,
     "category": "diag",
@@ -31834,6 +35150,14 @@
     "name": "eco_mode",
     "type": "switch"
    },
+   "100636": {
+    "capabilityId": 100636,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_mode_b2b",
+    "type": "string"
+   },
    "100800": {
     "capabilityId": 100800,
     "category": "diag",
@@ -31881,6 +35205,14 @@
     "name": "Capability_101",
     "type": "string",
     "value_type": 4
+   },
+   "101302": {
+    "capabilityId": 101302,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outside_temperature_available",
+    "type": "binary"
    },
    "102": {
     "capabilityId": 102,
@@ -32016,6 +35348,46 @@
     "name": "room_controls_capabilities",
     "type": "string"
    },
+   "103114": {
+    "capabilityId": 103114,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_with_fan",
+    "type": "binary"
+   },
+   "103115": {
+    "capabilityId": 103115,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_duration",
+    "type": "time"
+   },
+   "103116": {
+    "capabilityId": 103116,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_duration_max",
+    "type": "time"
+   },
+   "103118": {
+    "capabilityId": 103118,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_without_fan_duration",
+    "type": "time"
+   },
+   "103119": {
+    "capabilityId": 103119,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_with_fan_duration",
+    "type": "time"
+   },
    "103150": {
     "capabilityId": 103150,
     "category": "diag",
@@ -32040,6 +35412,22 @@
     "name": "schedule_anticipation_state",
     "type": "string"
    },
+   "103626": {
+    "capabilityId": 103626,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "flow_temperature_offset_heat",
+    "type": "temperature"
+   },
+   "103627": {
+    "capabilityId": 103627,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "flow_temperature_offset_cool",
+    "type": "temperature"
+   },
    "104": {
     "capabilityId": 104,
     "category": "sensor",
@@ -32047,6 +35435,15 @@
     "name": "Capability_104",
     "type": "string",
     "value_type": 4
+   },
+   "104025": {
+    "capabilityId": 104025,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "zone_maximum_electrical_power",
+    "type": "power"
    },
    "104044": {
     "capabilityId": 104044,
@@ -32200,6 +35597,14 @@
     "modelId": 999999,
     "name": "dhw_temperature",
     "type": "temperature"
+   },
+   "112": {
+    "capabilityId": 112,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "circulator_flow_rate",
+    "type": "flow_rate"
    },
    "113": {
     "capabilityId": 113,
@@ -33336,6 +36741,23 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "308": {
+    "capabilityId": 308,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_smart_grid_level_request",
+    "type": "string"
+   },
+   "309": {
+    "capabilityId": 309,
+    "category": "diag",
+    "displayed_unit_of_measurement": "W",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_smart_grid_power_setpoint",
+    "type": "power"
+   },
    "31": {
     "capabilityId": 31,
     "category": "diag",
@@ -33511,6 +36933,22 @@
     "name": "room_count",
     "type": "string"
    },
+   "345": {
+    "capabilityId": 345,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boiler_error_code",
+    "type": "int"
+   },
+   "346": {
+    "capabilityId": 346,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_minimum_weekly_slots",
+    "type": "int"
+   },
    "347": {
     "capabilityId": 347,
     "category": "diag",
@@ -33525,6 +36963,14 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "weekly_schedule_transitions",
+    "type": "int"
+   },
+   "349": {
+    "capabilityId": 349,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_maximum_weekly_slots",
     "type": "int"
    },
    "350": {
@@ -33599,6 +37045,14 @@
     "name": "thermal_ambiance_scope",
     "type": "string"
    },
+   "359": {
+    "capabilityId": 359,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "thermal_comfort_compatibility",
+    "type": "string"
+   },
    "36": {
     "capabilityId": 36,
     "category": "diag",
@@ -33606,6 +37060,31 @@
     "modelId": 999999,
     "name": "external_input_1",
     "type": "string"
+   },
+   "360": {
+    "capabilityId": 360,
+    "category": "diag",
+    "displayed_unit_of_measurement": "s",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_end_time",
+    "type": "time"
+   },
+   "361": {
+    "capabilityId": 361,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_duration_step",
+    "type": "time"
+   },
+   "362": {
+    "capabilityId": 362,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boost_duration_min",
+    "type": "time"
    },
    "37": {
     "capabilityId": 37,
@@ -33622,6 +37101,14 @@
     "modelId": 999999,
     "name": "external_input_3",
     "type": "string"
+   },
+   "380": {
+    "capabilityId": 380,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outdoor_unit_error_code_cesa",
+    "type": "int"
    },
    "381": {
     "capabilityId": 381,
@@ -33806,6 +37293,14 @@
     "name": "power_consumption",
     "type": "energy"
    },
+   "6": {
+    "capabilityId": 6,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_error_code",
+    "type": "int"
+   },
    "60": {
     "capabilityId": 60,
     "category": "diag",
@@ -33814,6 +37309,30 @@
     "modelId": 999999,
     "name": "total_electricity_consumption",
     "type": "energy"
+   },
+   "61": {
+    "capabilityId": 61,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fuel_heating_consumption",
+    "type": "volume"
+   },
+   "62": {
+    "capabilityId": 62,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fuel_dhw_consumption",
+    "type": "volume"
+   },
+   "63": {
+    "capabilityId": 63,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fuel_total_consumption",
+    "type": "volume"
    },
    "64": {
     "capabilityId": 64,
@@ -33899,12 +37418,28 @@
     "name": "boiler_contact",
     "type": "string"
    },
+   "72": {
+    "capabilityId": 72,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "compressor_modulation",
+    "type": "percentage"
+   },
    "73": {
     "capabilityId": 73,
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "available_thermostat_modes",
+    "type": "string"
+   },
+   "74": {
+    "capabilityId": 74,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "available_thermostat_modes_z2",
     "type": "string"
    },
    "75": {
@@ -33914,6 +37449,38 @@
     "modelId": 999999,
     "name": "ambient_compensation_z1",
     "type": "percentage"
+   },
+   "76": {
+    "capabilityId": 76,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "ambient_compensation_z2",
+    "type": "percentage"
+   },
+   "77": {
+    "capabilityId": 77,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outside_compensation_slope_z1",
+    "type": "string"
+   },
+   "78": {
+    "capabilityId": 78,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outside_compensation_offset_z1",
+    "type": "temperature"
+   },
+   "79": {
+    "capabilityId": 79,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outside_compensation_slope_z2",
+    "type": "string"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -33934,6 +37501,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 40,
     "type": "climate"
+   },
+   "81": {
+    "capabilityId": 81,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "outside_compensation_offset_z2",
+    "type": "temperature"
    },
    "82": {
     "capabilityId": 82,

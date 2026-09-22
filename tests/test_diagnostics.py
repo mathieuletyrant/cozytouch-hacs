@@ -134,7 +134,13 @@ def test_a_mapped_model_carries_its_name_and_type():
 
 
 def test_capabilities_split_into_what_is_named_and_what_is_not():
-    """303 is mapped, 100044 is not; a report needs to show both."""
+    """303 is mapped, 999 is nothing at all; a report needs to show both.
+
+    The unmapped one is an id no device reports and the vendor's catalogue
+    does not declare, rather than one the mapping has not got to yet: the
+    naming pass keeps taking those, and this case is about the split and not
+    about which ids happen to be missing this week.
+    """
     hub = make_hub(
         [
             device(
@@ -142,7 +148,7 @@ def test_capabilities_split_into_what_is_named_and_what_is_not():
                 557,
                 capabilities=[
                     {"capabilityId": 303, "value": "0"},
-                    {"capabilityId": 100044, "value": "[72,88]"},
+                    {"capabilityId": 999, "value": "[72,88]"},
                 ],
             )
         ],
@@ -152,8 +158,8 @@ def test_capabilities_split_into_what_is_named_and_what_is_not():
     caps = Hub.get_diagnostics(hub)["devices"][0]["capabilities"]
 
     assert caps["mapped"][303] == "error_code"
-    assert caps["unmapped"] == [100044]
-    assert caps["values"][100044] == "[72,88]"
+    assert caps["unmapped"] == [999]
+    assert caps["values"][999] == "[72,88]"
 
 
 def test_devices_this_entry_does_not_drive_are_still_described():
