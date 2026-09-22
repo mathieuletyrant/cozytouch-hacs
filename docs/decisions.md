@@ -3316,10 +3316,10 @@ section was a list of bare numbers: these ids are named, these are not. The
 vendor's catalogue is one request away and answers what every one of them is,
 so the dump carries it.
 
-### The whole catalogue, not the gaps
+### Every id the account reports, and only those
 
-The obvious version annotates the *unmapped* ids and stops there, since those
-are what a dump is read for. It is the wrong version.
+Two wrong versions were written before this one, and both are worth stating
+because each is the obvious answer to the other's failure.
 
 An id nobody has named produces no entity, which is visible the moment someone
 looks for it. An id named **wrongly** produces an entity that looks perfectly
@@ -3328,10 +3328,19 @@ whose unit is not what the row claims, an enum member off by one. Nothing in a
 dump has ever made that visible, and nothing would, unless the vendor's type,
 unit and enum members sit beside ours to be compared against.
 
-So the dump carries Atlantic's answer for all 405 ids, once, at the account
-level rather than copied under each device. It costs a request per dump, never
-on the poll, and a couple of hundred kilobytes in a file that exists to be
-read by whoever is answering the report.
+So describing only the gaps is out. But the answer to that was "describe all
+405", and that is wrong in the other direction: the catalogue covers Atlantic's
+whole range -- boilers, heat pumps, ventilation, tanks -- and on the account
+this was measured with, 91 of the 405 are reported and the other 314 describe
+hardware nobody there owns. Shipping them puts the same two hundred kilobytes
+of identical rows in every report on earth, and the catalogue is one request
+away for whoever reads it.
+
+What the dump carries is the vendor's answer for **every id the account's
+devices actually report**, mapped and unmapped alike. Once for the account
+rather than under each device, since two rooms of one installation report the
+same ids. One request per dump, never on the poll, and a failure caches empty
+and moves on.
 
 Each row is cut down to what a reader needs: the internal name, because that
 is what a report can be searched for; the description, because that is what

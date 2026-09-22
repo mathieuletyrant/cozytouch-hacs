@@ -16,6 +16,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from custom_components.cozytouch import diagnostics
 from custom_components.cozytouch.account import CozytouchAccount
 from custom_components.cozytouch.diagnostics import describe
 from custom_components.cozytouch.hub import Hub
@@ -302,19 +303,33 @@ def test_an_enum_arrives_as_its_members():
     assert described["values"] == {"0": "Off", "1": "On"}
 
 
-def test_the_catalogue_is_carried_whole_and_not_only_the_gaps():
-    """An id named *wrongly* makes an entity that looks fine and reads the
-    wrong thing. Carrying only the unmapped ids would leave exactly that
-    unreadable, so the dump carries the vendor's answer for all of them.
+def test_the_dump_describes_every_id_reported_and_only_those():
+    """Two halves of one rule. An id named *wrongly* makes an entity that
+    looks fine and reads the wrong thing, so the mapped ones are described
+    too. And the catalogue covers Atlantic's whole range, so the ids nothing
+    on this account reports are left out rather than shipped in every report.
     """
-    catalogue = {117: catalogue_row(), 999: catalogue_row(id=999)}
-
-    described = {
-        capabilityId: describe(row)
-        for capabilityId, row in sorted(catalogue.items())
+    dump = {
+        "devices": [
+            {
+                "capabilities": {
+                    "mapped": {117: "thermostat_temperature_z1"},
+                    "unmapped": [999],
+                    "values": {117: "19.5", 999: "3"},
+                }
+            }
+        ]
+    }
+    catalogue = {
+        117: catalogue_row(),
+        999: catalogue_row(id=999),
+        # A boiler's, on an account that has no boiler.
+        44: catalogue_row(id=44),
     }
 
-    assert set(described) == {117, 999}
+    described = diagnostics._with_what_atlantic_says(dump, catalogue)
+
+    assert set(described["atlanticSays"]) == {117, 999}
 
 
 def test_a_row_states_only_what_the_catalogue_states():
