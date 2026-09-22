@@ -30,7 +30,6 @@ class CapabilityType(StrEnum):
     AWAY_MODE_TIMESTAMPS = "away_mode_timestamps"
     BINARY = "binary"
     CLIMATE = "climate"
-    DURATION = "duration"
     DURATION_SELECT = "duration_select"
     ENERGY = "energy"
     FAN = "fan"

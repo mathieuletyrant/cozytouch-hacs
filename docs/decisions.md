@@ -3665,9 +3665,12 @@ an unknown reading as three dashes, `---`, which reads as `unknown` -- and it
 is the *zero* on two of the tables and the last member on another, so the row
 is what says which.
 
-`27 HoursRunCompressor` is in seconds where the type's usual unit is minutes,
-so it states its own; `58` and `60` are in kWh where the energy type's usual
-unit is Wh, the same way the rows that already existed do.
+`27 HoursRunCompressor` uses `TIME`, which already *is*
+`SensorDeviceClass.DURATION` in minutes -- a `DURATION` type was written
+beside it before anybody noticed the one that existed had a different name.
+The row states seconds instead, which is what the per-row unit above is for.
+`58` and `60` are in kWh where the energy type's usual unit is Wh, the same
+way the rows that already existed do.
 
 **Id 8 is deliberately not here.** The catalogue calls it
 `HeatingPowerConsumptionExtra2State`, a power in kW. `capability.py` treats 8

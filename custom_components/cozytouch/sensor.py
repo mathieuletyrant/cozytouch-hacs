@@ -712,11 +712,6 @@ SENSOR_BUILDERS = {
         SensorStateClass.TOTAL_INCREASING,
         UnitOfVolume.LITERS,
     ),
-    CapabilityType.DURATION: _unit(
-        SensorDeviceClass.DURATION,
-        SensorStateClass.MEASUREMENT,
-        UnitOfTime.MINUTES,
-    ),
     CapabilityType.POWER: _unit(
         SensorDeviceClass.POWER,
         SensorStateClass.MEASUREMENT,

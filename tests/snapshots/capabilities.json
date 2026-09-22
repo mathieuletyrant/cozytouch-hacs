@@ -1576,7 +1576,7 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -4021,7 +4021,7 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -6462,7 +6462,7 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -8918,7 +8918,7 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -11352,7 +11352,7 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -13862,7 +13862,7 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -16282,7 +16282,7 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -18738,7 +18738,7 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -21172,7 +21172,7 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -23642,7 +23642,7 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -26100,7 +26100,7 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -28552,7 +28552,7 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,
@@ -31006,7 +31006,7 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "compressor_running_time",
-    "type": "duration"
+    "type": "time"
    },
    "270": {
     "capabilityId": 270,

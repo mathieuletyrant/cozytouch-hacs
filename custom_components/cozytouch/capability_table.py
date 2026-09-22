@@ -362,7 +362,7 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     27: Entity(
         name="compressor_running_time",
-        type=CapabilityType.DURATION,
+        type=CapabilityType.TIME,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         extra={"displayed_unit_of_measurement": UnitOfTime.SECONDS},
