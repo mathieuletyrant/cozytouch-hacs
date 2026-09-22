@@ -1175,6 +1175,18 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
     ),
+    254: Entity(
+        name="dhw_setpoint_without_override",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    256: Entity(
+        name="dhw_heat_hot_water_status",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     258: Entity(
         name="tank_capacity",
         type=CapabilityType.VOLUME,
@@ -1253,6 +1265,36 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         icon="mdi:clock-outline",
     ),
+    284: Entity(
+        name="dhw_sg_level_status",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "normal",
+            "1": "switch_on",
+            "2": "switch_off",
+            "3": "forced_on",
+        },
+    ),
+    285: Entity(
+        name="dhw_sg_power_electrical_request",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    286: Entity(
+        name="dhw_sg_electrical_setpoint",
+        type=CapabilityType.INT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    287: Entity(
+        name="dhw_smart_grid_api_connected",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     288: Entity(
         name="dhw_system_services_state",
         type=CapabilityType.STRING,
@@ -1321,12 +1363,42 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    310: Entity(
+        name="dhw_thermal_generator_capabilities",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        bits=(
+            (1, "electric_heater"),
+            (2, "heat_pump"),
+            (4, "boiler"),
+        ),
+    ),
+    311: Entity(
+        name="dhw_smart_grid_request_capabilities",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        bits=(
+            (1, "smart_grid_level_wired"),
+            (2, "schedule_self_consumption"),
+            (4, "smart_grid_level_cloud"),
+            (8, "schedule_from_cloud"),
+            (16, "power_request"),
+        ),
+    ),
     312: Entity(
         # Read-only: the app has a getter and no writer, unlike 231 beside it.
         # See docs/decisions.md.
         name="dhw_current_control_target",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
+    ),
+    313: Entity(
+        name="dhw_self_consumption_status",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     315: Entity(
         name="timezone",
@@ -2148,6 +2220,12 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
         category=CapabilityCategory.DIAG,
+    ),
+    105301: Entity(
+        name="dhw_lowest_water_setpoint",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     105304: Entity(
         name="max_target_temperature_derogation",
