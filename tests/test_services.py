@@ -44,6 +44,11 @@ TRANSLATIONS = (
 PADDING = ",[0,0]" * 8
 
 
+def days(first, value="[[0,17]" + PADDING + "]"):
+    """The seven days of one block, so a hub reads as holding that program."""
+    return {first + day: value for day in range(7)}
+
+
 class FakeHub:
     """A hub that remembers what was written to it."""
 
@@ -373,7 +378,7 @@ def test_an_entry_that_is_not_loaded_says_so_rather_than_looking_missing(
 
 def test_writing_a_week_touches_one_capability_per_day(monkeypatch):
     """Monday is 196 and the block runs in calendar order from there."""
-    hub = FakeHub()
+    hub = FakeHub(days(196))
     hass = make_hass(monkeypatch, hub)
     handler = registered(hass, "set_schedule")
 
@@ -401,7 +406,7 @@ def test_writing_a_week_touches_one_capability_per_day(monkeypatch):
 
 def test_the_cooling_program_is_the_second_block_of_seven(monkeypatch):
     """203 is where the app writes "Refroidissement"."""
-    hub = FakeHub()
+    hub = FakeHub(days(203))
     hass = make_hass(monkeypatch, hub)
     handler = registered(hass, "set_schedule")
 
@@ -421,7 +426,7 @@ def test_the_cooling_program_is_the_second_block_of_seven(monkeypatch):
 
 def test_more_slots_than_the_device_holds_are_refused_by_name(monkeypatch):
     """Past its own limit the cloud truncates the day without saying so."""
-    hass = make_hass(monkeypatch, FakeHub({306: "2"}))
+    hass = make_hass(monkeypatch, FakeHub({306: "2", **days(196)}))
     handler = registered(hass, "set_schedule")
 
     call = call_with(
@@ -461,7 +466,7 @@ def test_reading_a_program_the_device_does_not_have_says_so(monkeypatch):
     hass = make_hass(monkeypatch, FakeHub())
     handler = registered(hass, "get_schedule")
 
-    with pytest.raises(ServiceValidationError, match="203 to 209"):
+    with pytest.raises(ServiceValidationError, match="203 or 100327"):
         asyncio.run(
             handler(call_with(entity_id=["climate.salon"], program="cooling"))
         )

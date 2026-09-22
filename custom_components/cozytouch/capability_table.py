@@ -31,6 +31,14 @@ from .model import CozytouchDeviceType
 # splits them at all.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
+# What the Cozytouch app drags its hot-water cursor between, whichever id the
+# tank stores the setpoint in. See docs/decisions.md.
+_DHW_USER_TARGET_BOUNDS = {
+    "lowestValueCapabilityId": 253,
+    "highestValueCapabilityId": 252,
+    "step": 1,
+}
+
 
 _CONTROL_MODE_BITS = (
     (1, "basic"),
@@ -120,7 +128,8 @@ def hidden_by_a_calendar(capabilityId: int, availableCapabilityIds: set[int]) ->
     return any(
         capabilityId in program_block(first)
         and all(day in availableCapabilityIds for day in program_block(first))
-        for first in PROGRAM_BLOCKS.values()
+        for firsts in PROGRAM_BLOCKS.values()
+        for first in firsts
     )
 
 
@@ -382,17 +391,13 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     22: Entity(
+        # 160/161 are the room's bounds, and a tank that reports its own
+        # answers on 253/252. See docs/decisions.md.
         name="target_temperature_dhw",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
         enabled_by_default=True,
         extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
-        per_model={
-            2374: {
-                "lowestValueCapabilityId": 253,
-                "highestValueCapabilityId": 252,
-                "step": 1,
-            }
-        },
+        per_type={(CozytouchDeviceType.WATER_HEATER,): _DHW_USER_TARGET_BOUNDS},
     ),
     23: Entity(
         name="dhw_comfort_setpoint",
@@ -1639,13 +1644,7 @@ CAPABILITIES: dict[int, Entity] = {
             "lowestValueCapabilityId": 105301,
             "highestValueCapabilityId": 105304,
         },
-        per_model={
-            2374: {
-                "lowestValueCapabilityId": 253,
-                "highestValueCapabilityId": 252,
-                "step": 1,
-            }
-        },
+        per_type={(CozytouchDeviceType.WATER_HEATER,): _DHW_USER_TARGET_BOUNDS},
     ),
     232: Entity(
         name="boost_total_time",

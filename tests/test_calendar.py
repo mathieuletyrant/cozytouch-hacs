@@ -117,13 +117,16 @@ def build(values):
     return entities
 
 
-def calendar_over(day_programs, program="heating"):
+def calendar_over(day_programs, program="heating", first=None):
     """One calendar, over a block whose days are given by weekday index."""
-    first = PROGRAM_BLOCKS[program]
+    first = PROGRAM_BLOCKS[program][0] if first is None else first
     values = {first + day: value for day, value in day_programs.items()}
 
     return CozytouchProgramCalendar(
-        coordinator=make_hub(values), config_uniq_id=SUBENTRY_ID, program=program
+        coordinator=make_hub(values),
+        config_uniq_id=SUBENTRY_ID,
+        program=program,
+        first=first,
     )
 
 
@@ -358,9 +361,16 @@ def test_the_calendars_are_keyed_on_the_entry_and_the_block(program):
     assert calendar.unique_id == f"{DOMAIN}_{SUBENTRY_ID}_{program}_program"
 
 
-@pytest.mark.parametrize(("program", "first"), list(PROGRAM_BLOCKS.items()))
+@pytest.mark.parametrize(
+    ("program", "first"),
+    [
+        (program, first)
+        for program, firsts in PROGRAM_BLOCKS.items()
+        for first in firsts
+    ],
+)
 def test_monday_is_the_first_capability_of_every_block(program, first):
-    """The three runs are seven consecutive ids each, monday first."""
+    """Every run is seven consecutive ids, monday first, wherever it starts."""
     entry = entry_over(make_hub({first + day: stored((0, 17)) for day in range(7)}))
     entities = []
     asyncio.run(
@@ -391,7 +401,7 @@ def test_a_calendar_lands_on_the_same_device_as_the_entities():
 
 def writable(day_programs, program="heating", extra=None):
     """A calendar whose hub records what the edit wrote."""
-    first = PROGRAM_BLOCKS[program]
+    first = PROGRAM_BLOCKS[program][0]
     values = {first + day: value for day, value in day_programs.items()}
     values.update(extra or {})
     written = {}
@@ -406,7 +416,7 @@ def writable(day_programs, program="heating", extra=None):
     hub.async_request_refresh = _noop
 
     calendar = CozytouchProgramCalendar(
-        coordinator=hub, config_uniq_id=SUBENTRY_ID, program=program
+        coordinator=hub, config_uniq_id=SUBENTRY_ID, program=program, first=first
     )
 
     return calendar, written

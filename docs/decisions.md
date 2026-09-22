@@ -3853,3 +3853,97 @@ the vendor's app shows the control, or when somebody reports that the one we
 shipped does nothing. The dump now carries `accessType` per capability, so
 that conversation starts from what Atlantic claims rather than from a guess --
 which is all the field is good for.
+
+## Issue #121 : an Hybrellia the integration could only half drive
+
+One report, one dump, three separate causes. Nothing here is Hybrellia-only
+-- all three are seams that any device of the same shape would hit.
+
+### A weekly program is stored in one of two places
+
+`PROGRAM_BLOCKS` named one first capability per program: 196 for heating, 203
+for cooling, 237 for hot water. The Hybrellia's room slot stores its heating
+week at **100320-100326** and its cooling week at **100327-100333**, and
+reports nothing at 196 or 203. `_reports_the_whole_block` therefore found no
+block, built no calendar, and `set_schedule`/`get_schedule` refused the
+device -- so the fourteen per-day sensors were the only view, and read-only.
+
+The rest of the machinery was already ready for these ids:
+`THERMOSTAT_PROG_IDS` in `capability.py` covers `range(100320, 100334)`, and
+`parse_slots` ignores the third element of the `[minute, setpoint, 0]`
+triplets they carry. Only the address was missing.
+
+A program is now a tuple of candidate runs, and `stored_in(program, reports)`
+picks the one a device holds all seven days of. The runs are tried in order
+and the first whole one wins: no dump has ever shown a device reporting two,
+and if one ever does, the older address is the one every other reader already
+assumes.
+
+Two call sites do not need the device to answer. `hidden_by_a_calendar` and
+the 2.2 migration walk every candidate, since they ask about ids rather than
+about one device; `device_trigger.py` takes the union for the same reason --
+a device holds exactly one run, so the union matches the sensors it has and
+nothing else.
+
+`set_schedule` is stricter than it was as a result: it used to write the
+block whatever the device reported, and now refuses a device that reports
+none of the runs. That is the same condition `get_schedule` already applied,
+and the writes it drops were going nowhere.
+
+### The hot-water setpoint bounds are 253 and 252
+
+Capability 22 read its range from 160/161 and 231 from 105301/105304 -- ids a
+room slot reports and a tank does not. Both fell back to the generic number
+defaults, so the two hot-water sliders offered a range the tank never
+claimed.
+
+The Android app settles it. `IDHWFeature.getMinUserTarget()` and
+`getMaxUserTarget()` read `DHW_MIN_USER_TARGET` and `DHW_MAX_USER_TARGET`,
+which `Capabilities.java` declares as `NSType.MAILB` and `NSType.AXFR` --
+jadx resolving the literals 253 and 252 against a DNS constant table that has
+nothing to do with this app. `CesaV2SteeringView` feeds exactly those two
+into `setMinAbsoluteTarget`/`setMaxAbsoluteTarget`. The dump agrees: 253 = 45,
+252 = 65.
+
+That was already known for one model id, 2374, through a `per_model` entry.
+It is a `per_type` on `WATER_HEATER` now, which covers 2374 and every tank
+after it.
+
+### What the app decides to show, and what we did not take
+
+Worth recording since it was read anyway. `DHW_IHM_CAPABILITIES` (336) is a
+bitfield -- `V40_STATE_OF_CHARGE = 1`, `MAIN_TEMPERATURE_SETPOINT_CURSOR = 2`,
+`SECONDARY_TEMPERATURE_SETPOINT_CURSOR = 4`, `IHM_DATA_INSIDE = 8` -- and the
+app gates each piece of its water-drop screen on one bit, the two cursors
+additionally on 86 not reading OFF. The reporter's 336 is 10, so the app
+shows one setpoint cursor and no eco cursor and no charge gauge.
+
+Nothing was gated on it here. A capability an entity is built from is already
+the condition for that entity existing, and 336 would only add a second,
+weaker one. It is recorded because it explains what a reporter's screenshot
+will and will not contain.
+
+Two names in that enum resolve to id `-100`, `DHW_MODIFIABLE_SETPOINTS` and
+`DHW_CHANGEABLE_TARGET`: the app knows the name and the back end never
+assigned an id. There is nothing to look for.
+
+### A write was undone by the poll it asked for
+
+The reporter could change a setpoint and not the override duration, and the
+difference was never in the capability.
+
+`PENDING_WRITE_GRACE` holds a confirmed write for sixty seconds, so the value
+a user set does not flicker back while the cloud catches up. It was applied
+in `_apply_pending_writes`, called only from `update_devices_from_json_data`
+-- the account-wide setup view. The targeted refresh a write triggers goes
+`fetch_capabilities` -> `store_capabilities`, which replaced the device's
+capabilities wholesale and never replayed the hold.
+
+That path is the one most likely to answer with the old value, since it runs
+seconds after the write. `store_capabilities` applies the hold now, which is
+where it was always meant to be: whichever poll arrives first, the value the
+user set is the value shown until the cloud agrees or the grace runs out.
+
+Why a setpoint looked fine and a duration did not is not settled -- it may be
+no more than how long each takes to propagate. The hold is the mechanism that
+was supposed to cover both, and it was covering neither on this path.

@@ -712,6 +712,23 @@ def test_the_setup_view_takes_over_once_it_agrees(monkeypatch):
     assert account.devices[0]["capabilities"][0]["value"] == "25"
 
 
+def test_the_refresh_a_write_asks_for_does_not_undo_it(monkeypatch):
+    """Issue #121 : the targeted poll is the one most likely to answer stale.
+
+    It runs seconds after the write, through `store_capabilities` rather than
+    the setup view -- the path the hold used to skip, which made a write look
+    refused when it had been accepted.
+    """
+    account, session = connected(monkeypatch)
+    session._answers["writecapability"] = FakeResponse(42, status=201)
+    session._answers["/magellan/executions/"] = FakeResponse({"state": 3})
+    assert asyncio.run(account.write_capability(1, 100, "1")) is True
+
+    account.store_capabilities(1, [{"capabilityId": 100, "value": "18"}])
+
+    assert account.devices[0]["capabilities"][0]["value"] == "1"
+
+
 def test_a_write_nothing_ever_reports_stops_being_held(monkeypatch):
     """A value the cloud accepted and then ignored must not be held forever."""
     account, session = connected(monkeypatch)

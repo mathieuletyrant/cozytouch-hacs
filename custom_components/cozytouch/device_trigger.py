@@ -34,7 +34,7 @@ from homeassistant.helpers.trigger import TriggerActionType, TriggerInfo
 from homeassistant.helpers.typing import ConfigType
 
 from .climate import PRESET_BASIC, PRESET_OVERRIDE, PRESET_PROG
-from .const import DOMAIN, WRITABLE_PROGRAM_BLOCKS, program_block
+from .const import DOMAIN, WRITABLE_PROGRAM_BLOCKS, program_days
 
 # One per program the schedule services know, so the two stay in step.
 SCHEDULE_TRIGGER_TYPES = {
@@ -93,7 +93,9 @@ def _schedule_entity_ids(
 
     Registry ids, so an automation survives a rename.
     """
-    block = program_block(WRITABLE_PROGRAM_BLOCKS[program])
+    # Every run any firmware stores it in : a device holds exactly one of
+    # them, so the union matches the sensors it actually has.
+    block = program_days(program)
 
     registry = er.async_get(hass)
     return [
@@ -143,7 +145,7 @@ async def async_get_triggers(
     triggers += [
         {**base_trigger, CONF_TYPE: trigger_type}
         for trigger_type, program in SCHEDULE_TRIGGER_TYPES.items()
-        if not capabilityIds.isdisjoint(program_block(WRITABLE_PROGRAM_BLOCKS[program]))
+        if not capabilityIds.isdisjoint(program_days(program))
     ]
 
     return triggers

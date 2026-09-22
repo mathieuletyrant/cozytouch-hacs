@@ -109,8 +109,9 @@ def _covered_prog_unique_ids(
     docs/decisions.md.
     """
     covered: set[str] = set()
+    firsts = [first for firsts in PROGRAM_BLOCKS.values() for first in firsts]
     for subentry_id in subentry_ids:
-        for first in PROGRAM_BLOCKS.values():
+        for first in firsts:
             block = {
                 f"{DOMAIN}_{subentry_id}_{capabilityId}"
                 for capabilityId in program_block(first)

@@ -39,8 +39,14 @@ AIR_CIRCULATION_SPEED_HIGH = "high"
 
 # The three weekly programs these devices hold, by the first capability of
 # each seven-day run. Read by the calendar, by the per-day sensors it disables
-# and by the migration that disables them. See docs/decisions.md.
-PROGRAM_BLOCKS = {"heating": 196, "cooling": 203, "hot_water": 237}
+# and by the migration that disables them. A program has more than one
+# candidate run because two firmware families store the same week in different
+# places and no device reports both. See docs/decisions.md.
+PROGRAM_BLOCKS = {
+    "heating": (196, 100320),
+    "cooling": (203, 100327),
+    "hot_water": (237,),
+}
 
 # A block is seven consecutive capabilities, one per day, monday first, so an
 # index into this tuple is an offset from the block's first id.
@@ -57,8 +63,8 @@ PROGRAM_DAYS = (
 # Writing is narrower than reading, deliberately : set_schedule refuses the
 # hot-water block until a capture confirms it. See docs/decisions.md.
 WRITABLE_PROGRAM_BLOCKS = {
-    program: first
-    for program, first in PROGRAM_BLOCKS.items()
+    program: firsts
+    for program, firsts in PROGRAM_BLOCKS.items()
     if program != "hot_water"
 }
 
@@ -66,6 +72,29 @@ WRITABLE_PROGRAM_BLOCKS = {
 def program_block(first: int) -> range:
     """The seven consecutive capability ids one weekly program is stored in."""
     return range(first, first + len(PROGRAM_DAYS))
+
+
+def program_days(program: str) -> frozenset[int]:
+    """Every id any firmware stores this program's days in."""
+    return frozenset(
+        capabilityId
+        for first in PROGRAM_BLOCKS[program]
+        for capabilityId in program_block(first)
+    )
+
+
+def stored_in(program: str, reports) -> int | None:
+    """Where a device holds a program, all seven days of it or nowhere.
+
+    `reports` answers whether one capability id is one the device sends. The
+    runs are tried in order, since no device reports two of them. See
+    docs/decisions.md.
+    """
+    for first in PROGRAM_BLOCKS[program]:
+        if all(reports(day) for day in program_block(first)):
+            return first
+
+    return None
 
 
 SERVICE_VALUES = {
