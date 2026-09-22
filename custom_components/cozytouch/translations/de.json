@@ -521,6 +521,10 @@
             "title": "{device_name} meldet eine Störung",
             "description": "Das Gerät meldet den Fehlercode `{code}`. Atlantic bezeichnet ihn als:\n\n**{label}**\n\nIhre eigenen Reparaturhinweise:\n\n{repair}\n\nFür Home Assistant gibt es hier nichts zu beheben. Dieser Hinweis verschwindet von selbst, sobald das Gerät den Code nicht mehr meldet."
         },
+        "unnamed_capabilities": {
+            "title": "Einige Fähigkeiten sind noch nicht benannt",
+            "description": "{devices} Gerät(e) dieses Kontos melden {count} Fähigkeits-Kennungen, die die Integration noch nicht benennt; sie erreichen Home Assistant daher überhaupt nicht: {ids}.\n\nDas ist eine Lücke in der Zuordnung, kein Fehler der Hardware, und nichts ist kaputt. Wenn Sie möchten, dass sie gelesen werden, öffnen Sie ein Issue und hängen Sie Ihre Diagnosedatei an (Geräteseite, drei Punkte, Diagnose herunterladen). Die Datei enthält Atlantics eigenen Namen, die Beschreibung und die Einheit zu jeder dieser Kennungen, also den größten Teil der Arbeit.\n\nDieser Hinweis verschwindet von selbst, sobald die Zuordnung aufgeholt hat."
+        },
         "unknown_model": {
             "title": "{device_name} ist ein Modell, das diese Integration nicht kennt",
             "fix_flow": {

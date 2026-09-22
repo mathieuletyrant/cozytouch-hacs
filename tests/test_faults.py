@@ -164,7 +164,7 @@ class FakeRegistry:
         self.created = []
         self.deleted = []
         self.issues = {("cozytouch", issue): None for issue in open_issues}
-        self.IssueSeverity = SimpleNamespace(ERROR="error")
+        self.IssueSeverity = SimpleNamespace(ERROR="error", WARNING="warning")
 
     def async_get(self, hass):
         return self
@@ -176,21 +176,55 @@ class FakeRegistry:
         self.deleted.append(issue_id)
 
 
-def entry_reporting(described):
+def entry_reporting(described, unnamed=()):
     """An account entry whose one device reports the given faults."""
     return SimpleNamespace(
         subentries={"sub-1": SimpleNamespace(title="Chaudière")},
         runtime_data=SimpleNamespace(
-            hubs={"sub-1": SimpleNamespace(get_faults=lambda: described)}
+            hubs={
+                "sub-1": SimpleNamespace(
+                    get_faults=lambda: described,
+                    get_capability_names=lambda: ({}, list(unnamed)),
+                )
+            }
         ),
     )
 
 
-def check_faults(monkeypatch, described, open_issues=()):
+def check_faults(monkeypatch, described, open_issues=(), unnamed=()):
     registry = FakeRegistry(open_issues)
     monkeypatch.setattr(repairs, "ir", registry)
-    repairs.async_check_faults(None, entry_reporting(described))
+    repairs.async_check_faults(None, entry_reporting(described, unnamed))
     return registry
+
+
+def test_an_id_nothing_names_asks_for_a_diagnostics_file(monkeypatch):
+    """One notice for the account, not one per device and not one per id:
+    the answer to all of them is the same single file.
+    """
+    registry = check_faults(monkeypatch, {}, unnamed=(305, 104047, 305))
+
+    issue_id, kwargs = registry.created[0]
+    assert issue_id == "unnamed_capabilities"
+    assert kwargs["is_fixable"] is False
+    assert kwargs["translation_placeholders"]["count"] == "2"
+    assert kwargs["translation_placeholders"]["devices"] == "1"
+    assert kwargs["translation_placeholders"]["ids"] == "305, 104047"
+
+
+def test_a_device_whose_ids_are_all_named_raises_nothing(monkeypatch):
+    registry = check_faults(monkeypatch, {})
+
+    assert registry.created == []
+
+
+def test_the_notice_goes_when_the_mapping_catches_up(monkeypatch):
+    """It clears itself, which is the point of raising it at all."""
+    registry = check_faults(
+        monkeypatch, {}, open_issues=("unnamed_capabilities",)
+    )
+
+    assert registry.deleted == ["unnamed_capabilities"]
 
 
 def test_a_fault_raises_a_notice_nobody_is_asked_to_fix(monkeypatch):
