@@ -709,6 +709,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -723,6 +739,14 @@
     "modelId": 1381,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -799,6 +823,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -869,6 +917,14 @@
     "modelId": 1381,
     "name": "override_remain_time",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -951,6 +1007,14 @@
     "modelId": 1381,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -1035,6 +1099,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -1107,6 +1195,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -1300,6 +1396,14 @@
     "category": "diag",
     "modelId": 1381,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -1730,6 +1834,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -1929,6 +2041,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -2057,6 +2185,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -2089,8 +2225,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 1381,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -2165,6 +2309,22 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -2302,6 +2462,14 @@
     "modelId": 1381,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -3169,6 +3337,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -3183,6 +3367,14 @@
     "modelId": 1457,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -3259,6 +3451,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -3329,6 +3545,14 @@
     "modelId": 1457,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -3412,6 +3636,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {},
    "172": {},
    "176": {
@@ -3479,6 +3711,30 @@
     "modelId": 1457,
     "name": "prog_mode",
     "type": "switch"
+   },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "override_remain_time_z2",
+    "type": "time"
    },
    "188": {
     "capabilityId": 188,
@@ -3552,6 +3808,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -3745,6 +4009,14 @@
     "category": "diag",
     "modelId": 1457,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -4175,6 +4447,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -4374,6 +4654,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -4502,6 +4798,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -4534,8 +4838,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 1457,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -4610,6 +4922,22 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -4745,6 +5073,14 @@
     "modelId": 1457,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -5603,6 +5939,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -5617,6 +5969,14 @@
     "modelId": 1505,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -5693,6 +6053,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -5763,6 +6147,14 @@
     "modelId": 1505,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -5845,6 +6237,14 @@
     "modelId": 1505,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -5929,6 +6329,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -6001,6 +6425,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -6186,6 +6618,14 @@
     "category": "diag",
     "modelId": 1505,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -6616,6 +7056,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -6815,6 +7263,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -6943,6 +7407,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -6975,8 +7447,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 1505,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -7051,6 +7531,22 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -7186,6 +7682,14 @@
     "modelId": 1505,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -8051,6 +8555,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -8065,6 +8585,14 @@
     "modelId": 1641,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -8141,6 +8669,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -8211,6 +8763,14 @@
     "modelId": 1641,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -8293,6 +8853,14 @@
     "modelId": 1641,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -8377,6 +8945,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -8449,6 +9041,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -8642,6 +9242,14 @@
     "category": "diag",
     "modelId": 1641,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -9072,6 +9680,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -9271,6 +9887,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -9399,6 +10031,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -9431,8 +10071,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 1641,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -9507,6 +10155,22 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -9642,6 +10306,14 @@
     "modelId": 1641,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -10500,6 +11172,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -10514,6 +11202,14 @@
     "modelId": 1734,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -10590,6 +11286,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -10660,6 +11380,14 @@
     "modelId": 1734,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -10743,6 +11471,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {},
    "172": {},
    "176": {
@@ -10810,6 +11546,30 @@
     "modelId": 1734,
     "name": "prog_mode",
     "type": "switch"
+   },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "override_remain_time_z2",
+    "type": "time"
    },
    "188": {
     "capabilityId": 188,
@@ -10883,6 +11643,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -11076,6 +11844,14 @@
     "category": "diag",
     "modelId": 1734,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -11506,6 +12282,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -11705,6 +12489,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -11833,6 +12633,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -11865,8 +12673,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 1734,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -11941,6 +12757,22 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -12087,6 +12919,14 @@
     "modelId": 1734,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "activityCapabilityId": 100506,
@@ -12981,6 +13821,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -12995,6 +13851,14 @@
     "modelId": 211,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -13063,6 +13927,30 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "mixing_valve_z2",
+    "type": "string"
+   },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_service_type",
     "type": "string"
    },
    "150": {
@@ -13135,6 +14023,14 @@
     "modelId": 211,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -13220,6 +14116,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {
     "capabilityId": 171,
     "category": "diag",
@@ -13302,6 +14206,30 @@
     "modelId": 211,
     "name": "prog_mode",
     "type": "switch"
+   },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "override_remain_time_z2",
+    "type": "time"
    },
    "188": {
     "capabilityId": 188,
@@ -13392,6 +14320,14 @@
     "systemServiceCapabilityId": 102020,
     "targetCapabilityId": 18,
     "type": "climate"
+   },
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
    },
    "200": {
     "capabilityId": 200,
@@ -13586,6 +14522,14 @@
     "category": "diag",
     "modelId": 211,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -14016,6 +14960,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -14215,6 +15167,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -14343,6 +15311,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -14375,8 +15351,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 211,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -14451,6 +15435,22 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -14567,6 +15567,14 @@
     "modelId": 211,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {},
    "82": {
@@ -15413,6 +16421,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -15427,6 +16451,14 @@
     "modelId": 2374,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -15503,6 +16535,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -15573,6 +16629,14 @@
     "modelId": 2374,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -15655,6 +16719,14 @@
     "modelId": 2374,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -15739,6 +16811,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -15811,6 +16907,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -16005,6 +17109,14 @@
     "category": "diag",
     "modelId": 2374,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -16436,6 +17548,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -16635,6 +17755,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -16763,6 +17899,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -16795,8 +17939,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 2374,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -16871,6 +18023,22 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -17006,6 +18174,14 @@
     "modelId": 2374,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -17871,6 +19047,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -17885,6 +19077,14 @@
     "modelId": 418,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -17961,6 +19161,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -18031,6 +19255,14 @@
     "modelId": 418,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -18113,6 +19345,14 @@
     "modelId": 418,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -18197,6 +19437,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -18269,6 +19533,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -18462,6 +19734,14 @@
     "category": "diag",
     "modelId": 418,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -18892,6 +20172,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -19091,6 +20379,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -19219,6 +20523,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -19251,8 +20563,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 418,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -19327,6 +20647,22 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -19462,6 +20798,14 @@
     "modelId": 418,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -20320,6 +21664,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -20334,6 +21694,14 @@
     "modelId": 557,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -20410,6 +21778,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -20480,6 +21872,14 @@
     "modelId": 557,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -20563,6 +21963,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {},
    "172": {},
    "176": {
@@ -20630,6 +22038,30 @@
     "modelId": 557,
     "name": "prog_mode",
     "type": "switch"
+   },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "override_remain_time_z2",
+    "type": "time"
    },
    "188": {
     "capabilityId": 188,
@@ -20703,6 +22135,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -20896,6 +22336,14 @@
     "category": "diag",
     "modelId": 557,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -21326,6 +22774,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -21525,6 +22981,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -21653,6 +23125,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -21685,8 +23165,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 557,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -21761,6 +23249,22 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -21907,6 +23411,14 @@
     "modelId": 557,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "activityCapabilityId": 100506,
@@ -22783,6 +24295,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -22797,6 +24325,14 @@
     "modelId": 56,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -22873,6 +24409,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -22943,6 +24503,14 @@
     "modelId": 56,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -23026,6 +24594,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {
     "capabilityId": 171,
     "category": "diag",
@@ -23101,6 +24677,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -23173,6 +24773,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -23366,6 +24974,14 @@
     "category": "diag",
     "modelId": 56,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -23796,6 +25412,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -23995,6 +25619,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -24123,6 +25763,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -24155,8 +25803,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 56,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -24231,6 +25887,22 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -24367,6 +26039,14 @@
     "modelId": 56,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -25233,6 +26913,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -25247,6 +26943,14 @@
     "modelId": 562,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -25323,6 +27027,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -25393,6 +27121,14 @@
     "modelId": 562,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -25475,6 +27211,14 @@
     "modelId": 562,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -25559,6 +27303,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -25631,6 +27399,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -25824,6 +27600,14 @@
     "category": "diag",
     "modelId": 562,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -26254,6 +28038,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -26453,6 +28245,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -26581,6 +28389,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -26613,8 +28429,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 562,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -26689,6 +28513,22 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -26824,6 +28664,14 @@
     "modelId": 562,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -27689,6 +29537,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -27703,6 +29567,14 @@
     "modelId": 76,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -27771,6 +29643,30 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "mixing_valve_z2",
+    "type": "string"
+   },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_service_type",
     "type": "string"
    },
    "150": {
@@ -27843,6 +29739,14 @@
     "modelId": 76,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -27928,6 +29832,14 @@
     "name": "control_setpoint",
     "type": "temperature"
    },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "signal_quality",
+    "type": "string"
+   },
    "171": {
     "capabilityId": 171,
     "category": "diag",
@@ -28011,6 +29923,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -28083,6 +30019,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -28276,6 +30220,14 @@
     "category": "diag",
     "modelId": 76,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -28706,6 +30658,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -28905,6 +30865,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -29033,6 +31009,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -29065,8 +31049,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 76,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -29141,6 +31133,22 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -29275,6 +31283,14 @@
     "modelId": 76,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,
@@ -30139,6 +32155,22 @@
     "temperatureMin": 15.0,
     "type": "temperature_percent_adjustment_number"
    },
+   "106": {
+    "capabilityId": 106,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "nominal_heating_power",
+    "type": "power"
+   },
+   "107": {
+    "capabilityId": 107,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "nominal_dhw_power",
+    "type": "power"
+   },
    "109": {
     "capabilityId": 109,
     "category": "sensor",
@@ -30153,6 +32185,14 @@
     "modelId": 999999,
     "name": "extra_dhw_power",
     "type": "power"
+   },
+   "110": {
+    "capabilityId": 110,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "boiler_water_temperature_z2",
+    "type": "temperature"
    },
    "111": {
     "capabilityId": 111,
@@ -30229,6 +32269,30 @@
     "name": "mixing_valve_z2",
     "type": "string"
    },
+   "148": {
+    "capabilityId": 148,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "away_period_start",
+    "type": "string"
+   },
+   "149": {
+    "capabilityId": 149,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "away_period_end",
+    "type": "string"
+   },
+   "15": {
+    "capabilityId": 15,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_service_type",
+    "type": "string"
+   },
    "150": {
     "capabilityId": 150,
     "category": "diag",
@@ -30299,6 +32363,14 @@
     "modelId": 999999,
     "name": "override_remain_time_z1",
     "type": "time"
+   },
+   "16": {
+    "capabilityId": 16,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_available",
+    "type": "binary"
    },
    "160": {
     "capabilityId": 160,
@@ -30381,6 +32453,14 @@
     "modelId": 999999,
     "name": "control_setpoint",
     "type": "temperature"
+   },
+   "170": {
+    "capabilityId": 170,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "signal_quality",
+    "type": "string"
    },
    "171": {
     "capabilityId": 171,
@@ -30465,6 +32545,30 @@
     "name": "prog_mode",
     "type": "switch"
    },
+   "185": {
+    "capabilityId": 185,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "prog_mode_z2",
+    "type": "string"
+   },
+   "186": {
+    "capabilityId": 186,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "override_setpoint_activation_z2",
+    "type": "binary"
+   },
+   "187": {
+    "capabilityId": 187,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "override_remain_time_z2",
+    "type": "time"
+   },
    "188": {
     "capabilityId": 188,
     "category": "diag",
@@ -30537,6 +32641,14 @@
     "type": "prog"
    },
    "2": {},
+   "20": {
+    "capabilityId": 20,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "temperature_setpoint_z2",
+    "type": "temperature"
+   },
    "200": {
     "capabilityId": 200,
     "category": "diag",
@@ -30730,6 +32842,14 @@
     "category": "diag",
     "modelId": 999999,
     "name": "absence_dhw_temperature",
+    "type": "temperature"
+   },
+   "23": {
+    "capabilityId": 23,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_comfort_setpoint",
     "type": "temperature"
    },
    "230": {
@@ -31160,6 +33280,14 @@
     "name": "schedule_minimum_interval",
     "type": "time"
    },
+   "3": {
+    "capabilityId": 3,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_profile",
+    "type": "string"
+   },
    "30": {
     "capabilityId": 30,
     "category": "diag",
@@ -31359,6 +33487,22 @@
     "name": "auto_mode_running_state",
     "type": "string"
    },
+   "342": {
+    "capabilityId": 342,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_setpoint_without_override_sif",
+    "type": "temperature"
+   },
+   "343": {
+    "capabilityId": 343,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fuel_tank_capacity",
+    "type": "volume"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -31487,6 +33631,14 @@
     "name": "ble_pairing_compatibility",
     "type": "binary"
    },
+   "39": {
+    "capabilityId": 39,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_eco_setpoint",
+    "type": "temperature"
+   },
    "4": {
     "capabilityId": 4,
     "category": "diag",
@@ -31519,8 +33671,16 @@
     "highestValueCapabilityId": 161,
     "lowestValueCapabilityId": 160,
     "modelId": 999999,
-    "name": "target_temperature_eco_z2",
+    "name": "target_temperature_comfort_z2",
     "type": "temperature_adjustment_number"
+   },
+   "43": {
+    "capabilityId": 43,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "target_temperature_eco_z2",
+    "type": "temperature"
    },
    "44": {
     "capabilityId": 44,
@@ -31595,6 +33755,22 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "compressor",
+    "type": "string"
+   },
+   "52": {
+    "capabilityId": 52,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "circulator_z1",
+    "type": "string"
+   },
+   "53": {
+    "capabilityId": 53,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "circulator_z2",
     "type": "string"
    },
    "56": {
@@ -31730,6 +33906,14 @@
     "modelId": 999999,
     "name": "available_thermostat_modes",
     "type": "string"
+   },
+   "75": {
+    "capabilityId": 75,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "ambient_compensation_z1",
+    "type": "percentage"
    },
    "8": {
     "airCirculationCapabilityId": 102024,

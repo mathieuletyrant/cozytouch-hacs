@@ -243,6 +243,10 @@ _OFF_ON = {"0": "off", "1": "on"}
 # The vendor writes an unknown reading as three dashes, and in two of these
 # tables it is the zero rather than the last member.
 _VALVE = {"0": "off", "1": "opening", "2": "closing", "3": "unknown"}
+# The vendor writes an unknown circulator reading as three dashes, and puts it
+# on the zero rather than at the end.
+_CIRCULATOR = {"0": "unknown", "1": "off", "2": "on"}
+
 _PROFILE = {
     "0": "stop",
     "1": "comfort",
@@ -255,6 +259,13 @@ _PROFILE = {
 }
 
 CAPABILITIES: dict[int, Entity] = {
+    3: Entity(
+        name="dhw_profile",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as=_PROFILE,
+    ),
     4: Entity(
         name="cooling_profile_z1",
         type=CapabilityType.STRING,
@@ -291,6 +302,23 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    15: Entity(
+        name="dhw_service_type",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "instantaneous",
+            "1": "semi_accumulated",
+            "2": "accumulated",
+        },
+    ),
+    16: Entity(
+        name="dhw_available",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     17: Entity(
         # The setpoint actually in force, which is not always the one that was
         # asked for: 40 is what somebody set, this is what the program or an
@@ -314,6 +342,12 @@ CAPABILITIES: dict[int, Entity] = {
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
+    ),
+    20: Entity(
+        name="temperature_setpoint_z2",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     21: Entity(
         name="emergency_mode",
@@ -339,6 +373,12 @@ CAPABILITIES: dict[int, Entity] = {
                 "step": 1,
             }
         },
+    ),
+    23: Entity(
+        name="dhw_comfort_setpoint",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     24: Entity(
         name="compressor_starts",
@@ -423,6 +463,12 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
         reads_as=_ACTIVITY,
     ),
+    39: Entity(
+        name="dhw_eco_setpoint",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     40: Entity(
         name="target_temperature",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
@@ -442,13 +488,19 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     42: Entity(
-        name="target_temperature_eco_z2",
+        name="target_temperature_comfort_z2",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
         enabled_by_default=True,
         extra={
             "lowestValueCapabilityId": 160,
             "highestValueCapabilityId": 161,
         },
+    ),
+    43: Entity(
+        name="target_temperature_eco_z2",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     44: Entity(
         name="ch_power_consumption",
@@ -510,6 +562,20 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         reads_as=_OFF_ON,
+    ),
+    52: Entity(
+        name="circulator_z1",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as=_CIRCULATOR,
+    ),
+    53: Entity(
+        name="circulator_z2",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as=_CIRCULATOR,
     ),
     56: Entity(
         name="mixing_valve_z1",
@@ -637,6 +703,12 @@ CAPABILITIES: dict[int, Entity] = {
             "4": "cooling_and_heating",
             "5": "cooling_and_heating_with_reheat",
         },
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    75: Entity(
+        name="ambient_compensation_z1",
+        type=CapabilityType.PERCENTAGE,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -781,10 +853,28 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=True,
         extra={"value_type": CozytouchCapabilityVariableType.ARRAY},
     ),
+    106: Entity(
+        name="nominal_heating_power",
+        type=CapabilityType.POWER,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    107: Entity(
+        name="nominal_dhw_power",
+        type=CapabilityType.POWER,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     109: Entity(
         name="boiler_water_temperature",
         type=CapabilityType.TEMPERATURE,
         enabled_by_default=True,
+    ),
+    110: Entity(
+        name="boiler_water_temperature_z2",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     111: Entity(
         name="dhw_temperature",
@@ -862,6 +952,18 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         reads_as=_VALVE,
+    ),
+    148: Entity(
+        name="away_period_start",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    149: Entity(
+        name="away_period_end",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     150: Entity(
         name="home_error_code",
@@ -1008,6 +1110,18 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:radio-tower",
     ),
+    170: Entity(
+        name="signal_quality",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "good",
+            "1": "normal",
+            "2": "low",
+            "3": "very_low",
+        },
+    ),
     171: Entity(
         # The cooling half of the absence setpoint, 172 being the heating one.
         # Read-only where 172 is a number. See docs/decisions.md.
@@ -1079,6 +1193,30 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.SWITCH,
         enabled_by_default=True,
         icon="mdi:clock-outline",
+    ),
+    185: Entity(
+        name="prog_mode_z2",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "basic",
+            "1": "prog",
+            "2": "auto",
+            "4": "prog_off",
+        },
+    ),
+    186: Entity(
+        name="override_setpoint_activation_z2",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    187: Entity(
+        name="override_remain_time_z2",
+        type=CapabilityType.TIME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     188: Entity(
         name="home_services",
@@ -1805,6 +1943,18 @@ CAPABILITIES: dict[int, Entity] = {
             "4": "heat",
         },
     ),
+    342: Entity(
+        name="dhw_setpoint_without_override_sif",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    343: Entity(
+        name="fuel_tank_capacity",
+        type=CapabilityType.VOLUME,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     344: Entity(
         name="room_count",
         type=CapabilityType.STRING,
@@ -1884,6 +2034,12 @@ CAPABILITIES: dict[int, Entity] = {
     381: Entity(
         name="ble_pairing_compatibility",
         type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    58773: Entity(
+        name="target_temperature_comfort_z1",
+        type=CapabilityType.TEMPERATURE,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -2557,5 +2713,17 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         icon="mdi:home-thermometer",
+    ),
+    107106: Entity(
+        name="generator_setpoint_mode",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            "4": "schedule",
+            "5": "peak_and_offpeak_schedule",
+            "6": "peak_and_offpeak",
+        },
     ),
 }
