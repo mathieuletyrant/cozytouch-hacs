@@ -328,3 +328,28 @@ def test_a_row_states_only_what_the_catalogue_states():
     assert "unit" not in described
     assert "values" not in described
     assert described["writable"] is False
+
+
+def test_a_suppressed_id_is_not_reported_as_unnamed():
+    """`get_capability_infos` answers None for an id nothing knows and an
+    empty `CapabilityInfos` for one it knows and deliberately does not turn
+    into an entity here. Both are falsy, and reading them the same way filed a
+    decision as a gap.
+    """
+    reported = [
+        # A room behind an air conditioner gateway: 40 is its setpoint, 172
+        # has a row gated on a flag this product does not have, and 999 is
+        # nothing at all.
+        {"capabilityId": 40, "value": "19"},
+        {"capabilityId": 172, "value": "26.5"},
+        {"capabilityId": 999, "value": "1"},
+    ]
+    hub = make_hub(
+        [device(1, 557, capabilities=reported, productId=26)], deviceId=1
+    )
+
+    mapped, suppressed, unmapped = hub.get_capability_names(1)
+
+    assert 40 in mapped
+    assert suppressed == [172]
+    assert unmapped == [999]

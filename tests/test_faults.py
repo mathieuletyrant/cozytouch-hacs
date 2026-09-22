@@ -184,7 +184,7 @@ def entry_reporting(described, unnamed=()):
             hubs={
                 "sub-1": SimpleNamespace(
                     get_faults=lambda: described,
-                    get_capability_names=lambda: ({}, list(unnamed)),
+                    get_capability_names=lambda: ({}, [], list(unnamed)),
                 )
             }
         ),
