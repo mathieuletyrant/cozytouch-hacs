@@ -3643,3 +3643,43 @@ nobody would search for. `DHW_tWaterSetpoint` is not the setpoint -- 22
 already is -- it is the one that applies when no override is running, so it
 says that. And `DHW_AbsMinWaterSetpointLimit` is the lowest the setpoint may
 be set to, which is shorter said than spelled.
+
+### The Heat Pump family, thirty-six ids
+
+The largest family so far, and the first where the generator's names were all
+replaced by hand: it produced `heating_power_consumption_extra1_state` and
+`room_comfort_cooling_target_temperature_state_z1`, which say the same things
+as `extra_heating_power_z1` and `target_temperature_comfort_cool_z1` and match
+nothing else in the table. The zone suffix follows the `_z1`/`_z2` the mapping
+already uses.
+
+What they cover: the compressor and its counters, the three external inputs
+and what each is wired to, the mixing valves, the backup electric heater in
+its two stages, the directional valve and the boiler contact on a hybrid, the
+cooling setpoints per zone and per profile, and two consumption counters.
+
+Four value tables are the vendor's own French, and read in English here:
+`Arret`/`Ouverture`/`Fermeture` on the mixing valves, `Entree EJP` and
+`Entree Heures Creuses` on the external inputs. A fifth thing they do is write
+an unknown reading as three dashes, `---`, which reads as `unknown` -- and it
+is the *zero* on two of the tables and the last member on another, so the row
+is what says which.
+
+`27 HoursRunCompressor` uses `TIME`, which already *is*
+`SensorDeviceClass.DURATION` in minutes -- a `DURATION` type was written
+beside it before anybody noticed the one that existed had a different name.
+The row states seconds instead, which is what the per-row unit above is for.
+`58` and `60` are in kWh where the energy type's usual unit is Wh, the same
+way the rows that already existed do.
+
+**Id 8 is deliberately not here.** The catalogue calls it
+`HeatingPowerConsumptionExtra2State`, a power in kW. `capability.py` treats 8
+as one of the four ids that can carry an HVAC mode, and a model that steers on
+it gets a climate entity from it. Both cannot be true of the same product, and
+which one holds is decided per model by `HVACModesCapabilityId` rather than by
+the catalogue. A row would be unreachable wherever the chain claims it and
+wrong wherever it does not, so 8 waits for a device that reports it.
+
+`180 ErrorCodeUE` is left undecoded. Its enum is forty-odd entries of the form
+`11:Serial communication error`, which is a code and a sentence in one string
+and belongs with the fault table in `faults.py` rather than in a `reads_as`.

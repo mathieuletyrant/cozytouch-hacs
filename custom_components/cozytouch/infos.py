@@ -38,6 +38,7 @@ class CapabilityType(StrEnum):
     INT = "int"
     MINUTES_ADJUSTMENT_NUMBER = "minutes_adjustment_number"
     PERCENTAGE = "percentage"
+    POWER = "power"
     PRESSURE = "pressure"
     PROG = "prog"
     PROGTIME = "progtime"
