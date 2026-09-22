@@ -51,9 +51,14 @@ Boilers, heat pumps, water heaters, towel rails, room air conditioners,
 electric radiators, heating circuits, hot water tanks, gateways and the zones
 of a ducted unit are all recognised this way.
 
-What the API never says is what a *capability* means -- a number on the wire
-with no name and no unit. Naming those is what this project spends its time
-on, and it is done one household at a time, from the dumps people send.
+What a device reports is a list of numbered *capabilities*, and what each
+number means used to be the whole difficulty -- a value on the wire with no
+name and no unit, worked out one household at a time from the dumps people
+send. Atlantic turns out to publish a catalogue of them: 405 capabilities with
+a name, a description, a type, a unit, the bounds and the enum members. It is
+used as a check rather than a replacement, because it names the *capability*
+and not the entity, and it says nothing about which device reports what. The
+reasoning is in `docs/decisions.md`, the routes in `docs/api-surface.md`.
 
 ### ❓ Something is missing or wrong
 
@@ -64,8 +69,10 @@ The form asks for three things, and all three matter:
   `Settings -> Devices & Services -> Cozytouch -> ⋮ -> Download
   diagnostics`. One file covers the whole account: every device the API
   returns, with what it says about each and the value of every capability it
-  reports -- including the devices you have not added. Your credentials and
-  address are stripped out before it is written.
+  reports -- including the devices you have not added. It also carries what
+  Atlantic's own catalogue says about each of those capabilities, which is
+  most of what naming one takes. Your credentials and address are stripped out
+  before it is written.
 - **screenshots of the Cozytouch app** -- its home screen, the device's own
   screen, and the screens behind it. The dump says what a device *reports*;
   only these say what you can actually *do* with it, and the two are not the
@@ -73,6 +80,11 @@ The form asks for three things, and all three matter:
   shows.
 - **what you expected and what you got.** An entity that is not there, one
   reading a value you do not recognise, a control that does nothing.
+
+Home Assistant raises a notice of its own when a device reports capabilities
+nothing names yet, saying which ones and pointing at that form. Nothing is
+broken when it appears -- it is a gap in the mapping, not a fault on the
+hardware -- and it clears itself once the mapping catches up.
 
 If you want to see the unnamed capabilities as entities in the meantime, tick
 `Create entities for unknown capabilities` when adding the account, under
