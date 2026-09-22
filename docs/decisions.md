@@ -3623,3 +3623,23 @@ belongs.
 `67 QGenFlowFromBurnerPump` is named `generator_flow_from_burner_pump` here.
 Its unit is dl/min, which Home Assistant has no unit for, so it is a plain
 reading rather than a flow rate converted on a guess.
+
+### The Water Heater family, ten ids
+
+Six of the ten are smart grid: the level the grid is asking for, whether a
+power request is live, the power setpoint that comes with it, whether the
+cloud has an API to receive requests at all, which of the five request kinds
+the tank supports, and whether self-consumption is running. Atlantic spells
+`SG` where it means smart grid, and the rows spell it out.
+
+**310 `DHW_ThermalGeneratorCapabilities`** is the tank's half of 103026: what
+heats this tank, as a sum -- electric heater, heat pump, boiler. A tank with a
+resistor and a heat pump reports both, which is what makes it a sum rather
+than a choice.
+
+Three names were not taken from the generator that derived the rest.
+`DHW_bSGAPIConnected` came out `dhw_sgapi_connected`, which reads as a word
+nobody would search for. `DHW_tWaterSetpoint` is not the setpoint -- 22
+already is -- it is the one that applies when no override is running, so it
+says that. And `DHW_AbsMinWaterSetpointLimit` is the lowest the setpoint may
+be set to, which is shorter said than spelled.

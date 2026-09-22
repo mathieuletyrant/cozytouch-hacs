@@ -668,6 +668,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -1390,6 +1398,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -1505,6 +1529,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -1593,12 +1649,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1381,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -2757,6 +2837,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -3464,6 +3552,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -3579,6 +3683,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -3667,12 +3803,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1457,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -4820,6 +4980,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -5534,6 +5702,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -5649,6 +5833,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -5737,12 +5953,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1505,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -6897,6 +7137,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -7619,6 +7867,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -7734,6 +7998,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -7822,12 +8118,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1641,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -8975,6 +9295,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -9682,6 +10010,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -9797,6 +10141,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -9885,12 +10261,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 1734,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -11085,6 +11485,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -11821,6 +12229,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -11936,6 +12360,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -12024,12 +12480,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 211,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -13146,6 +13626,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -13870,6 +14358,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -13985,6 +14489,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -14073,12 +14609,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 2374,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -15233,6 +15793,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -15955,6 +16523,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -16070,6 +16654,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -16158,12 +16774,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 418,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -17311,6 +17951,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -18018,6 +18666,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -18133,6 +18797,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -18221,12 +18917,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 557,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -19403,6 +20123,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -20117,6 +20845,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -20232,6 +20976,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -20320,12 +21096,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 56,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -21482,6 +22282,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -22204,6 +23012,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -22319,6 +23143,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -22407,12 +23263,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 562,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -23567,6 +24447,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -24285,6 +25173,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -24400,6 +25304,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -24488,12 +25424,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 76,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
@@ -25646,6 +26606,14 @@
     "name": "water_temperature_limit",
     "type": "temperature"
    },
+   "105301": {
+    "capabilityId": 105301,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_lowest_water_setpoint",
+    "type": "temperature"
+   },
    "105304": {
     "capabilityId": 105304,
     "category": "diag",
@@ -26368,6 +27336,22 @@
     "name": "target_temperature_min",
     "type": "temperature"
    },
+   "254": {
+    "capabilityId": 254,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_setpoint_without_override",
+    "type": "temperature"
+   },
+   "256": {
+    "capabilityId": 256,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_heat_hot_water_status",
+    "type": "binary"
+   },
    "258": {
     "capabilityId": 258,
     "category": "sensor",
@@ -26483,6 +27467,38 @@
     "name": "off_peak_hours",
     "type": "binary"
    },
+   "284": {
+    "capabilityId": 284,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_sg_level_status",
+    "type": "string"
+   },
+   "285": {
+    "capabilityId": 285,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_sg_power_electrical_request",
+    "type": "binary"
+   },
+   "286": {
+    "capabilityId": 286,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_sg_electrical_setpoint",
+    "type": "int"
+   },
+   "287": {
+    "capabilityId": 287,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_smart_grid_api_connected",
+    "type": "binary"
+   },
    "288": {
     "capabilityId": 288,
     "category": "diag",
@@ -26571,12 +27587,36 @@
     "name": "heating_period_min_duration",
     "type": "time"
    },
+   "310": {
+    "capabilityId": 310,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_thermal_generator_capabilities",
+    "type": "string"
+   },
+   "311": {
+    "capabilityId": 311,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_smart_grid_request_capabilities",
+    "type": "string"
+   },
    "312": {
     "capabilityId": 312,
     "category": "sensor",
     "modelId": 999999,
     "name": "dhw_current_control_target",
     "type": "temperature"
+   },
+   "313": {
+    "capabilityId": 313,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_self_consumption_status",
+    "type": "binary"
    },
    "315": {
     "capabilityId": 315,
