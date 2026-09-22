@@ -3334,6 +3334,18 @@ raises one notice per account when any device reports an id the mapping does
 not name -- one for the account and not one per device or per id, because the
 answer to all of them is the same single file.
 
+It opens the device report form rather than the issue list. Somebody arriving
+from a notice has not decided to write a report yet -- they were told by Home
+Assistant -- and a bare list of issues gives them nothing to do. The form is
+what says which three things an answer needs, and it now says in its first
+paragraph that a notice is a legitimate way to have arrived at it, because
+"some capabilities are not named yet" does not sound like "an entity you
+expected is not there", which is how the form describes itself.
+
+A second template was considered and dropped: it would have asked for the same
+device, the same screenshots and the same file, and a fork in the road is one
+more place for a report to end up in the wrong half.
+
 It is not fixable: there is nothing Home Assistant can do about a missing row.
 It says which ids, says plainly that this is a gap in the mapping rather than
 a fault on the hardware, and points at the diagnostics download. It clears

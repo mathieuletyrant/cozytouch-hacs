@@ -14,6 +14,12 @@ from .const import DOMAIN
 
 ISSUE_TRACKER = "https://github.com/mathieuletyrant/cozytouch-hacs/issues"
 
+# The device report form, opened rather than the bare issue list. Somebody
+# arriving from a notice has not decided to write a report yet -- they were
+# told by Home Assistant -- and the form is what says which three things the
+# answer needs. See docs/decisions.md.
+DEVICE_REPORT = ISSUE_TRACKER + "/new?template=device_report.yml"
+
 
 # One issue per device and code, so two faults on one boiler read as two and
 # a cleared one goes away on its own. See docs/decisions.md.
@@ -50,7 +56,7 @@ def async_check_faults(hass: HomeAssistant, entry: ConfigEntry) -> None:
             UNNAMED_ISSUE,
             is_fixable=False,
             severity=ir.IssueSeverity.WARNING,
-            learn_more_url=ISSUE_TRACKER,
+            learn_more_url=DEVICE_REPORT,
             translation_key="unnamed_capabilities",
             translation_placeholders={
                 "count": str(len(unnamed)),
