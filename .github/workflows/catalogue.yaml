@@ -1,0 +1,73 @@
+name: Catalogue
+
+# Atlantic's capability catalogue is where capability_table.py came from, and
+# nothing announces an edit to it. scripts/capability_catalogue.jsonl is what
+# it said last time ; this re-reads it and opens an issue when the two differ.
+#
+# Twice a month. The catalogue moves at the speed of firmware families, so
+# this is already generous -- and each run is one login against a personal
+# account, which is not something to do hourly.
+on:
+  schedule:
+    - cron: "0 6 1,15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  catalogue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      # The script says what it found through its exit code : 0 unchanged,
+      # 1 changed, 2 the fetch failed. Captured here rather than let the step
+      # fail, so the run is red only for 2 -- and so the catalogue is read
+      # once. A retry is a second login, and repeated failed logins are what
+      # could lock the account.
+      - name: Re-read the catalogue
+        id: check
+        run: |
+          set +e
+          python3 scripts/check_capability_catalogue.py
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+        env:
+          COZYTOUCH_USER: ${{ secrets.COZYTOUCH_USER }}
+          COZYTOUCH_PASS: ${{ secrets.COZYTOUCH_PASS }}
+
+      - name: Fail if the catalogue could not be read
+        if: steps.check.outputs.status == '2'
+        run: |
+          echo "Credentials, or Atlantic is down. Nothing was rewritten."
+          exit 1
+
+      - name: Open an issue with the diff
+        if: steps.check.outputs.status == '1'
+        run: |
+          git diff --stat -- scripts/capability_catalogue.jsonl | tail -1
+          {
+            echo "Atlantic's capability catalogue is not what"
+            echo "\`scripts/capability_catalogue.jsonl\` last recorded."
+            echo
+            echo "A new id needs a row in \`capability_table.py\` and a name in"
+            echo "every translation file. A changed enum or unit may mean a"
+            echo "row that is now wrong."
+            echo
+            echo '```diff'
+            git diff -U0 -- scripts/capability_catalogue.jsonl | head -c 40000
+            echo '```'
+            echo
+            echo "Reproduce locally with \`python3 scripts/check_capability_catalogue.py\`."
+            echo "Run ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          } > body.md
+          gh issue create \
+            --title "Atlantic changed the capability catalogue" \
+            --body-file body.md
+        env:
+          GH_TOKEN: ${{ github.token }}
