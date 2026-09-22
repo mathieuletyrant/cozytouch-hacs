@@ -3254,3 +3254,38 @@ inferred from the Android app's write call sites.
 
 Where the catalogue and the table disagree on an *encoding*, the catalogue
 wins. Where they disagree on a *name*, the table wins.
+### The bits the catalogue filled in, and the one it did not settle
+
+Three rows named one bit each and read the rest as `unknown (N)`, because one
+bit each is what a corpus of real values happened to show. The catalogue
+declares their whole sets, and on every one of the three the bit already named
+agrees with it, so these are gaps and not corrections:
+
+- **224 `dhw_estimation_supported`** -- 2 `water_flow` was right; the other six
+  are water, cold water and hot water temperatures, the V40 tank, its energy
+  and its power.
+- **103034 `room_controls_capabilities`** -- 16 `antifrost` was right; light,
+  restriction, central heating and baby care join it.
+- **188 `home_services`** -- the first four were right; 256 is away mode.
+
+**100004 and 100021 are left alone**, and that is the interesting one. The
+catalogue says bit 1 is `HygroControl` and bit 2 is `TemperatureControl`. The
+Android app says the opposite, and says it as literal masks rather than as a
+declaration order:
+
+    TEMPERATURE_IS_CHECKED(1),
+    HYGROMETRY_IS_CHECKED(2),
+
+Two first-party sources, flatly contradicting each other on two bits. The app
+wins here for two reasons. It is what renders the screen a reporter compares
+against, so matching it is what makes a bug report legible. And it knows two
+bits the catalogue does not -- 64 and 128, the blade positions -- which says
+the catalogue's row is the stale one on this particular capability.
+
+Nothing is flipped until a device reports a value that tells them apart: a
+unit with hygrometry and without temperature control, or the reverse. Until
+then the reading stands as the app has it, and this paragraph is why.
+
+Which qualifies the rule above. The catalogue wins on an encoding where it
+is the only source. Where the app contradicts it, the disagreement is the
+finding, and neither side is applied on its own authority.
