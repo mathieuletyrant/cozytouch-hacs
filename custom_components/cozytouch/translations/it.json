@@ -295,7 +295,7 @@
             "away_mode_stop":           { "name": "Fine modalità assenza" },
             "ble_pairing_compatibility": { "name": "Compatibilità accoppiamento BLE" },
             "circuit_driven_by_room":   { "name": "Circuito comandato da una stanza" },
-            "boiler_or_heat_pump":      { "name": "Caldaia o pompa di calore" },
+            "product_type":             { "name": "Tipo di prodotto" },
             "boiler_water_temperature": { "name": "Temperatura acqua caldaia" },
             "boost_mode":               { "name": "Modalità Boost" },
             "boost_target_temperature": { "name": "Temperatura impostata Boost" },
