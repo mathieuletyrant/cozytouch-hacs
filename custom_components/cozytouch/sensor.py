@@ -16,7 +16,6 @@ from homeassistant.components.sensor import (
 from homeassistant.const import (
     PERCENTAGE,
     EntityCategory,
-    UnitOfElectricCurrent,
     UnitOfEnergy,
     UnitOfPressure,
     UnitOfSoundPressure,
@@ -711,11 +710,6 @@ SENSOR_BUILDERS = {
         SensorDeviceClass.WATER,
         SensorStateClass.TOTAL_INCREASING,
         UnitOfVolume.LITERS,
-    ),
-    CapabilityType.CURRENT: _unit(
-        SensorDeviceClass.CURRENT,
-        SensorStateClass.MEASUREMENT,
-        UnitOfElectricCurrent.MICROAMPERE,
     ),
     CapabilityType.FLOW_RATE: _unit(
         SensorDeviceClass.VOLUME_FLOW_RATE,

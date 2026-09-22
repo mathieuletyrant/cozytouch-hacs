@@ -3587,9 +3587,18 @@ The generated rows turned up units the mapping had no type for -- a burner's
 flame current in µA, a flow rate in l/min -- and the first pass dropped them
 to a plain reading, which shows a current as a number with nothing beside it.
 
-Home Assistant covers both: `SensorDeviceClass.CURRENT` has µA among its
-units, and `VOLUME_FLOW_RATE` has L/min. So `CURRENT` and `FLOW_RATE` join
-`CapabilityType`, and no custom unit is invented.
+Home Assistant covers one of the two at the version `hacs.json` declares.
+`VOLUME_FLOW_RATE` has had L/min all along, so `FLOW_RATE` joins
+`CapabilityType` and no custom unit is invented.
+
+µA it does not: `UnitOfElectricCurrent` on 2025.12.0 is `mA` and `A`, and
+`MICROAMPERE` arrives later. A `CURRENT` type was written, and the min-floor
+job in CI refused it -- which is the job doing exactly what it is for. The
+three ways out were a unit the floor does not know, a division by a thousand
+that invents a reading, or raising the floor of the whole integration for one
+burner's flame current. None of them is worth it, so 47 is a plain reading and
+carries a pointer saying why. It becomes a current the day the floor moves for
+a reason of its own.
 
 `_unit()` in `sensor.py` now reads `displayed_unit_of_measurement` off the row
 rather than fixing the unit per type, the way `_energy` already did for Wh

@@ -1876,7 +1876,7 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -3950,7 +3950,7 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -6020,7 +6020,7 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -8105,7 +8105,7 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -10168,7 +10168,7 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -12307,7 +12307,7 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -14356,7 +14356,7 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -16441,7 +16441,7 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -18504,7 +18504,7 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -20603,7 +20603,7 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -22690,7 +22690,7 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -24771,7 +24771,7 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,
@@ -26854,7 +26854,7 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "generator_burner_flame",
-    "type": "current"
+    "type": "string"
    },
    "48": {
     "capabilityId": 48,

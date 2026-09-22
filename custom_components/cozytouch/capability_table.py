@@ -368,8 +368,11 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     47: Entity(
+        # µA, which Home Assistant only gained after the version hacs.json
+        # declares, so this is a plain reading until the floor moves. See
+        # docs/decisions.md.
         name="generator_burner_flame",
-        type=CapabilityType.CURRENT,
+        type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
