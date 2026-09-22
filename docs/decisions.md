@@ -3729,3 +3729,32 @@ Ids 1 and 2 are in this family and are **not** taken, for the reason 8 was not
 taken in the Heat Pump family: `capability.py` treats 1, 2, 7 and 8 as the
 four ids that can carry an HVAC mode, and a model that steers on one gets a
 climate entity from it rather than a row.
+
+### Everything outside SIF, forty-three ids
+
+The BASE and Hybrid families and the thirty-six ids no family declares at all,
+which is most of this batch. Being in no family does not mean being unused --
+`DEVICE_ZigbeeMacAdress`, the boost durations, the outside-temperature
+compensation curves and four energy prices are all in it -- it means the
+catalogue's family list is a partial index rather than a partition.
+
+Two tables are now shared rather than repeated. **359** declares the same nine
+members as 103026, the room's thermal generator, so both read
+`_THERMAL_GENERATOR_BITS`; the vendor's `Reserved` on bit 1 is left out,
+because naming a reserved bit promises it means something. **400** is the
+interfaces a device speaks, also a sum: wifi, zigbee, io-homecontrol,
+bluetooth, opentherm, modbus.
+
+`107078 GENERATOR_BoilerSwitchType` declares three members and labels two of
+them `COP`. Both read `cop` here. The catalogue cannot tell them apart and
+neither can this.
+
+The four prices are in cts/kWh, which has no device class, so they are plain
+readings. The fuel consumptions are in dm³, which is a litre exactly, so they
+are volumes with nothing converted.
+
+`100340 ROOM_OccupancyScheduleSunday_` is a struct and arrives raw: it holds a
+start time and an extension, and no capture here has one to check a decoding
+against.
+
+This leaves the SIF family, fifty-nine ids, which is the whole of what is left.
