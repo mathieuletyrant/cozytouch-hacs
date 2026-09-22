@@ -3151,3 +3151,61 @@ capability were mistyped.
 already builds it only for a device that reports 103199, and a device
 without the feature does not report it. The bit is recorded in
 `research/data/android_bitfields_331.tsv` for the day something needs it.
+
+## Atlantic named eleven capabilities, and two of ours were wrong
+
+`gduteil/cozytouch#146` corrects two tank temperature names against a list
+Atlantic itself published. We carried the same two, inherited from upstream.
+The provenance and the eleven ids are in `docs/api-surface.md`; what follows
+is what the table does with them.
+
+### 264 and 267
+
+264 was `condenser_temperature` and 267 was `tank_bottom_temperature`. There
+is no condenser reading: 264 is the bottom of the tank and 267 is its
+average. 265 and 266, middle and top, were already right.
+
+Our own corpus settles it without needing to trust anybody. On model 1368,
+264 reads 48.50, 267 reads 52.22 and 266 reads 53.36 -- bottom below average
+below top, on one device in one poll. A condenser sitting between the middle
+and the top of a tank's own water, every time, is not a reading anyone would
+defend. The upstream PR adds live behaviour from a ST CUBE WIFI WM 100L: 264
+falls toward inlet temperature during a draw, which is what the bottom of a
+tank does and what a condenser does not.
+
+Unique ids are built from the capability id, so an existing install keeps its
+entities and its recorder history. Only the displayed name moves -- and it
+moves to the truth, which means a dashboard that said "bottom" for 267 was
+already reading the average and nobody could tell.
+
+### The four that were missing
+
+234, 278, 281 and 288 are on Atlantic's list and had no row at all. They have
+one now, with the name Atlantic gave them.
+
+Only 234 claims a type. "Consigne de temperature de l'eau en mode Boost" is a
+temperature, the corpus reads 55.0 on a tank whose setpoints live in that
+range, and that is enough for a `TEMPERATURE` row.
+
+The other three arrive as the unverified-encoding row the house rule
+describes -- `STRING`, `DIAG`, off by default. 278 is the one that hurts:
+"puissance electrique instantanee du ballon" is obviously a power reading and
+there is no `POWER` type here to give it, but the corpus holds exactly one
+sample of it and that sample is `0`. Nothing in that distinguishes watts from
+kilowatts from deciwatts. Naming a unit off a single zero is the failure this
+project has a rule against, so the row carries the name and waits for a
+reading. 281 and 288 are a demand and a state whose encodings nobody has
+seen; one corpus reading each, `0` and `2`.
+
+### What was read and not taken
+
+Issue #129 also records that a capability which disappears from the cloud
+reads as `0.0` here rather than as unavailable, because
+`Hub.get_capability_value` defaults to the string `"0"` when an id is not in
+the device's list. That is still true in this fork, and it is why the May
+outage showed every affected tank sitting at 0 °C instead of going blank.
+
+It is left alone here on purpose. Changing the default touches every sensor
+on every platform, and telling a real zero from an absent id is exactly the
+kind of change that wants its own diff and its own tests. It is the next
+thing to do in this area, not a rider on this one.

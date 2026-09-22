@@ -1175,6 +1175,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 1381,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -1337,7 +1345,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 1381,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -1358,7 +1366,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 1381,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -1392,6 +1400,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 1381,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -1408,6 +1425,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -1415,6 +1440,14 @@
     "modelId": 1381,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -3048,6 +3081,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 1457,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -3210,7 +3251,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 1457,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -3231,7 +3272,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 1457,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -3265,6 +3306,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 1457,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -3281,6 +3331,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -3288,6 +3346,14 @@
     "modelId": 1457,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -4924,6 +4990,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 1505,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -5086,7 +5160,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 1505,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -5107,7 +5181,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 1505,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -5141,6 +5215,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 1505,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -5157,6 +5240,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -5164,6 +5255,14 @@
     "modelId": 1505,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -6808,6 +6907,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 1641,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -6970,7 +7077,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 1641,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -6991,7 +7098,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 1641,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -7025,6 +7132,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 1641,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -7041,6 +7157,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -7048,6 +7172,14 @@
     "modelId": 1641,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -8670,6 +8802,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 1734,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -8832,7 +8972,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 1734,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -8853,7 +8993,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 1734,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -8887,6 +9027,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 1734,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -8903,6 +9052,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -8910,6 +9067,14 @@
     "modelId": 1734,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -10608,6 +10773,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 211,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -10770,7 +10943,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 211,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -10791,7 +10964,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 211,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -10825,6 +10998,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 211,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -10841,6 +11023,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -10848,6 +11038,14 @@
     "modelId": 211,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -12456,6 +12654,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 2374,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -12618,7 +12824,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 2374,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -12639,7 +12845,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 2374,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -12673,6 +12879,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 2374,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -12689,6 +12904,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -12696,6 +12919,14 @@
     "modelId": 2374,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -14340,6 +14571,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 418,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -14502,7 +14741,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 418,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -14523,7 +14762,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 418,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -14557,6 +14796,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 418,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -14573,6 +14821,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -14580,6 +14836,14 @@
     "modelId": 418,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -16202,6 +16466,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 557,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -16364,7 +16636,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 557,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -16385,7 +16657,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 557,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -16419,6 +16691,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 557,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -16435,6 +16716,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -16442,6 +16731,14 @@
     "modelId": 557,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -18100,6 +18397,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 56,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -18262,7 +18567,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 56,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -18283,7 +18588,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 56,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -18317,6 +18622,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 56,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -18333,6 +18647,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -18340,6 +18662,14 @@
     "modelId": 56,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -19986,6 +20316,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 562,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -20148,7 +20486,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 562,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -20169,7 +20507,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 562,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -20203,6 +20541,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 562,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -20219,6 +20566,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -20226,6 +20581,14 @@
     "modelId": 562,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -21866,6 +22229,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 76,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -22028,7 +22399,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 76,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -22049,7 +22420,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 76,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -22083,6 +22454,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 76,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -22099,6 +22479,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -22106,6 +22494,14 @@
     "modelId": 76,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,
@@ -23748,6 +24144,14 @@
     "name": "boost_remaining_time",
     "type": "time"
    },
+   "234": {
+    "capabilityId": 234,
+    "category": "sensor",
+    "icon": "mdi:thermometer-high",
+    "modelId": 999999,
+    "name": "boost_target_temperature",
+    "type": "temperature"
+   },
    "236": {
     "capabilityId": 236,
     "category": "diag",
@@ -23910,7 +24314,7 @@
     "capabilityId": 264,
     "category": "sensor",
     "modelId": 999999,
-    "name": "condenser_temperature",
+    "name": "tank_bottom_temperature",
     "type": "temperature"
    },
    "265": {
@@ -23931,7 +24335,7 @@
     "capabilityId": 267,
     "category": "sensor",
     "modelId": 999999,
-    "name": "tank_bottom_temperature",
+    "name": "tank_average_temperature",
     "type": "temperature"
    },
    "268": {
@@ -23965,6 +24369,15 @@
     "name": "hot_water_available",
     "type": "percentage"
    },
+   "278": {
+    "capabilityId": 278,
+    "category": "diag",
+    "enabled_by_default": false,
+    "icon": "mdi:flash",
+    "modelId": 999999,
+    "name": "dhw_instant_power",
+    "type": "string"
+   },
    "28": {
     "capabilityId": 28,
     "category": "diag",
@@ -23981,6 +24394,14 @@
     "name": "cold_water_temperature",
     "type": "temperature"
    },
+   "281": {
+    "capabilityId": 281,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_heating_demand",
+    "type": "string"
+   },
    "283": {
     "capabilityId": 283,
     "category": "sensor",
@@ -23988,6 +24409,14 @@
     "modelId": 999999,
     "name": "off_peak_hours",
     "type": "binary"
+   },
+   "288": {
+    "capabilityId": 288,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_system_services_state",
+    "type": "string"
    },
    "29": {
     "capabilityId": 29,

@@ -7,7 +7,8 @@ than repeating it.
 The short answer to that question is **no for capabilities, partly for
 devices, and yes for model *names*** -- the last one found on 2026-09-12 and
 corrected below, where this document previously said no catalogue existed at
-all.
+all. There is no capability catalogue either, but Atlantic has stated the
+meaning of eleven ids once, in public; that is its own section below.
 
 ## How to probe
 
@@ -177,6 +178,54 @@ how often a device that is working reports, so nothing here decides when one
 has gone quiet; the dates are surfaced and the judgement is left to whoever
 reads them. Answering that needs dumps from hardware sitting idle, which is
 what putting the dates in the dump is for.
+
+## Atlantic has named eleven ids, once, and only eleven
+
+There is no endpoint, but there is a statement. On 2026-05-28 an account
+posting as Atlantic answered `gduteil/cozytouch#129` with the official
+meaning of eleven capability ids, in French:
+
+| id | what Atlantic calls it |
+| -- | ---------------------- |
+| 234 | consigne de temperature de l'eau en mode Boost |
+| 258 | capacite volumique du ballon |
+| 264 | temperature de l'eau en **bas** du ballon |
+| 265 | temperature de l'eau au **milieu** du ballon |
+| 266 | temperature de l'eau en **haut** du ballon |
+| 267 | temperature **moyenne** de l'eau dans le ballon |
+| 268 | volume restant de V40 dans le ballon |
+| 270 | volume maximal de V40 disponible a la consigne maximale |
+| 278 | puissance electrique instantanee du ballon |
+| 281 | besoin de chauffage de l'ECS |
+| 288 | etat des services ECS du systeme |
+
+This is the only first-party statement of what any capability id means that
+this project has ever had. Everything else here, and every row in
+`capability_table.py`, is reverse-engineered.
+
+**Why it is believable, given the account proves nothing.** It was created in
+2025 with no repositories and no profile, and says only this. What backs it
+is what happened next. On 2026-05-12 the cloud silently dropped nine
+capabilities from every tank on the fleet, and the thread measured exactly
+which ones. Two reporters opened tickets through the Cozytouch app -- one was
+closed as out of scope -- and a third escalated to the OEM asking for the
+backend team. Two weeks later this post appeared, promising the ids back at
+the end of June and listing two the thread had not asked for, 266 and 270.
+On 2026-06-23 they came back, all eleven, counted by a reporter going from 60
+sensors to 71. A promise kept, on the date given, for a set nobody outside
+the backend could have enumerated.
+
+**What it corrects here.** 264 was `condenser_temperature` and 267 was
+`tank_bottom_temperature`, both inherited from upstream and both wrong. The
+capture corpus agrees with Atlantic and not with the old names: on model
+1368, 264 = 48.50, 267 = 52.22, 266 = 53.36 -- bottom below average below
+top, which is stratification and not a condenser. `gduteil/cozytouch#146`
+reports the same ordering live on a ST CUBE WIFI WM 100L, including 264
+dropping toward inlet temperature during a draw.
+
+**What it is not.** Eleven ids of the two hundred and twenty-six this project
+maps, all of them hot-water. Asked in the same thread for the full list,
+Atlantic did not answer. The section above still holds.
 
 ## Devices: the server names only the gateway
 
