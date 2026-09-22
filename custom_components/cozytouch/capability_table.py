@@ -248,6 +248,16 @@ CAPABILITIES: dict[int, Entity] = {
         icon="mdi:air-conditioner",
         reads_as=SERVICE_VALUES,
     ),
+    17: Entity(
+        # The setpoint actually in force, which is not always the one that was
+        # asked for: 40 is what somebody set, this is what the program or an
+        # override left running. A heat pump steers its first zone on this id,
+        # and there _climate_entity claims it before this row is reached.
+        name="control_setpoint",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     19: Entity(
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
@@ -1311,9 +1321,35 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    341: Entity(
+        name="auto_mode_running_state",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            # What it says while the device is not in auto at all, which is
+            # not the same as off.
+            "1": "unavailable",
+            "3": "cool",
+            "4": "heat",
+        },
+    ),
     344: Entity(
         name="room_count",
         type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    347: Entity(
+        name="daily_schedule_transitions",
+        type=CapabilityType.INT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    348: Entity(
+        name="weekly_schedule_transitions",
+        type=CapabilityType.INT,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
@@ -1408,6 +1444,34 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    100014: Entity(
+        # What the device calls itself. Not what model.py classifies on -- it
+        # reads 255 on hardware that types perfectly well from its productId --
+        # so this is a reading and not a source. See docs/decisions.md.
+        name="device_type",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        # A zone is a name and a place in the device tree, not a thing with
+        # readings, and it is the one product that reports this id without
+        # being a device. See docs/decisions.md.
+        absent_on=(CozytouchDeviceType.ZONE,),
+        reads_as={
+            "0": "hub",
+            "1": "thermodynamic_water_heater",
+            "2": "zigbee_interface_indoor_unit_fujitsu",
+            "3": "heat_pump_generator",
+            "4": "thermostat",
+            "5": "electric_water_heater",
+            "6": "electric_panel_heater",
+            "7": "electric_towel_dryer_heater",
+            "8": "electric_floor_heater",
+            "9": "zigbee_interface_plenum",
+            "10": "thermostat_central",
+            "11": "thermostat_local",
+            "255": "unknown",
+        },
+    ),
     100021: Entity(
         name="ventilation_controls_supported",
         type=CapabilityType.STRING,
@@ -1444,6 +1508,28 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
         icon="mdi:bell-ring-outline",
+    ),
+    100100: Entity(
+        # The mode that was asked for, beside 7 which is the one running. Two
+        # of its members are the vendor's own French, and one account reports
+        # the string "None" on it, so it is read and never written.
+        name="requested_thermal_comfort",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            "1": "auto",
+            "3": "cool",
+            "4": "heat",
+            "5": "emergency_heat",
+            "6": "pre_cooling",
+            "7": "fan",
+            "8": "dry",
+            "9": "sleep",
+            "10": "off",
+            "11": "on",
+        },
     ),
     100102: Entity(
         name="adaptive_planning",
@@ -1797,6 +1883,31 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:fan-clock",
         enabled_by_default=False,
+    ),
+    103014: Entity(
+        name="room_type",
+        type=CapabilityType.INT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    103026: Entity(
+        # What drives this room, which capability.py says a room slot cannot
+        # tell you. It can. Read as a sum, since a room can sit in front of
+        # more than one generator. See docs/decisions.md.
+        name="thermal_generator",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        bits=(
+            (2, "air_to_water_heat_pump"),
+            (4, "boiler"),
+            (8, "air_to_air_split_heat_pump"),
+            (16, "electric_panel_heater"),
+            (32, "electric_towel_dryer"),
+            (64, "electric_floor_heater"),
+            (128, "electric_panel_heater_i2g"),
+            (256, "electric_towel_dryer_i2g"),
+        ),
     ),
     103034: Entity(
         name="room_controls_capabilities",

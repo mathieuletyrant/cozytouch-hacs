@@ -46,6 +46,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -86,6 +94,14 @@
     "modelId": 1381,
     "name": "identify_request",
     "type": "switch"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -514,6 +530,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -855,6 +887,14 @@
     "modelId": 1381,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -1640,6 +1680,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -1647,6 +1695,22 @@
     "modelId": 1381,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -1960,6 +2024,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -2000,6 +2072,14 @@
     "modelId": 1457,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -2435,6 +2515,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -2776,6 +2872,14 @@
     "modelId": 1457,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {},
    "172": {},
@@ -3546,6 +3650,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -3553,6 +3665,22 @@
     "modelId": 1457,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -3862,6 +3990,7 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {},
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -3902,6 +4031,14 @@
     "modelId": 1505,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -4337,6 +4474,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -4678,6 +4831,14 @@
     "modelId": 1505,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -5455,6 +5616,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -5462,6 +5631,22 @@
     "modelId": 1505,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -5771,6 +5956,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -5811,6 +6004,14 @@
     "modelId": 1641,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -6246,6 +6447,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -6587,6 +6804,14 @@
     "modelId": 1641,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -7372,6 +7597,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -7379,6 +7612,22 @@
     "modelId": 1641,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -7688,6 +7937,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -7728,6 +7985,14 @@
     "modelId": 1734,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -8156,6 +8421,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -8497,6 +8778,14 @@
     "modelId": 1734,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {},
    "172": {},
@@ -9267,6 +9556,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -9274,6 +9571,22 @@
     "modelId": 1734,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -9623,6 +9936,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -9663,6 +9984,14 @@
     "modelId": 211,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -10098,6 +10427,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -10435,6 +10780,14 @@
     "modelId": 211,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -11238,6 +11591,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -11245,6 +11606,22 @@
     "modelId": 211,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -11516,6 +11893,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -11556,6 +11941,14 @@
     "modelId": 2374,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -11991,6 +12384,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -12332,6 +12741,14 @@
     "modelId": 2374,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -13119,6 +13536,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -13126,6 +13551,22 @@
     "modelId": 2374,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -13435,6 +13876,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -13475,6 +13924,14 @@
     "modelId": 418,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -13910,6 +14367,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -14251,6 +14724,14 @@
     "modelId": 418,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -15036,6 +15517,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -15043,6 +15532,22 @@
     "modelId": 418,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -15352,6 +15857,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -15392,6 +15905,14 @@
     "modelId": 557,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -15820,6 +16341,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -16161,6 +16698,14 @@
     "modelId": 557,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {},
    "172": {},
@@ -16931,6 +17476,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -16938,6 +17491,22 @@
     "modelId": 557,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -17269,6 +17838,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -17309,6 +17886,14 @@
     "modelId": 56,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -17744,6 +18329,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -18085,6 +18686,14 @@
     "modelId": 56,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -18862,6 +19471,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -18869,6 +19486,22 @@
     "modelId": 56,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -19180,6 +19813,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -19220,6 +19861,14 @@
     "modelId": 562,
     "name": "identify_request",
     "type": "switch"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -19655,6 +20304,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -19996,6 +20661,14 @@
     "modelId": 562,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -20781,6 +21454,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -20788,6 +21469,22 @@
     "modelId": 562,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -21097,6 +21794,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -21137,6 +21842,14 @@
     "modelId": 76,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -21571,6 +22284,22 @@
     "name": "Capability_103",
     "type": "string",
     "value_type": 4
+   },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "thermal_generator",
+    "type": "string"
    },
    "103034": {
     "capabilityId": 103034,
@@ -21910,6 +22639,14 @@
     "name": "radio_signal",
     "type": "percentage"
    },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "control_setpoint",
+    "type": "temperature"
+   },
    "171": {
     "capabilityId": 171,
     "category": "diag",
@@ -22694,6 +23431,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -22701,6 +23446,22 @@
     "modelId": 76,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
@@ -23008,6 +23769,14 @@
     "name": "available_schedule_types",
     "type": "string"
    },
+   "100014": {
+    "capabilityId": 100014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "device_type",
+    "type": "string"
+   },
    "100021": {
     "capabilityId": 100021,
     "category": "diag",
@@ -23048,6 +23817,14 @@
     "modelId": 999999,
     "name": "identify_request",
     "type": "binary"
+   },
+   "100100": {
+    "capabilityId": 100100,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "requested_thermal_comfort",
+    "type": "string"
    },
    "100102": {
     "capabilityId": 100102,
@@ -23483,6 +24260,22 @@
     "type": "string",
     "value_type": 4
    },
+   "103014": {
+    "capabilityId": 103014,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "room_type",
+    "type": "int"
+   },
+   "103026": {
+    "capabilityId": 103026,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "thermal_generator",
+    "type": "string"
+   },
    "103034": {
     "capabilityId": 103034,
     "category": "diag",
@@ -23824,6 +24617,14 @@
     "modelId": 999999,
     "name": "radio_signal",
     "type": "percentage"
+   },
+   "17": {
+    "capabilityId": 17,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "control_setpoint",
+    "type": "temperature"
    },
    "171": {
     "capabilityId": 171,
@@ -24609,6 +25410,14 @@
     "name": "water_setpoint_step",
     "type": "string"
    },
+   "341": {
+    "capabilityId": 341,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "auto_mode_running_state",
+    "type": "string"
+   },
    "344": {
     "capabilityId": 344,
     "category": "diag",
@@ -24616,6 +25425,22 @@
     "modelId": 999999,
     "name": "room_count",
     "type": "string"
+   },
+   "347": {
+    "capabilityId": 347,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "daily_schedule_transitions",
+    "type": "int"
+   },
+   "348": {
+    "capabilityId": 348,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "weekly_schedule_transitions",
+    "type": "int"
    },
    "350": {
     "capabilityId": 350,
