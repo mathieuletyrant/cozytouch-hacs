@@ -3468,10 +3468,26 @@ which is what its hardware is.
 
 That is one observation, all of it one kind of gateway, so nothing is rewired
 on it here. The row reads the value as a sum -- the members are powers of two
-and the name is plural, so a room may sit in front of more than one generator
--- and it is a diagnostic until a dump from a room behind a radiator says the
-field moves. If it does, `_room_entity` has a source it was written without,
-and the paragraph above it is wrong rather than cautious.
+and the name is plural, so a room may sit in front of more than one generator.
+
+And on a second look it buys less than the paragraph above `_room_entity`
+makes it sound, which is worth writing down before somebody spends a day on
+it. The modes are already narrowed by 100022, so a room that does not declare
+cooling does not offer it. The capabilities are already asked for one by one
+rather than assumed, so a room without a boost gets no boost. And a room being
+called a room, with a neutral icon, is deliberate: it is what the vendor's own
+client does, and a room is a room whatever heats it.
+
+What is left is `_AC_ROOM`, which every room inherits regardless of what
+drives it -- a `quietModeAvailable` that belongs to an air conditioner, and an
+`ecoModeAvailable: False` decided for the rooms behind a Navizone. A room
+driven by a boiler or a radiator carries both for no reason. That is the whole
+of what 103026 would fix, and a report saying "there is a quiet mode that does
+nothing" would find it just as well.
+
+So it stays a diagnostic. If a dump from a room behind a radiator ever shows
+16, 32 or 64 on it, the change is to skip those flags in `apply_capabilities`,
+where 100022 and 106000 are already read, and nothing else moves.
 
 ### A capability the chain steers on still needs a row
 
@@ -3800,3 +3816,40 @@ the chain claims it. Three more go the other way -- 233, 103450 and 104047 are
 in the table and not in the catalogue, all three seen in real dumps -- which is
 what the notice about unnamed capabilities now means: not "nobody has got to
 this yet" but "no source names this, Atlantic's own included".
+
+## `accessType` answers a different question than "can this be a control"
+
+The catalogue carries an `accessType` bitmask -- Read 1, Refresh 2, Write 4 --
+and declares 217 of its 405 capabilities writable. The table exposes 63 as
+something somebody can set. Nothing about that gap is going to be closed by
+reading the field, and here is why.
+
+**It is wrong in the negative.** Two capabilities this integration has written
+since before any of this carry `accessType 3`, no write bit: `22
+DHW_WaterSetpoint`, the hot water setpoint, and `152 HOME_AwayModeStatus`, the
+away toggle. Both work. So the field does not list everything that can be
+written.
+
+**It is misleading in the positive.** `172 HOME_AwayHeating` carries
+`accessType 7`, and the entry above about the absence setpoint was written
+before the catalogue existed: an air conditioner reports it, stores what is
+written to it, and never reads it back. The API accepted the write. The
+hardware did nothing. That is the definition of a control that writes into the
+void, and the field said yes to it.
+
+What `accessType` answers is whether the *API* will take a write. What decides
+whether an entity should offer one is whether the *device* acts on it, and
+those are different questions. The one endpoint that would answer the second --
+`GET /magellan/capabilities/{capaId}/devices/{deviceId}`, the per-device write
+rule with `isReadOnly` and the bounds for that device -- is 403 on a
+private-person token.
+
+So the 157 capabilities the catalogue calls writable and the table only reads
+stay read-only. Turning them on from this field would reproduce the 172 case a
+hundred and fifty times over, and each one would look like a working control.
+
+The rule does not change: a capability becomes writable when a screenshot of
+the vendor's app shows the control, or when somebody reports that the one we
+shipped does nothing. The dump now carries `accessType` per capability, so
+that conversation starts from what Atlantic claims rather than from a guess --
+which is all the field is good for.
