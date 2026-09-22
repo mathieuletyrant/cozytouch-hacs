@@ -396,6 +396,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -403,6 +411,14 @@
     "modelId": 1381,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -929,6 +945,14 @@
     "modelId": 1381,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -2381,6 +2405,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -2388,6 +2420,14 @@
     "modelId": 1457,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -2899,6 +2939,14 @@
     "modelId": 1457,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -4340,6 +4388,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -4347,6 +4403,14 @@
     "modelId": 1505,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -4873,6 +4937,14 @@
     "modelId": 1505,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -6313,6 +6385,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -6320,6 +6400,14 @@
     "modelId": 1641,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -6846,6 +6934,14 @@
     "modelId": 1641,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -8287,6 +8383,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -8294,6 +8398,14 @@
     "modelId": 1734,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -8805,6 +8917,14 @@
     "modelId": 1734,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -10293,6 +10413,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -10300,6 +10428,14 @@
     "modelId": 211,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -10822,6 +10958,14 @@
     "modelId": 211,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -12250,6 +12394,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -12257,6 +12409,14 @@
     "modelId": 2374,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -12783,6 +12943,14 @@
     "modelId": 2374,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -14233,6 +14401,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -14240,6 +14416,14 @@
     "modelId": 418,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -14766,6 +14950,14 @@
     "modelId": 418,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -16207,6 +16399,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -16214,6 +16414,14 @@
     "modelId": 557,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -16725,6 +16933,14 @@
     "modelId": 557,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -18195,6 +18411,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -18202,6 +18426,14 @@
     "modelId": 56,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -18720,6 +18952,14 @@
     "modelId": 56,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -20170,6 +20410,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -20177,6 +20425,14 @@
     "modelId": 562,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -20703,6 +20959,14 @@
     "modelId": 562,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -22151,6 +22415,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -22158,6 +22430,14 @@
     "modelId": 76,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -22680,6 +22960,14 @@
     "modelId": 76,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,
@@ -24126,6 +24414,14 @@
     "name": "available_fan_speeds",
     "type": "string"
    },
+   "100801": {
+    "capabilityId": 100801,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fan_speed",
+    "type": "string"
+   },
    "100802": {
     "capabilityId": 100802,
     "category": "sensor",
@@ -24133,6 +24429,14 @@
     "modelId": 999999,
     "name": "quiet_mode",
     "type": "switch"
+   },
+   "100803": {
+    "capabilityId": 100803,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "louver_position",
+    "type": "string"
    },
    "100804": {
     "capabilityId": 100804,
@@ -24659,6 +24963,14 @@
     "modelId": 999999,
     "name": "wifi_signal",
     "type": "signal"
+   },
+   "18": {
+    "capabilityId": 18,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "control_setpoint_z2",
+    "type": "temperature"
    },
    "181": {
     "capabilityId": 181,

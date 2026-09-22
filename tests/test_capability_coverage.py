@@ -26,7 +26,7 @@ import re
 
 import pytest
 
-from custom_components.cozytouch import capability_table
+from custom_components.cozytouch import capability, capability_table
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.capability_table import CAPABILITIES
 from custom_components.cozytouch.infos import CapabilityType
@@ -401,3 +401,27 @@ def test_the_mapping_reads_in_ascending_id_order():
         "capability.py branches out of order at "
         f"{[pair for pair in itertools.pairwise(ids) if pair[1] < pair[0]]}"
     )
+
+
+def test_every_id_the_chain_wires_has_a_row():
+    """A capability `capability.py` reads still needs a row of its own.
+
+    The chain wires an id onto the climate entity -- a fan speed, a louver
+    position, a zone's setpoint -- and the table is asked about that id
+    separately, for the reading that sits beside the entity. With no row,
+    `get_capability_infos` answers None, and a capability the integration
+    understands well enough to steer on is filed as one nobody has ever named:
+    it lands in a diagnostics dump's unmapped list and raises the notice that
+    asks its owner to report it.
+    """
+    source = pathlib.Path(capability.__file__).read_text()
+    wired = {
+        int(capabilityId)
+        for capabilityId in re.findall(r"\b(\d{2,6}) in availableCapabilityIds", source)
+    } | {
+        int(capabilityId)
+        for capabilityId in re.findall(r"CapabilityId = (\d{2,6})", source)
+    }
+
+    assert wired, "the scrape found nothing, so it is measuring nothing"
+    assert not wired - set(capability_table.CAPABILITIES)
