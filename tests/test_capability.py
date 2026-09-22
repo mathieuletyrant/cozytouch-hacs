@@ -17,7 +17,10 @@ added later joins these tests on its own.
 
 import pytest
 
-from custom_components.cozytouch.capability import get_capability_infos
+from custom_components.cozytouch.capability import (
+    describe_capability_value,
+    get_capability_infos,
+)
 from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
 
@@ -53,16 +56,19 @@ def test_a_zone_gets_no_wifi_sensor():
     assert zone == {}
 
 
-def test_wifi_connected_is_a_raw_sensor_off_by_default():
-    """218 is `wifiConnected` by name but never reads "1", so a boolean
-    connected sensor was permanently "off". Its 0/4 encoding is unknown, so it
-    is a raw string, off by default, rather than a flag that is always wrong.
+def test_218_is_a_connectivity_code_and_not_a_wifi_flag():
+    """It was mapped as `wifiConnected`, a boolean that read "off" on working
+    hardware because the value is never "1". Atlantic calls it
+    ConnectivityDiagnosis and publishes the codes: the corpus's 0 and 4 are
+    "no error" and "the Navilink interface is offline".
     """
     result = get_capability_infos(get_model_infos(418), 218, "0", {218})
 
-    assert result["name"] == "wifi_connected"
+    assert result["name"] == "connectivity_diagnosis"
     assert result["type"] == "string"
     assert result["enabled_by_default"] is False
+    assert describe_capability_value(218, "0") == "ok"
+    assert describe_capability_value(218, "4") == "interface_offline"
 
 
 def test_a_zone_maps_to_nothing_at_all():

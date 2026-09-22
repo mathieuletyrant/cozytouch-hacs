@@ -836,14 +836,24 @@ CAPABILITIES: dict[int, Entity] = {
         enabled_by_default=False,
     ),
     218: Entity(
-        # `wifiConnected` by name, but never the boolean it looks like : shown
-        # raw and off by default. See docs/decisions.md. A zone gets nothing at
-        # all, having no readings to go with it.
-        name="wifi_connected",
+        # Not a wifi flag and never was: Atlantic calls it
+        # ConnectivityDiagnosis and publishes the seven codes it answers. A
+        # zone gets nothing at all, having no readings to go with it. See
+        # docs/decisions.md.
+        name="connectivity_diagnosis",
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
-        icon="mdi:wifi",
+        icon="mdi:lan-connect",
         absent_on=(CozytouchDeviceType.ZONE,),
+        reads_as={
+            "0": "ok",
+            "1": "product_unreachable_from_bridge",
+            "2": "bridge_offline",
+            "3": "product_unreachable_from_interface",
+            "4": "interface_offline",
+            "5": "cloud_issue",
+            "6": "maintenance",
+        },
         enabled_by_default=False,
     ),
     219: Entity(

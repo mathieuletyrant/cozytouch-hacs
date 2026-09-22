@@ -1087,9 +1087,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 1381,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -3057,9 +3057,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 1457,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -7004,9 +7004,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 1641,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -8963,9 +8963,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 1734,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -10998,9 +10998,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 211,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -12941,9 +12941,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 2374,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -14924,9 +14924,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 418,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -16883,9 +16883,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 557,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -18878,9 +18878,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 56,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -20861,9 +20861,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 562,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -22838,9 +22838,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 76,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {
@@ -24817,9 +24817,9 @@
     "capabilityId": 218,
     "category": "diag",
     "enabled_by_default": false,
-    "icon": "mdi:wifi",
+    "icon": "mdi:lan-connect",
     "modelId": 999999,
-    "name": "wifi_connected",
+    "name": "connectivity_diagnosis",
     "type": "string"
    },
    "219": {

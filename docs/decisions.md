@@ -166,26 +166,45 @@ without being down.
 
 ## `custom_components/cozytouch/capability.py`
 
-### Capability 218 `wifiConnected` is shown raw, not as a connected/off flag
+### Capability 218 is a connectivity code, and was never a wifi flag
 
-218 is `wifiConnected` by name, and was mapped as a boolean binary sensor
-whose `is_on` is `value == "1"`. It reads permanently "disconnected" on
-working hardware, because the value is never "1": across 42 models in the
-capture corpus it is "0" (92 readings) or "4" (6), never "1". A device
-plainly online with a -62 dB wifi signal still read "off", and so did every
-unit sitting behind a gateway with no radio of its own.
+218 was mapped as a boolean binary sensor whose `is_on` was `value == "1"`.
+It read permanently "disconnected" on working hardware, because the value is
+never "1": across 42 models in the capture corpus it is "0" (92 readings) or
+"4" (6), never "1". It was then surfaced raw and off by default, with this
+entry saying plainly that nothing decoded the 0/4 value space -- not the
+decompiled Dart, not the Kotlin SDK, not any reflected enum, which confirmed
+only the name: id 218 -> case 2 -> `wifiConnected`.
 
-The app does not use 218 for this at all — it reads a device's `isAvailable`
-field for connectivity. And nothing decodes the 0/4 value space: it is not
-referenced in the decompiled Dart or the Kotlin SDK, and no reflected enum
-covers it (the parser confirms only the name, id 218 → case 2 → wifiConnected).
+That name was the whole problem. Atlantic's own catalogue calls 218
+`ConnectivityDiagnosis`, "Defines the connectivity of our system", and
+publishes the codes it answers at
+`GET /magellan/productmodels/connectivitydiagnosis` -- seven of them, each
+with a description and the vendor's own troubleshooting text:
 
-So the honest reading is that we do not know what 218 encodes. It is surfaced
-raw and `enabled_by_default` False rather than as a flag that is always
-wrong; account reachability is the connectivity binary sensor, and a proper
-per-device connectivity sensor would come from `isAvailable`, the way the app
-does it. The `4` reading is still unexplained. Research in
-`research/FINDINGS.md`.
+| | |
+| --- | --- |
+| 0 | connectivity OK, no error |
+| 1 | the product is unreachable, and the Cozytouch bridge is fine |
+| 2 | the Cozytouch bridge is offline |
+| 3 | the product is unreachable, and the Navilink interface is fine |
+| 4 | the Navilink interface is offline |
+| 5 | a technical issue in Atlantic's cloud |
+| 6 | maintenance |
+
+So the corpus reads exactly as it should: 92 devices saying "no error" and 6
+saying "the Navilink interface this hangs off is offline". Nothing was ever
+broken about the value; the mapping was asking it a question it does not
+answer.
+
+The row is renamed and reads its codes. It stays a diagnostic and stays off
+by default: per-device reachability is still `isAvailable`, which is what the
+app uses, and this is a fault code rather than a live link state. A zone
+still gets nothing at all, having no readings to go with it.
+
+The rename changes what the entity is called for anybody who had enabled it.
+Its unique id is built from the capability id and does not move, so no history
+is lost, and the old name asserted something false.
 
 ### An electric heater's action is the element (153), not the mode (181)
 
