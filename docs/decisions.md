@@ -3546,3 +3546,23 @@ the products sit in are the families that column already names.
 
 The products table is kept as the check it is: it confirmed the ROOM block
 runs 97 to 111 and that there is no gateway at 98, which is its own commit.
+
+### Four enums the catalogue decodes, and one rename
+
+Four rows carried a name and a type and let the value through as the number it
+came as, because nothing said what the number meant. The catalogue declares an
+enum for each.
+
+- **120** is the rename. It was `boiler_or_heat_pump`, which offered two
+  answers to a capability Atlantic calls `ProductType` and gives twelve
+  members: the whole range, from a convector to a double-flow ventilation unit
+  to a zone controller. The name asserted a choice the field does not make, so
+  it is now `product_type` and reads the member. It is a diagnostic and off by
+  default, so the rename costs a display name and no history.
+- **288** `DHW_stWaterHeaterServiceStatus` -- off, off with frost protection,
+  on, on reduced. Four states where a reading of 1 used to be a 1.
+- **351** is read as a *sum*, not looked up: the name is plural and the one
+  member the catalogue declares sits on bit 1.
+- **100300** `ROOM_idxStartOfWeek` -- which day the thermostat counts a week
+  from, Sunday being 0. Worth having as a word rather than a number, since
+  reading a weekly program depends on it.

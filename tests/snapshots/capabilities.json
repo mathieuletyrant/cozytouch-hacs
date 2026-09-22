@@ -748,7 +748,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1381,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -2757,7 +2757,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1457,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -4740,7 +4740,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1505,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -6737,7 +6737,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1641,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -8735,7 +8735,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 1734,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -10759,7 +10759,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 211,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -12746,7 +12746,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 2374,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -14753,7 +14753,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 418,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -16751,7 +16751,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 557,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -18763,7 +18763,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 56,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -20762,7 +20762,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 562,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -22761,7 +22761,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 76,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {
@@ -24766,7 +24766,7 @@
     "category": "diag",
     "enabled_by_default": false,
     "modelId": 999999,
-    "name": "boiler_or_heat_pump",
+    "name": "product_type",
     "type": "string"
    },
    "121": {

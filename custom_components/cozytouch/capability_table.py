@@ -530,10 +530,27 @@ CAPABILITIES: dict[int, Entity] = {
         valid_above=-327.68,
     ),
     120: Entity(
-        name="boiler_or_heat_pump",
+        # Atlantic calls it ProductType, and it answers for the whole range
+        # rather than the two things the old name offered. See
+        # docs/decisions.md.
+        name="product_type",
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        reads_as={
+            "0": "accumulation_domestic_hot_water",
+            "1": "air_conditioning",
+            "2": "boiler",
+            "3": "convector",
+            "4": "double_flow_ventilation",
+            "5": "heat_pump",
+            "6": "heater",
+            "7": "hybrid",
+            "8": "single_flow_ventilation",
+            "9": "thermodynamic_domestic_hot_water",
+            "10": "zone_controller",
+            "11": "undefined",
+        },
     ),
     121: Entity(
         name="version",
@@ -1170,6 +1187,12 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            "1": "off_antifrost",
+            "2": "on",
+            "3": "on_reduced",
+        },
     ),
     290: Entity(
         name="dhw_error_code",
@@ -1384,6 +1407,9 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        # Read as a sum: the name is plural and the one member the catalogue
+        # declares sits on bit 1.
+        bits=((1, "dhw_v40_consumption"),),
     ),
     352: Entity(
         name="absence_day_heating_temperature",
@@ -1600,6 +1626,15 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.STRING,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        reads_as={
+            "0": "sunday",
+            "1": "monday",
+            "2": "tuesday",
+            "3": "wednesday",
+            "4": "thursday",
+            "5": "friday",
+            "6": "saturday",
+        },
     ),
     100301: Entity(
         name="max_schedule_slots_per_week",
