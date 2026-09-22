@@ -73,6 +73,42 @@ def describe(row: dict) -> dict:
     return described
 
 
+def _with_what_atlantic_says(dump: dict, catalogue: dict[int, dict]) -> dict:
+    """Add the vendor's answer for every id this account's devices report.
+
+    Every id they report, and not only the unmapped ones: an id named
+    *wrongly* makes an entity that looks perfectly fine and reads the wrong
+    thing, and nothing makes that visible unless the vendor's type, unit and
+    enum sit beside ours to be compared against.
+
+    And only the ids they report. The catalogue covers Atlantic's whole range,
+    405 capabilities across boilers, heat pumps, ventilation and tanks; on the
+    account this was measured with, 91 of them are reported and the other 314
+    describe hardware nobody there owns. Carrying all of them would put the
+    same two hundred kilobytes in every report on earth. Once, for the account,
+    rather than under each device, since two rooms of one installation report
+    the same ids. See docs/decisions.md.
+    """
+    if not catalogue:
+        return dump
+
+    reported = {
+        capabilityId
+        for device in dump.get("devices", [])
+        for capabilityId in (device.get("capabilities") or {}).get("values", {})
+    }
+
+    return dump | {
+        # An id the catalogue does not carry gets no entry, which is a reading
+        # too: three ids this integration ships are absent from it.
+        "atlanticSays": {
+            capabilityId: describe(catalogue[capabilityId])
+            for capabilityId in sorted(reported)
+            if capabilityId in catalogue
+        }
+    }
+
+
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: CozytouchConfigEntry
 ) -> dict[str, Any]:
@@ -106,17 +142,9 @@ async def async_get_config_entry_diagnostics(
                 },
             },
             "online": runtime.account.online,
-            **(hub.get_diagnostics() if hub is not None else {}),
-            # The vendor's answer for every id there is, once for the
-            # account rather than copied under each device. Not only the
-            # unmapped ones: an id named *wrongly* makes an entity that
-            # looks fine and reads the wrong thing, which is invisible
-            # unless the type, the unit and the enum are there to compare
-            # against. See docs/decisions.md.
-            "atlanticSays": {
-                capabilityId: describe(row)
-                for capabilityId, row in sorted(catalogue.items())
-            },
+            **_with_what_atlantic_says(
+                hub.get_diagnostics() if hub is not None else {}, catalogue
+            ),
         },
         TO_REDACT,
     )

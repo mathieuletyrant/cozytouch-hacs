@@ -531,7 +531,7 @@
         },
         "unnamed_capabilities": {
             "title": "Some capabilities are not named yet",
-            "description": "{devices} of this account's devices report {count} capability ids the integration does not name yet, so they reach Home Assistant as nothing at all: {ids}.\n\nThis is a gap in the mapping, not a fault on the hardware, and nothing here is broken. If you would like them read, open an issue with your diagnostics file attached (device page, three dots, Download diagnostics). The file carries Atlantic's own name, description and unit for each of these ids, which is most of what naming them takes.\n\nThis notice clears by itself once the mapping catches up."
+            "description": "{devices} of this account's devices report {count} capability ids the integration does not name, so they reach Home Assistant as nothing at all: {ids}.\n\nThis is a gap in the mapping, not a fault on the hardware, and nothing here is broken. If you would like them read, open an issue with your diagnostics file attached (device page, three dots, Download diagnostics). The file carries what each of your devices reports, and what Atlantic's own capability catalogue says about the ids it knows — which is most of what naming one takes.\n\nThis notice clears by itself once the mapping catches up."
         }
     },
     "selector": {

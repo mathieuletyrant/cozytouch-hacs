@@ -531,7 +531,7 @@
         },
         "unnamed_capabilities": {
             "title": "Algunas capacidades aún no tienen nombre",
-            "description": "{devices} dispositivo(s) de esta cuenta informan de {count} identificadores de capacidad que la integración todavía no nombra, por lo que no llegan a Home Assistant: {ids}.\n\nEs una laguna del mapeo, no un fallo del aparato, y no hay nada roto. Si desea que se lean, abra una incidencia adjuntando su archivo de diagnóstico (página del dispositivo, tres puntos, Descargar diagnósticos). El archivo lleva el nombre, la descripción y la unidad que Atlantic da a cada uno de esos identificadores, que es la mayor parte del trabajo.\n\nEste aviso desaparece solo en cuanto el mapeo se pone al día."
+            "description": "{devices} dispositivo(s) de esta cuenta informan de {count} identificadores de capacidad que la integración no nombra, por lo que no llegan a Home Assistant: {ids}.\n\nEs una laguna del mapeo, no un fallo del aparato, y no hay nada roto. Si desea que se lean, abra una incidencia adjuntando su archivo de diagnóstico (página del dispositivo, tres puntos, Descargar diagnósticos). El archivo contiene lo que informa cada uno de sus aparatos y lo que el catálogo de capacidades de Atlantic dice de los identificadores que conoce, que es la mayor parte del trabajo.\n\nEste aviso desaparece solo en cuanto el mapeo se pone al día."
         },
         "unknown_model": {
             "title": "{device_name} es un modelo que esta integración no conoce",
