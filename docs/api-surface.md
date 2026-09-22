@@ -4,11 +4,12 @@ A record of a probing session run on 2026-08-20, kept so the next person
 asking "can we stop guessing?" starts from what was already ruled out rather
 than repeating it.
 
-The short answer to that question is **no for capabilities, partly for
-devices, and yes for model *names*** -- the last one found on 2026-09-12 and
-corrected below, where this document previously said no catalogue existed at
-all. There is no capability catalogue either, but Atlantic has stated the
-meaning of eleven ids once, in public; that is its own section below.
+The short answer to that question is **yes** -- which is the opposite of what
+this document said for its first month. It ruled out a capability catalogue
+after ~90 probes, then found a model catalogue on 2026-09-12, and on
+2026-09-22 found the capability catalogue too. Both sections below are kept,
+corrections and all, because what the probes could not see is the point: none
+of them ever reached the namespace that answers.
 
 ## How to probe
 
@@ -154,10 +155,62 @@ Three limits, measured:
   (4 to 516) with an empty `parentIhmErrorCode` -- generator codes rather than
   interface ones, and nothing yet says which capability reports them.
 
-## There is no capability catalogue
+## There is a capability catalogue, and our own token reads it
 
-The *capabilities* have none, and that has not changed. A capability item
-carries exactly three fields:
+Found on 2026-09-22, and it overturns what this section said for a month.
+
+Atlantic runs a WSO2 developer portal at
+`https://apis.groupe-atlantic.com/devportal/`. Its own read API needs no
+credentials: `/api/am/devportal/v3/apis?limit=200` lists the 191 published
+APIs and `/api/am/devportal/v3/apis/{id}/swagger` serves each one's OpenAPI.
+No prose documentation is attached to any of them -- the schemas are the
+documentation.
+
+`Magellan_ProductModels` 1.9 declares `GET /magellan/productmodels/capabilities`,
+and an ordinary private-person token reads it. It answers **405 capabilities**,
+each carrying:
+
+| Field | What it is |
+| ----- | ---------- |
+| `name` | Atlantic's internal identifier, e.g. `ROOM1_AmbientRoom`. Not a label to show anyone, and not a translation key. |
+| `description` | one line of English prose, which is the part worth reading |
+| `type` | INT=1 FLOAT=2 STRING=3 BOOL=4 ENUM=5 OTHER=6 STRUCT=7 |
+| `accessType` | a bitmask: Read=1, Refresh=2, Write=4 |
+| `unit`, `min`, `max`, `resolution`, `defaultValue` | what a number means and where it may sit |
+| `enum` | `values[{Key, Value}]`. **A bitmask capability is declared as an enum whose Keys are the bit values**, which is what makes `capability_table.py`'s `bits` tables checkable line by line. |
+| `structId` | for type 7, into `GET /magellan/productmodels/structures` |
+
+`?productid=` or `?familyid=` narrows it to one product's or one family's ids,
+one filter at a time.
+
+`scripts/fetch_capability_catalogue.py` fetches it, along with the rest of the
+read-only routes of the same three APIs, and saves what answers under `research/data/`,
+which is scratch and not in the repository. What that run established, on 2026-09-22:
+
+| Route | |
+| ----- | --- |
+| `/productmodels/capabilities` | 200, 405 items |
+| `/productmodels/capabilities/{id}`, `?productid=` | 200 |
+| `/productmodels/structures` | 200, 8 structs -- one of them is the program slot |
+| `/productmodels/families` | 200, 19 families, each listing its capability ids |
+| `/productmodels/models` | 200, **2299 models in one call** |
+| `/productmodels/products` | 200, 123 products with `familyId` and `name` |
+| `/productmodels/connectivitydiagnosis` | 200, 7 network error codes |
+| `/magellan/devices`, `/magellan/devices/{id}/details` | 200; details adds `longName`, `productRange`, `isAvailable`, `zoneId`, `gatewaySerialNumber` |
+| `/magellan/capabilities/{capaId}/devices/{deviceId}` | **403** -- the per-device write rule is partner scope |
+| `/devices/{id}/thermal-programming/available`, `/domestic-hot-water-programming/available` | **403**, same |
+| `/magellan-admin/referentials/*` | **403**, `API Subscription validation failed` |
+| `/productmodels/productnames` | 400, wants `devicesUrls` |
+| `/devices/{id}/consumptions` | 400, wants `periodicity` |
+| `/productmodels/families/{id}` | 400 on a `modelFamily` string; the integer `familyId` comes from `/products` |
+
+What the catalogue does **not** do is say which capability a given device
+reports. That is still the setup view's job, and the section below still holds
+for the payload itself.
+
+### The payload is still three fields
+
+A capability item in a device's own report carries exactly three:
 
     {"capabilityId": 93, "modificationDate": 1786182322, "value": "1"}
 

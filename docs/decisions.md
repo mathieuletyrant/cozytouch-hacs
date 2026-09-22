@@ -3209,3 +3209,48 @@ It is left alone here on purpose. Changing the default touches every sensor
 on every platform, and telling a real zero from an absent id is exactly the
 kind of change that wants its own diff and its own tests. It is the next
 thing to do in this area, not a rider on this one.
+
+## The vendor's capability catalogue
+
+Found 2026-09-22. `docs/api-surface.md` carries what it is and which routes
+answer; this is why the tables here are not simply replaced by it.
+
+Atlantic's WSO2 devportal serves every API's OpenAPI without authenticating,
+and `Magellan_ProductModels` 1.9 declares
+`GET /magellan/productmodels/capabilities`. A private-person token reads it:
+405 capabilities with name, description, type, unit, bounds, enum members and
+an `accessType` bitmask. `capability_table.py` was reverse-engineered from one
+user's dump and from the Android app, so this is the first time any of it can
+be checked against what the vendor says.
+
+### It is a check, not a replacement
+
+Three reasons the table stays hand-written.
+
+The catalogue names the *capability*, not the *entity*. `ROOM1_AmbientRoom` is
+an internal identifier; `thermostat_temperature_z1` is a translation key with
+five language files behind it and dashboards pointing at the entity id it
+produces. Renaming 228 rows to match Atlantic's spelling would break every
+existing install and buy nothing.
+
+It says nothing about which device reports what. `absent_on`, `needs_flag` and
+`per_type` exist because the same id means different things on different
+products, and `?productid=` narrows the catalogue by product but does not say
+that a radiator reads 100506 differently from an air conditioner.
+
+And it is not complete. Three ids the integration ships -- 233, 103450 and
+104047 -- are absent from it, all three seen in real dumps. A capability in a
+device's report and not in the catalogue is the catalogue being behind, not
+the device being wrong.
+
+### What it is authoritative about
+
+The encodings. A bitmask capability is declared as an enum whose Keys are the
+bit values, so every `bits` tuple in the table is checkable against it, and
+the first check found one inversion and eleven missing bits. Same for
+`reads_as`, for units, for bounds, and for `accessType & 4`, which is the
+vendor's own list of what may be written -- 217 of the 405, against the 87
+inferred from the Android app's write call sites.
+
+Where the catalogue and the table disagree on an *encoding*, the catalogue
+wins. Where they disagree on a *name*, the table wins.
