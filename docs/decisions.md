@@ -3453,3 +3453,49 @@ and the name is plural, so a room may sit in front of more than one generator
 -- and it is a diagnostic until a dump from a room behind a radiator says the
 field moves. If it does, `_room_entity` has a source it was written without,
 and the paragraph above it is wrong rather than cautious.
+
+## The 631 models that were past the end of the sweep
+
+`model_catalogue.py` was built by asking
+`GET /magellan/productmodels/models/{id}` for one id at a time, over
+`range(1, 2500)`, because that is what a sweep can do when it has no list to
+ask for. The vendor has a list: `GET /magellan/productmodels/models` answers
+2299 models in one call.
+
+Two things came out of comparing them. Every id the sweep found is in the
+list, with the same name, so the sweep was right about what it reached. And
+the list carries **631 models the sweep never reached**, 645 of its ids
+sitting above 2500 -- the ADELIS, ATLANTIC and Saturnia ranges, id 2994 to
+3652. Every one of them read as `Unknown product (…)` until now.
+
+All of them carry `productId` 0, so nothing here types them; they are typed
+from the `modelFamily` a real device sends, which is what that column is for.
+What this adds is the name, which is the difference between a device page
+headed `Unknown product (3117)` and one headed `ADELIS LINE 1500W BEIGE`.
+
+The walks in `test_capability.py` and `test_snapshot.py` moved with it, from
+`range(1, 2500)` to `range(1, 3700)`. Nothing above 2500 is branch-mapped
+today, so the mapped set does not change -- but the bound was a sweep's reach
+rather than a decision, and a branch added above it would have been walked by
+nothing at all.
+
+### The 33 product ids that are still not classified
+
+The same run answered `GET /magellan/productmodels/products`: 123 products
+with a name and a family, against the 90 ids `PRODUCT_TYPES` covers. The 33
+left over are whole classes -- radiators (8, 9, 10, 23, 42, 43, 48, 116, 117),
+towel dryers (11, 12), thermodynamic water heaters (13 to 17, 20, 45, 119),
+electric water heaters (18, 19, 118), double-flow ventilation (22, 24), a
+ventilation unit (21), and the SIF generators (50, 51, 52) and bridges (114,
+115, 120).
+
+They are deliberately left out, for the reason `MODEL_FAMILIES` already gives
+about `Double_Flow_Ventilation`: a `PRODUCT_TYPES` entry needs a
+`DERIVED_TYPES` row beside it, and that row is a device type *and a set of HVAC
+modes*. Naming the type is easy and guessing the modes is not, and a device
+that grows entities it cannot drive is worse than one that arrives typed from
+its `modelFamily` -- which is what all of these do today, since the families
+the products sit in are the families that column already names.
+
+The products table is kept as the check it is: it confirmed the ROOM block
+runs 97 to 111 and that there is no gateway at 98, which is its own commit.
