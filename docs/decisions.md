@@ -3473,6 +3473,34 @@ and the name is plural, so a room may sit in front of more than one generator
 field moves. If it does, `_room_entity` has a source it was written without,
 and the paragraph above it is wrong rather than cautious.
 
+### A capability the chain steers on still needs a row
+
+`_climate_entity` wires ids onto the climate entity -- a fan speed, a louver
+position, a zone's setpoint -- and `get_capability_infos` is asked about each
+of those ids separately, for the reading that sits beside the entity. Three of
+them had no row: 18, 100801 and 100803.
+
+With no row the answer is `None`, which means "nothing in the mapping knows
+this id". So a capability the integration understands well enough to *steer
+on* was filed as one nobody had ever named: it landed in a dump's unmapped
+list, and after the notice was added it would have asked its owner to report
+it.
+
+It went unseen because the account it would show up on is one with a Fujitsu
+indoor unit reporting a fan speed. The rooms behind a ZONICLIM do not report
+100801 or 100803 at all, and no heat pump with a second zone has sent a dump.
+
+`tests/test_capability_coverage.py` now scrapes `capability.py` for the ids it
+wires and asserts every one of them has a row. It is a scrape rather than a
+list, so a new `somethingCapabilityId = N` is covered the day it is written,
+and it asserts the scrape found something before asserting what it found --
+a regex that silently stops matching would otherwise pass forever.
+
+The three rows are Atlantic's own: 18 is room 2's setpoint in force as 17 is
+room 1's, 100801 is one fan speed (not 350, which names a whole *set* of
+speeds), and 100803 is the six flap positions of a Fujitsu indoor unit plus a
+zero the vendor itself calls unknown.
+
 ## The 631 models that were past the end of the sweep
 
 `model_catalogue.py` was built by asking

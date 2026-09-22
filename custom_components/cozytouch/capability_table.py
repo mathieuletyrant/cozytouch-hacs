@@ -258,6 +258,15 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    18: Entity(
+        # Room 2's setpoint in force, as 17 is room 1's. A heat pump steers its
+        # second zone on this id and the climate entity claims it there first,
+        # so the row surfaces only where it is reported without being steered.
+        name="control_setpoint_z2",
+        type=CapabilityType.TEMPERATURE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     19: Entity(
         name="temperature_setpoint",
         type=CapabilityType.TEMPERATURE,
@@ -1783,11 +1792,39 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
+    100801: Entity(
+        # The speed the fan is actually running, which the climate entity
+        # drives as its fan mode. The row is what gives the reading beside it a
+        # word instead of a number. Its value space is not 350's: that one
+        # names a whole *set* of speeds, this one names one speed.
+        name="fan_speed",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={"1": "low", "2": "medium", "3": "high", "5": "auto"},
+    ),
     100802: Entity(
         name="quiet_mode",
         type=CapabilityType.SWITCH,
         enabled_by_default=True,
         icon="mdi:fan-minus",
+    ),
+    100803: Entity(
+        # Six flap positions on a Fujitsu indoor unit, plus a zero the vendor
+        # itself calls unknown. The climate entity drives it as the swing mode.
+        name="louver_position",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "unknown",
+            "1": "position_1",
+            "2": "position_2",
+            "3": "position_3",
+            "4": "position_4",
+            "5": "position_5",
+            "6": "position_6",
+        },
     ),
     100804: Entity(
         name="swing_mode",
