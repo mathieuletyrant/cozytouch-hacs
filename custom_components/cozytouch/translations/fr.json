@@ -531,7 +531,7 @@
         },
         "unnamed_capabilities": {
             "title": "Des capacités ne sont pas encore nommées",
-            "description": "{devices} appareil(s) de ce compte remontent {count} identifiants de capacité que l'intégration ne nomme pas encore, ils n'arrivent donc pas du tout dans Home Assistant : {ids}.\n\nC'est un manque dans le mappage, pas un défaut du matériel, et rien n'est cassé. Si vous souhaitez qu'ils soient lus, ouvrez un ticket en joignant votre fichier de diagnostic (page de l'appareil, trois points, Télécharger les diagnostics). Le fichier contient le nom, la description et l'unité qu'Atlantic donne à chacun de ces identifiants, soit l'essentiel du travail.\n\nCet avis disparaît de lui-même dès que le mappage rattrape son retard."
+            "description": "{devices} appareil(s) de ce compte remontent {count} identifiants de capacité que l'intégration ne nomme pas, ils n'arrivent donc pas du tout dans Home Assistant : {ids}.\n\nC'est un manque dans le mappage, pas un défaut du matériel, et rien n'est cassé. Si vous souhaitez qu'ils soient lus, ouvrez un ticket en joignant votre fichier de diagnostic (page de l'appareil, trois points, Télécharger les diagnostics). Le fichier contient ce que chacun de vos appareils remonte, et ce que le catalogue de capacités d'Atlantic dit des identifiants qu'il connaît — soit l'essentiel du travail.\n\nCet avis disparaît de lui-même dès que le mappage rattrape son retard."
         },
         "unknown_model": {
             "title": "{device_name} est un modèle que cette intégration ne connaît pas",

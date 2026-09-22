@@ -3374,6 +3374,16 @@ A second template was considered and dropped: it would have asked for the same
 device, the same screenshots and the same file, and a fork in the road is one
 more place for a report to end up in the wrong half.
 
+Its text says what the *file* carries, not what the file carries about these
+particular ids, and that distinction is the whole of it. The first version
+said the dump holds Atlantic's name, description and unit for each id it names
+-- true today, since most unmapped ids are in the catalogue, and false the
+moment the mapping catches up with it. What is left unnamed then is precisely
+what the catalogue does not carry either, and the notice would have been
+promising a section that is empty for exactly the ids it fires about. It now
+says the file holds what each device reports and what the catalogue says about
+the ids it knows, which is true in both worlds.
+
 It is not fixable: there is nothing Home Assistant can do about a missing row.
 It says which ids, says plainly that this is a gap in the mapping rather than
 a fault on the hardware, and points at the diagnostics download. It clears
