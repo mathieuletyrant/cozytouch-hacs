@@ -3683,3 +3683,49 @@ wrong wherever it does not, so 8 waits for a device that reports it.
 `180 ErrorCodeUE` is left undecoded. Its enum is forty-odd entries of the form
 `11:Serial communication error`, which is a code and a sentence in one string
 and belongs with the fault table in `faults.py` rather than in a `reads_as`.
+
+### Room 2's comfort setpoint was called its eco one
+
+Capability 42 has shipped as `target_temperature_eco_z2` since the table was
+written. It is room 2's **comfort** setpoint. Two independent sources say so,
+and they were both available before the mistake was made.
+
+Atlantic's catalogue names 42 `ROOM2_ComfortHeatingTargetTemperatureState`,
+against 41 `ROOM1_EcoHeatingTargetTemperatureState` which the table gets right.
+And the capture corpus settles it without reading a name at all -- on model
+211, across four separate captures:
+
+    41 = 15.0    58773 = 20.0
+    43 = 15.0    42    = 20.0
+
+41 and 43 pair at the low value, 42 and 58773 at the high one. Eco is the low
+one. So 41 and 43 are the eco setpoints of rooms 1 and 2, and 58773 and 42 are
+their comfort ones.
+
+The consequence for anybody with a two-zone PassAPC is that the number called
+"Target Temperature Eco Z2" writes the comfort setpoint, and there has been no
+eco entity for room 2 at all. Both are fixed here: 42 is renamed, 43 takes the
+name it should always have had, and 58773 arrives as room 1's comfort setpoint.
+
+What the rename does not fix is the entity id. Home Assistant builds it once
+and keeps it, so an existing install goes on calling 42
+`number.<device>_target_temperature_eco_z2` while the friendly name and
+everything written about it say comfort. Renaming the entity is the owner's
+call, and the alternative -- leaving the wrong name in place because the id
+would be stale -- is how a wrong reading becomes permanent.
+
+### The two Fluid-TES families, twenty-three ids
+
+The generator itself and the legacy generation beside it: the DHW service type
+and its comfort and eco setpoints, the circulators, the nominal heating and
+DHW powers, the second zone's flow temperature and setpoint, its programme
+mode and override, the away period's two dates, the fuel tank's capacity and
+the RSSI quality.
+
+`342` is the SIF generation's own comfort setpoint and says so in its name,
+since 254 already holds the same idea for the rest of the range.
+
+Ids 1 and 2 are in this family and are **not** taken, for the reason 8 was not
+taken in the Heat Pump family: `capability.py` treats 1, 2, 7 and 8 as the
+four ids that can carry an HVAC mode, and a model that steers on one gets a
+climate entity from it rather than a row.
