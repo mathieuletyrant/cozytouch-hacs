@@ -173,7 +173,11 @@ class Entity:
             fields of their own, because each is read by one platform only.
 
     The last four say the same id does not mean the same thing on every
-    product, which is why this is a table of rows rather than of strings :
+    product, which is why this is a table of rows rather than of strings.
+    All four key on what a device *is*, never on which model id it carries :
+    the vendor's own app dispatches on the device class, and a row keyed on
+    an id is a list that grows by one with every report. See
+    docs/decisions.md.
 
     absent_on   device types with no such entity at all.
     needs_flag  a flag from model.py that has to hold for the entity to exist.
@@ -181,8 +185,6 @@ class Entity:
     per_type    the keys to merge in last, for the device types named in the
                 key -- a tuple, like absent_on, so two products reading an id
                 the same way say so once.
-    per_model   the same per model id, for the products Atlantic wired to
-                different capabilities.
     valid_above the entity exists only while the value is above this. Atlantic
                 sends a far-out-of-range reading rather than nothing when a
                 probe has nothing to say.
@@ -201,7 +203,6 @@ class Entity:
     per_type: Mapping[tuple[CozytouchDeviceType, ...], Mapping[str, object]] | None = (
         None
     )
-    per_model: Mapping[int, Mapping[str, object]] | None = None
     valid_above: float | None = None
 
     def resolve(
@@ -228,7 +229,6 @@ class Entity:
             for deviceTypes, override in (self.per_type or {}).items()
             if modelInfos.type in deviceTypes
         ]
-        overrides.append((self.per_model or {}).get(modelInfos.modelId))
         for source in overrides:
             for key, setting in (source or {}).items():
                 capability[key] = setting

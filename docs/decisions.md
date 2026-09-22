@@ -3909,6 +3909,12 @@ That was already known for one model id, 2374, through a `per_model` entry.
 It is a `per_type` on `WATER_HEATER` now, which covers 2374 and every tank
 after it.
 
+`per_model` was that entry's only user, and it is gone with it. Keying a row
+on a model id is the mapping this project spent PR #112 getting out of: the
+vendor's app dispatches on the device class, so an id-keyed row is a list
+that grows by one with every report and says nothing about why. Every
+override left on a row keys on what a device *is*.
+
 ### What the app decides to show, and what we did not take
 
 Worth recording since it was read anyway. `DHW_IHM_CAPABILITIES` (336) is a
