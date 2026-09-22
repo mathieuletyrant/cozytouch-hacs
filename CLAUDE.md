@@ -295,3 +295,18 @@ The older files predate this and still carry their reasoning inline :
 `pyproject.toml`, the requirements files, and the modules under
 `custom_components/`. Do not migrate them wholesale. A file moves to
 `docs/decisions.md` when it is being edited for some other reason anyway.
+
+## Releasing
+
+The release job reads `release_notes/<version>.md` and puts it above the
+commit list, which it folds away. Write that file in the same pull request
+as the `manifest.json` bump -- the job refuses to run until the manifest
+carries the version being released, so it is one pull request either way.
+
+`/release-notes <version>` writes that file : it reads the commits since the
+last tag and turns them into the four or so themes somebody actually cares
+about. The notes are for somebody deciding whether to update : what their
+devices now do, what stopped being broken. The commit subjects already say what
+changed one at a time, and that is what the folded list is for. Without the
+file the release is that list alone, which is what every release before
+2026.9.21 was.

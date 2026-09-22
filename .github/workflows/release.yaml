@@ -68,10 +68,24 @@ jobs:
         # bare compare link and nothing else. The commit subjects are the
         # changelog. The grep drops the "Release x" bumps older releases
         # committed themselves, back when this job could push to main.
+        #
+        # A commit subject says what changed, one change at a time ; what the
+        # release *means* is release_notes/<version>.md, written in the same
+        # pull request as the manifest bump. Not a dispatch input : those are
+        # single-line fields, and a pasted paragraph arrives as one line. The
+        # commit list stays, folded, because it is what somebody chasing a
+        # behaviour change reads.
         run: |
           PREVIOUS=$(git describe --tags --abbrev=0 "${{ github.event.inputs.version }}^" 2>/dev/null || true)
+          NOTES=$(cat "release_notes/$VERSION.md" 2>/dev/null || true)
 
           {
+            if [ -n "$NOTES" ]; then
+              echo "$NOTES"
+              echo
+              echo '<details><summary>Every change in this release</summary>'
+              echo
+            fi
             if [ -n "$PREVIOUS" ]; then
               git log --no-merges --format='- %s (%h)' \
                 --invert-grep --grep='^Release ' \
@@ -81,9 +95,15 @@ jobs:
             else
               git log --no-merges --format='- %s (%h)' "${{ github.event.inputs.version }}"
             fi
+            if [ -n "$NOTES" ]; then
+              echo
+              echo '</details>'
+            fi
           } > release-notes.md
 
           cat release-notes.md
+        env:
+          VERSION: ${{ github.event.inputs.version }}
 
       - name: Create the GitHub release
         run: |
