@@ -135,6 +135,11 @@ class CozytouchAccount:
         # list is an answer -- most models have no table. See
         # docs/decisions.md.
         self._fault_tables: dict[int, list] = {}
+        # The vendor's capability catalogue, fetched only when a diagnostics
+        # dump is taken. None until then, and an empty dict once a request has
+        # failed, so one refusal is not retried per device. See
+        # docs/decisions.md.
+        self._capability_catalogue: dict[int, dict] | None = None
 
     @property
     def account_id(self) -> str:
@@ -478,6 +483,52 @@ class CozytouchAccount:
 
         self._fault_tables[modelId] = table
         return table
+
+    async def fetch_capability_catalogue(self) -> dict[int, dict]:
+        """What Atlantic says every capability id means, cached for the session.
+
+        405 rows with a name, a description, a type, a unit, bounds and the
+        enum members, which is what turns an unnamed id in a diagnostics dump
+        into a question somebody can answer. Asked for only when a dump is
+        taken, never on the poll. A failure is not worth an outage -- the dump
+        is still the dump -- so it caches empty and moves on. See
+        docs/decisions.md.
+        """
+        if self._capability_catalogue is not None:
+            return self._capability_catalogue
+
+        self._capability_catalogue = {}
+
+        if self.backoff_remaining:
+            self._capability_catalogue = None
+            return {}
+
+        try:
+            async with self._session.get(
+                COZYTOUCH_ATLANTIC_API + "/magellan/productmodels/capabilities",
+                headers=self._headers(),
+                timeout=REQUEST_TIMEOUT,
+            ) as response:
+                if response.status != 200:
+                    _LOGGER.debug(
+                        "No capability catalogue (%d)", response.status
+                    )
+                    return {}
+
+                catalogue = await response.json()
+        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
+            _LOGGER.debug("Capability catalogue failed: %s", err)
+            return {}
+
+        if not isinstance(catalogue, list):
+            return {}
+
+        self._capability_catalogue = {
+            row["id"]: row
+            for row in catalogue
+            if isinstance(row, dict) and isinstance(row.get("id"), int)
+        }
+        return self._capability_catalogue
 
     async def fetch_capabilities(self, deviceId: int) -> list:
         """GET the capability list of one device, to confirm a write.

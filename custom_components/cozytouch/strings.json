@@ -520,6 +520,10 @@
         "device_fault": {
             "title": "{device_name} reports a fault",
             "description": "The device is reporting fault code `{code}`. Atlantic names it:\n\n**{label}**\n\nTheir own repair instructions:\n\n{repair}\n\nThere is nothing for Home Assistant to fix here. This notice clears by itself once the device stops reporting the code."
+        },
+        "unnamed_capabilities": {
+            "title": "Some capabilities are not named yet",
+            "description": "{devices} of this account's devices report {count} capability ids the integration does not name yet, so they reach Home Assistant as nothing at all: {ids}.\n\nThis is a gap in the mapping, not a fault on the hardware, and nothing here is broken. If you would like them read, open an issue with your diagnostics file attached (device page, three dots, Download diagnostics). The file carries Atlantic's own name, description and unit for each of these ids, which is most of what naming them takes.\n\nThis notice clears by itself once the mapping catches up."
         }
     },
     "selector": {

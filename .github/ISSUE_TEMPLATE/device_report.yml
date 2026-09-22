@@ -11,6 +11,15 @@ body:
         the wire with no name and no unit -- and that is what this form is
         for.
 
+
+        **If a notice in Home Assistant sent you here**, saying some
+        capabilities are not named yet, this is the right form and the
+        diagnostics file at the bottom is the important part. Nothing is
+        broken: those ids are reaching Home Assistant as nothing at all, and
+        the file says what they are called. Fill in the rest as best you can
+        -- the app screenshots are what turn a name into a control that
+        works.
+
   - type: textarea
     id: device
     attributes:

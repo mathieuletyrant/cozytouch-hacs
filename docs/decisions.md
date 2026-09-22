@@ -3289,3 +3289,92 @@ then the reading stands as the app has it, and this paragraph is why.
 Which qualifies the rule above. The catalogue wins on an encoding where it
 is the only source. Where the app contradicts it, the disagreement is the
 finding, and neither side is applied on its own authority.
+
+## The catalogue in the diagnostics dump
+
+A dump is what a device report is built from, and until now its capability
+section was a list of bare numbers: these ids are named, these are not. The
+vendor's catalogue is one request away and answers what every one of them is,
+so the dump carries it.
+
+### The whole catalogue, not the gaps
+
+The obvious version annotates the *unmapped* ids and stops there, since those
+are what a dump is read for. It is the wrong version.
+
+An id nobody has named produces no entity, which is visible the moment someone
+looks for it. An id named **wrongly** produces an entity that looks perfectly
+fine and reads the wrong thing -- a duration typed as a temperature, a setpoint
+whose unit is not what the row claims, an enum member off by one. Nothing in a
+dump has ever made that visible, and nothing would, unless the vendor's type,
+unit and enum members sit beside ours to be compared against.
+
+So the dump carries Atlantic's answer for all 405 ids, once, at the account
+level rather than copied under each device. It costs a request per dump, never
+on the poll, and a couple of hundred kilobytes in a file that exists to be
+read by whoever is answering the report.
+
+Each row is cut down to what a reader needs: the internal name, because that
+is what a report can be searched for; the description, because that is what
+says what the thing is; the type as a word; whether bit 4 of `accessType` is
+set, because writability is the first question asked about an unmapped id and
+guessing it wrong is how a control that writes into the void gets shipped; and
+the unit, bounds and enum members only where the catalogue states them. A key
+present and empty would read as "Atlantic says there is none", which is not
+what a null field means.
+
+An id the catalogue does not carry gets no entry, and that is a reading too:
+three ids this integration ships are absent from it, all three seen in real
+dumps.
+
+### The notice that asks for the file
+
+A dump only helps if somebody sends it, and nothing asked. `repairs.py` now
+raises one notice per account when any device reports an id the mapping does
+not name -- one for the account and not one per device or per id, because the
+answer to all of them is the same single file.
+
+It opens the device report form rather than the issue list. Somebody arriving
+from a notice has not decided to write a report yet -- they were told by Home
+Assistant -- and a bare list of issues gives them nothing to do. The form is
+what says which three things an answer needs, and it now says in its first
+paragraph that a notice is a legitimate way to have arrived at it, because
+"some capabilities are not named yet" does not sound like "an entity you
+expected is not there", which is how the form describes itself.
+
+A second template was considered and dropped: it would have asked for the same
+device, the same screenshots and the same file, and a fork in the road is one
+more place for a report to end up in the wrong half.
+
+It is not fixable: there is nothing Home Assistant can do about a missing row.
+It says which ids, says plainly that this is a gap in the mapping rather than
+a fault on the hardware, and points at the diagnostics download. It clears
+itself the moment the mapping names the last of them, which is the whole point
+of raising it.
+
+The cost is that an account with unmapped ids now shows a notice it did not
+show before, and most accounts have some. That is the trade accepted: the
+alternative is the current state, where the people whose hardware is half-read
+are exactly the people who never find out.
+
+
+### Suppressed is not unmapped
+
+`get_capability_infos` has two ways of declining. `None` means nothing in the
+mapping knows the id. An empty `CapabilityInfos` means it is known and
+deliberately not an entity *here*: a `needs_flag` the product does not have,
+an `absent_on` covering its type, a `valid_above` the reading fails, an id in
+`SUPPRESSED_CAPABILITIES`, or one of 1, 2, 7 and 8 on a product that reports
+it without steering on it.
+
+Both are falsy, and the split that feeds the dump read them the same way. So
+a decision was filed as a gap. On the account this was found with, three of
+the thirteen "unnamed" ids had rows: 171 and 172, the absence setpoints an air
+conditioner reports and does not honour, and 100507, the eco mode the app does
+not offer on a room. The notice then asked for a report about ids that had
+already been reasoned about, in writing, in this file.
+
+The dump now lists all three groups, and the notice counts only the last. A
+suppressed id is listed rather than dropped, because "nobody has named this"
+and "somebody decided this" are different answers and only one of them is a
+report worth opening.

@@ -521,6 +521,10 @@
             "title": "{device_name} informa de un fallo",
             "description": "El aparato informa del código de fallo `{code}`. Atlantic lo denomina:\n\n**{label}**\n\nSus propias instrucciones de reparación:\n\n{repair}\n\nNo hay nada que Home Assistant pueda corregir aquí. Este aviso desaparece solo cuando el aparato deja de informar del código."
         },
+        "unnamed_capabilities": {
+            "title": "Algunas capacidades aún no tienen nombre",
+            "description": "{devices} dispositivo(s) de esta cuenta informan de {count} identificadores de capacidad que la integración todavía no nombra, por lo que no llegan a Home Assistant: {ids}.\n\nEs una laguna del mapeo, no un fallo del aparato, y no hay nada roto. Si desea que se lean, abra una incidencia adjuntando su archivo de diagnóstico (página del dispositivo, tres puntos, Descargar diagnósticos). El archivo lleva el nombre, la descripción y la unidad que Atlantic da a cada uno de esos identificadores, que es la mayor parte del trabajo.\n\nEste aviso desaparece solo en cuanto el mapeo se pone al día."
+        },
         "unknown_model": {
             "title": "{device_name} es un modelo que esta integración no conoce",
             "fix_flow": {

@@ -17,6 +17,7 @@ from types import SimpleNamespace
 import pytest
 
 from custom_components.cozytouch.account import CozytouchAccount
+from custom_components.cozytouch.diagnostics import describe
 from custom_components.cozytouch.hub import Hub
 
 
@@ -251,3 +252,104 @@ def test_the_dump_carries_the_sections_a_report_is_built_from(key):
     hub = make_hub([device(1, 557)], deviceId=1)
 
     assert key in Hub.get_diagnostics(hub)
+
+
+def catalogue_row(**overrides):
+    """One row shaped as `/magellan/productmodels/capabilities` sends it."""
+    return {
+        "id": 117,
+        "name": "ROOM1_AmbientRoom",
+        "description": "Ambient temperature in the Room 1",
+        "type": 2,
+        "accessType": 3,
+        "unit": "°C",
+        "min": -273.15,
+        "max": 327.67,
+        "resolution": 0.01,
+        "enum": None,
+        "structId": None,
+    } | overrides
+
+
+def test_a_described_id_carries_the_identifier_and_the_prose():
+    """Atlantic's name is what a report can be searched for; its description
+    is what says what the thing is. Both, not one.
+    """
+    described = describe(catalogue_row())
+
+    assert described["name"] == "ROOM1_AmbientRoom"
+    assert described["description"] == "Ambient temperature in the Room 1"
+    assert described["type"] == "float"
+    assert described["unit"] == "°C"
+
+
+def test_writability_is_read_off_the_access_bitmask():
+    """Bit 4, and it is the first question asked about an unmapped id:
+    guessing it wrong is how a control that writes into the void ships.
+    """
+    assert describe(catalogue_row(accessType=3))["writable"] is False
+    assert describe(catalogue_row(accessType=7))["writable"] is True
+
+
+def test_an_enum_arrives_as_its_members():
+    described = describe(
+        catalogue_row(
+            type=5,
+            enum={"values": [{"Key": 0, "Value": "Off"}, {"Key": 1, "Value": "On"}]},
+        )
+    )
+
+    assert described["values"] == {"0": "Off", "1": "On"}
+
+
+def test_the_catalogue_is_carried_whole_and_not_only_the_gaps():
+    """An id named *wrongly* makes an entity that looks fine and reads the
+    wrong thing. Carrying only the unmapped ids would leave exactly that
+    unreadable, so the dump carries the vendor's answer for all of them.
+    """
+    catalogue = {117: catalogue_row(), 999: catalogue_row(id=999)}
+
+    described = {
+        capabilityId: describe(row)
+        for capabilityId, row in sorted(catalogue.items())
+    }
+
+    assert set(described) == {117, 999}
+
+
+def test_a_row_states_only_what_the_catalogue_states():
+    """Most ids carry no unit and no enum. A key present and empty reads as
+    "Atlantic says there is none", which is not what a null field means.
+    """
+    described = describe(
+        {"id": 305, "name": "X", "description": "", "type": 1, "accessType": 1}
+    )
+
+    assert "unit" not in described
+    assert "values" not in described
+    assert described["writable"] is False
+
+
+def test_a_suppressed_id_is_not_reported_as_unnamed():
+    """`get_capability_infos` answers None for an id nothing knows and an
+    empty `CapabilityInfos` for one it knows and deliberately does not turn
+    into an entity here. Both are falsy, and reading them the same way filed a
+    decision as a gap.
+    """
+    reported = [
+        # A room behind an air conditioner gateway: 40 is its setpoint, 172
+        # has a row gated on a flag this product does not have, and 999 is
+        # nothing at all.
+        {"capabilityId": 40, "value": "19"},
+        {"capabilityId": 172, "value": "26.5"},
+        {"capabilityId": 999, "value": "1"},
+    ]
+    hub = make_hub(
+        [device(1, 557, capabilities=reported, productId=26)], deviceId=1
+    )
+
+    mapped, suppressed, unmapped = hub.get_capability_names(1)
+
+    assert 40 in mapped
+    assert suppressed == [172]
+    assert unmapped == [999]
