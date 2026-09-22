@@ -3468,10 +3468,26 @@ which is what its hardware is.
 
 That is one observation, all of it one kind of gateway, so nothing is rewired
 on it here. The row reads the value as a sum -- the members are powers of two
-and the name is plural, so a room may sit in front of more than one generator
--- and it is a diagnostic until a dump from a room behind a radiator says the
-field moves. If it does, `_room_entity` has a source it was written without,
-and the paragraph above it is wrong rather than cautious.
+and the name is plural, so a room may sit in front of more than one generator.
+
+And on a second look it buys less than the paragraph above `_room_entity`
+makes it sound, which is worth writing down before somebody spends a day on
+it. The modes are already narrowed by 100022, so a room that does not declare
+cooling does not offer it. The capabilities are already asked for one by one
+rather than assumed, so a room without a boost gets no boost. And a room being
+called a room, with a neutral icon, is deliberate: it is what the vendor's own
+client does, and a room is a room whatever heats it.
+
+What is left is `_AC_ROOM`, which every room inherits regardless of what
+drives it -- a `quietModeAvailable` that belongs to an air conditioner, and an
+`ecoModeAvailable: False` decided for the rooms behind a Navizone. A room
+driven by a boiler or a radiator carries both for no reason. That is the whole
+of what 103026 would fix, and a report saying "there is a quiet mode that does
+nothing" would find it just as well.
+
+So it stays a diagnostic. If a dump from a room behind a radiator ever shows
+16, 32 or 64 on it, the change is to skip those flags in `apply_capabilities`,
+where 100022 and 106000 are already read, and nothing else moves.
 
 ### A capability the chain steers on still needs a row
 
