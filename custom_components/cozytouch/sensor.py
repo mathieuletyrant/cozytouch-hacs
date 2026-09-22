@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import datetime
-from functools import partial
 import json
 import logging
 
@@ -17,12 +16,14 @@ from homeassistant.components.sensor import (
 from homeassistant.const import (
     PERCENTAGE,
     EntityCategory,
+    UnitOfElectricCurrent,
     UnitOfEnergy,
     UnitOfPressure,
     UnitOfSoundPressure,
     UnitOfTemperature,
     UnitOfTime,
     UnitOfVolume,
+    UnitOfVolumeFlowRate,
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -605,13 +606,30 @@ class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
 
 
 def _unit(device_class, state_class, unit):
-    """A CozytouchUnitSensor builder, for a type whose unit is fixed."""
-    return partial(
-        CozytouchUnitSensor,
-        device_class=device_class,
-        state_class=state_class,
-        native_unit_of_measurement=unit,
-    )
+    """A CozytouchUnitSensor builder for a type that has a usual unit.
+
+    Usual, not fixed: a row may state its own with
+    `displayed_unit_of_measurement`, the key `_energy` below already reads,
+    because one device class covers several units and the vendor picks per
+    capability -- kW on one power reading and W on the next. Home Assistant
+    rejects a unit its device class does not cover, which is the check that
+    keeps the override honest. See docs/decisions.md.
+    """
+
+    def build(coordinator, capability, config_title: str, config_uniq_id: str):
+        return CozytouchUnitSensor(
+            coordinator=coordinator,
+            capability=capability,
+            config_title=config_title,
+            config_uniq_id=config_uniq_id,
+            device_class=device_class,
+            state_class=state_class,
+            native_unit_of_measurement=capability.get(
+                "displayed_unit_of_measurement", unit
+            ),
+        )
+
+    return build
 
 
 def _energy(coordinator, capability, config_title: str, config_uniq_id: str):
@@ -693,6 +711,16 @@ SENSOR_BUILDERS = {
         SensorDeviceClass.WATER,
         SensorStateClass.TOTAL_INCREASING,
         UnitOfVolume.LITERS,
+    ),
+    CapabilityType.CURRENT: _unit(
+        SensorDeviceClass.CURRENT,
+        SensorStateClass.MEASUREMENT,
+        UnitOfElectricCurrent.MICROAMPERE,
+    ),
+    CapabilityType.FLOW_RATE: _unit(
+        SensorDeviceClass.VOLUME_FLOW_RATE,
+        SensorStateClass.MEASUREMENT,
+        UnitOfVolumeFlowRate.LITERS_PER_MINUTE,
     ),
     CapabilityType.PERCENTAGE: _unit(
         None,

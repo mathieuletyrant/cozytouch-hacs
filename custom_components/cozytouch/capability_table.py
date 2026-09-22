@@ -367,6 +367,30 @@ CAPABILITIES: dict[int, Entity] = {
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
         },
     ),
+    47: Entity(
+        name="generator_burner_flame",
+        type=CapabilityType.CURRENT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    48: Entity(
+        name="dhw_current_flow",
+        type=CapabilityType.FLOW_RATE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    49: Entity(
+        name="generator_flame_status",
+        type=CapabilityType.BINARY,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    50: Entity(
+        name="generator_modulation_level",
+        type=CapabilityType.PERCENTAGE,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     57: Entity(
         name="power_consumption",
         type=CapabilityType.ENERGY,
@@ -382,6 +406,32 @@ CAPABILITIES: dict[int, Entity] = {
         extra={
             "displayed_unit_of_measurement": UnitOfEnergy.KILO_WATT_HOUR,
         },
+    ),
+    65: Entity(
+        name="fan_status",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            "1": "on",
+        },
+    ),
+    66: Entity(
+        name="dhw_circulator_status",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+        reads_as={
+            "0": "off",
+            "1": "on",
+        },
+    ),
+    67: Entity(
+        name="generator_flow_from_burner_pump",
+        type=CapabilityType.STRING,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     73: Entity(
         name="available_thermostat_modes",
@@ -419,6 +469,18 @@ CAPABILITIES: dict[int, Entity] = {
         category=CapabilityCategory.DIAG,
         icon="mdi:tag",
     ),
+    89: Entity(
+        name="generator_heating_successful_burner_starts",
+        type=CapabilityType.INT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    90: Entity(
+        name="generator_dhw_burner_starts",
+        type=CapabilityType.INT,
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
     91: Entity(
         # the 3-way valve; see docs/decisions.md
         name="active_circuit",
@@ -428,6 +490,12 @@ CAPABILITIES: dict[int, Entity] = {
             "1": "heating",
             "3": "domestic_hot_water",
         },
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
+    ),
+    92: Entity(
+        name="generator_hours_flame_too_low",
+        type=CapabilityType.INT,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),

@@ -1870,6 +1870,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -1885,6 +1917,30 @@
     "modelId": 1381,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -1963,6 +2019,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -1971,6 +2043,14 @@
     "modelId": 1381,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1381,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -3864,6 +3944,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -3879,6 +3991,30 @@
     "modelId": 1457,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -3953,6 +4089,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -3961,6 +4113,14 @@
     "modelId": 1457,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1457,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -5854,6 +6014,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -5869,6 +6061,30 @@
     "modelId": 1505,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -5943,6 +6159,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -5951,6 +6183,14 @@
     "modelId": 1505,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1505,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -7859,6 +8099,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -7874,6 +8146,30 @@
     "modelId": 1641,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -7948,6 +8244,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -7956,6 +8268,14 @@
     "modelId": 1641,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1641,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -9842,6 +10162,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -9857,6 +10209,30 @@
     "modelId": 1734,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "activityCapabilityId": 100506,
@@ -9953,6 +10329,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -9961,6 +10353,14 @@
     "modelId": 1734,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 1734,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -11901,6 +12301,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -11916,6 +12348,30 @@
     "modelId": 211,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {},
    "73": {
@@ -11952,6 +12408,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -11960,6 +12432,14 @@
     "modelId": 211,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 211,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -13870,6 +14350,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -13885,6 +14397,30 @@
     "modelId": 2374,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -13959,6 +14495,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -13967,6 +14519,14 @@
     "modelId": 2374,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 2374,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -15875,6 +16435,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -15890,6 +16482,30 @@
     "modelId": 418,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -15964,6 +16580,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -15972,6 +16604,14 @@
     "modelId": 418,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 418,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -17858,6 +18498,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -17873,6 +18545,30 @@
     "modelId": 557,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "activityCapabilityId": 100506,
@@ -17969,6 +18665,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -17977,6 +18689,14 @@
     "modelId": 557,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 557,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -19877,6 +20597,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -19892,6 +20644,30 @@
     "modelId": 56,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -19968,6 +20744,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -19976,6 +20768,14 @@
     "modelId": 56,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 56,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -21884,6 +22684,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -21899,6 +22731,30 @@
     "modelId": 562,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -21973,6 +22829,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -21981,6 +22853,14 @@
     "modelId": 562,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 562,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -23885,6 +24765,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -23900,6 +24812,30 @@
     "modelId": 76,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -23972,6 +24908,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -23980,6 +24932,14 @@
     "modelId": 76,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 76,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,
@@ -25888,6 +26848,38 @@
     "name": "total_power_consumption",
     "type": "energy"
    },
+   "47": {
+    "capabilityId": 47,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_burner_flame",
+    "type": "current"
+   },
+   "48": {
+    "capabilityId": 48,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_current_flow",
+    "type": "flow_rate"
+   },
+   "49": {
+    "capabilityId": 49,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_flame_status",
+    "type": "binary"
+   },
+   "50": {
+    "capabilityId": 50,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_modulation_level",
+    "type": "percentage"
+   },
    "57": {
     "capabilityId": 57,
     "category": "sensor",
@@ -25903,6 +26895,30 @@
     "modelId": 999999,
     "name": "power_consumption",
     "type": "energy"
+   },
+   "65": {
+    "capabilityId": 65,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "fan_status",
+    "type": "string"
+   },
+   "66": {
+    "capabilityId": 66,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "dhw_circulator_status",
+    "type": "string"
+   },
+   "67": {
+    "capabilityId": 67,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_flow_from_burner_pump",
+    "type": "string"
    },
    "7": {
     "airCirculationCapabilityId": 102024,
@@ -25977,6 +26993,22 @@
     "name": "model_name",
     "type": "string"
    },
+   "89": {
+    "capabilityId": 89,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_heating_successful_burner_starts",
+    "type": "int"
+   },
+   "90": {
+    "capabilityId": 90,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_dhw_burner_starts",
+    "type": "int"
+   },
    "91": {
     "capabilityId": 91,
     "category": "diag",
@@ -25985,6 +27017,14 @@
     "modelId": 999999,
     "name": "active_circuit",
     "type": "string"
+   },
+   "92": {
+    "capabilityId": 92,
+    "category": "diag",
+    "enabled_by_default": false,
+    "modelId": 999999,
+    "name": "generator_hours_flame_too_low",
+    "type": "int"
    },
    "93": {
     "capabilityId": 93,

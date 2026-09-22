@@ -3566,3 +3566,51 @@ enum for each.
 - **100300** `ROOM_idxStartOfWeek` -- which day the thermostat counts a week
   from, Sunday being 0. Worth having as a word rather than a number, since
   reading a weekly program depends on it.
+
+## Naming the catalogue, family by family
+
+The vendor's catalogue declares 405 capabilities and the table names 240 of
+them. The rest are being added a product family at a time, from the
+catalogue's own name, description, type, unit, bounds and enum members rather
+than from a capture -- which is a better source than most of the existing rows
+have, since those were reverse-engineered from one household's dump.
+
+Every row added this way is `DIAG` and off by default. The catalogue says what
+a capability *is*; it says nothing about whether the vendor's app lets anybody
+do anything with it, and that is still the difference between a control that
+works and one that writes into the void. None of them is writable here, whatever
+`accessType` says.
+
+### The units Home Assistant already had
+
+The generated rows turned up units the mapping had no type for -- a burner's
+flame current in µA, a flow rate in l/min -- and the first pass dropped them
+to a plain reading, which shows a current as a number with nothing beside it.
+
+Home Assistant covers both: `SensorDeviceClass.CURRENT` has µA among its
+units, and `VOLUME_FLOW_RATE` has L/min. So `CURRENT` and `FLOW_RATE` join
+`CapabilityType`, and no custom unit is invented.
+
+`_unit()` in `sensor.py` now reads `displayed_unit_of_measurement` off the row
+rather than fixing the unit per type, the way `_energy` already did for Wh
+against kWh. One device class covers several units and the vendor picks per
+capability -- kW on one power reading and W on the next -- so the unit belongs
+on the row. Home Assistant rejects a unit its device class does not cover,
+which is what keeps the override honest.
+
+A type is added with the rows that produce it and not before:
+`test_no_platform_waits_for_a_type_nothing_produces` fails otherwise, and it
+is right to. The units with no device class at all -- dl/min, cts/kWh -- stay
+plain readings.
+
+### The Boiler family, ten ids
+
+Two of them are the vendor's own French inside an English enum: `65 FanStatus`
+declares `arret` and `marche`, where `66 DHWCirculatorStatus` beside it
+declares `Off` and `On` for the same two states. The entity states read `off`
+and `on` for both. An entity's state is not where a vendor's inconsistency
+belongs.
+
+`67 QGenFlowFromBurnerPump` is named `generator_flow_from_burner_pump` here.
+Its unit is dl/min, which Home Assistant has no unit for, so it is a plain
+reading rather than a flow rate converted on a guess.
