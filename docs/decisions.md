@@ -3378,3 +3378,59 @@ The dump now lists all three groups, and the notice counts only the last. A
 suppressed id is listed rather than dropped, because "nobody has named this"
 and "somebody decided this" are different answers and only one of them is a
 report worth opening.
+
+## Eight ids named from a live account and the catalogue
+
+A dump taken on 2026-09-22, from a HUB Navizone with three room air
+conditioners and three ducted zones, reported thirteen ids nothing named.
+Three of them had rows and were misfiled (see above). Two are the subject of
+their own entries. The remaining eight get rows here, and every one of them is
+named from the vendor's catalogue rather than from a reading: the name, the
+description, the type, the bounds and the enum members are all Atlantic's.
+
+All eight are `DIAG` and off by default, because a dump proves what a device
+*reports*, never what the app lets you *do* with it. None of them is written.
+
+- **17 `ROOM1_ControlSetpoint`** -- the setpoint actually in force, which is
+  not always the one asked for: 40 is what somebody set, 17 is what the
+  program or an override left running. A heat pump already steers its first
+  zone on this id, and there the climate entity claims it before the row is
+  reached, so the row only surfaces on products that report it without being
+  steered on it.
+- **341 `ROOM1_ThermostatOperatingMode_AutoValue`** -- what the thermostat is
+  really doing while the setpoint mode is Auto. Its `1` is `Unavailable`,
+  which is what it says when the device is not in auto at all, and that is not
+  the same as off.
+- **347 and 348** -- how many schedule transitions the thermostat can hold,
+  daily and weekly. Capability limits rather than readings, which is why they
+  are diagnostics and not sensors.
+- **100014 `DEVICE_DeviceType`** -- what the device calls itself. A reading
+  and not a source: it answers 255 `Unknown` on the ducted zones of an account
+  whose hardware `model.py` types perfectly well from its `productId`. Absent
+  on zones, which keeps the rule that a zone maps to nothing at all.
+- **100100 `Asked_Thermal_Comfort`** -- the mode that was asked for, beside 7
+  which is the one running. Two of its eleven members are the vendor's own
+  French -- `10 Arret`, `11 Marche` -- and the same account reports the
+  literal string `None` on it, which is why it is read and never written.
+- **103014 `ROOM_Type`** -- an integer with no enum in the catalogue, so it is
+  surfaced as the number it is.
+
+### 103026 says what drives a room, which we had written off as unknowable
+
+`capability.py` says, above `_room_entity`, that nothing a room slot reports
+tells you whether the room holds a radiator or an air conditioner, and the
+class is built to let the capabilities decide. The catalogue names 103026
+`ROOM_ThermalGeneratorCapabilities`: *"Indicates the type of generator linked
+in the thermal zone associated to the Room"*, with nine members --
+air-to-water heat pump, boiler, air-to-air split, panel heater, towel dryer,
+floor heater and two I2G variants.
+
+The account it was found on reads 8, air-to-air split, on all three rooms,
+which is what its hardware is.
+
+That is one observation, all of it one kind of gateway, so nothing is rewired
+on it here. The row reads the value as a sum -- the members are powers of two
+and the name is plural, so a room may sit in front of more than one generator
+-- and it is a diagnostic until a dump from a room behind a radiator says the
+field moves. If it does, `_room_entity` has a source it was written without,
+and the paragraph above it is wrong rather than cautious.
