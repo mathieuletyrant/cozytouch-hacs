@@ -474,21 +474,30 @@ class Hub(DataUpdateCoordinator):
 
     def get_capability_names(
         self, deviceId: int | None = None
-    ) -> tuple[dict[int, str], list[int]]:
-        """Split what a device reports into what the mapping names and what it
-        does not.
+    ) -> tuple[dict[int, str], list[int], list[int]]:
+        """Split what a device reports three ways: named, suppressed, unknown.
 
-        Read by the diagnostics dump and by the repair that asks for one, so
-        the rule for "named" lives here rather than in each.
+        Three and not two. `get_capability_infos` answers None for an id
+        nothing in the mapping knows, and an empty `CapabilityInfos` for one it
+        knows and deliberately does not turn into an entity here -- a flag the
+        product does not have, a type the row is absent on, a mode id the
+        device reports without steering on. Both are falsy, so reading them the
+        same way filed a decision as a gap: this account's 171, 172 and 100507
+        have rows and read as unnamed. See docs/decisions.md.
+
+        Read by the diagnostics dump and by the notice that asks for one, so
+        the rule lives here rather than in each.
         """
         dev = device_of(self, deviceId)
         if dev is None:
-            return {}, []
+            return {}, [], []
 
         modelInfos = get_device_model_infos(self._account.devices, dev)
         availableCapabilityIds = {cap["capabilityId"] for cap in dev["capabilities"]}
 
-        mapped, unmapped = {}, []
+        mapped: dict[int, str] = {}
+        suppressed: list[int] = []
+        unmapped: list[int] = []
         for cap in dev["capabilities"]:
             infos = get_capability_infos(
                 modelInfos,
@@ -498,10 +507,12 @@ class Hub(DataUpdateCoordinator):
             )
             if infos:
                 mapped[cap["capabilityId"]] = infos.get("name")
-            else:
+            elif infos is None:
                 unmapped.append(cap["capabilityId"])
+            else:
+                suppressed.append(cap["capabilityId"])
 
-        return mapped, sorted(unmapped)
+        return mapped, sorted(suppressed), sorted(unmapped)
 
     def get_diagnostics(self) -> dict:
         """Describe the account as the API reports it, for a diagnostics dump.
@@ -519,7 +530,9 @@ class Hub(DataUpdateCoordinator):
         for dev in self._account.devices:
             modelInfos = get_device_model_infos(self._account.devices, dev)
 
-            mapped, unmapped = self.get_capability_names(dev["deviceId"])
+            mapped, suppressed, unmapped = self.get_capability_names(
+                dev["deviceId"]
+            )
 
             devices.append(
                 {
@@ -545,6 +558,12 @@ class Hub(DataUpdateCoordinator):
                     },
                     "capabilities": {
                         "mapped": mapped,
+                        # Known, and deliberately not an entity on this
+                        # product. Listed rather than dropped: it is the
+                        # difference between "nobody has named this" and
+                        # "somebody decided this", and only one of the two is
+                        # a report worth opening.
+                        "suppressed": suppressed,
                         "unmapped": unmapped,
                         "values": {
                             cap["capabilityId"]: cap["value"]

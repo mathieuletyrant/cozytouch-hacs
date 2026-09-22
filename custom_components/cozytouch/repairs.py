@@ -43,7 +43,9 @@ def async_check_faults(hass: HomeAssistant, entry: ConfigEntry) -> None:
     unnamed: set[int] = set()
     devices = 0
     for hub in entry.runtime_data.hubs.values():
-        _, ids = hub.get_capability_names()
+        # The suppressed ones are somebody's decision, not a gap, so they are
+        # not what this asks about. See docs/decisions.md.
+        _, _, ids = hub.get_capability_names()
         if ids:
             devices += 1
             unnamed.update(ids)

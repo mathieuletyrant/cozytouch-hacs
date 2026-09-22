@@ -3357,3 +3357,24 @@ show before, and most accounts have some. That is the trade accepted: the
 alternative is the current state, where the people whose hardware is half-read
 are exactly the people who never find out.
 
+
+### Suppressed is not unmapped
+
+`get_capability_infos` has two ways of declining. `None` means nothing in the
+mapping knows the id. An empty `CapabilityInfos` means it is known and
+deliberately not an entity *here*: a `needs_flag` the product does not have,
+an `absent_on` covering its type, a `valid_above` the reading fails, an id in
+`SUPPRESSED_CAPABILITIES`, or one of 1, 2, 7 and 8 on a product that reports
+it without steering on it.
+
+Both are falsy, and the split that feeds the dump read them the same way. So
+a decision was filed as a gap. On the account this was found with, three of
+the thirteen "unnamed" ids had rows: 171 and 172, the absence setpoints an air
+conditioner reports and does not honour, and 100507, the eco mode the app does
+not offer on a room. The notice then asked for a report about ids that had
+already been reasoned about, in writing, in this file.
+
+The dump now lists all three groups, and the notice counts only the last. A
+suppressed id is listed rather than dropped, because "nobody has named this"
+and "somebody decided this" are different answers and only one of them is a
+report worth opening.
