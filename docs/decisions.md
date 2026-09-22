@@ -1899,19 +1899,66 @@ following the README has.
 
 ## `custom_components/cozytouch/hub.py`
 
-### The poll is the account's, every 30 seconds
+### The poll is the account's, every 60 seconds, and a write does not wait
 
-30 seconds where every version of this integration has said 60, and it costs
-*less* : the setup view carries every device, so this is two requests a minute
+The setup view carries every device, so the beat is one request a minute
 whatever the account holds, where the per-device poll it replaces was one per
 device per minute — five for the gateway-plus-four-units account in
-`docs/api-surface.md`. Anything from three devices up is both cheaper and
-twice as fresh.
+`docs/api-surface.md`.
 
-30 is also what the account's own `rateLimit` says, which is the one reading
-of that field nothing contradicts. That is a coincidence worth naming and not
-evidence : `rate_limit` is used as a ceiling in `poll_interval`, never as the
-source of this number.
+It ran at 30 s for a while, on the argument that the new shape had bought the
+headroom. What that bought was half the latency on a change nobody made from
+Home Assistant — a schedule firing, somebody turning a dial on the wall — and
+those are not events anybody is watching a dashboard for. What is watched is
+the second after a write, and a shorter beat is a poor way to pay for it : it
+spends every minute of every day on the one minute that matters.
+
+A write pays for it directly instead. It refreshes the device written to, then
+reads the account at once and once more at `WRITE_SETTLE_DELAY`, which is what
+the other devices get : a capability can be the whole home's — air circulation
+(102024) is — and the device that wrote it is not the only one whose value
+changed.
+
+The immediate read is immediate because it can be, which was measured rather
+than assumed ; the entry below says what. The second is for what a device
+derives from a write rather than what the write set — the remaining time, the
+mode a unit locks itself into — and is the only half that needs a guard
+against stacking, since the first goes through Home Assistant's own debouncer.
+
+That is the vendor app's shape rather than its numbers — it polls every device
+every five seconds, and only while somebody has it open. See the entry under
+`hub.py` for what was read out of it.
+
+### Neither plane is staler than the other, measured (22/09/2026)
+
+`research/probe_propagation.py` writes one capability and then watches both
+routes until each agrees. Air circulation (102024) on ROOM_0 of the reporting
+account, three rooms behind one HUB Navizone :
+
+    wrote '1' on 27906641, execution 18612101 -> state 3
+      +0.0s  /capabilities(27906641)='1'  setupviewv2 agreeing: [27906641, 27906642, 27906643]
+
+Both planes carried the new value on the first read after the execution
+reported completion, and all three rooms flipped together. So :
+
+- `setupviewv2` is not a cache that a write leaves behind. A write can read
+  it, which is the difference between one request and one per device — seven
+  on that account, against a `rateLimit` that reads 30.
+- The vendor app reading `/capabilities` and never `setupviewv2` is not a
+  freshness argument. The likely reason is payload size : the setup view is
+  the whole account, and the app asks every five seconds over cellular.
+- There is no per-device propagation to wait out. A household capability is
+  already true of every room by the time the execution completes ; what the
+  siblings lack is somebody to go and fetch it, which is what the write-time
+  read is.
+
+What this does *not* establish : one capability, one account, one moment. A
+capability that reaches the hardware over a slower link may well behave
+differently, and `PENDING_WRITE_GRACE` is still the guess it always was —
+this measured the cloud agreeing, not the hardware confirming.
+
+The account's own `rateLimit` reads 30 on the one account ever captured. It is
+used as a ceiling in `poll_interval` and was never the source of a number here.
 
 The floor of 15 s is where the requests stop buying anything. Atlantic's cloud
 learns from the hardware on its own schedule, and no amount of asking makes a
@@ -2040,6 +2087,39 @@ spelling. `None` is what Home Assistant already has for this : the frontend
 renders it in the reader's language, `states()` gives `unknown`, and the
 `unknown` / `unavailable` distinction other integrations rely on starts
 working. The datetime entities on the same capability already returned None.
+
+### What the vendor app does instead of a poll interval (22/09/2026)
+
+Read from the decompiled Android app, in
+`fr/modulotech/app/domain/GacomaPollManager.java`. There is no push : no
+websocket, no server-sent events, no FCM message carrying a value. The app
+polls, and it polls harder than anything Home Assistant would tolerate.
+
+`startPolling` builds `Observable.interval(0L, 5L, TimeUnit.SECONDS)`. Each
+tick maps every registered device to a `GET /magellan/capabilities/?deviceId=`
+and merges them with `Single.merge`, so N requests leave together and each
+screen is updated from its own reply through
+`Listener.onCapabilitiesUpdated`. Three rooms therefore refresh one after
+another in whatever order the cloud answers, which is what somebody watching
+the app sees and reports as a value "propagating" from device to device.
+Nothing propagates : three replies arrive.
+
+`setupviewv2` is not in that loop at all. `GlobalRepositoryImpl.fetchSetupView`
+runs at login and after a pairing, and never again. The app's live view is
+`/capabilities` per device, which is the opposite of the trade this
+integration made -- and for a reason:
+
+`DefaultActivity.onPause` calls `stopPolling`, which disposes the
+subscription; `onResume` calls `initPolling`, which re-registers every device
+of the account and starts a fresh interval with an initial delay of zero. The
+5-second beat exists only while somebody is looking at a lit screen, for the
+minute or two that lasts. Home Assistant polls for months without anybody
+watching, so the app's number cannot be copied -- only its shape : fast while
+somebody is acting, cheap the rest of the time.
+
+`POST /magellan/executions/refreshcapability` is the app's other lever and is
+still unused here (`docs/api-surface.md`) : it asks the cloud to re-read one
+capability from the hardware rather than waiting for the hardware to report.
 
 ## `custom_components/cozytouch/calendar.py`
 

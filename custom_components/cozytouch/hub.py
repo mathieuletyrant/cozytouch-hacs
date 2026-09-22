@@ -11,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
@@ -35,11 +36,16 @@ _LOGGER = logging.getLogger(__name__)
 
 # How often the account asks Atlantic for the setup view, and the bounds the
 # option is held between. See docs/decisions.md.
-DEFAULT_POLL_INTERVAL = 30
+DEFAULT_POLL_INTERVAL = 60
 MIN_POLL_INTERVAL = 15
 MAX_POLL_INTERVAL = 600
 
 POLL_INTERVAL_OPTION = "poll_interval"
+
+# How long after a write the account is read a second time, in seconds. The
+# first read is immediate : both planes carry the new value the moment the
+# execution completes, measured. See docs/decisions.md.
+WRITE_SETTLE_DELAY = 15
 
 
 @dataclass
@@ -118,10 +124,36 @@ class AccountCoordinator(DataUpdateCoordinator):
         self._account = account
         self._hubs = hubs
         self._entry = config_entry
+        self._settle_unsubs: list[Callable[[], None]] = []
+        config_entry.async_on_unload(self.async_cancel_settle)
 
         # Without a listener of its own, this coordinator never reschedules
         # and no poll follows setup's first one. See docs/decisions.md.
         self.async_add_listener(lambda: None)
+
+    async def async_after_write(self) -> None:
+        """Re-read the account after somebody wrote something.
+
+        The device written to refreshes itself; this is what its siblings get,
+        since a capability can be the whole home's. Immediately, because the
+        cloud already holds the value, and once more later for what the device
+        derives from it afterwards. See docs/decisions.md.
+        """
+        self.async_cancel_settle()
+        self._settle_unsubs = [
+            async_call_later(self.hass, WRITE_SETTLE_DELAY, self._settle_tick)
+        ]
+        await self.async_request_refresh()
+
+    def async_cancel_settle(self) -> None:
+        """Drop whatever a previous write scheduled."""
+        for unsub in self._settle_unsubs:
+            unsub()
+        self._settle_unsubs = []
+
+    async def _settle_tick(self, _now) -> None:
+        """The settling read, for the values a write leads to rather than sets."""
+        await self.async_refresh()
 
     async def _async_update_data(self) -> None:
         """Read the setup view once, and hand it to every device."""
@@ -341,6 +373,11 @@ class Hub(DataUpdateCoordinator):
         self._account.store_capabilities(self._deviceId, capabilities)
         await self._commit_staged_away_mode()
         await self._refresh_faults()
+
+        # This ran because of a write, and a write can be the home's. See
+        # docs/decisions.md.
+        if (runtime := getattr(self._entry, "runtime_data", None)) is not None:
+            await runtime.coordinator.async_after_write()
 
     async def _commit_staged_away_mode(self) -> None:
         """Send the away window once both ends have stopped moving.

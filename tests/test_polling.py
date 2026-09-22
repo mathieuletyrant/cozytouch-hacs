@@ -24,7 +24,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from custom_components.cozytouch import account as account_module
+from custom_components.cozytouch import account as account_module, hub as hub_module
 from custom_components.cozytouch.account import (
     RATE_LIMIT_BACKOFF,
     CozytouchAccount,
@@ -183,6 +183,8 @@ def coordinator_over(account, hubs):
     coordinator = object.__new__(AccountCoordinator)
     coordinator._account = account
     coordinator._hubs = hubs
+    coordinator._settle_unsubs = []
+    coordinator.hass = None
     # No entry, so the poll publishes without looking for faults to report.
     coordinator._entry = None
 
@@ -589,6 +591,7 @@ def hub_over(account, deviceId=1):
     hub = object.__new__(Hub)
     hub._account = account
     hub._deviceId = deviceId
+    hub._entry = None
     hub._timestamp_away_mode_last_change = None
     hub._timestamps_away_mode_capability_id = None
     hub._timestamp_away_mode_start = None
@@ -735,3 +738,93 @@ def test_a_write_nothing_ever_reports_stops_being_held(monkeypatch):
     monkeypatch.setattr(account_module, "PENDING_WRITE_GRACE", -1.0)
 
     assert write_and_poll(monkeypatch, account, session) == "18"
+
+
+# --- what a write leaves behind --------------------------------------------
+
+
+def scheduled(monkeypatch):
+    """Record what `async_call_later` was asked for, and hand back cancels."""
+    calls: list[tuple[float, object]] = []
+    cancelled: list[int] = []
+
+    def fake_call_later(hass, delay, action):
+        index = len(calls)
+        calls.append((delay, action))
+        return lambda: cancelled.append(index)
+
+    monkeypatch.setattr(hub_module, "async_call_later", fake_call_later)
+
+    return calls, cancelled
+
+
+def test_a_write_reads_the_account_at_once_and_again_once_it_settles(monkeypatch):
+    """A capability can be the whole home's, and only one device wrote it.
+
+    The device written to refreshes itself through `fetch_capabilities`. Its
+    siblings would otherwise wait for the beat, which is a minute by default --
+    the vendor app hides this by polling every device every five seconds while
+    it is open.
+
+    The first read is immediate because it can be : both planes carry the value
+    the moment the execution completes, measured on three rooms on 2026-09-22.
+    The booked one is for what the device derives afterwards. See
+    docs/decisions.md.
+    """
+    account, _ = connected(monkeypatch)
+    calls, _ = scheduled(monkeypatch)
+    coordinator = coordinator_over(account, {})
+    refreshed = []
+    coordinator.async_request_refresh = lambda: _noop(refreshed)
+
+    asyncio.run(coordinator.async_after_write())
+
+    assert refreshed == [True]
+    assert [delay for delay, _ in calls] == [hub_module.WRITE_SETTLE_DELAY]
+
+
+async def _noop(recorded):
+    """Stand in for the coordinator's own debounced refresh."""
+    recorded.append(True)
+
+
+def test_a_second_write_replaces_the_settling_read_rather_than_stacking_it(
+    monkeypatch,
+):
+    """Ten entities written in a row must not book ten settling reads.
+
+    The immediate half needs no guard of its own : it goes through Home
+    Assistant's own debouncer, which is what collapses a burst of writes.
+    """
+    account, _ = connected(monkeypatch)
+    calls, cancelled = scheduled(monkeypatch)
+
+    coordinator = coordinator_over(account, {})
+    refreshed = []
+    coordinator.async_request_refresh = lambda: _noop(refreshed)
+
+    asyncio.run(coordinator.async_after_write())
+    asyncio.run(coordinator.async_after_write())
+
+    assert cancelled == [0]
+    assert len(calls) == 2
+
+
+def test_the_targeted_refresh_asks_for_the_account_read(monkeypatch):
+    """The seam : the write path is what books it, and nothing else does."""
+    account, session = connected(monkeypatch)
+    session._answers["/magellan/capabilities/"] = FakeResponse(
+        [{"capabilityId": 100, "value": "23"}]
+    )
+
+    asked: list[bool] = []
+    hub = hub_over(account)
+    hub._entry = SimpleNamespace(
+        runtime_data=SimpleNamespace(
+            coordinator=SimpleNamespace(async_after_write=lambda: _noop(asked))
+        )
+    )
+
+    asyncio.run(hub._async_update_data())
+
+    assert asked == [True]

@@ -35,7 +35,8 @@ of that :
   language Home Assistant is set to
 
 Everything runs over the cloud : one login, one poll for the whole account,
-every 30 seconds by default.
+every 60 seconds by default -- plus an immediate re-read whenever you change
+something, so you never wait out the minute.
 
 ## 📋 Supported devices
 
@@ -123,9 +124,11 @@ credentials are sent once and the account is polled once whatever you own.
 To add a device later, use `Add device` on the integration page. To stop
 following one, delete it from there.
 
-Values refresh every 30 seconds by default. One request covers the whole
-account, so ticking more devices does not make the integration talk to Atlantic
-more often. You can change the interval under `Configure` on the integration
+Values refresh every 60 seconds by default, and right away when you change
+something -- including the other rooms, since a setting like air circulation
+is shared by all of them. One request
+covers the whole account, so ticking more devices does not make the integration
+talk to Atlantic more often. You can change the interval under `Configure` on the integration
 page; 15 seconds is the lowest it accepts, and below that the requests stop
 buying anything -- Atlantic's cloud hears from your hardware on its own
 schedule, whatever we ask it.
