@@ -17,7 +17,7 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS, program_block
+from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS, stored_in
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
 from .services import build_matrix, parse_slots, slot_limit
 
@@ -43,23 +43,24 @@ async def async_setup_entry(
                 coordinator=hub,
                 config_uniq_id=subentry_id,
                 program=program,
+                first=first,
             )
-            for program, first in PROGRAM_BLOCKS.items()
-            if _reports_the_whole_block(hub, first)
+            for program, first in (
+                (program, _where_the_block_is(hub, program))
+                for program in PROGRAM_BLOCKS
+            )
+            if first is not None
         ]
 
         if calendars:
             async_add_entities(calendars, True, config_subentry_id=subentry_id)
 
 
-def _reports_the_whole_block(hub: Hub, first: int) -> bool:
-    """Whether this device reports all seven days of a program block.
-
-    All seven rather than any. See docs/decisions.md.
-    """
-    return all(
-        hub.get_capability_value(capabilityId, None) is not None
-        for capabilityId in program_block(first)
+def _where_the_block_is(hub: Hub, program: str) -> int | None:
+    """Which run of seven this device holds a program in, or None."""
+    return stored_in(
+        program,
+        lambda capabilityId: hub.get_capability_value(capabilityId, None) is not None,
     )
 
 
@@ -100,12 +101,13 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
         coordinator: Hub,
         config_uniq_id: str,
         program: str,
+        first: int,
     ) -> None:
         """Initialize a program calendar."""
         super().__init__(coordinator)
 
         self._program = program
-        self._first_capability = PROGRAM_BLOCKS[program]
+        self._first_capability = first
         self._device_uniq_id = config_uniq_id
         # The service's words for these blocks, so one vocabulary covers all
         # three. See docs/decisions.md.

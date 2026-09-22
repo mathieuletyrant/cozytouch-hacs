@@ -608,6 +608,10 @@ class CozytouchAccount:
                 dev["capabilities"] = copy.deepcopy(capabilities)
                 break
 
+        # This is the poll a write asks for, so it is the one most likely to
+        # answer with the old value. See docs/decisions.md.
+        self._apply_pending_writes()
+
     async def write_capability(
         self, deviceId: int, capabilityId: int, value: str
     ) -> bool:

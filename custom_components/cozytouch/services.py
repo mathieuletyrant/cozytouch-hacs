@@ -21,7 +21,13 @@ from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, entity_registry as er
 
 from .capability import read_setpoint
-from .const import DOMAIN, PROGRAM_DAYS, WRITABLE_PROGRAM_BLOCKS
+from .const import (
+    DOMAIN,
+    PROGRAM_BLOCKS,
+    PROGRAM_DAYS,
+    WRITABLE_PROGRAM_BLOCKS,
+    stored_in,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -300,6 +306,22 @@ def _resolve_hub(hass: HomeAssistant, entity_id: str):
     return hub
 
 
+def _block_of(hub, entity_id: str, program: str) -> int:
+    """Where this device stores a program, refusing one it does not hold."""
+    first = stored_in(
+        program,
+        lambda capabilityId: hub.get_capability_value(capabilityId, None) is not None,
+    )
+    if first is None:
+        runs = " or ".join(str(candidate) for candidate in PROGRAM_BLOCKS[program])
+        raise ServiceValidationError(
+            f"{entity_id} reports no {program} program: it starts none of the "
+            f"seven-day runs at {runs}"
+        )
+
+    return first
+
+
 @callback
 def async_register_services(hass: HomeAssistant) -> None:
     """Register the integration services, once for all config entries."""
@@ -310,10 +332,11 @@ def async_register_services(hass: HomeAssistant) -> None:
         """Write the same day program to every requested day."""
         slots = call.data["slots"]
         value = build_matrix(slots)
-        first = WRITABLE_PROGRAM_BLOCKS[call.data["program"]]
+        program = call.data["program"]
 
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
+            first = _block_of(hub, entity_id, program)
 
             limit = slot_limit(hub)
             if len(slots) > limit:
@@ -327,7 +350,7 @@ def async_register_services(hass: HomeAssistant) -> None:
                 _LOGGER.debug(
                     "set_schedule %s %s %s -> capability %d = %s",
                     entity_id,
-                    call.data["program"],
+                    program,
                     day,
                     capabilityId,
                     value,
@@ -339,11 +362,11 @@ def async_register_services(hass: HomeAssistant) -> None:
     async def async_get_schedule(call: ServiceCall) -> ServiceResponse:
         """Read a whole week back, in the shape set_schedule takes."""
         program = call.data["program"]
-        first = WRITABLE_PROGRAM_BLOCKS[program]
 
         response: dict[str, Any] = {}
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
+            first = _block_of(hub, entity_id, program)
 
             days = {}
             for index, day in enumerate(PROGRAM_DAYS):
@@ -353,12 +376,6 @@ def async_register_services(hass: HomeAssistant) -> None:
                 value = hub.get_capability_value(first + index, None)
                 if value is not None:
                     days[day] = parse_slots(value, first + index)
-
-            if not days:
-                raise ServiceValidationError(
-                    f"{entity_id} reports no {program} program: it has none of "
-                    f"capabilities {first} to {first + 6}"
-                )
 
             response[entity_id] = {"program": program, "days": days}
 

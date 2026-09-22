@@ -222,10 +222,10 @@ always the other half : **what the capabilities mean**.
 
 1. `custom_components/cozytouch/capability_table.py` — a row per capability id
    the dump lists as unmapped. A device that reads an id differently says so
-   on its row (`absent_on`, `needs_flag`, `per_type`, `per_model`), never by
-   changing the shared default. An id the row cannot decide — it depends on
-   the value, or on what else the device reports — belongs in the chain in
-   `capability.py` instead. A capability whose encoding is unverified still
+   on its row (`absent_on`, `needs_flag`, `per_type`), never by changing the
+   shared default and never keyed on a model id. An id the row cannot decide
+   — it depends on the value, or on what else the device reports — belongs
+   in the chain in `capability.py` instead. A capability whose encoding is unverified still
    gets a row: named, `type=STRING`, `category=DIAG` and
    `enabled_by_default=False`, with neither `bits` nor `reads_as`, so it costs
    nobody anything until someone turns it on to investigate. Claim a type only

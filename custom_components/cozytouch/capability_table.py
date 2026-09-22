@@ -31,6 +31,14 @@ from .model import CozytouchDeviceType
 # splits them at all.
 ELECTRIC_HEATERS = (CozytouchDeviceType.TOWEL_RACK, CozytouchDeviceType.RADIATOR)
 
+# What the Cozytouch app drags its hot-water cursor between, whichever id the
+# tank stores the setpoint in. See docs/decisions.md.
+_DHW_USER_TARGET_BOUNDS = {
+    "lowestValueCapabilityId": 253,
+    "highestValueCapabilityId": 252,
+    "step": 1,
+}
+
 
 _CONTROL_MODE_BITS = (
     (1, "basic"),
@@ -120,7 +128,8 @@ def hidden_by_a_calendar(capabilityId: int, availableCapabilityIds: set[int]) ->
     return any(
         capabilityId in program_block(first)
         and all(day in availableCapabilityIds for day in program_block(first))
-        for first in PROGRAM_BLOCKS.values()
+        for firsts in PROGRAM_BLOCKS.values()
+        for first in firsts
     )
 
 
@@ -164,7 +173,11 @@ class Entity:
             fields of their own, because each is read by one platform only.
 
     The last four say the same id does not mean the same thing on every
-    product, which is why this is a table of rows rather than of strings :
+    product, which is why this is a table of rows rather than of strings.
+    All four key on what a device *is*, never on which model id it carries :
+    the vendor's own app dispatches on the device class, and a row keyed on
+    an id is a list that grows by one with every report. See
+    docs/decisions.md.
 
     absent_on   device types with no such entity at all.
     needs_flag  a flag from model.py that has to hold for the entity to exist.
@@ -172,8 +185,6 @@ class Entity:
     per_type    the keys to merge in last, for the device types named in the
                 key -- a tuple, like absent_on, so two products reading an id
                 the same way say so once.
-    per_model   the same per model id, for the products Atlantic wired to
-                different capabilities.
     valid_above the entity exists only while the value is above this. Atlantic
                 sends a far-out-of-range reading rather than nothing when a
                 probe has nothing to say.
@@ -192,7 +203,6 @@ class Entity:
     per_type: Mapping[tuple[CozytouchDeviceType, ...], Mapping[str, object]] | None = (
         None
     )
-    per_model: Mapping[int, Mapping[str, object]] | None = None
     valid_above: float | None = None
 
     def resolve(
@@ -219,7 +229,6 @@ class Entity:
             for deviceTypes, override in (self.per_type or {}).items()
             if modelInfos.type in deviceTypes
         ]
-        overrides.append((self.per_model or {}).get(modelInfos.modelId))
         for source in overrides:
             for key, setting in (source or {}).items():
                 capability[key] = setting
@@ -382,17 +391,13 @@ CAPABILITIES: dict[int, Entity] = {
         },
     ),
     22: Entity(
+        # 160/161 are the room's bounds, and a tank that reports its own
+        # answers on 253/252. See docs/decisions.md.
         name="target_temperature_dhw",
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
         enabled_by_default=True,
         extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
-        per_model={
-            2374: {
-                "lowestValueCapabilityId": 253,
-                "highestValueCapabilityId": 252,
-                "step": 1,
-            }
-        },
+        per_type={(CozytouchDeviceType.WATER_HEATER,): _DHW_USER_TARGET_BOUNDS},
     ),
     23: Entity(
         name="dhw_comfort_setpoint",
@@ -1639,13 +1644,7 @@ CAPABILITIES: dict[int, Entity] = {
             "lowestValueCapabilityId": 105301,
             "highestValueCapabilityId": 105304,
         },
-        per_model={
-            2374: {
-                "lowestValueCapabilityId": 253,
-                "highestValueCapabilityId": 252,
-                "step": 1,
-            }
-        },
+        per_type={(CozytouchDeviceType.WATER_HEATER,): _DHW_USER_TARGET_BOUNDS},
     ),
     232: Entity(
         name="boost_total_time",

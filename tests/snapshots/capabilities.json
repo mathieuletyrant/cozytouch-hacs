@@ -220,6 +220,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -227,6 +228,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -234,6 +236,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -241,6 +244,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -248,6 +252,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -255,6 +260,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -262,6 +268,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -269,6 +276,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -276,6 +284,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -283,6 +292,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -290,6 +300,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -297,6 +308,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -304,6 +316,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -311,6 +324,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -3444,6 +3458,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -3451,6 +3466,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -3458,6 +3474,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -3465,6 +3482,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -3472,6 +3490,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -3479,6 +3498,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -3486,6 +3506,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -3493,6 +3514,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -3500,6 +3522,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -3507,6 +3530,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -3514,6 +3538,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -3521,6 +3546,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -3528,6 +3554,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -3535,6 +3562,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -6649,6 +6677,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -6656,6 +6685,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -6663,6 +6693,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -6670,6 +6701,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -6677,6 +6709,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -6684,6 +6717,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -6691,6 +6725,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -6698,6 +6733,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -6705,6 +6741,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -6712,6 +6749,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -6719,6 +6757,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -6726,6 +6765,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -6733,6 +6773,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -6740,6 +6781,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -9868,6 +9910,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -9875,6 +9918,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -9882,6 +9926,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -9889,6 +9934,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -9896,6 +9942,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -9903,6 +9950,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -9910,6 +9958,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -9917,6 +9966,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -9924,6 +9974,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -9931,6 +9982,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -9938,6 +9990,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -9945,6 +9998,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -9952,6 +10006,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -9959,6 +10014,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -11247,10 +11303,11 @@
    "22": {
     "capabilityId": 22,
     "category": "sensor",
-    "highestValueCapabilityId": 161,
-    "lowestValueCapabilityId": 160,
+    "highestValueCapabilityId": 252,
+    "lowestValueCapabilityId": 253,
     "modelId": 1641,
     "name": "target_temperature_dhw",
+    "step": 1,
     "type": "temperature_adjustment_number"
    },
    "220": {
@@ -11361,10 +11418,11 @@
    "231": {
     "capabilityId": 231,
     "category": "sensor",
-    "highestValueCapabilityId": 105304,
-    "lowestValueCapabilityId": 105301,
+    "highestValueCapabilityId": 252,
+    "lowestValueCapabilityId": 253,
     "modelId": 1641,
     "name": "target_temperature",
+    "step": 1,
     "type": "temperature_adjustment_number"
    },
    "232": {
@@ -13095,6 +13153,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -13102,6 +13161,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -13109,6 +13169,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -13116,6 +13177,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -13123,6 +13185,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -13130,6 +13193,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -13137,6 +13201,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -13144,6 +13209,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -13151,6 +13217,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -13158,6 +13225,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -13165,6 +13233,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -13172,6 +13241,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -13179,6 +13249,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -13186,6 +13257,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -16340,6 +16412,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -16347,6 +16420,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -16354,6 +16428,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -16361,6 +16436,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -16368,6 +16444,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -16375,6 +16452,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -16382,6 +16460,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -16389,6 +16468,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -16396,6 +16476,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -16403,6 +16484,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -16410,6 +16492,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -16417,6 +16500,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -16424,6 +16508,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -16431,6 +16516,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -19543,6 +19629,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -19550,6 +19637,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -19557,6 +19645,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -19564,6 +19653,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -19571,6 +19661,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -19578,6 +19669,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -19585,6 +19677,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -19592,6 +19685,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -19599,6 +19693,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -19606,6 +19701,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -19613,6 +19709,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -19620,6 +19717,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -19627,6 +19725,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -19634,6 +19733,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -22772,6 +22872,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -22779,6 +22880,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -22786,6 +22888,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -22793,6 +22896,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -22800,6 +22904,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -22807,6 +22912,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -22814,6 +22920,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -22821,6 +22928,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -22828,6 +22936,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -22835,6 +22944,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -22842,6 +22952,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -22849,6 +22960,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -22856,6 +22968,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -22863,6 +22976,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -25999,6 +26113,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -26006,6 +26121,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -26013,6 +26129,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -26020,6 +26137,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -26027,6 +26145,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -26034,6 +26153,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -26041,6 +26161,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -26048,6 +26169,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -26055,6 +26177,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -26062,6 +26185,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -26069,6 +26193,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -26076,6 +26201,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -26083,6 +26209,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -26090,6 +26217,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -29226,6 +29354,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -29233,6 +29362,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -29240,6 +29370,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -29247,6 +29378,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -29254,6 +29386,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -29261,6 +29394,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -29268,6 +29402,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -29275,6 +29410,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -29282,6 +29418,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -29289,6 +29426,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -29296,6 +29434,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -29303,6 +29442,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -29310,6 +29450,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -29317,6 +29458,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -32447,6 +32589,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -32454,6 +32597,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -32461,6 +32605,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -32468,6 +32613,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -32475,6 +32621,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -32482,6 +32629,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -32489,6 +32637,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -32496,6 +32645,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -32503,6 +32653,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -32510,6 +32661,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -32517,6 +32669,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -32524,6 +32677,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -32531,6 +32685,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -32538,6 +32693,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -35674,6 +35830,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -35681,6 +35838,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -35688,6 +35846,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -35695,6 +35854,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -35702,6 +35862,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -35709,6 +35870,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -35716,6 +35878,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -35723,6 +35886,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -35730,6 +35894,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -35737,6 +35902,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -35744,6 +35910,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -35751,6 +35918,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -35758,6 +35926,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -35765,6 +35934,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
     "name": "prog_cool_sunday",
     "type": "prog"
@@ -38895,6 +39065,7 @@
    "100320": {
     "capabilityId": 100320,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_monday",
     "type": "prog"
@@ -38902,6 +39073,7 @@
    "100321": {
     "capabilityId": 100321,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_tuesday",
     "type": "prog"
@@ -38909,6 +39081,7 @@
    "100322": {
     "capabilityId": 100322,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_wednesday",
     "type": "prog"
@@ -38916,6 +39089,7 @@
    "100323": {
     "capabilityId": 100323,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_thursday",
     "type": "prog"
@@ -38923,6 +39097,7 @@
    "100324": {
     "capabilityId": 100324,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_friday",
     "type": "prog"
@@ -38930,6 +39105,7 @@
    "100325": {
     "capabilityId": 100325,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_saturday",
     "type": "prog"
@@ -38937,6 +39113,7 @@
    "100326": {
     "capabilityId": 100326,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_heat_sunday",
     "type": "prog"
@@ -38944,6 +39121,7 @@
    "100327": {
     "capabilityId": 100327,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_monday",
     "type": "prog"
@@ -38951,6 +39129,7 @@
    "100328": {
     "capabilityId": 100328,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_tuesday",
     "type": "prog"
@@ -38958,6 +39137,7 @@
    "100329": {
     "capabilityId": 100329,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_wednesday",
     "type": "prog"
@@ -38965,6 +39145,7 @@
    "100330": {
     "capabilityId": 100330,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_thursday",
     "type": "prog"
@@ -38972,6 +39153,7 @@
    "100331": {
     "capabilityId": 100331,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_friday",
     "type": "prog"
@@ -38979,6 +39161,7 @@
    "100332": {
     "capabilityId": 100332,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_saturday",
     "type": "prog"
@@ -38986,6 +39169,7 @@
    "100333": {
     "capabilityId": 100333,
     "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
     "name": "prog_cool_sunday",
     "type": "prog"

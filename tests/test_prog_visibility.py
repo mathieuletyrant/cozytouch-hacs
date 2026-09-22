@@ -12,8 +12,8 @@ stays re-enabled.
 The whole-block rule gates both halves: a partial block builds no calendar,
 and its per-day sensors stay its only view. No capture has ever shown a
 partial block, so those cases are the seam's insurance rather than observed
-behaviour. The blocks without a calendar at all -- the reduced milestones
-(100320-100333) and the time ranges (245-251) -- must keep arriving enabled
+behaviour. The blocks without a calendar at all -- the hot-water time ranges
+(245-251) -- must keep arriving enabled
 for the same reason.
 
 The migration is tested through fakes at the registry seam, the way
@@ -99,20 +99,28 @@ def test_a_whole_hot_water_block_arrives_disabled():
     assert result["enabled_by_default"] is False
 
 
-@pytest.mark.parametrize(
-    ("capabilityId", "block_first"),
-    [(100320, 100320), (100327, 100327), (245, 245)],
-)
+@pytest.mark.parametrize(("capabilityId", "block_first"), [(245, 245)])
 def test_a_block_no_calendar_covers_keeps_its_sensors_enabled(
     capabilityId, block_first
 ):
-    """The milestones and the time ranges have no other view to give way to."""
+    """The time ranges have no other view to give way to."""
     infos = get_model_infos(557)
     available = frozenset(range(block_first, block_first + 7))
 
     result = get_capability_infos(infos, capabilityId, "0", available)
 
     assert "enabled_by_default" not in result
+
+
+@pytest.mark.parametrize("block_first", [100320, 100327])
+def test_the_second_run_of_a_block_gives_way_the_same_way(block_first):
+    """Issue #121 : the same week, stored somewhere else, is still a week."""
+    infos = get_model_infos(557)
+    available = frozenset(range(block_first, block_first + 7))
+
+    result = get_capability_infos(infos, block_first, "0", available)
+
+    assert result["enabled_by_default"] is False
 
 
 # --- which registry entries the migration selects ---------------------------
