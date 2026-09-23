@@ -719,13 +719,17 @@ class Hub(DataUpdateCoordinator):
         self._timestamp_away_mode_start = timestampStart
         self._timestamp_away_mode_end = timestampEnd
 
-    async def set_away_mode_start(
+    async def set_away_mode_bound(
         self,
+        index: int,
         capabilityIdTimestamps: int,
         timestamp,
     ):
-        """Set away mode start timestamp."""
-        self._timestamp_away_mode_start = timestamp
+        """Set the away mode start (index 0) or end (index 1) timestamp."""
+        if index == 0:
+            self._timestamp_away_mode_start = timestamp
+        else:
+            self._timestamp_away_mode_end = timestamp
         self._timestamps_away_mode_capability_id = capabilityIdTimestamps
         self._timestamp_away_mode_last_change = datetime.now(
             tz=dt_util.DEFAULT_TIME_ZONE
@@ -734,18 +738,6 @@ class Hub(DataUpdateCoordinator):
     def get_away_mode_start(self):
         """Get away mode start timestamp."""
         return self._timestamp_away_mode_start
-
-    async def set_away_mode_end(
-        self,
-        capabilityIdTimestamps: int,
-        timestamp,
-    ):
-        """Set away mode end timestamp."""
-        self._timestamp_away_mode_end = timestamp
-        self._timestamps_away_mode_capability_id = capabilityIdTimestamps
-        self._timestamp_away_mode_last_change = datetime.now(
-            tz=dt_util.DEFAULT_TIME_ZONE
-        ).timestamp()
 
     def get_away_mode_end(self):
         """Get away mode end timestamp."""

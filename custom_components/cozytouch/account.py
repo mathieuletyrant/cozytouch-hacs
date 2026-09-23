@@ -441,6 +441,25 @@ class CozytouchAccount:
             if now >= expiry:
                 del self._pending_writes[key]
 
+    async def _get_json_quietly(self, path: str, what: str) -> list | None:
+        """GET a list from the API, or None on any failure, logged at debug."""
+        try:
+            async with self._session.get(
+                COZYTOUCH_ATLANTIC_API + path,
+                headers=self._headers(),
+                timeout=REQUEST_TIMEOUT,
+            ) as response:
+                if response.status != 200:
+                    _LOGGER.debug("No %s (%d)", what, response.status)
+                    return None
+
+                body = await response.json()
+        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
+            _LOGGER.debug("The %s failed: %s", what, err)
+            return None
+
+        return body if isinstance(body, list) else None
+
     async def fetch_fault_table(self, modelId: int) -> list:
         """The vendor's fault table for one model, cached for the session.
 
@@ -460,25 +479,11 @@ class CozytouchAccount:
             del self._fault_tables[modelId]
             return []
 
-        try:
-            async with self._session.get(
-                COZYTOUCH_ATLANTIC_API
-                + f"/magellan/productmodels/models/{modelId}/detailederrors",
-                headers=self._headers(),
-                timeout=REQUEST_TIMEOUT,
-            ) as response:
-                if response.status != 200:
-                    _LOGGER.debug(
-                        "No fault table for model %d (%d)", modelId, response.status
-                    )
-                    return []
-
-                table = await response.json()
-        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
-            _LOGGER.debug("Fault table for model %d failed: %s", modelId, err)
-            return []
-
-        if not isinstance(table, list):
+        table = await self._get_json_quietly(
+            f"/magellan/productmodels/models/{modelId}/detailederrors",
+            f"fault table for model {modelId}",
+        )
+        if table is None:
             return []
 
         self._fault_tables[modelId] = table
@@ -503,24 +508,10 @@ class CozytouchAccount:
             self._capability_catalogue = None
             return {}
 
-        try:
-            async with self._session.get(
-                COZYTOUCH_ATLANTIC_API + "/magellan/productmodels/capabilities",
-                headers=self._headers(),
-                timeout=REQUEST_TIMEOUT,
-            ) as response:
-                if response.status != 200:
-                    _LOGGER.debug(
-                        "No capability catalogue (%d)", response.status
-                    )
-                    return {}
-
-                catalogue = await response.json()
-        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
-            _LOGGER.debug("Capability catalogue failed: %s", err)
-            return {}
-
-        if not isinstance(catalogue, list):
+        catalogue = await self._get_json_quietly(
+            "/magellan/productmodels/capabilities", "capability catalogue"
+        )
+        if catalogue is None:
             return {}
 
         self._capability_catalogue = {

@@ -520,7 +520,33 @@ class CozytouchErrorCodeSensor(CozytouchSensor):
         }
 
 
-class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
+class _CozytouchDeviceTimestampSensor(CozytouchDeviceEntity, SensorEntity):
+    """A diagnostic timestamp that answers for the whole device."""
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+
+    def __init__(self, coordinator: Hub, config_uniq_id: str) -> None:
+        """Initialize the timestamp sensor."""
+        super().__init__(coordinator)
+
+        self._device_uniq_id = config_uniq_id
+        # Not keyed on a capability id like every other entity here, because it
+        # answers for all of them. The translation key is a name no capability
+        # can take: capability.py only ever produces ids.
+        self._attr_unique_id = (
+            f"{DOMAIN}_{config_uniq_id}_{self._attr_translation_key}"
+        )
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Publish whatever the poll just brought back."""
+        self.async_write_ha_state()
+
+
+class CozytouchLastUpdateSensor(_CozytouchDeviceTimestampSensor):
     """When the device last changed any of the values it reports.
 
     Answers what a frozen reading cannot : is the hardware still reporting, or
@@ -528,21 +554,7 @@ class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
     is deliberately not attempted. See docs/decisions.md.
     """
 
-    _attr_has_entity_name = True
-    _attr_should_poll = False
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_translation_key = "last_device_update"
-
-    def __init__(self, coordinator: Hub, config_uniq_id: str) -> None:
-        """Initialize the last-update sensor."""
-        super().__init__(coordinator)
-
-        self._device_uniq_id = config_uniq_id
-        # Not keyed on a capability id like every other entity here, because it
-        # answers for all of them. `last_device_update` is a name no capability
-        # can take: capability.py only ever produces ids.
-        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_device_update"
 
     @property
     def native_value(self) -> datetime.datetime | None:
@@ -557,13 +569,8 @@ class CozytouchLastUpdateSensor(CozytouchDeviceEntity, SensorEntity):
 
         return datetime.datetime.fromtimestamp(epoch, tz=datetime.UTC)
 
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Publish whatever the poll just brought back."""
-        self.async_write_ha_state()
 
-
-class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
+class CozytouchLastPollSensor(_CozytouchDeviceTimestampSensor):
     """When the integration last fetched the account from the API.
 
     The other half of what `CozytouchLastUpdateSensor` answers : that one says
@@ -571,20 +578,7 @@ class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     Per device though the date is the account's. See docs/decisions.md.
     """
 
-    _attr_has_entity_name = True
-    _attr_should_poll = False
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
-    _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_translation_key = "last_poll"
-
-    def __init__(self, coordinator: Hub, config_uniq_id: str) -> None:
-        """Initialize the last-poll sensor."""
-        super().__init__(coordinator)
-
-        self._device_uniq_id = config_uniq_id
-        # Like its sibling above : not keyed on a capability id, and
-        # `last_poll` is a name capability.py can never produce.
-        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_last_poll"
 
     @property
     def available(self) -> bool:
@@ -598,11 +592,6 @@ class CozytouchLastPollSensor(CozytouchDeviceEntity, SensorEntity):
     def native_value(self) -> datetime.datetime | None:
         """When the account's setup view last answered, as an aware datetime."""
         return self.coordinator.get_last_poll()
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Publish whatever the poll just brought back."""
-        self.async_write_ha_state()
 
 
 def _unit(device_class, state_class, unit):

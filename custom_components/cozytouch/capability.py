@@ -11,6 +11,7 @@ from .capability_table import (
     SUPPRESSED_CAPABILITIES,
     hidden_by_a_calendar,
 )
+from .const import program_days
 from .infos import CapabilityCategory, CapabilityInfos, CapabilityType, ModelInfos
 from .model import CozytouchDeviceType
 
@@ -64,7 +65,7 @@ def describe_capability_value(capabilityId: int, value) -> str | None:
 # The program blocks whose slots hold a room temperature. The hot-water block
 # (237-243) is deliberately out: its slots really do carry 50-65 °C, so the
 # hundredths rule below would read a 65 °C tank as 0.65 °C.
-THERMOSTAT_PROG_IDS = frozenset(range(196, 210)) | frozenset(range(100320, 100334))
+THERMOSTAT_PROG_IDS = program_days("heating") | program_days("cooling")
 
 
 def read_setpoint(capabilityId: int | None, value):
@@ -86,6 +87,38 @@ def read_setpoint(capabilityId: int | None, value):
     return setpoint / 100 if setpoint > 40 else setpoint
 
 
+def _wire_override(capability: CapabilityInfos) -> None:
+    capability.progOverrideCapabilityId = 157
+    capability.progOverrideTotalTimeCapabilityId = 158
+    capability.progOverrideTimeCapabilityId = 159
+
+
+def _wire_program(capability: CapabilityInfos) -> None:
+    capability.progCapabilityId = 184
+    _wire_override(capability)
+
+
+def _wire_cooling(capability: CapabilityInfos) -> None:
+    capability.targetCoolCapabilityId = 177
+    capability.lowestCoolValueCapabilityId = 162
+    capability.highestCoolValueCapabilityId = 163
+
+
+def _wire_presets(
+    capability: CapabilityInfos,
+    modelInfos: ModelInfos,
+    availableCapabilityIds: set[int],
+) -> None:
+    if 100506 in availableCapabilityIds:
+        capability.activityCapabilityId = 100506
+    if (
+        modelInfos.get("ecoModeAvailable", True)
+        and 100507 in availableCapabilityIds
+    ):
+        capability.ecoCapabilityId = 100507
+    if 100505 in availableCapabilityIds:
+        capability.boostCapabilityId = 100505
+
 
 def _room_entity(
     capability: CapabilityInfos,
@@ -104,22 +137,10 @@ def _room_entity(
     if 184 in availableCapabilityIds:
         capability.progCapabilityId = 184
     if 157 in availableCapabilityIds:
-        capability.progOverrideCapabilityId = 157
-        capability.progOverrideTotalTimeCapabilityId = 158
-        capability.progOverrideTimeCapabilityId = 159
+        _wire_override(capability)
     if 177 in availableCapabilityIds:
-        capability.targetCoolCapabilityId = 177
-        capability.lowestCoolValueCapabilityId = 162
-        capability.highestCoolValueCapabilityId = 163
-    if 100506 in availableCapabilityIds:
-        capability.activityCapabilityId = 100506
-    if (
-        modelInfos.get("ecoModeAvailable", True)
-        and 100507 in availableCapabilityIds
-    ):
-        capability.ecoCapabilityId = 100507
-    if 100505 in availableCapabilityIds:
-        capability.boostCapabilityId = 100505
+        _wire_cooling(capability)
+    _wire_presets(capability, modelInfos, availableCapabilityIds)
 
 
 def _climate_entity(
@@ -171,10 +192,7 @@ def _climate_entity(
     if modelInfos.type == CozytouchDeviceType.GAZ_BOILER:
         capability.name = "central_heating"
         capability.icon = "mdi:radiator"
-        capability.progCapabilityId = 184
-        capability.progOverrideCapabilityId = 157
-        capability.progOverrideTotalTimeCapabilityId = 158
-        capability.progOverrideTimeCapabilityId = 159
+        _wire_program(capability)
     elif modelInfos.type in ELECTRIC_HEATERS:
         capability.name = "heat"
         capability.icon = "mdi:heating-coil"
@@ -183,27 +201,14 @@ def _climate_entity(
         # heating -- see docs/decisions.md
         if 153 in availableCapabilityIds:
             capability.heatingActiveCapabilityId = 153
-        capability.progCapabilityId = 184
-        capability.progOverrideCapabilityId = 157
-        capability.progOverrideTotalTimeCapabilityId = 158
-        capability.progOverrideTimeCapabilityId = 159
+        _wire_program(capability)
     elif modelInfos.type == CozytouchDeviceType.ROOM:
         _room_entity(capability, modelInfos, availableCapabilityIds)
     elif modelInfos.type == CozytouchDeviceType.AC:
         capability.name = "air_conditioner"
         capability.icon = "mdi:air-conditioner"
-        capability.targetCoolCapabilityId = 177
-        capability.lowestCoolValueCapabilityId = 162
-        capability.highestCoolValueCapabilityId = 163
-        if 100506 in availableCapabilityIds:
-            capability.activityCapabilityId = 100506
-        if (
-            modelInfos.get("ecoModeAvailable", True)
-            and 100507 in availableCapabilityIds
-        ):
-            capability.ecoCapabilityId = 100507
-        if 100505 in availableCapabilityIds:
-            capability.boostCapabilityId = 100505
+        _wire_cooling(capability)
+        _wire_presets(capability, modelInfos, availableCapabilityIds)
     elif modelInfos.type == CozytouchDeviceType.HEAT_PUMP:
         if capabilityId in (1, 7):
             capability.name = "heat_pump_z1"
@@ -245,10 +250,7 @@ def _climate_entity(
         capability.quietModeCapabilityId = 100802
 
     if modelInfos.get("overrideModeAvailable", True):
-        capability.progCapabilityId = 184
-        capability.progOverrideCapabilityId = 157
-        capability.progOverrideTotalTimeCapabilityId = 158
-        capability.progOverrideTimeCapabilityId = 159
+        _wire_program(capability)
 
     if "swingModes" in modelInfos and 100803 in availableCapabilityIds:
         capability.swingModeCapabilityId = 100803

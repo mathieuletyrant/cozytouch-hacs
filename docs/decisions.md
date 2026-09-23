@@ -908,7 +908,7 @@ worse than one offered a poll later.
 
 A model's `HVACModes` is the product *line*'s table, and two units off one
 line differ : the Alfea Extensa S of issue #93 is sold with a cooling kit and
-without, under the same model id. So `supported_hvac_modes()` intersects the
+without, under the same model id. So `narrowed_modes()` intersects the
 table with capability 100022, `supportedSystemOperatingMode`, before the
 entity declares its modes.
 

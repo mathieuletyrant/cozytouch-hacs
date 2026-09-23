@@ -17,9 +17,9 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS, stored_in
+from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
-from .services import build_matrix, parse_slots, slot_limit
+from .services import build_matrix, in_charge_at, parse_slots, slot_limit, where_stored
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ async def async_setup_entry(
                 first=first,
             )
             for program, first in (
-                (program, _where_the_block_is(hub, program))
+                (program, where_stored(hub, program))
                 for program in PROGRAM_BLOCKS
             )
             if first is not None
@@ -54,24 +54,6 @@ async def async_setup_entry(
 
         if calendars:
             async_add_entities(calendars, True, config_subentry_id=subentry_id)
-
-
-def _where_the_block_is(hub: Hub, program: str) -> int | None:
-    """Which run of seven this device holds a program in, or None."""
-    return stored_in(
-        program,
-        lambda capabilityId: hub.get_capability_value(capabilityId, None) is not None,
-    )
-
-
-def _in_charge_at(slots: list[dict], moment: time) -> float | None:
-    """The setpoint a day holds at a time, which is the last slot before it."""
-    held = None
-    for slot in slots:
-        if slot["time"] <= moment:
-            held = slot["temperature"]
-
-    return held
 
 
 def _temperature_of(summary: str | None) -> float:
@@ -240,7 +222,7 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
         stored = self._slots_for(weekday)
         # Read before the edit : it is what the day held where this event
         # stops, and what the next slot has to put back.
-        after = _in_charge_at(stored, end.time())
+        after = in_charge_at(stored, end.time())
 
         slots = [slot for slot in stored if slot["time"] != start.time()]
         slots.append({"time": start.time(), "temperature": temperature})
