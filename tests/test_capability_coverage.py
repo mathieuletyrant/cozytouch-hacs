@@ -24,25 +24,16 @@ import json
 import pathlib
 import re
 
+from _harness import TRANSLATIONS
 import pytest
 
 from custom_components.cozytouch import capability, capability_table
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.capability_table import CAPABILITIES
-from custom_components.cozytouch.infos import CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
-
-# strings.json first: it is the reference the others are compared against.
-# The rest is a glob, so a language contributed later is held to the same
-# completeness without anyone editing this line.
-TRANSLATIONS = (
-    "custom_components/cozytouch/strings.json",
-    *sorted(
-        str(path)
-        for path in pathlib.Path("custom_components/cozytouch/translations").glob(
-            "*.json"
-        )
-    ),
+from scripts.dump_capability_map import (
+    EVERY_ID,
+    platforms_consuming as types_the_platforms_consume,
 )
 
 # Names that are deliberately raw: a capability whose meaning nobody has worked
@@ -53,31 +44,12 @@ PLACEHOLDER = re.compile(r"^(Capability_|Temp_|Target )")
 
 # A capability-id superset, so the walk below can reach every mapping branch
 # rather than only the ids a single device happens to report.
-EVERY_ID = frozenset(range(1, 400)) | frozenset(range(100000, 106000))
+EVERY_ID = frozenset(EVERY_ID)
 
 
 # One per device class, so a branch that only a boiler or only an air
 # conditioner reaches is still walked.
 MODEL_IDS = (56, 76, 211, 235, 418, 557, 1457, 1641, 1734)
-
-# The platforms that pick their entities out of the capability list by type.
-# binary_sensor.py is not one of them: it owns the single cloud-connectivity
-# entity and never looks at a capability.
-PLATFORMS = (
-    "climate.py",
-    "datetime.py",
-    "fan.py",
-    "number.py",
-    "select.py",
-    "sensor.py",
-    "switch.py",
-)
-
-# A key of a platform's builder table -- `CapabilityType.X: SomeEntity` -- which
-# is how a platform states which type it was written for. The member is
-# resolved to its value, so a name the enum does not declare fails here rather
-# than matching nothing at runtime.
-TYPE_TEST = re.compile(r"CapabilityType\.(\w+):")
 
 # What sensor.py turns into an EntityCategory, plus the "sensor" that means no
 # category at all. Anything else it silently drops on the floor.
@@ -114,18 +86,6 @@ def types_the_mapping_produces():
         for result in capabilities_the_mapping_produces()
         if "type" in result
     }
-
-
-def types_the_platforms_consume():
-    """Each type a platform matches on, and which platforms match on it."""
-    consumed: dict[str, set[str]] = {}
-    for platform in PLATFORMS:
-        source = pathlib.Path("custom_components/cozytouch", platform).read_text(
-            encoding="utf-8"
-        )
-        for member in TYPE_TEST.findall(source):
-            consumed.setdefault(CapabilityType[member].value, set()).add(platform)
-    return consumed
 
 
 def translated_keys(path):
@@ -342,7 +302,7 @@ def test_the_cooling_bounds_are_temperatures(capabilityId):
 
 
 def test_the_walk_finds_the_platforms_and_the_types_they_match_on():
-    """A sanity floor: the regex above found the dispatch, not an empty file."""
+    """A sanity floor: the dump's regex found the dispatch, not an empty file."""
     consumed = types_the_platforms_consume()
 
     assert consumed["climate"] == {"climate.py", "sensor.py"}

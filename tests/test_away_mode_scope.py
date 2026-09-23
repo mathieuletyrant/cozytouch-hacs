@@ -10,14 +10,13 @@ These drive the datetime platform the way `tests/test_sensor_metadata.py`
 drives the sensor one : a hub stand-in, a plain list for `async_add_entities`.
 """
 
-import asyncio
 from types import SimpleNamespace
+
+from _harness import entry_over, set_up
 
 from custom_components.cozytouch import datetime as datetime_platform
 from custom_components.cozytouch.capability_table import CAPABILITIES
 from custom_components.cozytouch.infos import CapabilityInfos, CapabilityType
-
-SUBENTRY_ID = "sub-1"
 
 ROOM_TIMESTAMPS = 100260
 GATEWAY_TIMESTAMPS = 222
@@ -41,23 +40,7 @@ def build(capabilityId, reported):
         get_capabilities_for_device=lambda deviceId=None: [capability],
         get_capability_value=lambda cid, default="0": reported.get(cid, default),
     )
-    entry = SimpleNamespace(
-        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
-        subentries={
-            SUBENTRY_ID: SimpleNamespace(data={"deviceId": 1}, title="Salon")
-        },
-    )
-    entities = []
-    asyncio.run(
-        datetime_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
-    return entities
+    return set_up(datetime_platform, entry_over(hub, deviceId=1))
 
 
 def test_the_room_pair_builds_no_datetime():

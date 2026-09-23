@@ -28,6 +28,14 @@ import pytest
 
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
+from scripts.dump_capability_map import (
+    EVERY_ID,
+    EXTRA_MODELS,
+    PROBES,
+    VALUES,
+    ZONE_PROBE_MODEL,
+    ZONE_PROBE_NAME,
+)
 
 SNAPSHOT_DIR = pathlib.Path(__file__).parent / "snapshots"
 
@@ -48,18 +56,8 @@ NAMED_MODEL_CASES = (
 )
 
 # One model per device type plus the ids whose branch differs from their
-# type's probe -- kept in step with scripts/dump_capability_map.py, which
-# explains each pick.
-PROBE_MODELS = (56, 211, 418, 1641, 1381, 557, 562, 1457, 1505, 999999, 76, 1734, 2374)
-ZONE_PROBE_MODEL = 1505
-ZONE_PROBE_NAME = "THZONE_0"
-
-# Where the vendor puts the capability ids: a low block below 400 and a high
-# block from 100000.
-EVERY_ID = sorted(set(range(1, 400)) | set(range(100000, 106000)))
-
-# Ids that answer on their own value -- 119 rejects the no-probe sentinel.
-VALUES = {119: "12.0", 172: "20.0"}
+# type's probe -- scripts/dump_capability_map.py explains each pick.
+PROBE_MODELS = (*PROBES.values(), *EXTRA_MODELS)
 
 # The climate branch is the only reader of availableCapabilityIds, wiring an
 # optional feature only when the device reports the id backing it. The full
