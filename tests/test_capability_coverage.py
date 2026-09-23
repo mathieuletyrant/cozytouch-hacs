@@ -377,28 +377,15 @@ def test_every_category_the_mapping_produces_is_one_the_entities_read():
     assert not produced - CATEGORIES
 
 
-BRANCH = re.compile(
-    r"^    elif (?:capabilityId (?:==|in) \(?(\d+)|(\d+) <= capabilityId)", re.M
-)
-
-
-def test_the_mapping_reads_in_ascending_id_order():
-    """The chain is 119 branches on disjoint ids, so nothing but reading order
-    depends on where a branch sits -- which is exactly why it drifts. Ids were
-    landing wherever the commit that added them happened to touch, and 303 sat
-    between 184 and 196, 150 and 290 after 102024, 312 after 105907. Somebody
-    looking an id up then has to grep for it rather than scroll to it.
-
-    The rule is ascending by the branch's lowest id, and this is what keeps it.
-    A new branch goes where its number goes.
+def test_the_table_reads_in_ascending_id_order():
+    """Ids were landing wherever the commit that added them happened to touch,
+    so somebody looking one up had to grep rather than scroll. A new row goes
+    where its number goes.
     """
-    source = pathlib.Path("custom_components/cozytouch/capability.py").read_text(
-        encoding="utf-8"
-    )
-    ids = [int(low or high) for low, high in BRANCH.findall(source)]
+    ids = list(capability_table.CAPABILITIES)
 
     assert ids == sorted(ids), (
-        "capability.py branches out of order at "
+        "capability_table.py rows out of order at "
         f"{[pair for pair in itertools.pairwise(ids) if pair[1] < pair[0]]}"
     )
 
