@@ -19,6 +19,7 @@ Assistant is imported, so run it in the test venv (see CLAUDE.md):
 """
 
 import pathlib
+import re
 import signal
 import sys
 
@@ -26,8 +27,10 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.capability_table import CAPABILITIES
-from custom_components.cozytouch.infos import CapabilityCategory
+from custom_components.cozytouch.infos import CapabilityCategory, CapabilityType
 from custom_components.cozytouch.model import CozytouchDeviceType, get_model_infos
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # One model per device type, so a branch that keys off the type is reached.
 # The ids are picked from the table; a type gaining its first model would need
@@ -58,36 +61,42 @@ EXTRA_MODELS = (76, 1734, 2374)
 # puts them: a low block below 400 and a high block from 100000.
 EVERY_ID = sorted(set(range(1, 400)) | set(range(100000, 106000)))
 
-# Which platform builds an entity from a capability type. Read off the
-# async_setup_entry of each module -- one type can reach several platforms,
-# which is why a switch capability also shows up as a binary sensor.
-PLATFORMS = {
-    "away_mode_switch": "sensor + switch",
-    "away_mode_timestamps": "sensor ×2 + datetime ×2",
-    "binary": "sensor",
-    "climate": "climate + sensor",
-    "energy": "sensor",
-    "hours_adjustment_number": "number",
-    "int": "sensor",
-    "minutes_adjustment_number": "number",
-    "percentage": "sensor",
-    "power": "sensor",
-    "pressure": "sensor",
-    "prog": "sensor",
-    "progtime": "sensor",
-    "select": "select",
-    "signal": "sensor",
-    "string": "sensor",
-    "switch": "sensor + switch",
-    "temperature": "sensor",
-    "temperature_adjustment_number": "number",
-    "temperature_percent_adjustment_number": "number",
-    "time": "sensor",
-    "time_adjustment": "time",
-    "timezone": "sensor",
-    "volume": "sensor",
-    "water_consumption": "sensor",
-}
+# The platforms that pick their entities out of the capability list by type.
+# binary_sensor.py is not one of them: it owns the single cloud-connectivity
+# entity and never looks at a capability.
+PLATFORM_FILES = (
+    "climate.py",
+    "datetime.py",
+    "fan.py",
+    "number.py",
+    "select.py",
+    "sensor.py",
+    "switch.py",
+)
+
+# A key of a platform's builder table -- `CapabilityType.X: SomeEntity` -- which
+# is how a platform states which type it was written for. The member is
+# resolved to its value, so a name the enum does not declare fails here rather
+# than matching nothing at runtime.
+TYPE_TEST = re.compile(r"CapabilityType\.(\w+):")
+
+
+def platforms_consuming():
+    """Each type a platform matches on, and which platform files match on it.
+
+    Read off the source rather than kept by hand, so it cannot drift from the
+    platforms. One type can reach several, which is why a switch capability
+    also shows up as a sensor.
+    """
+    consumed: dict[str, set[str]] = {}
+    for platform in PLATFORM_FILES:
+        source = (ROOT / "custom_components" / "cozytouch" / platform).read_text(
+            encoding="utf-8"
+        )
+        for member in TYPE_TEST.findall(source):
+            consumed.setdefault(CapabilityType[member].value, set()).add(platform)
+    return consumed
+
 
 # A couple of ids answer on their own value -- 119 rejects the sentinel the
 # device sends for "no outside probe" -- so feed a plausible one.
@@ -171,6 +180,10 @@ def main():
             branching.append((capabilityId, sigs))
 
     total = len(uniform) + len(branching)
+    platforms = {
+        kind: " + ".join(sorted(name.removesuffix(".py") for name in files))
+        for kind, files in platforms_consuming().items()
+    }
 
     print("# Capability reference")
     print()
@@ -203,7 +216,7 @@ def main():
     print("| id | entity | platform |")
     print("| ---: | --- | --- |")
     for capabilityId, sig in uniform:
-        print(f"| {capabilityId} | {cell(sig)} | {PLATFORMS.get(sig[1], '?')} |")
+        print(f"| {capabilityId} | {cell(sig)} | {platforms.get(sig[1], '?')} |")
 
     print()
     print(f"## The {len(branching)} ids that depend on the device")
