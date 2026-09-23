@@ -165,18 +165,26 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     if entry.minor_version < 4:
         # The fan is the switch and the speed both. The switch is gone from
-        # the platform, so its registry entry would sit unavailable forever;
-        # the select still exists and is disabled instead, once, so somebody
-        # who turns it back on keeps it. See docs/decisions.md.
+        # the platform, so its registry entry would sit unavailable forever.
+        # See docs/decisions.md.
         registry = er.async_get(hass)
         for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
             if entity.domain == "switch" and entity.unique_id.endswith(
                 "_switch_102024"
             ):
                 registry.async_remove(entity.entity_id)
-            elif (
+
+        hass.config_entries.async_update_entry(entry, minor_version=4)
+
+    if entry.minor_version < 5:
+        # The speed select is disabled rather than removed, once, so somebody
+        # who turns it back on keeps it. 2.4 meant to do this and matched a
+        # unique id no select carries.
+        registry = er.async_get(hass)
+        for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
+            if (
                 entity.domain == "select"
-                and entity.unique_id.endswith("_select_102004")
+                and entity.unique_id.endswith("_102004")
                 and entity.disabled_by is None
             ):
                 registry.async_update_entity(
@@ -184,7 +192,7 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     disabled_by=er.RegistryEntryDisabler.INTEGRATION,
                 )
 
-        hass.config_entries.async_update_entry(entry, minor_version=4)
+        hass.config_entries.async_update_entry(entry, minor_version=5)
 
     return True
 
