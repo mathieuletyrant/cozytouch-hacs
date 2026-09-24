@@ -51,7 +51,11 @@ them locally is a guess.
   (1758), its rooms (557-561) or THZONE (1505-1507) : say it is unverified,
   in the PR body.
 
-## Commits
+## Commits and the PR body
 
 Subject and body as CLAUDE.md, *Commit messages*. One commit per round of
 fixes, not one per comment.
+
+When a round changes what the PR does, not only how, rewrite its body with
+the `pr-description` skill ; a body that still describes the first push is
+wrong, not just stale.
