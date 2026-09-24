@@ -126,12 +126,12 @@ project, not a line in this one. Basic mode for the same reason.
 the floor cannot parse has to fail here, and anything 3.13 accepts 3.14
 accepts too.
 
-The pin is inline in the workflow, next to uv's, because pyright needs the
-full test environment to resolve the `homeassistant` imports — it cannot live
-in `requirements_lint.txt` without dragging Home Assistant into the ruff job.
-`.claude/hooks/session-start.sh` repeats it, so that a cloud session has the
-same three checks as CI ; the first session after the hook was written had
-ruff and pytest but no pyright. A bump edits both.
+The pin is `requirements_typecheck.txt`, its own file, because pyright needs
+the full test environment to resolve the `homeassistant` imports — it cannot
+live in `requirements_lint.txt` without dragging Home Assistant into the ruff
+job. It started inline in the workflow ; it moved to a file when
+`.claude/hooks/session-start.sh` needed the same pin, so that a cloud session
+has the same three checks as CI without a second copy to keep in step.
 
 Measured before wiring it up : 11 errors on the scope, of which 10 were the
 missing venv configuration and one was real — `get_model_infos` could assign
