@@ -39,6 +39,8 @@ Python 3.14.2 — the system `python3` on this machine is too old. Build the
 venv with `uv venv --python 3.14.2`, install with
 `uv pip install -r requirements_test.txt`, run `.venv/bin/pytest tests/ -q`.
 `uv pip` and not `pip`, because a uv venv ships no pip of its own.
+In a Claude Code on the web session, `.claude/hooks/session-start.sh` builds
+that venv at startup, lint tools included.
 The patch version matters: `requirements_test.txt`
 pins Home Assistant exactly, and that release declares Python 3.14.2 as its
 floor, so an older interpreter makes the install fail rather than resolve
