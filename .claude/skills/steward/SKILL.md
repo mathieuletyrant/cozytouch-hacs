@@ -17,8 +17,7 @@ them locally is a guess.
 
 - A `claude/**` branch Claude created : bring `main` in by merge, not rebase,
   once the PR is open — the maintainer may have it checked out.
-- Never push to `main`, and never to a branch backing an upstream PR on
-  `fork` unless the maintainer asked for that PR by name.
+- Never push to `main`.
 
 ## CI red
 

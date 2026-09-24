@@ -27,7 +27,3 @@ if [ "$(.venv/bin/python --version 2>/dev/null)" != "Python $PYTHON" ]; then
 fi
 "$UV" pip install -q -r requirements_test.txt -r requirements_lint.txt \
   -r requirements_typecheck.txt
-
-# The clone only has `origin`.
-git remote get-url fork >/dev/null 2>&1 \
-  || git remote add fork https://github.com/mathieuletyrant/cozytouch
