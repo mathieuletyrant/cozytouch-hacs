@@ -46,7 +46,7 @@ jobs:
       - name: Install test requirements and pyright
         run: |
           uv venv --python "$(which python)" .venv
-          uv pip install --python .venv/bin/python -r requirements_test.txt pyright==1.1.411
+          uv pip install --python .venv/bin/python -r requirements_test.txt -r requirements_typecheck.txt
       - name: Run pyright
         run: .venv/bin/pyright
 

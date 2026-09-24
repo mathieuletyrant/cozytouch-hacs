@@ -62,8 +62,7 @@ know why this exists and how to verify it? If yes, post it.
 
 ## This repo
 
-`gh` defaults to `upstream`. Every command needs
-`--repo mathieuletyrant/cozytouch-hacs`.
+Pull requests target `mathieuletyrant/cozytouch-hacs`, base `main`.
 
 `How to check` is normally `.venv/bin/pytest tests/ -q`, or the one test file
 the change touches. A docs-only PR still says so, with `ruff check .`.

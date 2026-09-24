@@ -21,17 +21,11 @@ and are worth reading before a change rather than after :
 
 ## Repository topology
 
-This repo started as a fork of `gduteil/cozytouch` and now stands on its own.
-Three remotes, each with a job :
-
-| Remote     | Repository                     | What goes there |
-| ---------- | ------------------------------ | --------------- |
-| `origin`   | `mathieuletyrant/cozytouch-hacs` | Our `main`. This is what HACS installs. |
-| `fork`     | `mathieuletyrant/cozytouch`      | Branches backing the pull requests still open upstream. |
-| `upstream` | `gduteil/cozytouch`              | Read-only. Fetch to see what the original project does. |
-
-`main` tracks `origin`. The PR branches track `fork`, so `git push` on one of
-them updates the upstream pull request and nothing else. Do not repoint them.
+This repo started as a fork of `gduteil/cozytouch` and now stands on its own :
+it is no longer tied to that project or to `mathieuletyrant/cozytouch`, and
+nothing here pushes to either. `origin` is `mathieuletyrant/cozytouch-hacs`,
+the only remote ; its `main` is what HACS installs, and every pull request
+targets it.
 
 ## Tests
 
@@ -80,6 +74,9 @@ Types are checked by pyright, but only on the typed core — `infos.py`,
 `model.py`, `capability.py` — as `pyproject.toml` scopes it ; CI runs it in
 the pinned test venv (`.venv/bin/pyright`), and the scope's reasons are in
 `docs/decisions.md`.
+
+`scripts/check.sh` runs all three in the order that fails fastest ; extra
+arguments go to pytest.
 
 `ruff format` is **not** run, by CI or otherwise. The tree is not
 formatter-clean; reformatting it is its own change, not something to slip into

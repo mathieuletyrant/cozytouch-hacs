@@ -25,4 +25,5 @@ fi
 if [ "$(.venv/bin/python --version 2>/dev/null)" != "Python $PYTHON" ]; then
   "$UV" venv -q --clear --python "$PYTHON"
 fi
-"$UV" pip install -q -r requirements_test.txt -r requirements_lint.txt
+"$UV" pip install -q -r requirements_test.txt -r requirements_lint.txt \
+  -r requirements_typecheck.txt
