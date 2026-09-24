@@ -81,6 +81,9 @@ Types are checked by pyright, but only on the typed core — `infos.py`,
 the pinned test venv (`.venv/bin/pyright`), and the scope's reasons are in
 `docs/decisions.md`.
 
+`scripts/check.sh` runs all three in the order that fails fastest ; extra
+arguments go to pytest.
+
 `ruff format` is **not** run, by CI or otherwise. The tree is not
 formatter-clean; reformatting it is its own change, not something to slip into
 another one.

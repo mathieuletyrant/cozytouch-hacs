@@ -57,6 +57,11 @@ overturn one, edit the line here in the same pull request.
 
 - `gh pr create` defaults to `gduteil/cozytouch`. Always pass
   `--repo mathieuletyrant/cozytouch-hacs --base main --head <branch>`.
+- A Claude Code on the web session has no `gh` : pull requests go through
+  the GitHub MCP tools, owner `mathieuletyrant`, repo `cozytouch-hacs`, base
+  `main`. Its GitHub access covers that repository alone.
+- `scripts/check.sh` runs ruff, pyright and pytest, CI's three checks ; run
+  it before every push.
 - Releases are the maintainer's call : never run the release workflow, tag or
   `gh release create`.
 - Anything that logs into the real account is run by the maintainer, not by an
