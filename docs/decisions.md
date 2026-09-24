@@ -2020,15 +2020,37 @@ same rejected password.
 The failure belongs to the account, and no entity listens to the account
 coordinator, so `_publish_error` marks every hub instead.
 
-### The away window is staged, then committed
+### The away window is sent with the switch, never without it
 
-Editing the start or the end of the window stamps the change, and the commit
-runs once that stamp is more than 20 seconds old, so both ends can be set
-before either is sent. It used to hang off the hub's own 60-second poll, which
-no longer exists — so it runs on every path that now stands in for it, the
-account's tick and a post-write refresh alike. Hanging it off one of them would
-have made the delay depend on which, and off neither would have left a staged
-window sitting there for good.
+Editing a date used to stage it and stamp the change, and the next refresh
+more than 20 seconds later sent it : the setup's absence was PUT and the pair
+(222/226) written, but the switch (152/227) never was. With the absence off,
+that left the setup away and the device not -- a state the vendor app never
+produces, and the one that "broke everything" when somebody set the dates
+before turning the absence on.
+
+So a window only ever goes out whole, through `Hub.set_away_mode` : the PUT
+once, then on every device of the account that reports a switch, the pair and
+then the switch. The switch, the `set_away_mode` / `clear_away_mode` services
+and a date moved while the absence is on all go through it ; a date moved
+while it is off stays on the hub for the switch to send, and a poll sends
+nothing. The 20-second delay goes with the staging : it existed so both ends
+could be set before either was sent, which is now what "off" means.
+
+Every device and not just the one targeted, because the window is the
+account's : a second device with its own switch would otherwise go on reading
+off under a setup that says away. What was not captured is whether the vendor
+app writes the second device's switch itself or leaves the cloud to ; writing
+it is the side that cannot leave the two disagreeing.
+
+The switch writes `1` whether the start is now or later. The rows carry
+`value_pending` "2", which reads like a programmed absence, but nothing here
+has seen the app write it ; a capture of an absence programmed for the next
+day is what would settle it. A switch reading 2 counts as on.
+
+A window already over is not sent : the switch replaces it with its default
+(from the next minute, for two days), where it used to send it as it was, and
+the service refuses one.
 
 ### `modificationDate` reads as None rather than as 1970
 
@@ -2611,10 +2633,9 @@ switched on. It is mapped now, with the same `AWAY_MODE_TIMESTAMPS` reading as
 
 What the room does not report is a switch: neither 152 nor 227, only 100261,
 which reads whether the absence is on and is a binary sensor. That matters
-because nothing in a datetime entity commits anything — `set_away_mode_start`
-and `set_away_mode_end` stage the value on the hub, and the write happens in
-`set_away_mode_timestamps`, which the away-mode *switch* calls when it is
-turned on. A room would therefore have got two date pickers that accept a date,
+because a datetime entity sends nothing while the absence is off — it keeps
+the date on the hub, and the write happens in `set_away_mode`, which the
+away-mode *switch* calls when it is turned on. A room would therefore have got two date pickers that accept a date,
 show it, and send nothing: a control that fails silently, which is worse than
 no control.
 

@@ -218,14 +218,14 @@ next poll corrects it.
 **Away mode is the exception to everything.** It is the one feature that does
 not go through `writecapability` alone: the absence window is `PUT` to
 `/magellan/v2/setups/{id}` — a setup-level resource, not a device one, which
-is why `set_absence` lives on the account and the staging on the hub — and
-only then written to the timestamps capability. And it is deferred: editing
-the start or end datetime entity stages the value on the hub and stamps
-`_timestamp_away_mode_last_change`; `_async_update_data` commits it once that
-stamp is more than 20 seconds old. The delay is deliberate — it lets someone
-set both ends before either is sent. The switch entity compensates for the
-API lagging behind by ignoring the reported value for a few reads
-(`_nb_ignore`).
+is why `set_absence` lives on the account — and only then written to the
+timestamps capability and the switch, on every device of the account that
+reports one (`Hub.set_away_mode`). A window never goes out without the switch :
+a date edited while the absence is off stays on the hub until the switch is
+turned on, and one edited while it is on is sent at once. The
+`set_away_mode` and `clear_away_mode` services are the same call in one
+action. The switch entity compensates for the API lagging behind by ignoring
+the reported value for a few reads (`_nb_ignore`).
 
 ## What a device is
 

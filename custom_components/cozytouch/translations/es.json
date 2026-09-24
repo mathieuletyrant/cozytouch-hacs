@@ -739,11 +739,24 @@
         }
     },
     "services": {
+        "clear_away_mode": {
+            "name": "Desactivar el modo ausencia",
+            "description": "Termina la ausencia en todos los dispositivos de la cuenta, fechas incluidas."
+        },
         "get_schedule": {
             "name": "Leer el programa de una semana",
             "description": "Devuelve los siete programas diarios de un dispositivo, con la forma que acepta \"Definir un programa diario\".",
             "fields": {
                 "program":  { "name": "Programa", "description": "Calefacción o refrigeración." }
+            }
+        },
+        "set_away_mode": {
+            "name": "Activar el modo ausencia",
+            "description": "Define las fechas de la ausencia y la activa, en una sola acción, en todos los dispositivos de la cuenta.",
+            "fields": {
+                "start":    { "name": "Inicio", "description": "Cuándo empieza la ausencia. Si se deja vacío, empieza dentro de un minuto." },
+                "end":      { "name": "Fin", "description": "Cuándo termina la ausencia. Indique un fin o una duración." },
+                "duration": { "name": "Duración", "description": "Cuánto dura la ausencia desde su inicio, en lugar de un fin." }
             }
         },
         "set_schedule": {
