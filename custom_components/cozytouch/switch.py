@@ -10,7 +10,12 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
-from .hub import CozytouchConfigEntry, Hub, add_capability_entities
+from .hub import (
+    CozytouchConfigEntry,
+    Hub,
+    add_capability_entities,
+    away_window_is_valid,
+)
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
 
@@ -126,39 +131,20 @@ class CozytouchAwayModeSwitch(CozytouchSwitch):
         timestampStart = self.coordinator.get_away_mode_start()
         timestampEnd = self.coordinator.get_away_mode_end()
 
-        # If timestamps range is invalid, start it next minute for 2 days
-        if (
-            timestampStart is None
-            or timestampEnd is None
-            or timestampStart == 0
-            or timestampEnd == 0
-            or timestampStart > timestampEnd
-        ):
+        # No window prepared, or one already over : from the next minute, for
+        # two days.
+        if not away_window_is_valid(timestampStart, timestampEnd):
             timestampStart = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp() + 60
             timestampEnd = timestampStart + (2 * 24 * 60 * 60)
 
         self._nb_ignore = 5
         self._state = True
-        await self.coordinator.set_away_mode_timestamps(
-            self._capability.capabilityId,
-            self._value_on,
-            self._capability.timestampsCapabilityId,
-            int(timestampStart),
-            int(timestampEnd),
-        )
+        await self.coordinator.set_away_mode(int(timestampStart), int(timestampEnd))
         self._nb_ignore = 1
-        await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self):
         """Turn Off method."""
         self._nb_ignore = 5
         self._state = False
-        await self.coordinator.set_away_mode_timestamps(
-            self._capability.capabilityId,
-            self._value_off,
-            self._capability.timestampsCapabilityId,
-            None,
-            None,
-        )
+        await self.coordinator.set_away_mode(None, None)
         self._nb_ignore = 1
-        await self.coordinator.async_request_refresh()
