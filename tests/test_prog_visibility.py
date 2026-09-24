@@ -24,6 +24,7 @@ list of one config entry, and what it does is flip `disabled_by`.
 import asyncio
 from types import SimpleNamespace
 
+from _harness import SUBENTRY_ID, entry_over, set_up
 import pytest
 
 from custom_components.cozytouch import (
@@ -40,8 +41,6 @@ from custom_components.cozytouch.infos import (
 )
 from custom_components.cozytouch.model import get_model_infos
 from homeassistant.helpers import entity_registry as er
-
-SUBENTRY_ID = "sub-1"
 
 HEATING = frozenset(range(196, 203))
 COOLING = frozenset(range(203, 210))
@@ -174,24 +173,7 @@ def test_the_migration_flips_the_unique_ids_the_sensors_actually_claim():
         get_last_modification_date=lambda: None,
         get_last_poll=lambda: None,
     )
-    entry = SimpleNamespace(
-        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
-        subentries={
-            SUBENTRY_ID: SimpleNamespace(data={"deviceId": 1}, title="Salon")
-        },
-        title="cozytouch@example.test",
-        entry_id="entry123",
-    )
-    entities = []
-    asyncio.run(
-        sensor_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
+    entities = set_up(sensor_platform, entry_over(hub, deviceId=1))
 
     (prog,) = entities
     assert prog.unique_id in _covered_prog_unique_ids(
@@ -262,7 +244,7 @@ def test_the_migration_disables_a_covered_block_and_bumps_the_entry(monkeypatch)
     result, registry, bumps = migrate(monkeypatch, make_entry(), entities)
 
     assert result is True
-    assert bumps == [2, 3, 4]
+    assert bumps == [2, 3, 4, 5]
     assert sorted(registry.disabled) == [
         (f"sensor.{uid}", er.RegistryEntryDisabler.INTEGRATION)
         for uid in sorted(block_uids(SUBENTRY_ID, 196))
@@ -295,7 +277,7 @@ def test_an_entry_already_at_2_2_is_never_disabled_again(monkeypatch):
 
     assert result is True
     assert registry.disabled == []
-    assert bumps == [3, 4]
+    assert bumps == [3, 4, 5]
 
 
 def test_a_version_1_entry_still_asks_to_be_added_again(monkeypatch):
@@ -328,7 +310,7 @@ def test_the_migration_drops_the_number_312_used_to_build(monkeypatch):
 
     assert result is True
     assert registry.removed == [f"number.{DOMAIN}_{SUBENTRY_ID}_312"]
-    assert bumps == [3, 4]
+    assert bumps == [3, 4, 5]
 
 
 def test_an_entry_already_at_2_3_only_moves_on(monkeypatch):
@@ -340,7 +322,7 @@ def test_an_entry_already_at_2_3_only_moves_on(monkeypatch):
 
     assert result is True
     assert registry.removed == []
-    assert bumps == [4]
+    assert bumps == [4, 5]
 
 
 # --- 2.4 : the air circulation became a fan -------------------------------
@@ -361,7 +343,7 @@ def test_the_migration_drops_the_switch_the_fan_replaced(monkeypatch):
 
     assert result is True
     assert registry.removed == [f"switch.{DOMAIN}_{SUBENTRY_ID}_switch_102024"]
-    assert bumps == [4]
+    assert bumps == [4, 5]
 
 
 def test_the_migration_disables_the_speed_select_rather_than_dropping_it(
@@ -371,30 +353,30 @@ def test_the_migration_disables_the_speed_select_rather_than_dropping_it(
     have it. A removed entity cannot be re-enabled.
     """
     entities = [
-        registered(f"{DOMAIN}_{SUBENTRY_ID}_select_102004", domain="select")
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_102004", domain="select")
     ]
 
     result, registry, _ = migrate(
-        monkeypatch, make_entry(minor_version=3), entities
+        monkeypatch, make_entry(minor_version=4), entities
     )
 
     assert result is True
     assert registry.removed == []
     assert registry.disabled == [
         (
-            f"select.{DOMAIN}_{SUBENTRY_ID}_select_102004",
+            f"select.{DOMAIN}_{SUBENTRY_ID}_102004",
             er.RegistryEntryDisabler.INTEGRATION,
         )
     ]
 
 
-def test_a_speed_select_re_enabled_after_2_4_stays_re_enabled(monkeypatch):
+def test_a_speed_select_re_enabled_after_2_5_stays_re_enabled(monkeypatch):
     entities = [
-        registered(f"{DOMAIN}_{SUBENTRY_ID}_select_102004", domain="select")
+        registered(f"{DOMAIN}_{SUBENTRY_ID}_102004", domain="select")
     ]
 
     _, registry, bumps = migrate(
-        monkeypatch, make_entry(minor_version=4), entities
+        monkeypatch, make_entry(minor_version=5), entities
     )
 
     assert registry.disabled == []

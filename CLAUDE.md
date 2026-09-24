@@ -15,6 +15,9 @@ and are worth reading before a change rather than after :
 | `docs/architecture.md` | How a capability id becomes an entity, what the account owns and what the Hub owns, which invariants hold, and the rough edges that are real and inherited. |
 | `docs/api-surface.md` | What the API does and does not expose. Read it before probing anything : ~90 paths are already ruled out, and there is no capability catalogue to fetch. |
 | `docs/decisions.md` | Why a setting is the value it is — which run was measured, what was tried and dropped. This is where the reasoning lives that used to sit in comment blocks above the setting. |
+| `MEMORY.md` | What past sessions settled, rejected or parked — one line each. Imported below, so it is always loaded ; update it when a finding is overturned. |
+
+@MEMORY.md
 
 ## Repository topology
 
@@ -85,122 +88,23 @@ as it ought to be : most entries were reverse-engineered from one user's
 capture, so a test going green says "nobody changed this by accident", never
 "this is correct".
 
-- `tests/test_model.py` — one case per branch of `get_model_infos`, comparing
-  the whole returned dict. Ids that resolve differently inside a shared branch
-  get their own case.
-- `tests/test_regressions.py` — bugs that were live and that no table walk
-  would have reached: state that used to sit on the `Hub` class and so was
-  shared by every config entry, a shadowed `time` import that made every time
-  entity raise, and the connect lock without which every device on an account
-  logs in separately.
-- `tests/test_reauth.py` — the split between a refused password and a server
-  that is not answering, end to end : what the token endpoint said, what
-  `connect()` raises, what setup and the poll turn it into, and what the reauth
-  dialog does with the password somebody types. Its `FakeSession` is the only
-  stand-in in the suite that reaches the HTTP layer, so it is where the rest of
-  `account.py` gets tested when somebody gets to it. One case pins a
-  *limitation* on purpose : a refused login is retried once per waiting hub,
-  and if that number ever drops the case should say why.
-- `tests/test_floor.py` — what the Home Assistant version `hacs.json` declares
-  has to provide. It imports every module, which the rest of the suite does not
-  — four of them, and none touching the config flow or the platforms — and
-  names the config-subentry APIs the current shape rests on. **The floor is
-  found by running this, not by reading a changelog**: it is what established
-  that 2025.2 has no subentries and that the whole 2025.3 line cannot be
-  installed (a yanked `aiohttp` pin).
-- `tests/test_polling.py` — the account-level beat : one setup-view request
-  for the whole account where it used to be one per device per minute, and
-  what a 429 does — back off and keep the last values, rather than answering
-  a rate-limit complaint with a login. Its `FakeSession` is a deliberate copy
-  of `test_reauth.py`'s, kept separate so a change there cannot quietly
-  rewrite what these say.
-- `tests/test_diagnostics.py` — that an unmapped model reads as unmapped and
-  unnamed capability ids get listed, since that is what a dump is read for.
-- `tests/test_sensor_values.py` — what the value builders in `sensor.py`
-  return, character for character : the zero padding on a duration, the double
-  space before a temperature, a setpoint arriving from JSON as a float and
-  still reading as a whole number. This is the file whose strings end up on a
-  dashboard, so **the assertions are the current output, not the nicer output**
-  — including one case pinned as wrong on purpose, the timezone offset applied
-  twice. Changing any of these should mean changing a test in the same commit.
-- `tests/test_sensor_metadata.py` — what the platform declares *about* a value :
-  the state class that decides whether the recorder keeps long-term statistics,
-  and the firmware version that reaches the device registry. It drives
-  `async_setup_entry` rather than restating its table, and checks each
-  device-class/state-class pair against Home Assistant's own compatibility
-  table — the check that catches a combination HA rejects at runtime, which is
-  how the tank volumes ended up as `volume_storage`.
-- `tests/test_freshness.py` — the `modificationDate` every capability carries
-  and nothing used to read : that a date the API sends survives arriving as a
-  string, that nothing useful reads as None rather than as 1970, that a
-  device's date is the *newest* of its capabilities (any one of them can sit
-  unchanged while the hardware keeps reporting), that the sensor exists only
-  when the device reports a date at all, and that the dump carries them per
-  capability. It pins the reading, never a staleness threshold — nothing yet
-  says what a normal silence looks like. The poll sensor's cases live here
-  too : the account's `last_poll` surfaced per device, and kept available
-  through the very failure it dates.
-- `tests/test_calendar.py` — the weekly program expanded into dated events :
-  which capability a weekday reads, that a slot runs until the next one rather
-  than for a fixed length and that the last of the day runs to midnight, that
-  the week repeats over a range, that a slot which began before the window is
-  still the one in charge at its start, and that a calendar exists only for a
-  block the device reports in full -- one case per block, since the three runs
-  (196, 203, 237) are the whole of what it reads. Its second half is the
-  editing : what an event created, moved or deleted from a card writes into the
-  day's matrix, the slot at 00:00 that cannot be deleted, and the hot-water
-  block still refusing to be written. `dt_util.DEFAULT_TIME_ZONE` is UTC in a
-  test process, which is what makes the expected datetimes readable.
-- `tests/test_prog_visibility.py` — the per-day program sensors giving way to
-  the calendar : that a whole block's days arrive disabled by default and a
-  partial block's stay enabled (same rule that gates the calendar), that the
-  blocks without a calendar keep their sensors, that the 2.2 migration
-  disables what an existing install registered — exactly once, so a re-enabled
-  sensor stays re-enabled — targeting the same unique_ids the sensor platform
-  actually claims, and that a version 1 entry still refuses to migrate.
-- `tests/test_derivation.py` — what a device says about itself, and the order
-  of authority : that an override wins over what the device declares, that a
-  room takes its type from the interface it hangs off and is a room behind
-  every other gateway, that `modelFamily` answers where no `productId` is
-  assigned, that a gateway and the rooms behind it get no absence setpoint,
-  and that a device the API describes never reads as `Unknown product`. The
-  seam, not the ranges — `test_model.py` owns what the tables answer.
-- `tests/test_services.py` — the schedule services : the matrix `set_schedule`
-  builds, and the round trip that is the promise of `get_schedule`, since what
-  it returns has to be writable again unchanged.
-- `tests/test_device_trigger.py` — the device triggers : which ones a device
-  is offered, given what it reports, and what each one then watches — the right
-  entities for a program, the preset *attribute* rather than the state for a
-  preset. Both halves fail silently in production, since a trigger that never
-  fires logs nothing.
-- `tests/test_topology.py` — the gateway link. The API reports the parent in
-  `masterDeviceId`, but a device is registered under its config entry, so the
-  link can only be drawn when the gateway was set up too; these pin that a
-  missing gateway yields no link rather than a dangling one.
-- `tests/test_snapshot.py` — the whole of both tables against JSON files in
-  `tests/snapshots/` : every mapped model id, every capability id the chain
-  claims on one model per device type, and a digest per model id for the
-  other 2486, which is the half a probe cannot see. This is what makes a pure
-  refactor provable — if the files do not change, no answer did. Regenerate
-  deliberately, in the same commit as the change the diff shows, with
-  `UPDATE_SNAPSHOTS=1 pytest tests/test_snapshot.py`. It is also the slowest
-  file here, about three seconds of the suite's five.
-- `tests/test_capability.py` — walks every mapped model id to check which
-  models a flag reaches and whether the gates in `capability.py` still follow
-  the flag they were written for. The walk runs over `range(1, 2500)`; a model
-  added outside it needs that range widened.
-- `tests/test_capability_coverage.py` — the seams around the mapping : that a
-  self-describing capability arrives switched off, that every name the mapping
-  can produce has an entry in every translation file, and that the
-  `CapabilityType` members the mapping writes and the ones the platforms match
-  on are the same set — a type on one side only is silent both ways, and two
-  lived exactly there.
-- `tests/test_hvac_modes.py` — the modes a climate entity ends up offering :
-  the model's table narrowed by capability 100022, which is what a unit built
-  without the cooling kit reports. The masks are read from the table the
-  mapping derives, so a case fails if either half of that derivation moves,
-  and the two refusals are pinned — a mask never adds a mode, and a mask that
-  matches nothing leaves the table alone rather than emptying it.
+Every test file opens with a docstring saying what it pins and why ; read
+that rather than a list here, which went stale the moment a file was added.
+The rules the docstrings do not repeat :
+
+- `tests/test_snapshot.py` holds both tables against `tests/snapshots/`. If
+  those files do not change, no answer did -- that is what proves a refactor.
+  Regenerate only in the commit whose diff shows why :
+  `UPDATE_SNAPSHOTS=1 .venv/bin/pytest tests/test_snapshot.py`.
+- `tests/test_sensor_values.py` pins the strings a dashboard shows **as they
+  are, not as they should be** -- one case is wrong on purpose. Changing an
+  output means changing its test in the same commit.
+- `tests/test_floor.py` is how the supported HA floor is found : run it, do not
+  read a changelog.
+- `tests/test_capability.py` walks `range(1, 2500)` ; a model id outside it
+  needs the range widened.
+- `tests/test_polling.py`'s `FakeSession` is a deliberate copy of
+  `tests/test_reauth.py`'s. Do not merge them.
 
 ## Entries, subentries, identity
 

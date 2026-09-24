@@ -15,27 +15,14 @@ trigger does with it.
 
 import asyncio
 import json
-import pathlib
 from types import SimpleNamespace
 
+from _harness import TRANSLATIONS
 import pytest
 
 from custom_components.cozytouch import const, device_trigger
 from homeassistant.components.device_automation.exceptions import (
     InvalidDeviceAutomationConfig,
-)
-
-# strings.json first: it is the reference the others are compared against.
-# The rest is a glob, so a language contributed later is held to the same
-# completeness without anyone editing this line.
-TRANSLATIONS = (
-    "custom_components/cozytouch/strings.json",
-    *sorted(
-        str(path)
-        for path in pathlib.Path("custom_components/cozytouch/translations").glob(
-            "*.json"
-        )
-    ),
 )
 
 DEVICE_ID = "device"

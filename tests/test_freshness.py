@@ -26,10 +26,10 @@ tests/test_diagnostics.py does: they touch `_devices` and `_deviceId` and
 nothing a real coordinator would bring.
 """
 
-import asyncio
 import datetime
 from types import SimpleNamespace
 
+from _harness import SUBENTRY_ID, entry_over, set_up
 import pytest
 
 from custom_components.cozytouch import sensor as sensor_platform
@@ -155,8 +155,6 @@ def test_a_siblings_dates_do_not_answer_for_this_device():
 # ------------------------------------------------------------------ the sensor
 
 
-SUBENTRY_ID = "sub-1"
-
 
 def build(last_modification_date, capabilities=(), last_poll=None):
     """Run the sensor platform and return the entities it built."""
@@ -169,26 +167,7 @@ def build(last_modification_date, capabilities=(), last_poll=None):
         get_software_version=lambda: "1.2.3",
         get_via_device=lambda: None,
     )
-    entry = SimpleNamespace(
-        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
-        subentries={
-            SUBENTRY_ID: SimpleNamespace(data={"deviceId": DEVICE_ID}, title="Salon")
-        },
-        title="cozytouch@example.com",
-        entry_id="entry123",
-    )
-    entities = []
-    asyncio.run(
-        sensor_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
-
-    return entities
+    return set_up(sensor_platform, entry_over(hub))
 
 
 def test_the_sensor_exists_when_the_device_reports_a_date():

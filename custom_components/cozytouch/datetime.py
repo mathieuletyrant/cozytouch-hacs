@@ -96,15 +96,12 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
     async def async_set_value(self, value: datetime) -> None:
         """Update the current value."""
         timestamp = value.timestamp()
-        if timestamp is not None:
-            if self._timestamp_index == 0:
-                await self.coordinator.set_away_mode_start(
-                    self._capability.capabilityId, int(timestamp)
-                )
-            elif self._timestamp_index == 1:
-                await self.coordinator.set_away_mode_end(
-                    self._capability.capabilityId, int(timestamp)
-                )
+        if timestamp is not None and self._timestamp_index in (0, 1):
+            await self.coordinator.set_away_mode_bound(
+                self._timestamp_index,
+                self._capability.capabilityId,
+                int(timestamp),
+            )
 
     @property
     def native_value(self) -> datetime | None:

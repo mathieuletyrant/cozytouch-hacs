@@ -92,7 +92,7 @@ class CozytouchSwitch(SwitchEntity, CozytouchSensor):
             await self.async_turn_on()
 
 
-class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
+class CozytouchAwayModeSwitch(CozytouchSwitch):
     """Class for away mode switch."""
 
     def __init__(
@@ -104,22 +104,8 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         name: str | None = None,
     ) -> None:
         """Initialize a Switch entity."""
-        capabilityId = capability.capabilityId
-        super().__init__(
-            coordinator=coordinator,
-            capability=capability,
-            config_title=config_title,
-            config_uniq_id=config_uniq_id,
-            attr_uniq_id=f"{DOMAIN}_{config_uniq_id}_switch_{capabilityId!s}",
-            name=name,
-        )
-        self._state = False
-        self._attr_device_class = SwitchDeviceClass.SWITCH
-
+        super().__init__(coordinator, capability, config_title, config_uniq_id, name)
         self._nb_ignore = 0
-
-        self._value_off = capability.get("value_off", "0")
-        self._value_on = capability.get("value_on", "1")
         self._value_pending = capability.get("value_pending", "2")
 
     @property
@@ -176,10 +162,3 @@ class CozytouchAwayModeSwitch(SwitchEntity, CozytouchSensor):
         )
         self._nb_ignore = 1
         await self.coordinator.async_request_refresh()
-
-    async def async_toggle(self) -> None:
-        """Toggle the power on the zone."""
-        if self._state:
-            await self.async_turn_off()
-        else:
-            await self.async_turn_on()

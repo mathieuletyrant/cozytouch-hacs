@@ -24,6 +24,7 @@ import datetime
 import json
 from types import SimpleNamespace
 
+from _harness import SUBENTRY_ID, entry_over, set_up
 import pytest
 
 from custom_components.cozytouch import calendar as calendar_platform
@@ -35,8 +36,6 @@ from custom_components.cozytouch.const import DOMAIN
 from custom_components.cozytouch.infos import ModelInfos
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.util import dt as dt_util
-
-SUBENTRY_ID = "sub-1"
 
 # Monday, so that a range starting here lines up with the first capability of
 # a block; the fixtures below rely on it.
@@ -88,33 +87,9 @@ def week(first_capability, day_program):
     return {first_capability + day: day_program for day in range(7)}
 
 
-def entry_over(hub):
-    """An account entry holding one device, which is what a subentry is."""
-    return SimpleNamespace(
-        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
-        subentries={
-            SUBENTRY_ID: SimpleNamespace(data={"deviceId": 27906641}, title="Salon")
-        },
-        title="cozytouch@example.com",
-        entry_id="entry123",
-    )
-
-
 def build(values):
     """Run the calendar platform and return the entities it built."""
-    entry = entry_over(make_hub(values))
-    entities = []
-    asyncio.run(
-        calendar_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
-
-    return entities
+    return set_up(calendar_platform, entry_over(make_hub(values)))
 
 
 def calendar_over(day_programs, program="heating", first=None):
@@ -371,17 +346,8 @@ def test_the_calendars_are_keyed_on_the_entry_and_the_block(program):
 )
 def test_monday_is_the_first_capability_of_every_block(program, first):
     """Every run is seven consecutive ids, monday first, wherever it starts."""
-    entry = entry_over(make_hub({first + day: stored((0, 17)) for day in range(7)}))
-    entities = []
-    asyncio.run(
-        calendar_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
+    hub = make_hub({first + day: stored((0, 17)) for day in range(7)})
+    entities = set_up(calendar_platform, entry_over(hub))
 
     assert [entity.translation_key for entity in entities] == [f"{program}_program"]
 

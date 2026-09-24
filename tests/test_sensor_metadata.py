@@ -21,9 +21,9 @@ rather than restate it, and building an entity needs no `hass`. The device_info
 properties are called unbound, the way `tests/test_topology.py` does.
 """
 
-import asyncio
 from types import SimpleNamespace
 
+from _harness import entry_over, set_up
 import pytest
 
 from custom_components.cozytouch import sensor as sensor_platform
@@ -42,8 +42,6 @@ from homeassistant.const import UnitOfTime
 DEVICE_ID = 27906641
 
 
-SUBENTRY_ID = "sub-1"
-
 
 def build(capabilities):
     """Run the sensor platform over these capabilities and return the entities.
@@ -60,25 +58,7 @@ def build(capabilities):
         get_last_modification_date=lambda: None,
         get_last_poll=lambda: None,
     )
-    entry = SimpleNamespace(
-        runtime_data=SimpleNamespace(hubs={SUBENTRY_ID: hub}),
-        subentries={
-            SUBENTRY_ID: SimpleNamespace(data={"deviceId": DEVICE_ID}, title="Salon")
-        },
-        title="cozytouch@example.com",
-        entry_id="entry123",
-    )
-    entities = []
-    asyncio.run(
-        sensor_platform.async_setup_entry(
-            None,
-            entry,
-            lambda new, update_before_add, config_subentry_id=None: entities.extend(
-                new
-            ),
-        )
-    )
-    return entities
+    return set_up(sensor_platform, entry_over(hub))
 
 
 def one(capability_type, **capability):

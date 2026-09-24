@@ -21,7 +21,7 @@ from homeassistant.const import UnitOfTemperature
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, HVAC_MODE_MASKS, SERVICE_OFF
+from .const import DOMAIN, SERVICE_OFF, narrowed_modes
 from .hub import CozytouchConfigEntry, Hub, add_capability_entities
 from .infos import CapabilityType
 from .sensor import CozytouchSensor
@@ -35,29 +35,30 @@ FAN_QUIET = "quiet"
 SUPPORTED_HVAC_MODES_CAPABILITY_ID = 100022
 
 
-def supported_hvac_modes(
-    HVACModes: dict[int, HVACMode], supported: str | None
-) -> list[HVACMode]:
-    """The model's modes, minus the ones this unit says it was not built with.
+def _bound(entity, coolKey, key) -> float | None:
+    """The setpoint bound in force : the cooling one while cooling, if any."""
+    if (
+        entity._attr_hvac_mode in (HVACMode.COOL, HVACMode.DRY, HVACMode.AUTO)
+        and coolKey in entity._capability
+    ):
+        key = coolKey
+    elif key not in entity._capability:
+        return None
+    return float(
+        entity.coordinator.get_capability_value(getattr(entity._capability, key))
+    )
 
-    A model's table is what the product line can do ; `supported` is what the
-    unit in front of us reports, and reads narrower on a heat pump sold with
-    the cooling kit left out. A mode the bit table does not name is kept, and
-    so is the whole table when the narrowing leaves nothing -- an entity with
-    no mode at all is worse than one offering a mode that does nothing.
-    See docs/decisions.md.
-    """
-    modes = list(HVACModes.values())
-    if supported is None:
-        return modes
 
-    mask = int(supported)
-    narrowed = [
-        mode
-        for value, mode in HVACModes.items()
-        if value not in HVAC_MODE_MASKS or HVAC_MODE_MASKS[value] & mask
-    ]
-    return narrowed or modes
+def _read_mode(entity, overrideKey, override, modeKey, tableKey) -> str | None:
+    """The fan or swing mode reported, the on/off override winning."""
+    capability = entity._capability
+    get = entity.coordinator.get_capability_value
+    if overrideKey in capability and int(get(getattr(capability, overrideKey))):
+        return override
+    if modeKey in capability:
+        value = int(get(getattr(capability, modeKey)))
+        return getattr(entity._modelInfos, tableKey).get(value)
+    return None
 
 
 PRESET_BASIC = "basic"
@@ -136,47 +137,50 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             | ClimateEntityFeature.TURN_ON
         )
 
-        self._attr_hvac_modes = supported_hvac_modes(
-            self._modelInfos.HVACModes,
-            self.coordinator.get_capability_value(
-                SUPPORTED_HVAC_MODES_CAPABILITY_ID, None
-            ),
+        self._attr_hvac_modes = list(
+            narrowed_modes(
+                self._modelInfos.HVACModes,
+                self.coordinator.get_capability_value(
+                    SUPPORTED_HVAC_MODES_CAPABILITY_ID, None
+                ),
+            ).values()
         )
         self._attr_hvac_mode = HVACMode.OFF
 
         # Fan modes
         if "fanModes" in self._modelInfos and "fanModeCapabilityId" in self._capability:
-            self._configure_fan_modes()
+            self._attr_fan_modes = self._configure_modes(
+                ClimateEntityFeature.FAN_MODE,
+                self._modelInfos.fanModes,
+                "quietModeCapabilityId",
+                FAN_QUIET,
+            )
+            if self._attr_fan_modes:
+                self._attr_fan_mode = self._attr_fan_modes[0]
 
         # Swing modes
         if (
             "swingModes" in self._modelInfos
             and "swingModeCapabilityId" in self._capability
         ):
-            self._configure_swing_modes()
+            self._attr_swing_modes = self._configure_modes(
+                ClimateEntityFeature.SWING_MODE,
+                self._modelInfos.swingModes,
+                "swingOnCapabilityId",
+                SWING_ON,
+            )
+            if self._attr_swing_modes:
+                self._attr_swing_mode = self._attr_swing_modes[0]
 
         # Presets
         self._configure_presets()
 
-    def _configure_fan_modes(self):
-        self._attr_supported_features |= ClimateEntityFeature.FAN_MODE
-        self._attr_fan_modes = list(self._modelInfos.fanModes.values())
-
-        if "quietModeCapabilityId" in self._capability:
-            self._attr_fan_modes.append(FAN_QUIET)
-
-        if len(self._attr_fan_modes) > 0:
-            self._attr_fan_mode = self._attr_fan_modes[0]
-
-    def _configure_swing_modes(self):
-        self._attr_supported_features |= ClimateEntityFeature.SWING_MODE
-        self._attr_swing_modes = list(self._modelInfos.swingModes.values())
-
-        if "swingOnCapabilityId" in self._capability:
-            self._attr_swing_modes.append(SWING_ON)
-
-        if len(self._attr_swing_modes) > 0:
-            self._attr_swing_mode = self._attr_swing_modes[0]
+    def _configure_modes(self, feature, table, extraKey, extra) -> list[str]:
+        self._attr_supported_features |= feature
+        modes = list(table.values())
+        if extraKey in self._capability:
+            modes.append(extra)
+        return modes
 
     def _configure_presets(self):
         self._attr_preset_modes = []
@@ -288,75 +292,27 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 else None
             )
 
-        # Lowest adjustment value
-        if (
-            self._attr_hvac_mode in (
-                HVACMode.COOL,
-                HVACMode.DRY,
-                HVACMode.AUTO )
-            and "lowestCoolValueCapabilityId" in self._capability
-        ):
-            lowestValueId = self._capability.get("lowestCoolValueCapabilityId", None)
-            self._attr_min_temp = float(
-                self.coordinator.get_capability_value(lowestValueId)
-            )
-        elif "lowestValueCapabilityId" in self._capability:
-            lowestValueId = self._capability.get("lowestValueCapabilityId", None)
-            self._attr_min_temp = float(
-                self.coordinator.get_capability_value(lowestValueId)
-            )
+        lowest = _bound(self, "lowestCoolValueCapabilityId", "lowestValueCapabilityId")
+        if lowest is not None:
+            self._attr_min_temp = lowest
 
-        # Highest adjustment value
-        if (
-            self._attr_hvac_mode in (
-                HVACMode.COOL,
-                HVACMode.DRY,
-                HVACMode.AUTO )
-            and "highestCoolValueCapabilityId" in self._capability
-        ):
-            highestValueId = self._capability.highestCoolValueCapabilityId
-            self._attr_max_temp = float(
-                self.coordinator.get_capability_value(highestValueId)
-            )
-        elif "highestValueCapabilityId" in self._capability:
-            highestValueId = self._capability.highestValueCapabilityId
-            self._attr_max_temp = float(
-                self.coordinator.get_capability_value(highestValueId)
-            )
+        highest = _bound(
+            self, "highestCoolValueCapabilityId", "highestValueCapabilityId"
+        )
+        if highest is not None:
+            self._attr_max_temp = highest
 
-        # FAN mode
-        if "quietModeCapabilityId" in self._capability and int(
-            self.coordinator.get_capability_value(
-                self._capability.quietModeCapabilityId
-            )
-        ):
-            self._attr_fan_mode = FAN_QUIET
-        elif "fanModeCapabilityId" in self._capability:
-            fanModes = self._modelInfos.fanModes
-            fanModeValue = int(
-                self.coordinator.get_capability_value(
-                    self._capability.fanModeCapabilityId
-                )
-            )
-            if fanModeValue in fanModes:
-                self._attr_fan_mode = fanModes[fanModeValue]
+        fanMode = _read_mode(
+            self, "quietModeCapabilityId", FAN_QUIET, "fanModeCapabilityId", "fanModes"
+        )
+        if fanMode is not None:
+            self._attr_fan_mode = fanMode
 
-        # Swing mode
-        if "swingOnCapabilityId" in self._capability and int(
-            self.coordinator.get_capability_value(
-                self._capability.swingOnCapabilityId
-            )
-        ):
-            self._attr_swing_mode = SWING_ON
-        elif "swingModeCapabilityId" in self._capability:
-            swingModes = self._modelInfos.swingModes
-            swingModeValue = int(
-                self.coordinator.get_capability_value(
-                    self._capability.swingModeCapabilityId
-                )
-            )
-            if swingModeValue in swingModes:
-                self._attr_swing_mode = swingModes[swingModeValue]
+        swingMode = _read_mode(
+            self, "swingOnCapabilityId", SWING_ON, "swingModeCapabilityId", "swingModes"
+        )
+        if swingMode is not None:
+            self._attr_swing_mode = swingMode
 
         # Presets
         activityModeValue, ecoModeValue, boostModeValue = 0, 0, 0
@@ -417,6 +373,25 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
                 self._attr_preset_mode = PRESET_PROG
 
         self.async_write_ha_state()
+
+    async def _write_mode(self, mode, overrideKey, override, modeKey, tableKey):
+        if mode == override and overrideKey in self._capability:
+            await self.coordinator.set_capability_value(
+                getattr(self._capability, overrideKey), "1"
+            )
+        elif modeKey in self._capability:
+            if overrideKey in self._capability:
+                await self.coordinator.set_capability_value(
+                    getattr(self._capability, overrideKey), "0"
+                )
+            for value, name in getattr(self._modelInfos, tableKey).items():
+                if name == mode:
+                    await self.coordinator.set_capability_value(
+                        getattr(self._capability, modeKey), str(value)
+                    )
+                    break
+
+        await self.coordinator.async_request_refresh()
 
     def _ambient_temperature_is_available(self) -> bool:
         """Whether the ambient reading means anything right now.
@@ -509,53 +484,23 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     async def async_set_fan_mode(self, fan_mode) -> None:
         """Set new target fan mode."""
-        if fan_mode == FAN_QUIET and "quietModeCapabilityId" in self._capability:
-            await self.coordinator.set_capability_value(
-                self._capability.quietModeCapabilityId,
-                "1",
-            )
-        elif "fanModeCapabilityId" in self._capability:
-            if "quietModeCapabilityId" in self._capability:
-                await self.coordinator.set_capability_value(
-                    self._capability.quietModeCapabilityId,
-                    "0",
-                )
-
-            FANModes = self._modelInfos.fanModes
-            for mode in FANModes:
-                if FANModes[mode] == fan_mode:
-                    await self.coordinator.set_capability_value(
-                        self._capability.fanModeCapabilityId,
-                        str(mode),
-                    )
-                    break
-
-        await self.coordinator.async_request_refresh()
+        await self._write_mode(
+            fan_mode,
+            "quietModeCapabilityId",
+            FAN_QUIET,
+            "fanModeCapabilityId",
+            "fanModes",
+        )
 
     async def async_set_swing_mode(self, swing_mode):
         """Set new target swing operation."""
-        if swing_mode == SWING_ON and "swingOnCapabilityId" in self._capability:
-            await self.coordinator.set_capability_value(
-                self._capability.swingOnCapabilityId,
-                "1",
-            )
-        elif "swingModeCapabilityId" in self._capability:
-            if "swingOnCapabilityId" in self._capability:
-                await self.coordinator.set_capability_value(
-                    self._capability.swingOnCapabilityId,
-                    "0",
-                )
-
-            SwingModes = self._modelInfos.swingModes
-            for mode in SwingModes:
-                if SwingModes[mode] == swing_mode:
-                    await self.coordinator.set_capability_value(
-                        self._capability.swingModeCapabilityId,
-                        str(mode),
-                    )
-                    break
-
-        await self.coordinator.async_request_refresh()
+        await self._write_mode(
+            swing_mode,
+            "swingOnCapabilityId",
+            SWING_ON,
+            "swingModeCapabilityId",
+            "swingModes",
+        )
 
     async def async_set_preset_mode(self, preset_mode):
         """Set new target preset mode."""

@@ -40,11 +40,11 @@ from .const import (
     HEATING_MODE_ECO_PLUS,
     HEATING_MODE_MANUAL,
     HEATING_MODE_PROG,
-    HVAC_MODE_MASKS,
     SWING_MODE_DOWN,
     SWING_MODE_MIDDLE_DOWN,
     SWING_MODE_MIDDLE_UP,
     SWING_MODE_UP,
+    narrowed_modes,
 )
 from .infos import ModelInfos
 from .model_catalogue import MODEL_CATALOGUE
@@ -503,20 +503,9 @@ def apply_capabilities(
         modelInfos.HVACModes = {}
         return
 
-    supported = capabilities.get(100022)
-    if supported is None:
-        return
-
-    mask = int(float(supported))
-    declared = {
-        value: mode
-        for value, mode in modelInfos.HVACModes.items()
-        if value not in HVAC_MODE_MASKS or HVAC_MODE_MASKS[value] & mask
-    }
-    # A mask that names nothing is a mask that says nothing : the same refusal
-    # `climate.py` makes, kept here so both halves answer alike.
-    if declared:
-        modelInfos.HVACModes = declared
+    modelInfos.HVACModes = narrowed_modes(
+        modelInfos.HVACModes, capabilities.get(100022)
+    )
 
 
 def get_device_model_infos(

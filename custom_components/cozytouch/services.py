@@ -306,12 +306,17 @@ def _resolve_hub(hass: HomeAssistant, entity_id: str):
     return hub
 
 
-def _block_of(hub, entity_id: str, program: str) -> int:
-    """Where this device stores a program, refusing one it does not hold."""
-    first = stored_in(
+def where_stored(hub, program: str) -> int | None:
+    """Which run of seven this device holds a program in, or None."""
+    return stored_in(
         program,
         lambda capabilityId: hub.get_capability_value(capabilityId, None) is not None,
     )
+
+
+def _block_of(hub, entity_id: str, program: str) -> int:
+    """Where this device stores a program, refusing one it does not hold."""
+    first = where_stored(hub, program)
     if first is None:
         runs = " or ".join(str(candidate) for candidate in PROGRAM_BLOCKS[program])
         raise ServiceValidationError(

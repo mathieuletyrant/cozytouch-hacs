@@ -37,40 +37,18 @@ Reads are cheap: the integration itself polls the setup view twice a minute. A
 account -- so a rejected token stops the script instead of retrying.
 """
 
-import importlib.util
 import json
 import os
 import pathlib
 import sys
 import time
 import urllib.error
-import urllib.parse
 import urllib.request
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-def _const():
-    """Load the integration's const.py without importing Home Assistant.
-
-    Going through the package would pull in `__init__.py` and with it all of
-    HA, which this script has no reason to require. Loading the one module by
-    path keeps the API host and client id in a single place instead of copying
-    them here to drift.
-    """
-    path = (
-        pathlib.Path(__file__).resolve().parent.parent
-        / "custom_components"
-        / "cozytouch"
-        / "const.py"
-    )
-    spec = importlib.util.spec_from_file_location("cozytouch_const", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-_CONST = _const()
-API = _CONST.COZYTOUCH_ATLANTIC_API
-CLIENT_ID = _CONST.COZYTOUCH_CLIENT_ID
+import _atlantic
+from _atlantic import COZYTOUCH_ATLANTIC_API as API, password
 
 # The device fields model.py hardcodes or derives today. Printed per device so
 # a dump from another product family can be compared against the table in
@@ -108,37 +86,10 @@ ROUTES_EXPLORE = (
 )
 
 
-def password() -> str:
-    """Password from COZYTOUCH_PASS_FILE, else COZYTOUCH_PASS."""
-    path = os.environ.get("COZYTOUCH_PASS_FILE")
-    if path:
-        # A trailing newline from an editor or a shell redirect is not part of
-        # the password.
-        return pathlib.Path(path).expanduser().read_text().strip("\r\n")
-    return os.environ.get("COZYTOUCH_PASS", "")
-
-
 def token() -> str:
     """Authenticate, or exit saying why."""
-    data = urllib.parse.urlencode(
-        {
-            "grant_type": "password",
-            "scope": "openid",
-            "username": "GA-PRIVATEPERSON/" + os.environ["COZYTOUCH_USER"],
-            "password": password(),
-        }
-    ).encode()
-    req = urllib.request.Request(
-        API + "/users/token",
-        data=data,
-        headers={
-            "Authorization": f"Basic {CLIENT_ID}",
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    )
     try:
-        with urllib.request.urlopen(req, timeout=20) as response:
-            return json.loads(response.read().decode())["access_token"]
+        return _atlantic.token(password() or "", timeout=20)
     except urllib.error.HTTPError as err:
         sys.exit(
             f"login refused ({err.code}): {err.read().decode()[:200]}\n"

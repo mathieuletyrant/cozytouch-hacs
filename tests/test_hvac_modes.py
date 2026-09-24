@@ -12,8 +12,7 @@ if either of them moves.
 
 import pytest
 
-from custom_components.cozytouch.climate import supported_hvac_modes
-from custom_components.cozytouch.const import HVAC_MODE_MASKS
+from custom_components.cozytouch.const import HVAC_MODE_MASKS, narrowed_modes
 from homeassistant.components.climate import HVACMode
 
 # The air conditioner table, the widest one the mapping produces.
@@ -25,6 +24,10 @@ AC_MODES = {
     7: HVACMode.FAN_ONLY,
     8: HVACMode.DRY,
 }
+
+
+def supported_hvac_modes(modes, supported):
+    return list(narrowed_modes(modes, supported).values())
 
 
 def test_a_unit_reporting_nothing_keeps_the_whole_table():

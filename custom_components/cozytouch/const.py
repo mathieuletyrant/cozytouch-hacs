@@ -132,3 +132,20 @@ HVAC_MODE_MASKS = {
     for mask, bitName in HVAC_MODE_BITS
     if bitName == name
 }
+
+
+def narrowed_modes[T](modes: dict[int, T], supported: str | None) -> dict[int, T]:
+    """The model's modes, minus those capability 100022 says the unit lacks.
+
+    See docs/decisions.md.
+    """
+    if supported is None:
+        return modes
+
+    mask = int(float(supported))
+    narrowed = {
+        value: mode
+        for value, mode in modes.items()
+        if value not in HVAC_MODE_MASKS or HVAC_MODE_MASKS[value] & mask
+    }
+    return narrowed or modes

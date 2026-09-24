@@ -30,71 +30,33 @@ failed logins are what could lock the account, and a fortnightly job that
 retries is exactly how that would happen unattended.
 """
 
-import importlib.util
 import json
-import os
 import pathlib
 import sys
 import urllib.error
-import urllib.parse
 import urllib.request
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+import _atlantic
+from _atlantic import (
+    COZYTOUCH_ATLANTIC_API,
+    COZYTOUCH_CLIENT_ID,  # noqa: F401 -- test_catalogue_watch reads it here
+)
+
+ROOT = _atlantic.ROOT
 CATALOGUE = ROOT / "scripts" / "capability_catalogue.jsonl"
 
 CHANGED = 10
 UNREACHABLE = 2
 
 
-def _const():
-    """`const.py` alone, loaded by path rather than as part of the package.
-
-    Importing `custom_components.cozytouch.const` runs the package's
-    `__init__`, which pulls in aiohttp and Home Assistant. This script runs on
-    a bare runner with neither, and did nothing else for its whole first run.
-    `const.py` itself imports only `enum`.
-    """
-    spec = importlib.util.spec_from_file_location(
-        "cozytouch_const", ROOT / "custom_components" / "cozytouch" / "const.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-COZYTOUCH_ATLANTIC_API = _const().COZYTOUCH_ATLANTIC_API
-COZYTOUCH_CLIENT_ID = _const().COZYTOUCH_CLIENT_ID
-
-
-def password() -> str:
-    """The password, from a file rather than the environment or a prompt."""
-    path = os.environ.get("COZYTOUCH_PASS_FILE")
-    if path:
-        return pathlib.Path(path).expanduser().read_text().strip()
-    if "COZYTOUCH_PASS" in os.environ:
-        return os.environ["COZYTOUCH_PASS"]
-    sys.exit("Set COZYTOUCH_PASS_FILE (preferred) or COZYTOUCH_PASS.")
-
-
 def token() -> str:
-    data = urllib.parse.urlencode(
-        {
-            "grant_type": "password",
-            "scope": "openid",
-            "username": "GA-PRIVATEPERSON/" + os.environ["COZYTOUCH_USER"],
-            "password": password(),
-        }
-    ).encode()
-    req = urllib.request.Request(
-        COZYTOUCH_ATLANTIC_API + "/users/token",
-        data=data,
-        headers={
-            "Authorization": f"Basic {COZYTOUCH_CLIENT_ID}",
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-    )
-    with urllib.request.urlopen(req, timeout=30) as response:
-        return json.loads(response.read().decode())["access_token"]
+    """One login with the password, or exit when none is set."""
+    secret = _atlantic.password()
+    if secret is None:
+        sys.exit("Set COZYTOUCH_PASS_FILE (preferred) or COZYTOUCH_PASS.")
+    return _atlantic.token(secret, timeout=30)
 
 
 def catalogue(access_token: str) -> list[dict]:
