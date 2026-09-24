@@ -185,16 +185,8 @@ PRODUCT_ID_RUNS: tuple[tuple[int, int, int], ...] = (
 
 # What a live payload sent where the catalogue's column is empty. Atlantic
 # fills `productId` on the wire for models its own catalogue leaves at 0, and
-# its app reads nothing else -- so every diagnostics dump can correct a row
-# here. 1457 came from one : the catalogue says 0, the account says 63.
-# See docs/decisions.md.
-LEARNED_FROM_DUMPS: dict[int, int] = {
-    1457: 63,
-}
-
-# What a live payload sent where the catalogue's column is empty. Atlantic
-# fills `productId` on the wire for models its own catalogue leaves at 0, and
 # its app reads nothing else, so a diagnostics dump can correct a row here.
+# 1457 came from one : the catalogue says 0, the account says 63.
 #
 # The CozyBox sends 63, the same as the HUB Cozytouch, and the same
 # `Connectivity_Box` family, while one drives radiators and the other air
@@ -219,4 +211,4 @@ PRODUCT_IDS: dict[int, int] = {
     modelId: productId
     for first, last, productId in PRODUCT_ID_RUNS
     for modelId in range(first, last + 1)
-} | LEARNED_FROM_DUMPS | LEARNED_FROM_DUMPS
+} | LEARNED_FROM_DUMPS

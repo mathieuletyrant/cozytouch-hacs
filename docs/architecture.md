@@ -252,6 +252,42 @@ contiguous runs. Its `LEARNED_FROM_DUMPS` holds what a live payload sent where
 that catalogue leaves a 0, which is how a row gets corrected without touching
 code.
 
+Three tables take part, and only one of them decides anything :
+
+```
+        a device from the setup view
+        (modelId, productId?, modelFamily?)
+                     │
+                     ▼
+          productId sent? ──── no ───┐
+                     │               ▼
+                    yes    ┌──────────────────────────┐
+                     │     │ model_product_ids.py     │
+                     │     │ modelId → productId      │
+                     │     │ (catalogue + dumps)      │
+                     │     └──────────────────────────┘
+                     ▼               │
+          ┌───────────────────────────┐
+          │ PRODUCT_TYPES (model.py)  │  decides what the
+          │ productId → kind          │  device is
+          │ else modelFamily          │
+          └───────────────────────────┘
+                     │
+                     ▼
+          ┌───────────────────────────┐
+          │ name                      │  names it,
+          │ 1. room / zone label      │  decides nothing
+          │ 2. model_catalogue.py     │
+          │ 3. the name the API sent  │
+          │ 4. Unknown product (id)   │
+          └───────────────────────────┘
+                     │
+                     ▼
+          capabilities narrow the modes,
+          then OVERRIDES and MODEL_NAMES
+          have the last word
+```
+
 Then the device gets the last word on its modes. `narrow_by_capabilities`
 reads capability 100022, a bitmask over the mode values, and narrows the
 table's modes to what the unit supports ; and if the device reports none of
