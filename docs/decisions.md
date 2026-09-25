@@ -2080,9 +2080,14 @@ The switch writes `1` whether the start is now or later. The rows carry
 has seen the app write it ; a capture of an absence programmed for the next
 day is what would settle it. A switch reading 2 counts as on.
 
-A window already over is not sent : the switch replaces it with its default
-(from the next minute, for two days), where it used to send it as it was, and
-the service refuses one.
+While the absence is off, the pickers show the window the switch would
+send : a start that is not set or already past reads as now, to the minute,
+and an end already past as unknown. The switch sends exactly that -- the start
+bumped to the next minute, and two days after it when no end is later than it
+-- where it used to replace both ends as soon as either was missing, and send
+a window already over as it was. Clearing the absence empties the pickers
+again. The service refuses a window already over. While the absence is on,
+both read as they are stored, since an absence under way began when it began.
 
 ### `modificationDate` reads as None rather than as 1970
 

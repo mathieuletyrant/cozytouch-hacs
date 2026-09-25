@@ -171,9 +171,9 @@ temperatures are whole degrees. Heating and cooling only.
 The absence belongs to the account, not to one device : turning it on sets
 the window on the account and switches every device that has an away mode.
 
-- **From the device page** : set the start and end dates first, then turn
-  the *Away mode* switch on. While it is off, the dates are only kept ; with
-  no dates, the switch starts the absence in a minute, for two days.
+- **From the device page** : set the dates, then turn the *Away mode*
+  switch on. While it is off, the dates are only kept : the start reads as
+  now until you move it, and with no end the absence lasts two days.
 - **From an automation** : `cozytouch.set_away_mode` does both in one action,
   and `cozytouch.clear_away_mode` ends it.
 

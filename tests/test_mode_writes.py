@@ -8,7 +8,7 @@ the way test_hvac_action.py drives the update.
 """
 
 import asyncio
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from functools import partial
 from types import SimpleNamespace
 
@@ -17,6 +17,7 @@ from custom_components.cozytouch.datetime import CozytouchAwayModeDateTime
 from custom_components.cozytouch.hub import Hub
 from custom_components.cozytouch.infos import CapabilityInfos, ModelInfos
 from homeassistant.components.climate import SWING_ON
+from homeassistant.util import dt as dt_util
 
 FAN = {"quietModeCapabilityId": 30, "fanModeCapabilityId": 31}
 SWING = {"swingOnCapabilityId": 40, "swingModeCapabilityId": 41}
@@ -133,6 +134,7 @@ def away_hub(reported=None):
         "set_away_mode_bound",
         "get_away_mode_start",
         "get_away_mode_end",
+        "away_mode_init",
     ):
         setattr(hub, name, partial(getattr(Hub, name), hub))
     return hub
@@ -176,6 +178,41 @@ def test_each_date_reads_back_what_was_set():
 
     assert CozytouchAwayModeDateTime.native_value.fget(start) == START
     assert CozytouchAwayModeDateTime.native_value.fget(end) == END
+
+
+def read(hub, index):
+    return CozytouchAwayModeDateTime.native_value.fget(away_date(hub, index))
+
+
+def reads_as_now(value):
+    """Now to the minute, allowing for the minute turning mid-test."""
+    minute = dt_util.now().replace(second=0, microsecond=0)
+    return value in (minute, minute - timedelta(minutes=1))
+
+
+def test_with_no_window_the_start_reads_as_now_and_the_end_as_unknown():
+    """What the switch would send : from now, to an end still to pick."""
+    hub = away_hub()
+
+    assert reads_as_now(read(hub, 0))
+    assert read(hub, 1) is None
+
+
+def test_a_window_already_over_reads_as_a_fresh_one_while_off():
+    hub = away_hub()
+    hub.away_mode_init(1000, 2000)
+
+    assert reads_as_now(read(hub, 0))
+    assert read(hub, 1) is None
+
+
+def test_an_absence_under_way_reads_as_it_is():
+    """On, the start is the day it began, however long ago."""
+    hub = away_hub({152: "1", 222: "[1000,2000]"})
+    hub.away_mode_init(1000, int(END.timestamp()))
+
+    assert read(hub, 0) == datetime.fromtimestamp(1000, tz=dt_util.DEFAULT_TIME_ZONE)
+    assert read(hub, 1) == END
 
 
 def test_a_date_set_while_the_absence_is_off_sends_nothing():

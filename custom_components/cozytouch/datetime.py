@@ -93,12 +93,26 @@ class CozytouchAwayModeDateTime(DateTimeEntity, CozytouchSensor):
 
     @property
     def native_value(self) -> datetime | None:
-        """Retrieve value from hub."""
+        """Retrieve value from hub.
+
+        While the absence is off, a start that is not set or already past
+        reads as now, and an end already past as unknown : that is the window
+        the switch would send. See docs/decisions.md.
+        """
         value = None
         if self._timestamp_index == 0:
             value = self.coordinator.get_away_mode_start()
         elif self._timestamp_index == 1:
             value = self.coordinator.get_away_mode_end()
+
+        if not self.coordinator.is_away():
+            now = dt_util.now().replace(second=0, microsecond=0)
+            if self._timestamp_index == 0 and (
+                not value or value < now.timestamp()
+            ):
+                return now
+            if self._timestamp_index == 1 and value and value <= now.timestamp():
+                return None
 
         if value is not None and value > 0:
             return datetime.fromtimestamp(value, tz=dt_util.DEFAULT_TIME_ZONE)
