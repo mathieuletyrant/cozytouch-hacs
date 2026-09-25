@@ -259,6 +259,15 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         if self._air_circulation_active():
             self._attr_hvac_action = HVACAction.FAN
 
+        # An absence stops an air conditioner and leaves its mode as it was,
+        # so the mode alone would read as running. See docs/decisions.md.
+        if (
+            self._attr_hvac_action is not None
+            and self.coordinator.absence_under_way()
+            and self.coordinator.is_air_conditioning()
+        ):
+            self._attr_hvac_action = HVACAction.OFF
+
         # Target value
         if self._attr_hvac_mode in (
             HVACMode.OFF,

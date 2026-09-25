@@ -1,9 +1,8 @@
 """What the sensor value builders return, character for character.
 
 `sensor.py` is where a capability value becomes the string somebody reads on a
-dashboard, and it had no tests at all. These pin the formatting as it stands --
-including the two places where what it stands at is wrong on purpose, marked
-below -- so that changing one has to be a decision rather than a side effect.
+dashboard, and it had no tests at all. These pin the formatting as it stands,
+so that changing one has to be a decision rather than a side effect.
 
 They exist because a lint pass rewrote six `%`-format expressions in this file
 into f-strings. That is exactly the kind of edit that looks free and silently
@@ -16,7 +15,7 @@ same trick `tests/test_diagnostics.py` uses on the `Hub`.
 """
 
 import datetime
-import time
+import zoneinfo
 
 import pytest
 
@@ -32,6 +31,7 @@ from custom_components.cozytouch.sensor import (
     CozytouchUnitSensor,
     decode_error_code,
 )
+from homeassistant.util import dt as dt_util
 
 CAPABILITY_ID = 42
 
@@ -263,20 +263,18 @@ def timestamp_sensor(value, index=0, offset="7200", away=(0, 0)):
 
 
 @pytest.fixture
-def in_timezone(monkeypatch):
-    """Run a test under a fixed local zone, since the sensor reads one.
+def in_timezone():
+    """Run a test under a fixed Home Assistant zone, since the sensor reads it.
 
-    A test that renders a timestamp is otherwise a test of the machine it runs
-    on. monkeypatch puts TZ back on its own; tzset has to be told about it, or
-    the next test inherits this one's zone.
+    A test that renders a timestamp is otherwise a test of whatever zone the
+    last one left behind, so it goes back to UTC afterwards.
     """
 
     def switch(name):
-        monkeypatch.setenv("TZ", name)
-        time.tzset()
+        dt_util.set_default_time_zone(zoneinfo.ZoneInfo(name))
 
     yield switch
-    time.tzset()
+    dt_util.set_default_time_zone(datetime.UTC)
 
 
 def test_an_unset_window_reads_as_unknown(in_timezone):
@@ -291,7 +289,7 @@ def test_a_window_that_is_not_reported_is_none(in_timezone):
 
 
 @pytest.mark.parametrize(
-    ("index", "expected"), [(0, "00:13 15/11/2023"), (1, "01:13 15/11/2023")]
+    ("index", "expected"), [(0, "22:13 14/11/2023"), (1, "23:13 14/11/2023")]
 )
 def test_each_end_of_the_window_reads_from_its_own_index(in_timezone, index, expected):
     in_timezone("UTC")
@@ -299,74 +297,33 @@ def test_each_end_of_the_window_reads_from_its_own_index(in_timezone, index, exp
     assert CozytouchAwayModeTimestampSensor.get_value(stub) == expected
 
 
-def test_the_first_read_seeds_the_hub_with_the_window_it_found(in_timezone):
-    """Whichever entity renders first is what initialises the coordinator, and
-    the datetime entities read it back from there.
+def test_the_window_reads_as_the_vendor_app_set_it(in_timezone):
+    """Measured on a HUB Navizone (1758), 2026-09-24.
+
+    The vendor app set an absence that morning. The setup's own
+    `absence.startDate` and the gateway's 222 both hold 1790238529 --
+    10:28:49 in Paris -- and the gateway reports 315 at 7200. The sensor
+    used to add that offset to the timestamp and read the sum in the local
+    zone, so the gateway showed 12:28 while the room beside it, which reports
+    no 315, showed 10:28.
     """
-    in_timezone("UTC")
-    stub = timestamp_sensor("[1700000000,1700003600]", away=(None, None))
-
-    CozytouchAwayModeTimestampSensor.get_value(stub)
-
-    assert stub.coordinator.initialised_with == (1700000000, 1700003600)
-
-
-def test_the_timezone_offset_is_applied_twice_outside_utc(in_timezone):
-    """WRONG ON PURPOSE, pinned so the fix is visible when somebody makes it.
-
-    The device's offset is already added to the timestamp, and then the sum is
-    read with a bare fromtimestamp(), which adds the local zone on top. The
-    same instant therefore renders an hour later in Paris than in UTC, for a
-    window that is the same window. docs/architecture.md carries this as a
-    rough edge; correcting it changes what the sensor displays, so it wants a
-    capture of the Cozytouch app first.
-    """
-    in_timezone("UTC")
-    in_utc = CozytouchAwayModeTimestampSensor.get_value(
-        timestamp_sensor("[1700000000,1700003600]")
-    )
-
     in_timezone("Europe/Paris")
-    in_paris = CozytouchAwayModeTimestampSensor.get_value(
-        timestamp_sensor("[1700000000,1700003600]")
-    )
+    stub = timestamp_sensor("[1790238529,1790584129]", offset="7200")
 
-    assert in_utc == "00:13 15/11/2023"
-    # One hour later for the same instant: November in Paris is UTC+1, and it
-    # lands on top of the +2 the device already reported.
-    assert in_paris == "01:13 15/11/2023"
+    assert CozytouchAwayModeTimestampSensor.get_value(stub) == "10:28 24/09/2026"
 
 
-def test_the_offset_the_device_reports_is_what_moves_the_clock(in_timezone):
-    """Read in UTC, the only shift left is the device's own offset, so this is
-    the one assertion here that says what the sensor is *for*.
-    """
-    in_timezone("UTC")
-    at_utc = CozytouchAwayModeTimestampSensor.get_value(
-        timestamp_sensor("[1700000000,1700003600]", offset="0")
-    )
-    at_plus_two = CozytouchAwayModeTimestampSensor.get_value(
-        timestamp_sensor("[1700000000,1700003600]", offset="7200")
-    )
-
-    assert at_utc == "22:13 14/11/2023"
-    assert at_plus_two == "00:13 15/11/2023"
-
-
-def test_the_offset_shifts_by_exactly_what_it_says(in_timezone):
-    """Derived rather than hand-computed, so the pair above cannot both be
-    wrong in the same direction and still agree.
-    """
-    in_timezone("UTC")
-    base = 1700000000
-    for offset in (0, 3600, 7200, -3600, -18000):
-        got = CozytouchAwayModeTimestampSensor.get_value(
-            timestamp_sensor(f"[{base},{base + 3600}]", offset=str(offset))
+def test_the_offset_the_device_reports_moves_nothing(in_timezone):
+    """The timestamp is an instant already ; the offset is not added to it."""
+    in_timezone("Europe/Paris")
+    readings = {
+        CozytouchAwayModeTimestampSensor.get_value(
+            timestamp_sensor("[1790238529,1790584129]", offset=offset)
         )
-        want = datetime.datetime.fromtimestamp(
-            base + offset, tz=datetime.UTC
-        ).strftime("%H:%M %d/%m/%Y")
-        assert got == want
+        for offset in ("0", "3600", "7200", "-18000")
+    }
+
+    assert readings == {"10:28 24/09/2026"}
 
 
 # ---------------------------------------------------------------- error codes
