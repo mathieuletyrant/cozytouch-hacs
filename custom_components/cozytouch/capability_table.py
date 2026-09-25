@@ -1089,7 +1089,7 @@ CAPABILITIES: dict[int, Entity] = {
         # docs/decisions.md.
         name="heating_status",
         type=CapabilityType.STRING,
-        enabled_by_default=True,
+        enabled_by_default=False,
         icon="mdi:heat-wave",
         reads_as={"0": "off", "1": "heating", "2": "cooling"},
     ),
