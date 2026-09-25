@@ -31,6 +31,9 @@ overturn one, edit the line here in the same pull request.
 - **The Android dex is spent** for naming : it names 188 ids, all but five
   already mapped. Its write call sites are the only writability signal
   (`docs/decisions.md`).
+- **153 stays 0 on the Navizone rooms while cooling**, so it is no running
+  signal there. **Absence timestamps are plain unix time** ; 315 is not
+  added. Both from the 2026-09-25 dump, `docs/decisions.md`.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.
 
@@ -50,6 +53,10 @@ overturn one, edit the line here in the same pull request.
   app screenshot.
 - 100004/100021 bits 1 and 2 : catalogue and Android app disagree on hygro vs
   temperature. Needs a unit reporting one without the other.
+- Whether a programmed absence is 152 = 2 and the cloud turns it to 1 at its
+  start. The 2026-09-25 dump fits, but its first write may have been Home
+  Assistant's. Needs an absence programmed from the app alone, dumped before
+  its start.
 - A room slot (557-561) is a room index behind a gateway, not a product ; read
   the gateway's model via `masterDeviceId` before touching `model.py`.
 
