@@ -31,11 +31,6 @@ overturn one, edit the line here in the same pull request.
 - **The Android dex is spent** for naming : it names 188 ids, all but five
   already mapped. Its write call sites are the only writability signal
   (`docs/decisions.md`).
-- **The cloud turns an absence on at its start** : 152/100261 flip to 1 on
-  their own, eighteen seconds after the start the app set. A start to come
-  writes 2. **153 stays 0 on the Navizone rooms while cooling**, so it is no
-  running signal there. **Absence timestamps are plain unix time** ; 315 is
-  not added. All from the 2026-09-25 dump, `docs/decisions.md`.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.
 

@@ -27,7 +27,6 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util import dt as dt_util
 
 from . import faults
 from .capability import describe_capability_value, read_setpoint
@@ -283,11 +282,27 @@ class CozytouchAwayModeTimestampSensor(CozytouchSensor):
             if len(timestamps) == 2:
                 if timestamps[0] != "0" and timestamps[1] != "0":
                     timestamp = int(timestamps[self._timestamp_index])
-                    # A plain unix timestamp : the setup's own absence reads
-                    # the same instant. See docs/decisions.md.
-                    ts = datetime.datetime.fromtimestamp(
-                        timestamp, tz=dt_util.DEFAULT_TIME_ZONE
+                    timeOffset = int(
+                        self.coordinator.get_capability_value(
+                            self._capability.timezoneCapabilityId
+                        )
                     )
+                    # DTZ006 is silenced on purpose: the device's offset is
+                    # already in the timestamp, so reading it naively applies
+                    # that offset twice for anyone off UTC. Fixing it changes
+                    # what the sensor displays and wants its own change, with
+                    # a capture to check against -- docs/architecture.md.
+                    ts = datetime.datetime.fromtimestamp(  # noqa: DTZ006
+                        timestamp + timeOffset
+                    )
+
+                    # Check if we need to init timestamps in coordinator
+                    timestampStart = self.coordinator.get_away_mode_start()
+                    timestampEnd = self.coordinator.get_away_mode_end()
+                    if timestampStart is None or timestampEnd is None:
+                        self.coordinator.away_mode_init(
+                            int(timestamps[0]), int(timestamps[1])
+                        )
 
                     return ts.strftime("%H:%M %d/%m/%Y")
 

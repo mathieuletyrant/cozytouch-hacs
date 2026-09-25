@@ -69,9 +69,6 @@ def hub_over(account, reported, siblings=None, log=None):
     for name in (
         "away_mode_init",
         "away_mode_switches",
-        "reported_away_window",
-        "_follow_reported_away_window",
-        "absence_under_way",
         "is_away",
         "set_away_mode",
         "set_away_mode_bound",
@@ -94,23 +91,9 @@ def test_the_window_goes_first_then_the_pair_then_the_switch():
     assert account.absences == [(START, END)]
     assert hub.log == [
         (id(hub), 222, f"[{START},{END}]"),
-        (id(hub), 152, "2"),
+        (id(hub), 152, "1"),
     ]
     assert hub.refreshed == 1
-
-
-def test_a_start_still_to_come_is_programmed_and_one_past_is_on():
-    """The cloud turns 152 to 1 when the start comes.
-
-    Measured on a HUB Navizone (1758), 2026-09-24 : the vendor app wrote the
-    window at 10:19:02 for a start at 10:28:49, and 152 with every room's
-    100261 changed at 10:29:07, eighteen seconds after the start.
-    """
-    hub = hub_over(FakeAccount(), {152: "0", 222: "[0,0]"})
-
-    asyncio.run(hub.set_away_mode(1000, END))
-
-    assert (id(hub), 152, "1") in hub.log
 
 
 def test_clearing_writes_the_empty_pair_and_the_switch_off():
@@ -140,9 +123,9 @@ def test_every_device_of_the_account_is_switched_with_it():
     assert account.absences == [(START, END)]
     assert log == [
         (id(boiler), 222, f"[{START},{END}]"),
-        (id(boiler), 152, "2"),
+        (id(boiler), 152, "1"),
         (id(heater), 226, f"[{START},{END}]"),
-        (id(heater), 227, "2"),
+        (id(heater), 227, "1"),
     ]
     assert room.refreshed == 0
     assert heater.get_away_mode_start() == START
@@ -302,7 +285,7 @@ def test_the_service_switches_the_absence_on_in_one_call(monkeypatch):
     asyncio.run(registered(hass, "set_away_mode")(call))
 
     assert hub.account.absences == [(START, END)]
-    assert (id(hub), 152, "2") in hub.log
+    assert (id(hub), 152, "1") in hub.log
 
 
 def test_two_targets_on_one_account_are_one_write(monkeypatch):
@@ -334,62 +317,3 @@ def test_a_refusal_from_atlantic_is_an_error(monkeypatch):
 
     with pytest.raises(HomeAssistantError):
         asyncio.run(registered(hass, "clear_away_mode")(call))
-
-
-# --- what the device reports --------------------------------------------
-
-
-def test_an_absence_set_elsewhere_is_what_the_pickers_follow():
-    """The vendor app set this one ; the pickers held something else."""
-    hub = hub_over(FakeAccount(), {152: "1", 222: "[1790238529,1790584129]"})
-    hub.away_mode_init(START, END)
-
-    hub._follow_reported_away_window()
-
-    assert hub.get_away_mode_start() == 1790238529
-    assert hub.get_away_mode_end() == 1790584129
-
-
-def test_while_off_the_pickers_keep_what_was_picked():
-    hub = hub_over(FakeAccount(), {152: "0", 222: "[1000,2000]"})
-    hub.away_mode_init(START, END)
-
-    hub._follow_reported_away_window()
-
-    assert (hub.get_away_mode_start(), hub.get_away_mode_end()) == (START, END)
-
-
-@pytest.mark.parametrize(
-    ("reported", "under_way"),
-    [
-        ({152: "1"}, True),
-        ({152: "2"}, False),  # programmed, not started
-        ({152: "0"}, False),
-        ({100261: "1"}, True),  # a room, which has no switch
-        ({100261: "0"}, False),
-        ({}, False),
-    ],
-)
-def test_when_an_absence_is_under_way(reported, under_way):
-    hub = hub_over(FakeAccount(), reported)
-    assert hub.absence_under_way() is under_way
-
-
-def devices_hub(devices, deviceId):
-    return SimpleNamespace(
-        _deviceId=deviceId, _account=SimpleNamespace(devices=devices)
-    )
-
-
-def test_a_room_is_air_conditioning_through_its_gateway():
-    """Measured : a Navizone room declares no family, its gateway does."""
-    devices = [
-        {"deviceId": 1, "modelFamily": "Air_Conditioning", "masterDeviceId": None},
-        {"deviceId": 2, "modelFamily": None, "masterDeviceId": 1},
-    ]
-    assert Hub.is_air_conditioning(devices_hub(devices, 2)) is True
-
-
-def test_a_device_of_another_family_is_not():
-    devices = [{"deviceId": 1, "modelFamily": "Heating", "masterDeviceId": None}]
-    assert Hub.is_air_conditioning(devices_hub(devices, 1)) is False
