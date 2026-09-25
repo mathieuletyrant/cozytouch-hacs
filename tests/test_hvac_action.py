@@ -1,5 +1,5 @@
-"""What a radiator reports while it sits at its setpoint, and a room while
-the house is away.
+"""What a radiator reports while it sits at its setpoint, and an air
+conditioner while the house is away.
 
 181 carries the mode the device is really running, and that is what the
 climate entity turned into an action: a radiator asked for heat reported
@@ -24,7 +24,7 @@ from homeassistant.components.climate import HVACAction, HVACMode
 IDLING = {7: "4", 181: "4", 40: "19.0", 153: "0"}
 
 
-def entity(values, stopped=False, **capabilityExtra):
+def entity(values, away=False, air_conditioning=False, **capabilityExtra):
     """A stand-in carrying only what _handle_coordinator_update touches."""
     capability = CapabilityInfos()
     capability.capabilityId = 7
@@ -43,7 +43,8 @@ def entity(values, stopped=False, **capabilityExtra):
             get_capability_value=lambda capabilityId, default="0": values.get(
                 capabilityId, default
             ),
-            climate_is_stopped=lambda: stopped,
+            absence_under_way=lambda: away,
+            is_air_conditioning=lambda: air_conditioning,
         ),
         async_write_ha_state=lambda: None,
     )
@@ -94,9 +95,9 @@ def test_a_device_that_does_not_report_the_element_reads_as_before():
 AWAY_ROOM = {7: "3", 181: "3", 40: "17.0", 153: "0"}
 
 
-def test_a_room_away_is_off_whatever_its_mode_says():
+def test_an_air_conditioner_away_is_off_whatever_its_mode_says():
     """The absence stops the unit and leaves the mode for the return."""
-    fake = entity(AWAY_ROOM, stopped=True)
+    fake = entity(AWAY_ROOM, away=True, air_conditioning=True)
 
     CozytouchClimate._handle_coordinator_update(fake)
 
@@ -104,9 +105,18 @@ def test_a_room_away_is_off_whatever_its_mode_says():
     assert fake._attr_hvac_action is HVACAction.OFF
 
 
-def test_a_room_at_home_still_reads_its_mode():
-    fake = entity(AWAY_ROOM)
+def test_an_air_conditioner_at_home_still_reads_its_mode():
+    fake = entity(AWAY_ROOM, air_conditioning=True)
 
     CozytouchClimate._handle_coordinator_update(fake)
 
     assert fake._attr_hvac_action is HVACAction.COOLING
+
+
+def test_a_radiator_away_keeps_its_action():
+    """A heater runs its absence setpoint : nothing says it stops."""
+    fake = entity(IDLING | {153: "1"}, away=True, heatingActiveCapabilityId=153)
+
+    CozytouchClimate._handle_coordinator_update(fake)
+
+    assert fake._attr_hvac_action is HVACAction.HEATING

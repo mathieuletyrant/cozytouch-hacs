@@ -21,7 +21,7 @@ from test_services import make_hass
 import voluptuous as vol
 
 from custom_components.cozytouch import services
-from custom_components.cozytouch.hub import STOPS_CLIMATE, Hub, away_window_is_valid
+from custom_components.cozytouch.hub import Hub, away_window_is_valid
 from custom_components.cozytouch.switch import CozytouchAwayModeSwitch
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 
@@ -71,7 +71,7 @@ def hub_over(account, reported, siblings=None, log=None):
         "away_mode_switches",
         "reported_away_window",
         "_follow_reported_away_window",
-        "climate_is_stopped",
+        "absence_under_way",
         "is_away",
         "set_away_mode",
         "set_away_mode_bound",
@@ -346,21 +346,36 @@ def test_while_off_the_pickers_keep_what_was_picked():
 
 
 @pytest.mark.parametrize(
-    ("reported", "stopped"),
+    ("reported", "under_way"),
     [
-        ({100261: "1"}, True),
+        ({152: "1"}, True),
+        ({152: "2"}, False),  # programmed, not started
+        ({152: "0"}, False),
+        ({100261: "1"}, True),  # a room, which has no switch
         ({100261: "0"}, False),
-        # A switch is on for a programmed absence too : it says nothing
-        # about whether the unit runs.
-        ({152: "1"}, False),
         ({}, False),
     ],
 )
-def test_what_stops_the_unit_is_what_the_table_marks(reported, stopped):
+def test_when_an_absence_is_under_way(reported, under_way):
     hub = hub_over(FakeAccount(), reported)
-    assert hub.climate_is_stopped() is stopped
+    assert hub.absence_under_way() is under_way
 
 
-def test_only_the_room_absence_is_marked_so_far():
-    """Measured on the Navizone rooms (557-559) and nowhere else."""
-    assert set(STOPS_CLIMATE) == {100261}
+def devices_hub(devices, deviceId):
+    return SimpleNamespace(
+        _deviceId=deviceId, _account=SimpleNamespace(devices=devices)
+    )
+
+
+def test_a_room_is_air_conditioning_through_its_gateway():
+    """Measured : a Navizone room declares no family, its gateway does."""
+    devices = [
+        {"deviceId": 1, "modelFamily": "Air_Conditioning", "masterDeviceId": None},
+        {"deviceId": 2, "modelFamily": None, "masterDeviceId": 1},
+    ]
+    assert Hub.is_air_conditioning(devices_hub(devices, 2)) is True
+
+
+def test_a_device_of_another_family_is_not():
+    devices = [{"deviceId": 1, "modelFamily": "Heating", "masterDeviceId": None}]
+    assert Hub.is_air_conditioning(devices_hub(devices, 1)) is False

@@ -2137,31 +2137,24 @@ and the gateway reports 315 at 7200. The gateway's sensor showed 12:28 and
 the room beside it, which reports no 315, showed 10:28. The timestamp is read
 as it is, in Home Assistant's zone ; 315 is no longer read by the sensor.
 
-### A room's absence stops its unit, and the climate says so
+### An absence stops an air conditioner, and the climate says so
 
 During an absence the rooms of an air-conditioning gateway keep their mode
 (7, 102020) and their effective mode (181) as they were -- measured on the
-Navizone, 2026-09-25, all three rooms (557-559) at 3 since the day before --
-so the action read from 181 said `cooling` for a unit the absence had
-stopped. While 100261 reads 1, the action now reads `off` ; the mode stays,
-since it is what comes back on the return.
+Navizone, 2026-09-25, all three rooms at 3 since the day before -- so the
+action read from 181 said `cooling` for a unit the absence had stopped. When
+the absence is under way (100261 at 1 on a room, or a switch at 1) on a
+device that is air conditioning, or hangs off a gateway that is, the action
+reads `off`. The mode stays : it is what comes back on the return.
 
-It is said on the row, as `stopsClimate` in 100261's extra, and the climate
-reads every row that carries it rather than naming an id. So the claim
-covers exactly the capability it was measured on, and another product whose
-absence is found to stop it says so on its own row.
+Air conditioning is the `modelFamily` the API declares, on the device or on
+its `masterDeviceId`, because a room slot declares none and nothing it
+reports says what it holds. A heater is left alone : it runs its absence
+setpoint (172) rather than stopping, and nothing captured says otherwise.
 
-The limit is the one every room row has : a room behind a radiator gateway
-would report 100261 too, if such rooms report it at all, and nothing a room
-reports says what it holds. A radiator in absence runs its setpoint (172)
-rather than stopping, so a dump of such a room reading 100261 at 1 is what
-would take the key off the shared row and onto a narrower one. The switches
-(152, 227) are not marked : they read on for a programmed absence too, and
-nothing measured says what the unit behind them does.
-
-153 could not have done this. It reads 0 on all three rooms and has not
-changed since 2026-09-07 on the first of them, through a fortnight of
-cooling -- see the entry on 153.
+153 could not do this. It reads 0 on all three rooms and has not changed
+since 2026-09-07 on the first of them, through a fortnight of cooling --
+see the entry on 153.
 
 ### An unset absence window reads as unknown, not as a word of our own
 
