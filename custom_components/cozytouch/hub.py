@@ -768,8 +768,8 @@ class Hub(DataUpdateCoordinator):
             if not switches:
                 continue
 
-            if away:
-                hub.away_mode_init(timestampStart, timestampEnd)
+            # Cleared, the pickers go back to what the switch would send.
+            hub.away_mode_init(timestampStart, timestampEnd)
 
             for capabilityId, settings in switches.items():
                 await hub.set_capability_value(

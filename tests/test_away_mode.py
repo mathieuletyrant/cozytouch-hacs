@@ -184,6 +184,27 @@ def test_the_switch_replaces_a_window_already_over():
     assert start > 2000
 
 
+def test_the_switch_starts_now_when_only_the_end_was_picked():
+    """The start picker reads as now until somebody moves it."""
+    hub = hub_over(FakeAccount(), {152: "0", 222: "[0,0]"})
+    hub.away_mode_init(None, END)
+
+    asyncio.run(CozytouchAwayModeSwitch.async_turn_on(switch_over(hub)))
+
+    [(start, end)] = hub.account.absences
+    assert end == END
+    assert abs(start - (datetime.now(tz=UTC).timestamp() + 60)) < 5
+
+
+def test_clearing_puts_the_pickers_back_to_empty():
+    hub = hub_over(FakeAccount(), {152: "1", 222: f"[{START},{END}]"})
+    hub.away_mode_init(START, END)
+
+    asyncio.run(hub.set_away_mode(None, None))
+
+    assert (hub.get_away_mode_start(), hub.get_away_mode_end()) == (None, None)
+
+
 def test_the_switch_off_clears_the_window():
     hub = hub_over(FakeAccount(), {152: "1", 222: f"[{START},{END}]"})
 

@@ -131,10 +131,13 @@ class CozytouchAwayModeSwitch(CozytouchSwitch):
         timestampStart = self.coordinator.get_away_mode_start()
         timestampEnd = self.coordinator.get_away_mode_end()
 
-        # No window prepared, or one already over : from the next minute, for
-        # two days.
+        # What the pickers show while the absence is off : no start, or one
+        # already past, is the next minute ; no end, or one not after the
+        # start, is two days later.
+        soon = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp() + 60
+        if not timestampStart or timestampStart < soon:
+            timestampStart = soon
         if not away_window_is_valid(timestampStart, timestampEnd):
-            timestampStart = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp() + 60
             timestampEnd = timestampStart + (2 * 24 * 60 * 60)
 
         self._nb_ignore = 5
