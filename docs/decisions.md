@@ -1160,12 +1160,6 @@ which is wrong about every other id on this page at least once.
 `HEATING_STATUS`, read as `HeatingStatus { OFF "0", HEAT_UP "1", COOL_DOWN
 "2" }`. Two things follow, and the second is the one that mattered.
 
-(2026-09-25) The Navizone rooms (557-559) never report the third one : 153
-reads 0 on all three, unchanged since 2026-09-07 on 557, through the
-cooling season, and its history in Home Assistant is `off` throughout. So on
-those rooms it says nothing about whether the unit runs, and cannot turn a
-cooling action into idle the way it does for a radiator's heating.
-
 **It was a binary sensor**, whose `is_on` is `value == "1"`. A device
 reporting 2 read as off, silently, and the product that reports 2 is an air
 conditioner while it is cooling -- including the room units this
@@ -1194,6 +1188,8 @@ cooling season, so the entity sat at "off" on every room page while the
 units cooled. Where it does move -- the radiators -- what it says already
 reaches the climate entity's action, which reads the capability and not the
 entity, and is unaffected. Anyone who wants the raw value turns it on.
+For the same reason it cannot turn a cooling action into idle the way it
+does a radiator's heating : on those rooms it never reports the third state.
 
 ### Seventeen names the iOS list got wrong
 
