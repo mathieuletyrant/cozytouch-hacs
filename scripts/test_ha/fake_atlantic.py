@@ -18,7 +18,7 @@ Anything else -- a programmed absence turning on at its start, a 429 --
 is not simulated. This tests the integration's reading of the API, not the
 cloud.
 
-    python scripts/fake_atlantic.py DUMP.json [--port 8765]
+    python scripts/test_ha/fake_atlantic.py DUMP.json [--port 8765]
 """
 
 import argparse
@@ -30,7 +30,7 @@ import time
 
 from aiohttp import web
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 
 # What a gateway write is mirrored onto, on every device it is master of.
 MIRRORED_ON_ROOMS = {152: 100261, 222: 100260}

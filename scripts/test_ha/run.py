@@ -4,38 +4,51 @@
 starts it, starts Home Assistant with the integration copied from the working
 tree -- its API address pointed at the fake -- onboards an owner and adds the
 account, so the result is a running instance with every device of the dump
-on it. Nobody's credentials are involved.
+on it. Nobody's credentials are involved. `.claude/skills/test-ha` is the
+walk-through.
 
-    python scripts/test_ha.py start DUMP.json   # fresh instance
-    python scripts/test_ha.py restart           # recopy the code, full restart
-    python scripts/test_ha.py stop
-    python scripts/test_ha.py token             # a fresh access token
+    python scripts/test_ha/run.py setup            # once : the HA venv
+    python scripts/test_ha/run.py start [DUMP]     # fresh instance
+    python scripts/test_ha/run.py restart          # recopy the code, restart
+    python scripts/test_ha/run.py stop
+    python scripts/test_ha/run.py states [TEXT]    # entities, filtered
+    python scripts/test_ha/run.py call DOMAIN.SERVICE [JSON]
+    python scripts/test_ha/run.py device ENTITY_ID # its device page path
+    python scripts/test_ha/run.py journal          # what the fake received
+    python scripts/test_ha/run.py token            # a fresh access token
 
-Home Assistant runs from the interpreter in HA_PYTHON (default: the one
-running this), which needs `homeassistant` installed ; the frontend and the
-default integrations' requirements are installed by Home Assistant itself on
-first start. State lives in TEST_HA_DIR (default: ./.test-ha), which is
-throwaway : `start` wipes it.
+DUMP defaults to `navizone.json` beside this file : a HUB Navizone and its
+three rooms, from a real dump with the names and ids replaced and no absence
+set. Home Assistant runs from `.venv-ha` (or HA_PYTHON), the version
+`requirements_test.txt` pins ; the frontend and the default integrations'
+requirements are installed by Home Assistant itself on first start. State
+lives in TEST_HA_DIR (default `.test-ha`), which `start` wipes.
 """
 
 import json
 import os
 import pathlib
+import re
 import shutil
 import signal
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent
+HERE = pathlib.Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
 WORK = pathlib.Path(os.environ.get("TEST_HA_DIR", ROOT / ".test-ha")).resolve()
 CONFIG = WORK / "config"
-PYTHON = os.environ.get("HA_PYTHON", sys.executable)
+VENV = ROOT / ".venv-ha"
+PYTHON = os.environ.get("HA_PYTHON", str(VENV / "bin" / "python"))
+DEFAULT_DUMP = HERE / "navizone.json"
 
 HA_URL = "http://127.0.0.1:8123"
 FAKE_PORT = 8765
+FAKE_URL = f"http://127.0.0.1:{FAKE_PORT}"
 CLIENT_ID = HA_URL + "/"
 
 REAL_API = "https://apis.groupe-atlantic.com"
@@ -59,7 +72,7 @@ logger:
 
 
 def request(method, path, body=None, form=None, token=None, base=HA_URL):
-    """One HTTP call, JSON in and out, raising on anything but 2xx."""
+    """One HTTP call, JSON in and out, exiting on anything but 2xx."""
     data, headers = None, {}
     if form is not None:
         data = urllib.parse.urlencode(form).encode()
@@ -78,11 +91,14 @@ def request(method, path, body=None, form=None, token=None, base=HA_URL):
         raise SystemExit(
             f"{method} {path} answered {err.code}: {err.read().decode()[:500]}"
         ) from err
-    return json.loads(raw) if raw else None
+    try:
+        return json.loads(raw) if raw else None
+    except ValueError:
+        return raw.decode()
 
 
 def wait_for(url, seconds):
-    """Until the URL answers at all, or give up."""
+    """Until the URL answers with anything but a 404, or give up."""
     deadline = time.time() + seconds
     while time.time() < deadline:
         try:
@@ -91,9 +107,9 @@ def wait_for(url, seconds):
         except urllib.error.HTTPError as err:
             if err.code != 404:
                 return
-            time.sleep(2)
         except OSError:
-            time.sleep(2)
+            pass
+        time.sleep(2)
     raise SystemExit(f"{url} did not come up within {seconds}s ; see {WORK}/*.log")
 
 
@@ -142,10 +158,12 @@ def copy_integration():
     text = const.read_text()
     if REAL_API not in text:
         raise SystemExit("const.py no longer names the API address this replaces")
-    const.write_text(text.replace(REAL_API, f"http://127.0.0.1:{FAKE_PORT}"))
+    const.write_text(text.replace(REAL_API, FAKE_URL))
 
 
 def start_ha():
+    if not pathlib.Path(PYTHON).exists():
+        raise SystemExit(f"No Home Assistant interpreter at {PYTHON} ; run setup")
     spawn("hass", [PYTHON, "-m", "homeassistant", "-c", str(CONFIG)])
     # The API answers before startup is over ; onboarding only once the
     # default integrations are set up, which on a first start includes
@@ -204,7 +222,7 @@ def add_account():
         {"username": "fake@example.com", "password": "fake"},
         token=token,
     )
-    if step.get("type") == "form":
+    if step.get("type") == "form" and step.get("step_id") == "devices":
         step = request(
             "POST",
             f"/api/config/config_entries/flow/{flow['flow_id']}",
@@ -213,6 +231,32 @@ def add_account():
         )
     if step.get("type") != "create_entry":
         raise SystemExit(f"The config flow stopped at {step}")
+
+
+def setup():
+    """The venv Home Assistant runs from, at the version the tests pin."""
+    pin = re.search(
+        r"^homeassistant==(\S+)", (ROOT / "requirements_test.txt").read_text(), re.M
+    )
+    if pin is None:
+        raise SystemExit("requirements_test.txt pins no homeassistant")
+    uv = shutil.which("uv") or "uv"
+    subprocess.run(  # noqa: S603 -- fixed arguments
+        [uv, "venv", "-q", "--python", "3.14.2", str(VENV)], check=True
+    )
+    subprocess.run(  # noqa: S603 -- fixed arguments
+        [
+            uv,
+            "pip",
+            "install",
+            "-q",
+            "--python",
+            str(VENV / "bin" / "python"),
+            f"homeassistant=={pin.group(1)}",
+        ],
+        check=True,
+    )
+    print(f"Home Assistant {pin.group(1)} in {VENV}")
 
 
 def start(dump):
@@ -226,13 +270,13 @@ def start(dump):
         "fake",
         [
             PYTHON,
-            str(ROOT / "scripts" / "fake_atlantic.py"),
+            str(HERE / "fake_atlantic.py"),
             str(pathlib.Path(dump).resolve()),
             "--port",
             str(FAKE_PORT),
         ],
     )
-    wait_for(f"http://127.0.0.1:{FAKE_PORT}/fake/journal", 30)
+    wait_for(FAKE_URL + "/fake/journal", 30)
 
     copy_integration()
     start_ha()
@@ -248,21 +292,67 @@ def restart():
     print(f"Restarted on {HA_URL}")
 
 
+def states(text=""):
+    for state in request("GET", "/api/states", token=access_token()):
+        entity = state["entity_id"]
+        if text not in entity:
+            continue
+        attributes = state["attributes"]
+        shown = {
+            key: attributes[key]
+            for key in ("hvac_action", "preset_mode", "preset_modes")
+            if key in attributes
+        }
+        print(entity, "=", state["state"], shown or "")
+
+
+def call(service, data="{}"):
+    domain, name = service.split(".", 1)
+    result = request(
+        "POST", f"/api/services/{domain}/{name}", json.loads(data), token=access_token()
+    )
+    print(json.dumps(result, indent=1, ensure_ascii=False))
+
+
+def device(entity):
+    deviceId = request(
+        "POST",
+        "/api/template",
+        {"template": "{{ device_id('%s') }}" % entity},  # noqa: UP031
+        token=access_token(),
+    )
+    if not deviceId or deviceId == "None":
+        raise SystemExit(f"{entity} has no device")
+    print(f"/config/devices/device/{deviceId}")
+
+
+def journal():
+    for line in request("GET", "/fake/journal", base=FAKE_URL):
+        print(line)
+
+
 def main():
-    if len(sys.argv) < 2:
+    args = sys.argv[1:]
+    commands = {
+        "setup": (setup, 0, 0),
+        "start": (start, 0, 1),
+        "restart": (restart, 0, 0),
+        "stop": (lambda: (kill("hass"), kill("fake")), 0, 0),
+        "states": (states, 0, 1),
+        "call": (call, 1, 2),
+        "device": (device, 1, 1),
+        "journal": (journal, 0, 0),
+        "token": (lambda: print(access_token()), 0, 0),
+    }
+    if not args or args[0] not in commands:
         raise SystemExit(__doc__)
-    command = sys.argv[1]
-    if command == "start" and len(sys.argv) == 3:
-        start(sys.argv[2])
-    elif command == "restart":
-        restart()
-    elif command == "stop":
-        kill("hass")
-        kill("fake")
-    elif command == "token":
-        print(access_token())
-    else:
+    function, least, most = commands[args[0]]
+    rest = args[1:]
+    if not least <= len(rest) <= most:
         raise SystemExit(__doc__)
+    if args[0] == "start" and not rest:
+        rest = [str(DEFAULT_DUMP)]
+    function(*rest)
 
 
 if __name__ == "__main__":
