@@ -13,6 +13,31 @@ Files written before this convention still carry their reasoning inline :
 `custom_components/`. They are not being rewritten wholesale. A file moves
 here when it is edited for some other reason.
 
+## `scripts/test_ha/`
+
+### A test Home Assistant, against a fake cloud rather than the account
+
+Checking a change on a running Home Assistant used to mean the maintainer's
+own install, on the real account -- and agents are kept off the account,
+because a refused login is what can lock it. So a page was first seen after
+a release.
+
+The fake serves a diagnostics dump as the account, which is what a dump
+already is : every device, every capability value, the setup's absence.
+Writes are stored and served back. The only cloud behaviour it plays is what
+a capture showed -- 102020 reaching every room, a gateway's 152 and 222
+mirrored onto its rooms -- because anything guessed there would be tested
+against itself. The integration is copied, not imported from the
+repository, with its API address rewritten in the copy, so the code under
+test is not edited to be testable. Home Assistant runs from a venv of its
+own, `.venv-ha`, since its first start installs the frontend and the
+default integrations' requirements, and the pinned test venv must not grow
+them.
+
+`navizone.json` is the 2026-09-25 Navizone dump (1758, rooms 557-559) with
+the names, device ids, zone ids and setup id replaced, and the absence
+cleared so a scenario starts from home.
+
 ## `.github/workflows/tests.yaml`
 
 ### ruff, and not `ruff format`
@@ -1156,6 +1181,13 @@ The default was also wrong before that, and wrong in the way CLAUDE.md
 warns about: `flame` was the shared default with the electric heaters as
 the exception, so it claimed every product nobody had considered -- the air
 conditioners included.
+
+**It is off by default (2026-09-25).** On the Navizone rooms (557-559) it
+reads 0 on all three and has not changed since 2026-09-07, through the
+cooling season, so the entity sat at "off" on every room page while the
+units cooled. Where it does move -- the radiators -- what it says already
+reaches the climate entity's action, which reads the capability and not the
+entity, and is unaffected. Anyone who wants the raw value turns it on.
 
 ### Seventeen names the iOS list got wrong
 

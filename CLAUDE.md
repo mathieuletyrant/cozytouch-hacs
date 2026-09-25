@@ -105,6 +105,15 @@ The rules the docstrings do not repeat :
 - `tests/test_polling.py`'s `FakeSession` is a deliberate copy of
   `tests/test_reauth.py`'s. Do not merge them.
 
+## Seeing it in Home Assistant
+
+The tests say a mapping did not move ; they do not say what a page looks
+like. `scripts/test_ha/run.py` starts a Home Assistant in the session with
+the working tree's integration, served by a fake Cozytouch cloud built from
+a diagnostics dump -- no account involved -- and
+`scripts/test_ha/screenshot.cjs` photographs its pages. The `test-ha` skill
+is the walk-through, and says what the fake does not simulate.
+
 ## Entries, subentries, identity
 
 An account is one config entry; each of its devices is a subentry of it. The
