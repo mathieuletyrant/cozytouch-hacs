@@ -625,17 +625,6 @@ from it when a change makes an entry untrue.
 - **`signal` maps to `SIGNAL_STRENGTH` with `UnitOfSoundPressure.DECIBEL`.**
   The unit string is `dB`, which is valid for the device class, but it is
   reached through the sound-pressure enum.
-- **The away-mode timestamp sensor applies the device's timezone offset twice.**
-  `CozytouchAwayModeTimestampSensor.get_value` adds the offset the device
-  reports to the unix timestamp, then formats the sum with a bare
-  `datetime.fromtimestamp()` — which reads it in Home Assistant's local zone,
-  adding the offset again for anyone not on UTC. `tz=UTC` is the fix; it changes
-  what the sensor displays, so it wants a capture of what the Cozytouch app
-  shows before it is made. The line carries a `noqa: DTZ006` so the linter does
-  not have to be argued with twice, and
-  `tests/test_sensor_values.py::test_the_timezone_offset_is_applied_twice_outside_utc`
-  pins it, so making the fix shows up as that test failing rather than as a
-  silent shift in what people see.
 - **A few capabilities are deliberate placeholders.** 101–104 come out as
   `Capability_101`…, 105906/105907 as `Target 105906`…, and 312 is commented
   `For test`. The coverage test skips them by regex, which is why they have no

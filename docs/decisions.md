@@ -1135,6 +1135,12 @@ which is wrong about every other id on this page at least once.
 `HEATING_STATUS`, read as `HeatingStatus { OFF "0", HEAT_UP "1", COOL_DOWN
 "2" }`. Two things follow, and the second is the one that mattered.
 
+(2026-09-25) The Navizone rooms (557-559) never report the third one : 153
+reads 0 on all three, unchanged since 2026-09-07 on 557, through the
+cooling season, and its history in Home Assistant is `off` throughout. So on
+those rooms it says nothing about whether the unit runs, and cannot turn a
+cooling action into idle the way it does for a radiator's heating.
+
 **It was a binary sensor**, whose `is_on` is `value == "1"`. A device
 reporting 2 read as off, silently, and the product that reports 2 is an air
 conditioner while it is cooling -- including the room units this
@@ -2043,10 +2049,22 @@ off under a setup that says away. What was not captured is whether the vendor
 app writes the second device's switch itself or leaves the cloud to ; writing
 it is the side that cannot leave the two disagreeing.
 
-The switch writes `1` whether the start is now or later. The rows carry
-`value_pending` "2", which reads like a programmed absence, but nothing here
-has seen the app write it ; a capture of an absence programmed for the next
-day is what would settle it. A switch reading 2 counts as on.
+The switch still writes `1` whether the start is now or later ; a switch
+reading 2 counts as on. The diagnostics dump of 2026-09-25 (HUB Navizone
+1758 and its three rooms) looked for a moment like it settled `2` : the
+window (222 and every room's 100260) was written at 10:19:02 for a start at
+10:28:49, and 152 with every room's 100261 changed at 10:29:07, eighteen
+seconds after the start. But the owner had first tried from Home Assistant,
+on the release that writes the window without the switch, and then turned
+the absence on from the vendor app -- so the first write may be ours and the
+second a hand on the app, and the dump cannot tell. Settling it takes an
+absence programmed from the app alone for a start some minutes away, and a
+dump taken before that start.
+
+While the absence is on, the pickers follow the window the device reports
+beside its switch, on every refresh. They used to be seeded once, from the
+first sensor read, and kept whatever they held after that : on the same
+dump, they showed a window that was not the one the device reported.
 
 While the absence is off, the pickers show the window the switch would
 send : a start that is not set or already past reads as now, to the minute,
@@ -2107,6 +2125,36 @@ it was added as — so `get_via_device` returns None for a gateway, and for a
 child whose gateway nobody added. None rather than a guess matters : HA logs a
 warning when `via_device` names a device that is not in the registry. The
 registry-id spelling is covered under `__init__.py` above.
+
+### The absence timestamps are plain unix time
+
+The sensor used to add the offset the device reports (315) to the timestamp
+and read the sum in Home Assistant's zone, which counts the offset twice for
+anyone off UTC. A diagnostics dump of 2026-09-25 settles which reading is
+right : the setup's own `absence.startDate` and the gateway's 222 hold the
+same 1790238529 -- 10:28:49 in Paris, the morning it was set --
+and the gateway reports 315 at 7200. The gateway's sensor showed 12:28 and
+the room beside it, which reports no 315, showed 10:28. The timestamp is read
+as it is, in Home Assistant's zone ; 315 is no longer read by the sensor.
+
+### An absence stops an air conditioner, and the climate says so
+
+During an absence the rooms of an air-conditioning gateway keep their mode
+(7, 102020) and their effective mode (181) as they were -- measured on the
+Navizone, 2026-09-25, all three rooms at 3 since the day before -- so the
+action read from 181 said `cooling` for a unit the absence had stopped. When
+the absence is under way (100261 at 1 on a room, or a switch at 1) on a
+device that is air conditioning, or hangs off a gateway that is, the action
+reads `off`. The mode stays : it is what comes back on the return.
+
+Air conditioning is the `modelFamily` the API declares, on the device or on
+its `masterDeviceId`, because a room slot declares none and nothing it
+reports says what it holds. A heater is left alone : it runs its absence
+setpoint (172) rather than stopping, and nothing captured says otherwise.
+
+153 could not do this. It reads 0 on all three rooms and has not changed
+since 2026-09-07 on the first of them, through a fortnight of cooling --
+see the entry on 153.
 
 ### An unset absence window reads as unknown, not as a word of our own
 
@@ -2640,7 +2688,8 @@ What the room does not report is a switch: neither 152 nor 227, only 100261,
 which reads whether the absence is on and is a binary sensor. That matters
 because a datetime entity sends nothing while the absence is off — it keeps
 the date on the hub, and the write happens in `set_away_mode`, which the
-away-mode *switch* calls when it is turned on. A room would therefore have got two date pickers that accept a date,
+away-mode *switch* calls when it is turned on. A room would therefore have got
+two date pickers that accept a date,
 show it, and send nothing: a control that fails silently, which is worse than
 no control.
 

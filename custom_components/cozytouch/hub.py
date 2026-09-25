@@ -52,10 +52,22 @@ WRITE_SETTLE_DELAY = 15
 # What each away switch writes, read off the table so that a switch mapped
 # later is written with the others.
 AWAY_MODE_SWITCHES: dict[int, Mapping[str, object]] = {
-    capabilityId: {"value_off": "0", "value_on": "1", **(row.extra or {})}
+    capabilityId: {
+        "value_off": "0",
+        "value_on": "1",
+        "value_pending": "2",
+        **(row.extra or {}),
+    }
     for capabilityId, row in CAPABILITIES.items()
     if row.type is CapabilityType.AWAY_MODE_SWITCH
 }
+
+
+# Whether a room's absence is under way. A room has no switch of its own.
+ROOM_ABSENCE_CAPABILITY_ID = 100261
+
+# The `modelFamily` the API declares for air conditioning.
+AIR_CONDITIONING_FAMILY = "Air_Conditioning"
 
 
 @dataclass
@@ -304,6 +316,7 @@ class Hub(DataUpdateCoordinator):
 
         Nothing left to fetch : the values are already on `account.devices`.
         """
+        self._follow_reported_away_window()
         await self._refresh_faults()
         self.async_set_updated_data(None)
 
@@ -377,6 +390,7 @@ class Hub(DataUpdateCoordinator):
             raise UpdateFailed(str(err)) from err
 
         self._account.store_capabilities(self._deviceId, capabilities)
+        self._follow_reported_away_window()
         await self._refresh_faults()
 
         # This ran because of a write, and a write can be the home's. See
@@ -707,6 +721,61 @@ class Hub(DataUpdateCoordinator):
             for capabilityId, settings in AWAY_MODE_SWITCHES.items()
             if self.get_capability_value(capabilityId, None) is not None
         }
+
+    def reported_away_window(self) -> tuple[int, int] | None:
+        """The window the device reports beside its switch, if one is set."""
+        for settings in self.away_mode_switches().values():
+            value = self.get_capability_value(settings["timestampsCapabilityId"], None)
+            try:
+                start, end = (int(bound) for bound in value.strip("[]").split(","))
+            except (AttributeError, ValueError):
+                continue
+            if start and end:
+                return start, end
+        return None
+
+    def _follow_reported_away_window(self) -> None:
+        """While the absence is on, the pickers show the one under way.
+
+        Whoever set it -- the vendor app included. See docs/decisions.md.
+        """
+        if self.is_away() and (window := self.reported_away_window()):
+            self.away_mode_init(*window)
+
+    def absence_under_way(self) -> bool:
+        """Whether the absence has started, rather than being on or programmed.
+
+        A room reports it on its own (100261) ; a device with a switch reads
+        it there, where 2 is an absence still waiting for its start.
+        """
+        if self.get_capability_value(ROOM_ABSENCE_CAPABILITY_ID, None) == "1":
+            return True
+        return any(
+            self.get_capability_value(capabilityId, None) == settings["value_on"]
+            for capabilityId, settings in self.away_mode_switches().items()
+        )
+
+    def is_air_conditioning(self) -> bool:
+        """Whether this device, or the gateway it hangs off, is an air
+        conditioner, going by the family the API declares.
+
+        What an absence does depends on it : an air conditioner stops. See
+        docs/decisions.md.
+        """
+        dev = device_of(self)
+        if dev is None:
+            return False
+
+        master = (
+            device_of(self, dev["masterDeviceId"])
+            if dev.get("masterDeviceId")
+            else None
+        )
+        return any(
+            candidate is not None
+            and candidate.get("modelFamily") == AIR_CONDITIONING_FAMILY
+            for candidate in (dev, master)
+        )
 
     def is_away(self) -> bool:
         """Whether this device's absence is on, or programmed."""
