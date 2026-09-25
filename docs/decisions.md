@@ -1157,6 +1157,13 @@ warns about: `flame` was the shared default with the electric heaters as
 the exception, so it claimed every product nobody had considered -- the air
 conditioners included.
 
+**It is off by default (2026-09-25).** On the Navizone rooms (557-559) it
+reads 0 on all three and has not changed since 2026-09-07, through the
+cooling season, so the entity sat at "off" on every room page while the
+units cooled. Where it does move -- the radiators -- what it says already
+reaches the climate entity's action, which reads the capability and not the
+entity, and is unaffected. Anyone who wants the raw value turns it on.
+
 ### Seventeen names the iOS list got wrong
 
 The mapping's names came from an extraction of the iOS app. The Android
