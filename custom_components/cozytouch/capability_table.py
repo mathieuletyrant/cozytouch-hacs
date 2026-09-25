@@ -2625,6 +2625,9 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.BINARY,
         enabled_by_default=True,
         icon="mdi:airplane",
+        # On, the room's unit is stopped whatever its mode says. See
+        # docs/decisions.md.
+        extra={"stopsClimate": True},
     ),
     100300: Entity(
         name="schedule_start_day",

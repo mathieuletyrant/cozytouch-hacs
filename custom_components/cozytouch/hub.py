@@ -63,11 +63,13 @@ AWAY_MODE_SWITCHES: dict[int, Mapping[str, object]] = {
 }
 
 
-# Whether a room's absence is under way. A room has no switch of its own.
-ROOM_ABSENCE_CAPABILITY_ID = 100261
-
-# The `modelFamily` the API declares for air conditioning.
-AIR_CONDITIONING_FAMILY = "Air_Conditioning"
+# The capabilities that stop the unit while they read on, with the value that
+# means on. Read off the table, like the switches above.
+STOPS_CLIMATE: dict[int, object] = {
+    capabilityId: (row.extra or {}).get("value_on", "1")
+    for capabilityId, row in CAPABILITIES.items()
+    if (row.extra or {}).get("stopsClimate")
+}
 
 
 @dataclass
@@ -742,39 +744,11 @@ class Hub(DataUpdateCoordinator):
         if self.is_away() and (window := self.reported_away_window()):
             self.away_mode_init(*window)
 
-    def absence_under_way(self) -> bool:
-        """Whether the absence has started, rather than being on or programmed.
-
-        A room reports it on its own (100261) ; a device with a switch reads
-        it there, where 2 is an absence still waiting for its start.
-        """
-        if self.get_capability_value(ROOM_ABSENCE_CAPABILITY_ID, None) == "1":
-            return True
+    def climate_is_stopped(self) -> bool:
+        """Whether a capability the table marks as stopping the unit reads on."""
         return any(
-            self.get_capability_value(capabilityId, None) == settings["value_on"]
-            for capabilityId, settings in self.away_mode_switches().items()
-        )
-
-    def is_air_conditioning(self) -> bool:
-        """Whether this device, or the gateway it hangs off, is an air
-        conditioner, going by the family the API declares.
-
-        What an absence does depends on it : an air conditioner stops. See
-        docs/decisions.md.
-        """
-        dev = device_of(self)
-        if dev is None:
-            return False
-
-        master = (
-            device_of(self, dev["masterDeviceId"])
-            if dev.get("masterDeviceId")
-            else None
-        )
-        return any(
-            candidate is not None
-            and candidate.get("modelFamily") == AIR_CONDITIONING_FAMILY
-            for candidate in (dev, master)
+            self.get_capability_value(capabilityId, None) == value_on
+            for capabilityId, value_on in STOPS_CLIMATE.items()
         )
 
     def is_away(self) -> bool:
