@@ -13,6 +13,7 @@ test_duration_select.py drives the select: _handle_coordinator_update touches
 nothing of Home Assistant beyond async_write_ha_state.
 """
 
+import asyncio
 from types import SimpleNamespace
 
 from custom_components.cozytouch.climate import CozytouchClimate
@@ -24,7 +25,9 @@ from homeassistant.components.climate import HVACAction, HVACMode
 IDLING = {7: "4", 181: "4", 40: "19.0", 153: "0"}
 
 
-def entity(values, away=False, air_conditioning=False, **capabilityExtra):
+def entity(
+    values, away=False, air_conditioning=False, presets=(), **capabilityExtra
+):
     """A stand-in carrying only what _handle_coordinator_update touches."""
     capability = CapabilityInfos()
     capability.capabilityId = 7
@@ -45,7 +48,11 @@ def entity(values, away=False, air_conditioning=False, **capabilityExtra):
             ),
             absence_under_way=lambda: away,
             is_air_conditioning=lambda: air_conditioning,
+            reports_absence=lambda: bool(presets),
         ),
+        _presets_at_home=list(presets),
+        _attr_preset_modes=list(presets),
+        _attr_preset_mode=presets[0] if presets else None,
         async_write_ha_state=lambda: None,
     )
     fake._air_circulation_active = lambda: CozytouchClimate._air_circulation_active(
@@ -120,3 +127,53 @@ def test_a_radiator_away_keeps_its_action():
     CozytouchClimate._handle_coordinator_update(fake)
 
     assert fake._attr_hvac_action is HVACAction.HEATING
+
+
+
+# --- the away preset --------------------------------------------------------
+
+
+def test_an_absence_under_way_shows_as_the_away_preset():
+    """On any device that says whether it is away, not only air conditioning."""
+    fake = entity(IDLING, away=True, presets=("none",))
+
+    CozytouchClimate._handle_coordinator_update(fake)
+
+    assert fake._attr_preset_mode == "away"
+    assert fake._attr_preset_modes == ["none", "away"]
+    # A heater keeps heating at its absence setpoint : the action is untouched.
+    assert fake._attr_hvac_action is HVACAction.HEATING
+
+
+def test_away_is_only_offered_while_away():
+    fake = entity(IDLING, away=True, presets=("none",))
+    CozytouchClimate._handle_coordinator_update(fake)
+
+    fake.coordinator.absence_under_way = lambda: False
+    CozytouchClimate._handle_coordinator_update(fake)
+
+    assert fake._attr_preset_modes == ["none"]
+    assert fake._attr_preset_mode == "none"
+
+
+def test_a_device_that_says_nothing_about_absence_gets_no_preset():
+    fake = entity(IDLING, away=True)
+
+    CozytouchClimate._handle_coordinator_update(fake)
+
+    assert fake._attr_preset_modes == []
+
+
+def test_choosing_away_writes_nothing():
+    """It is shown while away ; the switch or the service is what sets it."""
+    written = []
+
+    async def set_capability_value(capabilityId, value):
+        written.append((capabilityId, value))
+
+    fake = entity(IDLING, away=True, presets=("none",), ecoCapabilityId=50)
+    fake.coordinator.set_capability_value = set_capability_value
+
+    asyncio.run(CozytouchClimate.async_set_preset_mode(fake, "away"))
+
+    assert written == []

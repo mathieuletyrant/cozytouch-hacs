@@ -742,6 +742,12 @@ class Hub(DataUpdateCoordinator):
         if self.is_away() and (window := self.reported_away_window()):
             self.away_mode_init(*window)
 
+    def reports_absence(self) -> bool:
+        """Whether this device says if the absence is on, one way or another."""
+        return bool(self.away_mode_switches()) or (
+            self.get_capability_value(ROOM_ABSENCE_CAPABILITY_ID, None) is not None
+        )
+
     def absence_under_way(self) -> bool:
         """Whether the absence has started, rather than being on or programmed.
 

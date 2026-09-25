@@ -12,6 +12,7 @@ from homeassistant.components.climate import (
 )
 from homeassistant.components.climate.const import (
     PRESET_ACTIVITY,
+    PRESET_AWAY,
     PRESET_BOOST,
     PRESET_ECO,
     PRESET_NONE,
@@ -219,6 +220,16 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             if PRESET_NONE not in self._attr_preset_modes :
                 self._attr_preset_mode = PRESET_BASIC
 
+        # Away is shown, not chosen : it is listed while an absence is under
+        # way, and the switch or the service sets it. See docs/decisions.md.
+        self._presets_at_home = list(self._attr_preset_modes)
+        if self.coordinator.reports_absence():
+            self._attr_supported_features |= ClimateEntityFeature.PRESET_MODE
+            if not self._presets_at_home:
+                self._presets_at_home = [PRESET_NONE]
+                self._attr_preset_modes = [PRESET_NONE]
+                self._attr_preset_mode = PRESET_NONE
+
     @callback
     def _handle_coordinator_update(self) -> None:  # noqa: C901
         """Update the values from the hub.
@@ -381,6 +392,15 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             else:
                 self._attr_preset_mode = PRESET_PROG
 
+        if self._presets_at_home and self.coordinator.reports_absence():
+            if self.coordinator.absence_under_way():
+                self._attr_preset_modes = [*self._presets_at_home, PRESET_AWAY]
+                self._attr_preset_mode = PRESET_AWAY
+            else:
+                self._attr_preset_modes = list(self._presets_at_home)
+                if self._attr_preset_mode == PRESET_AWAY:
+                    self._attr_preset_mode = self._presets_at_home[0]
+
         self.async_write_ha_state()
 
     async def _write_mode(self, mode, overrideKey, override, modeKey, tableKey):
@@ -513,6 +533,9 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
 
     async def async_set_preset_mode(self, preset_mode):
         """Set new target preset mode."""
+        if preset_mode == PRESET_AWAY:
+            return
+
         activityCapabilityId = self._capability.get("activityCapabilityId", None)
         ecoCapabilityId = self._capability.get("ecoCapabilityId", None)
         boostCapabilityId = self._capability.get("boostCapabilityId", None)

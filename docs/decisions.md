@@ -2156,6 +2156,21 @@ setpoint (172) rather than stopping, and nothing captured says otherwise.
 since 2026-09-07 on the first of them, through a fortnight of cooling --
 see the entry on 153.
 
+### An absence shows as the away preset, on every device that reports one
+
+What an absence does depends on the product -- an air conditioner stops, a
+heater runs its absence setpoint -- so the action can only say `off` where
+the stop is known. That it is away is true everywhere, and Home Assistant
+has a place for it : the `away` preset. Any climate entity whose device
+reports an away switch (152, 227) or a room's absence (100261) gets the
+preset feature, and `away` is listed and selected while the absence is under
+way, then withdrawn.
+
+It is shown, not chosen. The absence is the account's, so a preset that set
+it from one room would switch the whole house ; choosing `away` writes
+nothing, and the switch and `cozytouch.set_away_mode` stay what set it. A
+programmed absence (a switch at 2) does not show until it starts.
+
 ### An unset absence window reads as unknown, not as a word of our own
 
 The pair reads `[0,0]` until somebody sets a window, and the sensor answered
