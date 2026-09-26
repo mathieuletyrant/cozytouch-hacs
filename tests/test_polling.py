@@ -471,13 +471,21 @@ def test_a_write_is_still_attempted_while_throttled(monkeypatch):
 METERED = [{"type": 1, "unit": 1, "currency": 101, "consumptionPeriods": []}]
 
 
-def before_consumptions(monkeypatch, answer):
-    """A connected account the consumption endpoint has not answered yet."""
+def before_consumptions(monkeypatch, answer, declared=None):
+    """A connected account the consumption endpoint has not answered yet.
+
+    `declared` is what its first device reports in 164, if it reports it.
+    """
+    view = setup_view()
+    if declared is not None:
+        view[0]["devices"][0]["capabilities"].append(
+            {"capabilityId": 164, "value": declared}
+        )
     account, session = make_account(
         monkeypatch,
         {
             "/users/token": FakeResponse(TOKEN_OK),
-            "setupviewv2": FakeResponse(setup_view()),
+            "setupviewv2": FakeResponse(view),
             "/consumptions": answer,
         },
     )
@@ -534,6 +542,47 @@ def test_a_setup_without_a_meter_is_asked_once(monkeypatch, answer):
     account._consumptions_due = 0
     asyncio.run(account.refresh_consumptions())
 
+    assert len(consumption_reads(session)) == 1
+
+
+@pytest.mark.parametrize(
+    "declared", ["0", "1024"], ids=["nothing", "production-only"]
+)
+def test_a_setup_that_declares_no_consumption_is_never_asked(monkeypatch, declared):
+    """The Navizone's 164 reads 0, and its app shows no consumption. 1024 is
+    `dhw_production`, heat made rather than a meter read, so it declares
+    nothing either.
+    """
+    account, session = before_consumptions(
+        monkeypatch, FakeResponse(METERED), declared=declared
+    )
+
+    for _ in range(2):
+        account._consumptions_due = 0
+        asyncio.run(coordinator_over(account, {"a": FakeHub()})._async_update_data())
+
+    assert consumption_reads(session) == []
+    assert account.consumption_declared() is False
+
+
+def test_a_setup_that_declares_a_consumption_is_asked(monkeypatch):
+    """1040 is what the fork's Duralis reports : elec_dhw and dhw_production."""
+    account, session = before_consumptions(
+        monkeypatch, FakeResponse(METERED), declared="1040"
+    )
+
+    asyncio.run(account.refresh_consumptions())
+
+    assert len(consumption_reads(session)) == 1
+    assert account.consumption_declared() is True
+
+
+def test_a_setup_that_says_nothing_in_164_is_left_to_the_endpoint(monkeypatch):
+    account, session = before_consumptions(monkeypatch, FakeResponse(METERED))
+
+    asyncio.run(account.refresh_consumptions())
+
+    assert account.consumption_declared() is None
     assert len(consumption_reads(session)) == 1
 
 

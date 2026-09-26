@@ -248,6 +248,7 @@ def test_the_dump_carries_the_answer_without_the_serial_numbers():
         online=True,
         consumptions=answer(),
         consumptions_status=200,
+        consumption_declared=lambda: True,
         fetch_capability_catalogue=lambda: asyncio.sleep(0, {}),
     )
     entry = SimpleNamespace(
@@ -259,6 +260,7 @@ def test_the_dump_carries_the_answer_without_the_serial_numbers():
 
     dump = asyncio.run(diagnostics.async_get_config_entry_diagnostics(None, entry))
 
+    assert dump["consumptions"]["declared"] is True
     assert dump["consumptions"]["status"] == 200
     series = dump["consumptions"]["answer"][0]
     assert series["serialNumber"] == "**REDACTED**"

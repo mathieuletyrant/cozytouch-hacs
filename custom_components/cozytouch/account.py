@@ -63,6 +63,12 @@ API_DECLARED_FIELDS = (
 # docs/decisions.md.
 CONSUMPTION_INTERVAL = 900
 
+# HOME_EnergyConsumptionCapabilities : which consumptions the system tracks,
+# as a mask. Bits 1-64 are gas, electricity and fuel ; 256 and 1024 are heat
+# *produced*, and say nothing about a meter. See docs/decisions.md.
+CONSUMPTION_CAPABILITY = 164
+CONSUMPTION_BITS = 0b1111111
+
 # Keys of the setup view worth keeping. The rest of the payload is per-device.
 SETUP_FIELDS = (
     "absence",
@@ -537,16 +543,41 @@ class CozytouchAccount:
         }
         return self._capability_catalogue
 
+    def consumption_declared(self) -> bool | None:
+        """Whether a device says the setup tracks any consumption.
+
+        None when no device reports 164, which leaves the endpoint to answer.
+        See docs/decisions.md.
+        """
+        masks = []
+        for device in self.devices:
+            for capability in device["capabilities"]:
+                if capability["capabilityId"] != CONSUMPTION_CAPABILITY:
+                    continue
+                try:
+                    masks.append(int(capability["value"]))
+                except (TypeError, ValueError):
+                    continue
+
+        if not masks:
+            return None
+
+        return any(mask & CONSUMPTION_BITS for mask in masks)
+
     async def refresh_consumptions(self) -> None:
         """Re-read what the setup consumed, when it is due.
 
         Never raises and never touches `online` : a meter reading is not worth
         a reconnect. A setup whose first answer is a refusal or an empty list
         is not asked again until the entry reloads, since no entity was built
-        for it. See docs/decisions.md.
+        for it ; one whose devices declare no consumption in 164 is not asked
+        at all. See docs/decisions.md.
         """
         setupId = self.setup.get("id")
         now = datetime.now(UTC).timestamp()
+        if self.consumptions is None and self.consumption_declared() is False:
+            self._consumptions_unsupported = True
+
         if (
             setupId is None
             or self._consumptions_unsupported

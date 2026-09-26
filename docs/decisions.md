@@ -4117,6 +4117,28 @@ second overwrote the first. Adding is the reading that loses neither ; it has
 never been observed, and a setup that reports per-appliance series is the
 report that would say whether they should be split instead.
 
+### Capability 164 says whether to ask at all
+
+`HOME_EnergyConsumptionCapabilities`, which the catalogue describes as "the
+consumption available on the system", is a mask : bits 1 to 64 are gas,
+electricity and fuel for heating, cooling and hot water, and the two bits
+the table adds, 256 and 1024, are heat *produced* rather than a meter. Two
+readings line up with what the app shows :
+
+| device | 164 | consumption in the app |
+| --- | ---: | --- |
+| HUB Navizone (1758), this project's | 0 | none, per its owner |
+| Duralis ACI HYB (393), the fork's | 1040 = `elec_dhw` + `dhw_production` | yes |
+
+So a setup where every device reporting 164 sets none of bits 1-64 is not
+asked at all -- the Navizone costs no request. One where some device sets
+one is asked. One where no device reports 164 is left to the endpoint's
+first answer, as below, since two readings do not say that 164 is always
+there. The dump carries the reading as `declared`.
+
+164 decides whether to ask, not what to build : water is in no bit of it
+and the fork's device reports water all the same.
+
 ### What is built, and when
 
 The sensors are built from the first answer and only from it : energy, and
@@ -4127,9 +4149,9 @@ answer comes with setup's first refresh, which runs before the platforms
 load.
 
 A setup whose first answer is an empty list or a 4xx is not asked again until
-the entry reloads, since nothing was built to read it. That is the account
-this project is checked against, and it now costs one request per start
-rather than 96 a day. A setup that did report keeps being asked through an
+the entry reloads, since nothing was built to read it : one request per
+start rather than 96 a day, for a setup 164 did not already rule out. A
+setup that did report keeps being asked through an
 empty answer, and a sensor whose series disappears goes unavailable rather
 than reading zero.
 
@@ -4151,10 +4173,12 @@ accepts both.
 
 ### What the dump carries
 
-The whole answer, and the status it came with, under `consumptions`, with
-`serialNumber` and `deviceUrl` redacted. For a setup that reports nothing
-that is `status` 200 and an empty `answer`, or the 4xx -- which is itself the
-thing worth knowing, and what a Navizone dump will now say. The fake cloud in
+The whole answer, the status it came with and what 164 declared, under
+`consumptions`, with `serialNumber` and `deviceUrl` redacted. A setup 164
+rules out reads `declared: false` and no answer, since it was not asked ; one
+that was asked and reports nothing reads `status` 200 and an empty `answer`,
+or the 4xx -- the thing worth knowing if 164 ever turns out wrong. The fake
+cloud in
 `scripts/test_ha` serves a dump's `consumptions` back, moved so its latest day
 is today ; `scripts/test_ha/water_heater.json` is a synthetic dump built from
 the fork's documented capability values and its fixture, and says so.

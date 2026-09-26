@@ -17,8 +17,8 @@ overturn one, edit the line here in the same pull request.
 - **No second data plane.** `setupviewv2` is the whole functional payload,
   but for consumption : `GET /magellan/setups/<setupId>/consumptions?periodicity=daily`,
   implemented from `mmnlfrrr/cozytouch`'s ACI HYB capture and never seen
-  answering here. The Navizone's dump now says what it answers for a setup
-  with no meter. `docs/decisions.md`, *Consumption*.
+  answering here. Capability 164 gates it : the Navizone reads 0 and is never
+  asked, the fork's Duralis 1040. `docs/decisions.md`, *Consumption*.
 - **The Overkiz plane is empty for us.** The token mints an Overkiz JWT, but
   `enduserAPI/login` answers 401. `docs/api-surface.md`.
 - **`productId` classifies a device, not `modelId`** -- the vendor app resolves

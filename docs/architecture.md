@@ -83,8 +83,9 @@ Four kinds of entity are not capability-driven, and so are not in that
 fan-out. The consumption sensors are the setup's rather than a device's :
 they read `GET /magellan/setups/{id}/consumptions` through the account, every
 15 minutes, are entities of `AccountCoordinator` rather than of a hub, and
-sit on a device of their own named after the setup -- built only when the
-setup's first answer carries a series (`docs/decisions.md`, *Consumption*).
+sit on a device of their own named after the setup -- asked for only when
+no device declares an empty 164, and built only when the first answer
+carries a series (`docs/decisions.md`, *Consumption*).
 The other three are per device.
 
 `binary_sensor` builds exactly one per subentry, a connectivity sensor

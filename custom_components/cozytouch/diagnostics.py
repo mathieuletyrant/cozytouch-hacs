@@ -147,6 +147,8 @@ async def async_get_config_entry_diagnostics(
             # As the endpoint answered, so a report shows what a meter sends
             # -- or that this setup has none. See docs/decisions.md.
             "consumptions": {
+                # What 164 says ; False means the endpoint was never asked.
+                "declared": runtime.account.consumption_declared(),
                 "status": runtime.account.consumptions_status,
                 "answer": runtime.account.consumptions,
             },
