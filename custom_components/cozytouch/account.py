@@ -58,6 +58,11 @@ API_DECLARED_FIELDS = (
     "isAvailable",
 )
 
+# How often the consumption endpoint is read, in seconds. Its days are
+# aggregated in the cloud and move far slower than the setup view. See
+# docs/decisions.md.
+CONSUMPTION_INTERVAL = 900
+
 # Keys of the setup view worth keeping. The rest of the payload is per-device.
 SETUP_FIELDS = (
     "absence",
@@ -140,6 +145,17 @@ class CozytouchAccount:
         # failed, so one refusal is not retried per device. See
         # docs/decisions.md.
         self._capability_catalogue: dict[int, dict] | None = None
+
+        # What the consumption endpoint last answered, as it answered it, and
+        # the status it answered with ; None until it has. Read by the sensors
+        # and carried whole to the dump. See docs/decisions.md.
+        self.consumptions: list | None = None
+        self.consumptions_status: int | None = None
+        self._consumptions_due: float = 0
+        # Set once the endpoint has said this setup has nothing to report, so
+        # an account without a meter spends one request per start, not one
+        # every quarter of an hour.
+        self._consumptions_unsupported = False
 
     @property
     def account_id(self) -> str:
@@ -520,6 +536,64 @@ class CozytouchAccount:
             if isinstance(row, dict) and isinstance(row.get("id"), int)
         }
         return self._capability_catalogue
+
+    async def refresh_consumptions(self) -> None:
+        """Re-read what the setup consumed, when it is due.
+
+        Never raises and never touches `online` : a meter reading is not worth
+        a reconnect. A setup whose first answer is a refusal or an empty list
+        is not asked again until the entry reloads, since no entity was built
+        for it. See docs/decisions.md.
+        """
+        setupId = self.setup.get("id")
+        now = datetime.now(UTC).timestamp()
+        if (
+            setupId is None
+            or self._consumptions_unsupported
+            or now < self._consumptions_due
+            or self.backoff_remaining
+        ):
+            return
+
+        # Before the request, so a route that keeps failing is asked once per
+        # interval rather than once per poll.
+        self._consumptions_due = now + CONSUMPTION_INTERVAL
+
+        try:
+            async with self._session.get(
+                COZYTOUCH_ATLANTIC_API
+                + f"/magellan/setups/{setupId}/consumptions?periodicity=daily",
+                headers=self._headers(),
+                timeout=REQUEST_TIMEOUT,
+            ) as response:
+                if response.status == 429:
+                    self._note_rate_limited(response, "the consumptions")
+                    return
+
+                self.consumptions_status = response.status
+                if 400 <= response.status < 500 and self.consumptions is None:
+                    _LOGGER.debug(
+                        "No consumptions for this setup (%d)", response.status
+                    )
+                    self._consumptions_unsupported = True
+                    return
+
+                if response.status != 200:
+                    _LOGGER.debug("No consumptions (%d)", response.status)
+                    return
+
+                body = await response.json()
+        except (TimeoutError, ClientError, ContentTypeError, ValueError) as err:
+            _LOGGER.debug("Reading the consumptions failed: %s", why(err))
+            return
+
+        if not isinstance(body, list):
+            return
+
+        if not body and self.consumptions is None:
+            self._consumptions_unsupported = True
+
+        self.consumptions = body
 
     async def fetch_capabilities(self, deviceId: int) -> list:
         """GET the capability list of one device, to confirm a write.
