@@ -20,6 +20,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
+from .capability_table import CAPABILITIES
 from .const import COZYTOUCH_ATLANTIC_API, COZYTOUCH_CLIENT_ID
 from .model import CozytouchDeviceType, get_device_model_infos
 
@@ -63,11 +64,16 @@ API_DECLARED_FIELDS = (
 # docs/decisions.md.
 CONSUMPTION_INTERVAL = 900
 
-# HOME_EnergyConsumptionCapabilities : which consumptions the system tracks,
-# as a mask. Bits 1-64 are gas, electricity and fuel ; 256 and 1024 are heat
-# *produced*, and say nothing about a meter. See docs/decisions.md.
+# HOME_EnergyConsumptionCapabilities, whose bits its table row names. Every
+# member but the `_production` ones is a meter ; those are heat made. Derived
+# from the row rather than written out, so the two cannot drift apart. See
+# docs/decisions.md.
 CONSUMPTION_CAPABILITY = 164
-CONSUMPTION_BITS = 0b1111111
+CONSUMPTION_BITS = sum(
+    bit
+    for bit, name in CAPABILITIES[CONSUMPTION_CAPABILITY].bits or ()
+    if not name.endswith("_production")
+)
 
 # Keys of the setup view worth keeping. The rest of the payload is per-device.
 SETUP_FIELDS = (
@@ -555,7 +561,7 @@ class CozytouchAccount:
                 if capability["capabilityId"] != CONSUMPTION_CAPABILITY:
                     continue
                 try:
-                    masks.append(int(capability["value"]))
+                    masks.append(int(str(capability["value"]).strip()))
                 except (TypeError, ValueError):
                     continue
 

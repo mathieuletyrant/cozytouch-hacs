@@ -565,6 +565,15 @@ def test_a_setup_that_declares_no_consumption_is_never_asked(monkeypatch, declar
     assert account.consumption_declared() is False
 
 
+def test_what_counts_as_a_meter_is_read_off_164s_own_row():
+    """The seven consumption members, and not the three that are heat made.
+
+    Pinned as a number so a bit added to the row shows up here, where
+    somebody has to say whether it is a meter.
+    """
+    assert account_module.CONSUMPTION_BITS == 1 | 2 | 4 | 8 | 16 | 32 | 64
+
+
 def test_a_setup_that_declares_a_consumption_is_asked(monkeypatch):
     """1040 is what the fork's Duralis reports : elec_dhw and dhw_production."""
     account, session = before_consumptions(

@@ -4136,6 +4136,11 @@ one is asked. One where no device reports 164 is left to the endpoint's
 first answer, as below, since two readings do not say that 164 is always
 there. The dump carries the reading as `declared`.
 
+What counts as a meter is read off 164's own row in `capability_table.py`,
+every member but the `_production` ones, the way `HVAC_MODE_MASKS` is read off
+the mode bits : a bit named there later is either a meter or not, and a test
+pins the mask so somebody has to say which.
+
 164 decides whether to ask, not what to build : water is in no bit of it
 and the fork's device reports water all the same.
 
