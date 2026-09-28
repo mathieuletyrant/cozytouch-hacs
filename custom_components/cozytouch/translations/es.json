@@ -73,9 +73,6 @@
         }
     },
     "entity": {
-        "button": {
-            "system_service": { "name": "Parada general" }
-        },
         "calendar": {
             "heating_program":         { "name": "Programa de calefacción" },
             "cooling_program":         { "name": "Programa de refrigeración" },
@@ -694,7 +691,8 @@
             "prog_mode":          { "name": "Modo programa" },
             "quiet_mode":         { "name": "Modo silencioso" },
             "schedule_anticipation": { "name": "Anticipación de la programación" },
-            "swing_mode":         { "name": "Oscilación" }
+            "swing_mode":         { "name": "Oscilación" },
+            "system_service":     { "name": "Sistema" }
         }
     },
     "device_automation": {

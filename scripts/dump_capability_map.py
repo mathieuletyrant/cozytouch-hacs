@@ -65,7 +65,6 @@ EVERY_ID = sorted(set(range(1, 400)) | set(range(100000, 106000)))
 # binary_sensor.py is not one of them: it owns the single cloud-connectivity
 # entity and never looks at a capability.
 PLATFORM_FILES = (
-    "button.py",
     "climate.py",
     "datetime.py",
     "fan.py",

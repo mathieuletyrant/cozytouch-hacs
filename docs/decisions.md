@@ -3199,14 +3199,20 @@ same dropdown, and that 0 is off in the `Service` space 102020 reads in. It
 has not been watched on the wire. If the hardware disagrees, this is the entry
 to overturn, and a capture of the app pressing it is what settles it.
 
-It is a button, one per room reporting 102020, the way air circulation is
-household-wide and still shown per room. A switch would have had to write
-something on *on*, and 102020 keeps no memory of the service it left ;
-starting again is a mode picked on any room's climate entity, which already
-writes 102020 and wakes a room that was off.
+It is a switch, one per room reporting 102020, the way air circulation is
+household-wide and still shown per room. A button was tried first and dropped
+the same day : it has no state and no `turn_off`, so an automation or a voice
+assistant could not say "switch the house off", which is the whole use.
+
+What a switch owes is an *on*, and 102020 keeps no memory of the service it
+left. So the entity remembers the last non-zero value it saw, carries it in a
+`last_service` attribute so a restart brings it back, and writes that. Stopped
+before Home Assistant ever saw it run, it falls back on the room's own 7 if
+that still names a service, and otherwise refuses rather than guess one --
+picking a mode on a room's climate entity starts the system just as well.
 
 The capability gets its own type, `system_service`, so the sensor platform
-keeps reading it and the button platform can find it : a row names one type,
+keeps reading it and the switch platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.
 
 What the fake cloud cannot say is what the rooms' own 7 reads once the system

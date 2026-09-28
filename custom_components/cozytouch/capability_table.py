@@ -2981,7 +2981,7 @@ CAPABILITIES: dict[int, Entity] = {
         # Named `AIR_MIXING_ACTUAL_MODE` by the vendor and read as air
         # circulation here for a year : it is the service the whole system
         # runs, and writing it is what moves every room -- 0 is the app's
-        # general stop, which the button platform offers. See
+        # general stop, which the switch platform offers. See
         # docs/decisions.md.
         name="system_service",
         type=CapabilityType.SYSTEM_SERVICE,
@@ -2996,6 +2996,7 @@ CAPABILITIES: dict[int, Entity] = {
         },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
+        extra={"roomServiceCapabilityId": 7},
     ),
     102021: Entity(
         name="air_circulation_total_time",

@@ -15,19 +15,23 @@ The last is the service the house is already running, which is why switching
 a room back on beside a mode change is one gesture here and two there.
 
 The app's general stop was not in that capture. It is the first entry of the
-same dropdown, so the button writes 102020 at 0, the off of that value space.
+same dropdown, so the system switch writes 102020 at 0, the off of that value
+space, and turning it on writes back the service it last saw running.
 """
 
 import asyncio
 from types import SimpleNamespace
 
-from custom_components.cozytouch.button import CozytouchSystemStopButton
+import pytest
+
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.climate import CozytouchClimate
 from custom_components.cozytouch.const import SERVICE_OFF
 from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.model import get_model_infos
+from custom_components.cozytouch.switch import CozytouchSystemSwitch
 from homeassistant.components.climate import HVACMode
+from homeassistant.exceptions import HomeAssistantError
 
 ROOM_SERVICE = 7
 SYSTEM_SERVICE = 102020
@@ -118,20 +122,68 @@ def test_the_room_climate_is_wired_to_the_system_service():
     assert capability.systemServiceCapabilityId == SYSTEM_SERVICE
 
 
-def test_the_general_stop_writes_off_to_the_system():
-    """One write, on the system's service, and no room's own state touched."""
+
+def build_switch(reported):
+    """A system switch over a hub stand-in that records what it writes."""
     written = []
 
     async def set_capability_value(capabilityId, value):
         written.append((capabilityId, value))
+        reported[capabilityId] = value
 
-    button = CozytouchSystemStopButton.__new__(CozytouchSystemStopButton)
-    button._capability = CapabilityInfos(capabilityId=SYSTEM_SERVICE)
-    button.coordinator = SimpleNamespace(
+    switch = CozytouchSystemSwitch.__new__(CozytouchSystemSwitch)
+    switch._capability = CapabilityInfos(
+        capabilityId=SYSTEM_SERVICE, roomServiceCapabilityId=ROOM_SERVICE
+    )
+    switch.coordinator = SimpleNamespace(
         set_capability_value=set_capability_value,
+        get_capability_value=lambda cid, default="0": reported.get(cid, default),
         async_request_refresh=_noop,
     )
+    switch._last_service = None
+    switch._remember_service()
+    return switch, written
 
-    asyncio.run(button.async_press())
+
+def test_off_is_the_general_stop():
+    """One write, on the system's service, and no room's own state touched."""
+    switch, written = build_switch({SYSTEM_SERVICE: str(COOL)})
+
+    asyncio.run(switch.async_turn_off())
 
     assert written == [(SYSTEM_SERVICE, SERVICE_OFF)]
+    assert switch.is_on is False
+
+
+def test_on_goes_back_to_the_service_the_system_left():
+    """102020 forgets it ; the switch does not."""
+    switch, written = build_switch({SYSTEM_SERVICE: str(DRY)})
+
+    asyncio.run(switch.async_turn_off())
+    asyncio.run(switch.async_turn_on())
+
+    assert written == [(SYSTEM_SERVICE, SERVICE_OFF), (SYSTEM_SERVICE, str(DRY))]
+    assert switch.is_on is True
+
+
+def test_on_falls_back_on_the_room_when_nothing_was_seen():
+    """Stopped before Home Assistant ever saw it run : the room may say."""
+    switch, written = build_switch(
+        {SYSTEM_SERVICE: SERVICE_OFF, ROOM_SERVICE: str(COOL)}
+    )
+
+    asyncio.run(switch.async_turn_on())
+
+    assert written == [(SYSTEM_SERVICE, str(COOL))]
+
+
+def test_on_with_nothing_to_go_back_to_writes_nothing():
+    """Better an error than a guessed service the house never asked for."""
+    switch, written = build_switch(
+        {SYSTEM_SERVICE: SERVICE_OFF, ROOM_SERVICE: SERVICE_OFF}
+    )
+
+    with pytest.raises(HomeAssistantError):
+        asyncio.run(switch.async_turn_on())
+
+    assert written == []

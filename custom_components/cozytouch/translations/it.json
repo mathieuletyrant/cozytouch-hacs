@@ -73,9 +73,6 @@
         }
     },
     "entity": {
-        "button": {
-            "system_service": { "name": "Arresto generale" }
-        },
         "calendar": {
             "heating_program":         { "name": "Programma di riscaldamento" },
             "cooling_program":         { "name": "Programma di raffrescamento" },
@@ -694,7 +691,8 @@
             "prog_mode":          { "name": "Modalità programma" },
             "quiet_mode":         { "name": "Modalità silenziosa" },
             "schedule_anticipation": { "name": "Anticipo della programmazione" },
-            "swing_mode":         { "name": "Oscillazione" }
+            "swing_mode":         { "name": "Oscillazione" },
+            "system_service":     { "name": "Sistema" }
         }
     },
     "device_automation": {

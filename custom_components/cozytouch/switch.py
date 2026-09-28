@@ -5,13 +5,16 @@ from datetime import datetime
 import logging
 
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN
+from .const import DOMAIN, SERVICE_OFF
 from .hub import (
     CozytouchConfigEntry,
+    CozytouchDeviceEntity,
     Hub,
     add_capability_entities,
     away_window_is_valid,
@@ -35,6 +38,7 @@ async def async_setup_entry(
         {
             CapabilityType.SWITCH: CozytouchSwitch,
             CapabilityType.AWAY_MODE_SWITCH: CozytouchAwayModeSwitch,
+            CapabilityType.SYSTEM_SERVICE: CozytouchSystemSwitch,
         },
     )
 
@@ -151,3 +155,98 @@ class CozytouchAwayModeSwitch(CozytouchSwitch):
         self._state = False
         await self.coordinator.set_away_mode(None, None)
         self._nb_ignore = 1
+
+
+class CozytouchSystemSwitch(CozytouchDeviceEntity, SwitchEntity, RestoreEntity):
+    """The whole system, on or at the app's general stop.
+
+    Off is 102020 at 0, which every room follows. 102020 keeps nothing of the
+    service it left, so on writes back the last one this entity saw running,
+    kept across restarts. See docs/decisions.md.
+    """
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_icon = "mdi:power"
+    _attr_device_class = SwitchDeviceClass.SWITCH
+
+    def __init__(
+        self,
+        coordinator: Hub,
+        capability,
+        config_title: str,
+        config_uniq_id: str,
+    ) -> None:
+        """Initialize a switch entity."""
+        super().__init__(coordinator)
+
+        capabilityId = capability.capabilityId
+        self._capability = capability
+        self._device_uniq_id = config_uniq_id
+        self._attr_translation_key = capability.name
+        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_switch_{capabilityId!s}"
+        self._last_service: str | None = None
+        self._remember_service()
+
+    async def async_added_to_hass(self) -> None:
+        """Take back the service seen before a restart, if none is seen yet."""
+        await super().async_added_to_hass()
+        if self._last_service is None:
+            state = await self.async_get_last_state()
+            if state is not None:
+                self._last_service = state.attributes.get("last_service")
+
+    def _remember_service(self) -> None:
+        value = self.coordinator.get_capability_value(
+            self._capability.capabilityId, None
+        )
+        if value is not None and str(value) != SERVICE_OFF:
+            self._last_service = str(value)
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        self._remember_service()
+        super()._handle_coordinator_update()
+
+    @property
+    def is_on(self) -> bool | None:
+        """Whether the system runs a service at all."""
+        value = self.coordinator.get_capability_value(
+            self._capability.capabilityId, None
+        )
+        if value is None:
+            return None
+        return str(value) != SERVICE_OFF
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """The service turning on writes back, as the device numbers it."""
+        if self._last_service is None:
+            return None
+        return {"last_service": self._last_service}
+
+    def _service_to_restore(self) -> str:
+        if self._last_service is not None:
+            return self._last_service
+        roomId = self._capability.get("roomServiceCapabilityId")
+        if roomId is not None:
+            room = self.coordinator.get_capability_value(roomId, None)
+            if room is not None and str(room) != SERVICE_OFF:
+                return str(room)
+        raise HomeAssistantError(
+            "No service to go back to: pick a mode on a room's climate entity"
+        )
+
+    async def async_turn_on(self, **kwargs) -> None:
+        """Run the system again, on the service it left."""
+        await self.coordinator.set_capability_value(
+            self._capability.capabilityId, self._service_to_restore()
+        )
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_off(self, **kwargs) -> None:
+        """The general stop."""
+        await self.coordinator.set_capability_value(
+            self._capability.capabilityId, SERVICE_OFF
+        )
+        await self.coordinator.async_request_refresh()

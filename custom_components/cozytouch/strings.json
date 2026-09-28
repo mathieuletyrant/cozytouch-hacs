@@ -73,9 +73,6 @@
         }
     },
     "entity": {
-        "button": {
-            "system_service": { "name": "System stop" }
-        },
         "calendar": {
             "heating_program":         { "name": "Heating Program" },
             "cooling_program":         { "name": "Cooling Program" },
@@ -694,7 +691,8 @@
             "prog_mode":          { "name": "Prog Mode" },
             "quiet_mode":         { "name": "Quiet Mode" },
             "schedule_anticipation": { "name": "Schedule Anticipation" },
-            "swing_mode":         { "name": "Swing Mode" }
+            "swing_mode":         { "name": "Swing Mode" },
+            "system_service":     { "name": "System" }
         }
     },
     "device_automation": {

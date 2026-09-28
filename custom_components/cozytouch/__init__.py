@@ -26,7 +26,6 @@ from .services import async_register_services
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
-    Platform.BUTTON,
     Platform.CALENDAR,
     Platform.CLIMATE,
     Platform.DATETIME,
