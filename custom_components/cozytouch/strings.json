@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "button": {
+            "system_service": { "name": "System stop" }
+        },
         "calendar": {
             "heating_program":         { "name": "Heating Program" },
             "cooling_program":         { "name": "Cooling Program" },

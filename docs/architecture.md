@@ -461,6 +461,7 @@ Unique ids key on the capability id, never on the name:
 
     sensor    cozytouch_{subentry_id}_{capabilityId}
     select    cozytouch_{subentry_id}_{capabilityId}  (same shape, other platform)
+    button    cozytouch_{subentry_id}_button_{capabilityId}
     switch    cozytouch_{subentry_id}_switch_{capabilityId}
     number    cozytouch_{subentry_id}_number_{capabilityId}
     climate   cozytouch_{subentry_id}_climate_{capabilityId}

@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "button": {
+            "system_service": { "name": "Arrêt général" }
+        },
         "calendar": {
             "heating_program":         { "name": "Programme Chauffage" },
             "cooling_program":         { "name": "Programme Refroidissement" },

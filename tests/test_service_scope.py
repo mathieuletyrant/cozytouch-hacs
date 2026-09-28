@@ -13,11 +13,15 @@ Captured from the iOS app on a three-room account, 2026-09-21, three writes :
 
 The last is the service the house is already running, which is why switching
 a room back on beside a mode change is one gesture here and two there.
+
+The app's general stop was not in that capture. It is the first entry of the
+same dropdown, so the button writes 102020 at 0, the off of that value space.
 """
 
 import asyncio
 from types import SimpleNamespace
 
+from custom_components.cozytouch.button import CozytouchSystemStopButton
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.climate import CozytouchClimate
 from custom_components.cozytouch.const import SERVICE_OFF
@@ -112,3 +116,22 @@ def test_the_room_climate_is_wired_to_the_system_service():
     )
 
     assert capability.systemServiceCapabilityId == SYSTEM_SERVICE
+
+
+def test_the_general_stop_writes_off_to_the_system():
+    """One write, on the system's service, and no room's own state touched."""
+    written = []
+
+    async def set_capability_value(capabilityId, value):
+        written.append((capabilityId, value))
+
+    button = CozytouchSystemStopButton.__new__(CozytouchSystemStopButton)
+    button._capability = CapabilityInfos(capabilityId=SYSTEM_SERVICE)
+    button.coordinator = SimpleNamespace(
+        set_capability_value=set_capability_value,
+        async_request_refresh=_noop,
+    )
+
+    asyncio.run(button.async_press())
+
+    assert written == [(SYSTEM_SERVICE, SERVICE_OFF)]

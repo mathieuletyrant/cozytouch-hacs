@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "button": {
+            "system_service": { "name": "Parada general" }
+        },
         "calendar": {
             "heating_program":         { "name": "Programa de calefacción" },
             "cooling_program":         { "name": "Programa de refrigeración" },

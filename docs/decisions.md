@@ -3186,6 +3186,33 @@ The row is `system_service` now, in all six translation files. The vendor's
 own name is kept in a comment above it, because a report quoting
 `AIR_MIXING_ACTUAL_MODE` still has to lead here.
 
+### The general stop is 102020 at 0, deduced rather than captured
+
+The app's service dropdown on a Navizone offers five entries, and the first is
+*arrêt général* : the whole system off, every room with it. Home Assistant had
+no way to send it. Off on a room's climate entity writes 7, the room's own
+state, and that is right for the gesture it copies -- switching one room off.
+
+The capture of 2026-09-21 recorded the dropdown writing 102020, but at 8, not
+at the stop. What 102020 = `0` rests on is that the stop is an entry of that
+same dropdown, and that 0 is off in the `Service` space 102020 reads in. It
+has not been watched on the wire. If the hardware disagrees, this is the entry
+to overturn, and a capture of the app pressing it is what settles it.
+
+It is a button, one per room reporting 102020, the way air circulation is
+household-wide and still shown per room. A switch would have had to write
+something on *on*, and 102020 keeps no memory of the service it left ;
+starting again is a mode picked on any room's climate entity, which already
+writes 102020 and wakes a room that was off.
+
+The capability gets its own type, `system_service`, so the sensor platform
+keeps reading it and the button platform can find it : a row names one type,
+and `string` is every unnamed capability in the table.
+
+What the fake cloud cannot say is what the rooms' own 7 reads once the system
+is stopped. If it keeps the last service, the climate entities go on showing
+it while nothing runs.
+
 ### Capability 91 is which circuit is active, named for that rather than the valve
 
 Reported against an Alfea Extensa Duo S (September 2026): capability 91 is an

@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "button": {
+            "system_service": { "name": "Arresto generale" }
+        },
         "calendar": {
             "heating_program":         { "name": "Programma di riscaldamento" },
             "cooling_program":         { "name": "Programma di raffrescamento" },

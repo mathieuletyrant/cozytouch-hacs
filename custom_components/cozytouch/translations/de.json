@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "button": {
+            "system_service": { "name": "Anlage ausschalten" }
+        },
         "calendar": {
             "heating_program":         { "name": "Heizprogramm" },
             "cooling_program":         { "name": "Kühlprogramm" },
