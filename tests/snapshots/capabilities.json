@@ -587,7 +587,6 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -3834,7 +3833,6 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -7055,7 +7053,6 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -10290,7 +10287,6 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -13528,7 +13524,6 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -16796,7 +16791,6 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -20015,7 +20009,6 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -23260,7 +23253,6 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -26496,7 +26488,6 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -29746,7 +29737,6 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -32983,7 +32973,6 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -36226,7 +36215,6 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {
@@ -39463,7 +39451,6 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "system_service",
-    "roomServiceCapabilityId": 7,
     "type": "system_service"
    },
    "102021": {

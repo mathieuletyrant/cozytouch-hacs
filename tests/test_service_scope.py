@@ -14,9 +14,11 @@ Captured from the iOS app on a three-room account, 2026-09-21, three writes :
 The last is the service the house is already running, which is why switching
 a room back on beside a mode change is one gesture here and two there.
 
-The app's general stop was not in that capture. It is the first entry of the
-same dropdown, so the system switch writes 102020 at 0, the off of that value
-space, and turning it on writes back the service it last saw running.
+The app's general stop was not in that capture, but a diagnostics dump taken
+right after it (2026-09-28) was : 102020 at 0 on all three rooms within the
+same second, then each room's 7 at 0 five seconds later. So the system switch
+writes 102020 at 0, and turning it on writes back the service it last saw
+running -- the rooms keep none of it.
 """
 
 import asyncio
@@ -132,9 +134,7 @@ def build_switch(reported):
         reported[capabilityId] = value
 
     switch = CozytouchSystemSwitch.__new__(CozytouchSystemSwitch)
-    switch._capability = CapabilityInfos(
-        capabilityId=SYSTEM_SERVICE, roomServiceCapabilityId=ROOM_SERVICE
-    )
+    switch._capability = CapabilityInfos(capabilityId=SYSTEM_SERVICE)
     switch.coordinator = SimpleNamespace(
         set_capability_value=set_capability_value,
         get_capability_value=lambda cid, default="0": reported.get(cid, default),
@@ -164,17 +164,6 @@ def test_on_goes_back_to_the_service_the_system_left():
 
     assert written == [(SYSTEM_SERVICE, SERVICE_OFF), (SYSTEM_SERVICE, str(DRY))]
     assert switch.is_on is True
-
-
-def test_on_falls_back_on_the_room_when_nothing_was_seen():
-    """Stopped before Home Assistant ever saw it run : the room may say."""
-    switch, written = build_switch(
-        {SYSTEM_SERVICE: SERVICE_OFF, ROOM_SERVICE: str(COOL)}
-    )
-
-    asyncio.run(switch.async_turn_on())
-
-    assert written == [(SYSTEM_SERVICE, str(COOL))]
 
 
 def test_on_with_nothing_to_go_back_to_writes_nothing():

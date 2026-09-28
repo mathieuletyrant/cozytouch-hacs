@@ -161,8 +161,9 @@ class CozytouchSystemSwitch(CozytouchDeviceEntity, SwitchEntity, RestoreEntity):
     """The whole system, on or at the app's general stop.
 
     Off is 102020 at 0, which every room follows. 102020 keeps nothing of the
-    service it left, so on writes back the last one this entity saw running,
-    kept across restarts. See docs/decisions.md.
+    service it left, and the rooms' own 7 follows it to 0, so on writes back
+    the last one this entity saw running, kept across restarts. See
+    docs/decisions.md.
     """
 
     _attr_has_entity_name = True
@@ -226,16 +227,11 @@ class CozytouchSystemSwitch(CozytouchDeviceEntity, SwitchEntity, RestoreEntity):
         return {"last_service": self._last_service}
 
     def _service_to_restore(self) -> str:
-        if self._last_service is not None:
-            return self._last_service
-        roomId = self._capability.get("roomServiceCapabilityId")
-        if roomId is not None:
-            room = self.coordinator.get_capability_value(roomId, None)
-            if room is not None and str(room) != SERVICE_OFF:
-                return str(room)
-        raise HomeAssistantError(
-            "No service to go back to: pick a mode on a room's climate entity"
-        )
+        if self._last_service is None:
+            raise HomeAssistantError(
+                "No service to go back to: pick a mode on a room's climate entity"
+            )
+        return self._last_service
 
     async def async_turn_on(self, **kwargs) -> None:
         """Run the system again, on the service it left."""

@@ -2996,7 +2996,6 @@ CAPABILITIES: dict[int, Entity] = {
         },
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
-        extra={"roomServiceCapabilityId": 7},
     ),
     102021: Entity(
         name="air_circulation_total_time",

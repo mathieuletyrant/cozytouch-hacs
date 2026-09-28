@@ -27,6 +27,9 @@ overturn one, edit the line here in the same pull request.
   it but moves with the season, so it picks modes, never a device type.
 - **102020 is the system's service** and propagates to every room ; 7 is the
   room's own state. Settled by capturing the iOS app. `docs/decisions.md`.
+- **The general stop is 102020 at 0**, and every room follows : 7 and 181 to
+  0, 166 to 1. Read off a dump taken after the app's stop (2026-09-28) ; what
+  starting again does to the rooms is unseen. `docs/decisions.md`.
 - **Air circulation is household-wide, but the app shows it per room**, so the
   per-room entities are correct. Do not move them onto the gateway.
 - **The Android dex is spent** for naming : it names 188 ids, all but five

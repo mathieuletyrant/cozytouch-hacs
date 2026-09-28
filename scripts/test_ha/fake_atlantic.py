@@ -10,6 +10,10 @@ a capture showed the effect :
 
 - 102020 written on any device reaches every room of the account
   (MEMORY.md, settled by capturing the iOS app).
+- 102020 at 0, the app's general stop, takes every room with it : 7 and
+  181 to 0 and 166 to 1 (only off permitted), as the 2026-09-28 Navizone
+  dump reads five seconds after the stop. What starting again does to the
+  rooms has not been seen, so it is not played.
 - 152 and 222 on a gateway are mirrored onto its rooms as 100261 and
   100260, which is how the 2026-09-25 Navizone dump reads : the same values,
   changed within the same second.
@@ -42,6 +46,9 @@ MIRRORED_ON_ROOMS = {152: 100261, 222: 100260}
 
 # What reaches every room whichever device it was written on.
 HOUSEHOLD_WIDE = (102020,)
+
+# What every room reads once the system is stopped.
+STOPPED_ROOM = {7: "0", 181: "0", 166: "1"}
 
 
 def setup_from_dump(dump: dict) -> dict:
@@ -142,6 +149,9 @@ class FakeAtlantic:
                 self.store(other, mirrored, value)
             if capabilityId in HOUSEHOLD_WIDE and other is not device:
                 self.store(other, capabilityId, value)
+            if capabilityId == 102020 and value == "0":
+                for stoppedId, stoppedValue in STOPPED_ROOM.items():
+                    self.store(other, stoppedId, stoppedValue)
 
         return True
 

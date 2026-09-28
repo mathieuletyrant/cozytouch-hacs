@@ -3186,38 +3186,49 @@ The row is `system_service` now, in all six translation files. The vendor's
 own name is kept in a comment above it, because a report quoting
 `AIR_MIXING_ACTUAL_MODE` still has to lead here.
 
-### The general stop is 102020 at 0, deduced rather than captured
+### The general stop is 102020 at 0, and every room follows it to off
 
 The app's service dropdown on a Navizone offers five entries, and the first is
 *arrêt général* : the whole system off, every room with it. Home Assistant had
 no way to send it. Off on a room's climate entity writes 7, the room's own
 state, and that is right for the gesture it copies -- switching one room off.
 
-The capture of 2026-09-21 recorded the dropdown writing 102020, but at 8, not
-at the stop. What 102020 = `0` rests on is that the stop is an entry of that
-same dropdown, and that 0 is off in the `Service` space 102020 reads in. It
-has not been watched on the wire. If the hardware disagrees, this is the entry
-to overturn, and a capture of the app pressing it is what settles it.
+The 2026-09-21 capture saw the dropdown write 102020 at 8, not at the stop.
+The stop itself was read off a diagnostics dump of the three-room Navizone
+account taken right after pressing it in the app, 2026-09-28 :
 
-It is a switch, one per room reporting 102020, the way air circulation is
-household-wide and still shown per room. A button was tried first and dropped
-the same day : it has no state and no `turn_off`, so an automation or a voice
-assistant could not say "switch the house off", which is the whole use.
+| When | On each of 557, 558, 559 |
+| ---- | ------------------------ |
+| 11:47:00 | 102020 `0`, the same second on all three |
+| 11:47:05 | 7 `0`, 181 `0`, 166 `1`, 341 `1` |
 
-What a switch owes is an *on*, and 102020 keeps no memory of the service it
-left. So the entity remembers the last non-zero value it saw, carries it in a
-`last_service` attribute so a restart brings it back, and writes that. Stopped
-before Home Assistant ever saw it run, it falls back on the room's own 7 if
-that still names a service, and otherwise refuses rather than guess one --
-picking a mode on a room's climate entity starts the system just as well.
+One write, carried to every room, which is how 102020 already behaved at 8 ;
+then the rooms themselves go off, and 166 -- the modes currently permitted --
+shrinks to bit 0 alone, off. A dump shows state, not the write that caused
+it, but a single value landing on three rooms in one second leaves nothing
+else it could have been. What starting again does to the rooms is not in the
+dump ; it has not been seen.
+
+So the climate entities read off on their own after a stop, with nothing to
+add. And it is a switch, one per room reporting 102020, the way air
+circulation is household-wide and still shown per room. A button was tried
+first and dropped the same day : it has no state and no `turn_off`, so an
+automation or a voice assistant could not say "switch the house off", which
+is the whole use.
+
+What a switch owes is an *on*, and nothing on the device keeps the service it
+left : 102020 is 0, and so is every room's 7. So the entity remembers the last
+non-zero 102020 it saw, carries it in a `last_service` attribute so a restart
+brings it back, and writes that. Stopped before Home Assistant ever saw it run,
+it refuses rather than guess -- picking a mode on a room's climate entity
+starts the system just as well.
 
 The capability gets its own type, `system_service`, so the sensor platform
 keeps reading it and the switch platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.
 
-What the fake cloud cannot say is what the rooms' own 7 reads once the system
-is stopped. If it keeps the last service, the climate entities go on showing
-it while nothing runs.
+The fake cloud under `scripts/test_ha/` plays the stop the way the dump reads,
+rooms included, and plays nothing on the way back.
 
 ### Capability 91 is which circuit is active, named for that rather than the valve
 
