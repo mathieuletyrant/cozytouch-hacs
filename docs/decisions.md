@@ -3210,28 +3210,36 @@ else it could have been. What starting again does to the rooms is not in the
 dump ; it has not been seen.
 
 So the climate entities read off on their own after a stop, with nothing to
-add. And it is a switch, one per room reporting 102020, the way air
-circulation is household-wide and still shown per room. A button was tried
-first and dropped the same day : it has no state and no `turn_off`, so an
-automation or a voice assistant could not say "switch the house off", which
-is the whole use.
+add.
 
-What a switch owes is an *on*, and nothing on the device keeps the service it
-left : 102020 is 0, and so is every room's 7. So the entity remembers the last
-non-zero 102020 it saw, carries it in a `last_service` attribute so a restart
-brings it back, and writes that. Stopped before Home Assistant ever saw it run,
-it refuses rather than guess -- picking a mode on a room's climate entity
-starts the system just as well.
+### The system's service is a select on each room, as the app draws it
 
-The switch reads "System (whole house)" and not just "System" : one sits on
-every room's page, and nothing else there says it reaches past the room. For
-the same reason each room's climate entity carries a `system_stopped`
-attribute. Both a stopped house and a room switched off on its own read `off`,
-and the attribute is what tells them apart, for an automation or a card ;
-Home Assistant shows it only under the entity's *Details*.
+The app's room page (screenshots from the maintainer, 2026-09-28) has two
+controls, and their reach is plain from their shape : a toggle for the room,
+and a dropdown -- *"Choose the service for your system"* -- listing System off,
+Heat, Cool, Auto, Dehumidify. Everything in the dropdown moves every room ;
+the toggle moves only its own. `CozytouchSystemServiceSelect` is that
+dropdown : 102020 as a select, its options the room's climate modes narrowed
+by 100022 (the same five on 557-559, fan removed) in the app's order. The
+room's toggle is the climate entity's off and on, already writing 7.
+
+Three shapes came before it the same day, each dropped by the maintainer :
+
+- **A button** for the stop. No state and no `turn_off`, so no automation or
+  voice assistant could switch the house off.
+- **A switch per room.** On had to write *some* service, and nothing on the
+  device keeps the one it left -- 102020 and every room's 7 read 0 -- so the
+  entity remembered the last one it saw across restarts. Working, but a
+  third control with a third reach, beside a climate whose modes are the
+  house's and whose off is the room's.
+- **The switch renamed "whole house", plus a `system_stopped` attribute** on
+  each climate. The attribute showed only under Details.
+
+The select needs no memory : starting again is a service picked in the same
+list, which is exactly what the app asks for.
 
 The capability gets its own type, `system_service`, so the sensor platform
-keeps reading it and the switch platform can find it : a row names one type,
+keeps reading it and the select platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.
 
 The fake cloud under `scripts/test_ha/` plays the stop the way the dump reads,

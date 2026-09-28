@@ -16,27 +16,24 @@ a room back on beside a mode change is one gesture here and two there.
 
 The app's general stop was not in that capture, but a diagnostics dump taken
 right after it (2026-09-28) was : 102020 at 0 on all three rooms within the
-same second, then each room's 7 at 0 five seconds later. So the system switch
-writes 102020 at 0, and turning it on writes back the service it last saw
-running -- the rooms keep none of it.
+same second, then each room's 7 at 0 five seconds later. It is the first entry
+of the app's service dropdown, which a select on each room reproduces.
 """
 
 import asyncio
 from types import SimpleNamespace
-
-import pytest
 
 from custom_components.cozytouch.capability import get_capability_infos
 from custom_components.cozytouch.climate import CozytouchClimate
 from custom_components.cozytouch.const import SERVICE_OFF
 from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.model import get_model_infos
-from custom_components.cozytouch.switch import CozytouchSystemSwitch
+from custom_components.cozytouch.select import CozytouchSystemServiceSelect
 from homeassistant.components.climate import HVACMode
-from homeassistant.exceptions import HomeAssistantError
 
 ROOM_SERVICE = 7
 SYSTEM_SERVICE = 102020
+SUPPORTED = 100022
 COOL = 3
 DRY = 8
 
@@ -124,66 +121,52 @@ def test_the_room_climate_is_wired_to_the_system_service():
     assert capability.systemServiceCapabilityId == SYSTEM_SERVICE
 
 
-
-def build_switch(reported):
-    """A system switch over a hub stand-in that records what it writes."""
+def build_select(reported):
+    """The system's service select, over a hub stand-in that records writes."""
     written = []
 
     async def set_capability_value(capabilityId, value):
         written.append((capabilityId, value))
         reported[capabilityId] = value
 
-    switch = CozytouchSystemSwitch.__new__(CozytouchSystemSwitch)
-    switch._capability = CapabilityInfos(capabilityId=SYSTEM_SERVICE)
-    switch.coordinator = SimpleNamespace(
+    coordinator = SimpleNamespace(
         set_capability_value=set_capability_value,
         get_capability_value=lambda cid, default="0": reported.get(cid, default),
+        get_model_infos=lambda: get_model_infos(AC_ROOM),
         async_request_refresh=_noop,
     )
-    switch._last_service = None
-    switch._remember_service()
-    return switch, written
+    select = CozytouchSystemServiceSelect(
+        coordinator=coordinator,
+        capability=CapabilityInfos(capabilityId=SYSTEM_SERVICE, name="system_service"),
+        config_title="Room",
+        config_uniq_id="room",
+    )
+    return select, written
 
 
-def test_off_is_the_general_stop():
-    """One write, on the system's service, and no room's own state touched."""
-    switch, written = build_switch({SYSTEM_SERVICE: str(COOL)})
+def test_the_select_offers_what_the_app_offers():
+    """Five entries, in the app's order, fan removed by 100022 as the app does."""
+    select, _ = build_select({SYSTEM_SERVICE: str(COOL), SUPPORTED: "285"})
 
-    asyncio.run(switch.async_turn_off())
+    assert select.options == ["off", "heat", "cool", "auto", "dry"]
+    assert select.current_option == "cool"
+
+
+def test_the_general_stop_is_the_select_at_off():
+    """One write, on the system's service ; every room follows it off."""
+    select, written = build_select({SYSTEM_SERVICE: str(COOL), SUPPORTED: "285"})
+
+    asyncio.run(select.async_select_option("off"))
 
     assert written == [(SYSTEM_SERVICE, SERVICE_OFF)]
-    assert switch.is_on is False
+    assert select.current_option == "off"
 
 
-def test_on_goes_back_to_the_service_the_system_left():
-    """102020 forgets it ; the switch does not."""
-    switch, written = build_switch({SYSTEM_SERVICE: str(DRY)})
+def test_starting_again_is_a_service_picked_in_the_same_list():
+    """The app has no memory to restore either : a service is chosen."""
+    select, written = build_select({SYSTEM_SERVICE: SERVICE_OFF, SUPPORTED: "285"})
 
-    asyncio.run(switch.async_turn_off())
-    asyncio.run(switch.async_turn_on())
+    asyncio.run(select.async_select_option("dry"))
 
-    assert written == [(SYSTEM_SERVICE, SERVICE_OFF), (SYSTEM_SERVICE, str(DRY))]
-    assert switch.is_on is True
+    assert written == [(SYSTEM_SERVICE, str(DRY))]
 
-
-def test_on_with_nothing_to_go_back_to_writes_nothing():
-    """Better an error than a guessed service the house never asked for."""
-    switch, written = build_switch(
-        {SYSTEM_SERVICE: SERVICE_OFF, ROOM_SERVICE: SERVICE_OFF}
-    )
-
-    with pytest.raises(HomeAssistantError):
-        asyncio.run(switch.async_turn_on())
-
-    assert written == []
-
-
-def test_a_room_says_when_the_whole_system_is_stopped():
-    """Off because the house stopped, not because the room was switched off."""
-    stopped, _ = build({ROOM_SERVICE: SERVICE_OFF, SYSTEM_SERVICE: SERVICE_OFF})
-    alone, _ = build({ROOM_SERVICE: SERVICE_OFF, SYSTEM_SERVICE: str(COOL)})
-    boiler, _ = build({ROOM_SERVICE: str(COOL)}, system=None)
-
-    assert stopped.extra_state_attributes == {"system_stopped": True}
-    assert alone.extra_state_attributes == {"system_stopped": False}
-    assert boiler.extra_state_attributes is None

@@ -436,21 +436,6 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
         return value is None or str(value) != "0"
 
     @property
-    def extra_state_attributes(self) -> dict[str, bool] | None:
-        """Whether the whole system is at the general stop.
-
-        Tells a room off because the house was stopped from one switched off
-        on its own, which the mode alone cannot. See docs/decisions.md.
-        """
-        system = self._capability.get("systemServiceCapabilityId")
-        if system is None:
-            return None
-        value = self.coordinator.get_capability_value(system, None)
-        if value is None:
-            return None
-        return {"system_stopped": str(value) == SERVICE_OFF}
-
-    @property
     def current_temperature(self):
         """Return current temperature."""
         return self._current_value

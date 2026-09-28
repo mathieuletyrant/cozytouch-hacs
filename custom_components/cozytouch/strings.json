@@ -109,15 +109,6 @@
                             "middle_up": "Middle Up",
                             "up": "Up"
                         }
-                    },
-                    "system_stopped":
-                    {
-                        "name": "Whole system stopped",
-                        "state":
-                        {
-                            "false": "No",
-                            "true": "Yes"
-                        }
                     }
                 }
             },
@@ -260,6 +251,19 @@
                     "manual": "Manual",
                     "eco_plus": "Eco+",
                     "prog": "Prog"
+                }
+            },
+            "system_service":
+            {
+                "name": "System service",
+                "state":
+                {
+                    "off": "System off",
+                    "heat": "Heat",
+                    "cool": "Cool",
+                    "auto": "Auto",
+                    "dry": "Dehumidify",
+                    "fan": "Fan"
                 }
             }
         },
@@ -700,8 +704,7 @@
             "prog_mode":          { "name": "Prog Mode" },
             "quiet_mode":         { "name": "Quiet Mode" },
             "schedule_anticipation": { "name": "Schedule Anticipation" },
-            "swing_mode":         { "name": "Swing Mode" },
-            "system_service":     { "name": "System (whole house)" }
+            "swing_mode":         { "name": "Swing Mode" }
         }
     },
     "device_automation": {

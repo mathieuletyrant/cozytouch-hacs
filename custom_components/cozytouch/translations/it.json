@@ -109,15 +109,6 @@
                             "middle_up": "Medio alto",
                             "up": "Alto"
                         }
-                    },
-                    "system_stopped":
-                    {
-                        "name": "Arresto generale",
-                        "state":
-                        {
-                            "false": "No",
-                            "true": "Sì"
-                        }
                     }
                 }
             },
@@ -260,6 +251,19 @@
                     "manual": "Manuale",
                     "eco_plus": "Eco+",
                     "prog": "Prog"
+                }
+            },
+            "system_service":
+            {
+                "name": "Servizio del sistema",
+                "state":
+                {
+                    "off": "Arresto generale",
+                    "heat": "Riscaldamento",
+                    "cool": "Raffreddamento",
+                    "auto": "Auto",
+                    "dry": "Deumidificazione",
+                    "fan": "Ventilazione"
                 }
             }
         },
@@ -700,8 +704,7 @@
             "prog_mode":          { "name": "Modalità programma" },
             "quiet_mode":         { "name": "Modalità silenziosa" },
             "schedule_anticipation": { "name": "Anticipo della programmazione" },
-            "swing_mode":         { "name": "Oscillazione" },
-            "system_service":     { "name": "Sistema (tutta la casa)" }
+            "swing_mode":         { "name": "Oscillazione" }
         }
     },
     "device_automation": {
