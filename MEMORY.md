@@ -52,6 +52,9 @@ overturn one, edit the line here in the same pull request.
 - Rewiring `_room_entity` on capability 103026 : one observation, on air
   conditioners only. A room behind a *radiator* gateway reading 16/32/64 there
   is what would settle it.
+- A "house" climate entity on the HUB carrying the system's modes, with the
+  rooms cut down to off and the current mode : declined by the maintainer
+  (2026-09-28). The system switch per room is the answer.
 
 ## Parked — each needs one specific piece of evidence
 
