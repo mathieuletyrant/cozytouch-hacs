@@ -2081,17 +2081,19 @@ off under a setup that says away. What was not captured is whether the vendor
 app writes the second device's switch itself or leaves the cloud to ; writing
 it is the side that cannot leave the two disagreeing.
 
-The switch still writes `1` whether the start is now or later ; a switch
-reading 2 counts as on. The diagnostics dump of 2026-09-25 (HUB Navizone
-1758 and its three rooms) looked for a moment like it settled `2` : the
-window (222 and every room's 100260) was written at 10:19:02 for a start at
-10:28:49, and 152 with every room's 100261 changed at 10:29:07, eighteen
-seconds after the start. But the owner had first tried from Home Assistant,
-on the release that writes the window without the switch, and then turned
-the absence on from the vendor app -- so the first write may be ours and the
-second a hand on the app, and the dump cannot tell. Settling it takes an
-absence programmed from the app alone for a start some minutes away, and a
-dump taken before that start.
+A start still to come writes `2`, the rows' `value_pending`, and a start
+already reached writes `1`, which is what the vendor app does. Measured on
+the HUB Navizone (1758) and its three rooms, from a dump of 2026-09-28 : the
+owner programmed an absence from the app alone, at 11:18 for a start on
+30/09 at 11:28. The window (222) was written at 11:18:21, 152 went to 2 at
+11:18:26, and every room's 100260 and 100261 followed a second later, 100261
+at 2 too. A switch reading 2 counts as on for the pickers ; the away preset
+and the stopped action wait for 1, since the unit runs until the start.
+
+What was not seen is the turn to 1 when the start comes. The 2026-09-25 dump
+fits it -- 152 and every 100261 changed eighteen seconds after its start --
+but that absence had been touched from Home Assistant first, so nothing
+here relies on the cloud doing it.
 
 While the absence is on, the pickers follow the window the device reports
 beside its switch, on every refresh. They used to be seeded once, from the

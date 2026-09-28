@@ -838,6 +838,13 @@ class Hub(DataUpdateCoordinator):
         away = timestampStart is not None and timestampEnd is not None
         pair = f"[{timestampStart},{timestampEnd}]" if away else "[0,0]"
 
+        # A start still to come is programmed, as the vendor app writes it.
+        # See docs/decisions.md.
+        state = "value_off"
+        if away:
+            now = datetime.now(tz=dt_util.DEFAULT_TIME_ZONE).timestamp()
+            state = "value_pending" if timestampStart > now else "value_on"
+
         for hub in self._account_hubs():
             switches = hub.away_mode_switches()
             if not switches:
@@ -850,9 +857,7 @@ class Hub(DataUpdateCoordinator):
                 await hub.set_capability_value(
                     settings["timestampsCapabilityId"], pair
                 )
-                await hub.set_capability_value(
-                    capabilityId, settings["value_on" if away else "value_off"]
-                )
+                await hub.set_capability_value(capabilityId, settings[state])
 
             await hub.async_request_refresh()
 

@@ -94,9 +94,24 @@ def test_the_window_goes_first_then_the_pair_then_the_switch():
     assert account.absences == [(START, END)]
     assert hub.log == [
         (id(hub), 222, f"[{START},{END}]"),
-        (id(hub), 152, "1"),
+        (id(hub), 152, "2"),
     ]
     assert hub.refreshed == 1
+
+
+def test_a_start_to_come_is_programmed_and_one_reached_is_on():
+    """What the vendor app writes, 2026-09-28 : 152 at 2 for a start two days
+    away, on a HUB Navizone (1758), the rooms' 100261 following at 2.
+    """
+    hub = hub_over(FakeAccount(), {152: "0", 222: "[0,0]"})
+
+    asyncio.run(hub.set_away_mode(START, END))
+    asyncio.run(hub.set_away_mode(1000, END))
+
+    assert [value for _, capabilityId, value in hub.log if capabilityId == 152] == [
+        "2",
+        "1",
+    ]
 
 
 def test_clearing_writes_the_empty_pair_and_the_switch_off():
@@ -126,9 +141,9 @@ def test_every_device_of_the_account_is_switched_with_it():
     assert account.absences == [(START, END)]
     assert log == [
         (id(boiler), 222, f"[{START},{END}]"),
-        (id(boiler), 152, "1"),
+        (id(boiler), 152, "2"),
         (id(heater), 226, f"[{START},{END}]"),
-        (id(heater), 227, "1"),
+        (id(heater), 227, "2"),
     ]
     assert room.refreshed == 0
     assert heater.get_away_mode_start() == START
@@ -288,7 +303,7 @@ def test_the_service_switches_the_absence_on_in_one_call(monkeypatch):
     asyncio.run(registered(hass, "set_away_mode")(call))
 
     assert hub.account.absences == [(START, END)]
-    assert (id(hub), 152, "1") in hub.log
+    assert (id(hub), 152, "2") in hub.log
 
 
 def test_two_targets_on_one_account_are_one_write(monkeypatch):
