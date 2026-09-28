@@ -176,3 +176,14 @@ def test_on_with_nothing_to_go_back_to_writes_nothing():
         asyncio.run(switch.async_turn_on())
 
     assert written == []
+
+
+def test_a_room_says_when_the_whole_system_is_stopped():
+    """Off because the house stopped, not because the room was switched off."""
+    stopped, _ = build({ROOM_SERVICE: SERVICE_OFF, SYSTEM_SERVICE: SERVICE_OFF})
+    alone, _ = build({ROOM_SERVICE: SERVICE_OFF, SYSTEM_SERVICE: str(COOL)})
+    boiler, _ = build({ROOM_SERVICE: str(COOL)}, system=None)
+
+    assert stopped.extra_state_attributes == {"system_stopped": True}
+    assert alone.extra_state_attributes == {"system_stopped": False}
+    assert boiler.extra_state_attributes is None

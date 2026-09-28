@@ -109,6 +109,15 @@
                             "middle_up": "Milieu Haut",
                             "up": "Haut"
                         }
+                    },
+                    "system_stopped":
+                    {
+                        "name": "Arrêt général",
+                        "state":
+                        {
+                            "false": "Non",
+                            "true": "Oui"
+                        }
                     }
                 }
             },
@@ -692,7 +701,7 @@
             "quiet_mode":         { "name": "Mode Silence" },
             "schedule_anticipation": { "name": "Anticipation du programme" },
             "swing_mode":         { "name": "Mode Oscillation" },
-            "system_service":     { "name": "Système" }
+            "system_service":     { "name": "Système (toute la maison)" }
         }
     },
     "device_automation": {

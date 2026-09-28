@@ -109,6 +109,15 @@
                             "middle_up": "Medio arriba",
                             "up": "Arriba"
                         }
+                    },
+                    "system_stopped":
+                    {
+                        "name": "Parada general",
+                        "state":
+                        {
+                            "false": "No",
+                            "true": "Sí"
+                        }
                     }
                 }
             },
@@ -692,7 +701,7 @@
             "quiet_mode":         { "name": "Modo silencioso" },
             "schedule_anticipation": { "name": "Anticipación de la programación" },
             "swing_mode":         { "name": "Oscilación" },
-            "system_service":     { "name": "Sistema" }
+            "system_service":     { "name": "Sistema (toda la casa)" }
         }
     },
     "device_automation": {

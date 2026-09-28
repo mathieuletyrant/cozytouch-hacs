@@ -109,6 +109,15 @@
                             "middle_up": "Mitte oben",
                             "up": "Oben"
                         }
+                    },
+                    "system_stopped":
+                    {
+                        "name": "Gesamte Anlage aus",
+                        "state":
+                        {
+                            "false": "Nein",
+                            "true": "Ja"
+                        }
                     }
                 }
             },
@@ -692,7 +701,7 @@
             "quiet_mode":         { "name": "Leisemodus" },
             "schedule_anticipation": { "name": "Zeitplan-Vorlauf" },
             "swing_mode":         { "name": "Schwenkmodus" },
-            "system_service":     { "name": "Anlage" }
+            "system_service":     { "name": "Anlage (ganzes Haus)" }
         }
     },
     "device_automation": {

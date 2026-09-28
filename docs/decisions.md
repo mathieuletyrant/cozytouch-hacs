@@ -3223,6 +3223,13 @@ brings it back, and writes that. Stopped before Home Assistant ever saw it run,
 it refuses rather than guess -- picking a mode on a room's climate entity
 starts the system just as well.
 
+The switch reads "System (whole house)" and not just "System" : one sits on
+every room's page, and nothing else there says it reaches past the room. For
+the same reason each room's climate entity carries a `system_stopped`
+attribute. Both a stopped house and a room switched off on its own read `off`,
+and the attribute is what tells them apart, for an automation or a card ;
+Home Assistant shows it only under the entity's *Details*.
+
 The capability gets its own type, `system_service`, so the sensor platform
 keeps reading it and the switch platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.

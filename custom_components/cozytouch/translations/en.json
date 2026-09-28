@@ -109,6 +109,15 @@
                             "middle_up": "Middle Up",
                             "up": "Up"
                         }
+                    },
+                    "system_stopped":
+                    {
+                        "name": "Whole system stopped",
+                        "state":
+                        {
+                            "false": "No",
+                            "true": "Yes"
+                        }
                     }
                 }
             },
@@ -692,7 +701,7 @@
             "quiet_mode":         { "name": "Quiet Mode" },
             "schedule_anticipation": { "name": "Schedule Anticipation" },
             "swing_mode":         { "name": "Swing Mode" },
-            "system_service":     { "name": "System" }
+            "system_service":     { "name": "System (whole house)" }
         }
     },
     "device_automation": {
