@@ -252,19 +252,6 @@
                     "eco_plus": "Eco+",
                     "prog": "Prog"
                 }
-            },
-            "system_service":
-            {
-                "name": "Systemdienst",
-                "state":
-                {
-                    "off": "Anlage aus",
-                    "heat": "Heizen",
-                    "cool": "Kühlen",
-                    "auto": "Auto",
-                    "dry": "Entfeuchten",
-                    "fan": "Lüften"
-                }
             }
         },
         "sensor": {
@@ -704,7 +691,8 @@
             "prog_mode":          { "name": "Programmmodus" },
             "quiet_mode":         { "name": "Leisemodus" },
             "schedule_anticipation": { "name": "Zeitplan-Vorlauf" },
-            "swing_mode":         { "name": "Schwenkmodus" }
+            "swing_mode":         { "name": "Schwenkmodus" },
+            "system_service":     { "name": "Raum an" }
         }
     },
     "device_automation": {

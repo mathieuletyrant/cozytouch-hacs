@@ -485,13 +485,12 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             await self.coordinator.async_request_refresh()
 
     async def async_set_hvac_mode(self, hvac_mode: HVACMode) -> None:
-        """Set hvac mode, on the room or on the system as the app does.
+        """Set hvac mode, on the whole system where the room belongs to one.
 
-        A mode is the whole system's -- one outdoor unit runs one service --
-        and off is the room's own. So a mode goes to 102020, which every room
-        of the system then follows, and off goes to the room's own service.
-        A room that was off is switched back on beside the mode, which the app
-        needs two gestures for. See docs/decisions.md.
+        One outdoor unit runs one service, so every mode goes to 102020 and
+        every room follows -- off included, which is the app's general stop.
+        The room's own on and off is the switch beside it. A room that was off
+        is switched back on beside a mode. See docs/decisions.md.
         """
         HVACModes = self._modelInfos.HVACModes
         for mode in HVACModes:
@@ -501,11 +500,14 @@ class CozytouchClimate(ClimateEntity, CozytouchSensor):
             room = self._capability.capabilityId
             system = self._capability.get("systemServiceCapabilityId")
 
-            if system is None or hvac_mode == HVACMode.OFF:
+            if system is None:
                 await self.coordinator.set_capability_value(room, str(mode))
             else:
                 await self.coordinator.set_capability_value(system, str(mode))
-                if self.coordinator.get_capability_value(room) == SERVICE_OFF:
+                if (
+                    hvac_mode != HVACMode.OFF
+                    and self.coordinator.get_capability_value(room) == SERVICE_OFF
+                ):
                     await self.coordinator.set_capability_value(room, str(mode))
 
             await self.coordinator.async_request_refresh()

@@ -6,12 +6,14 @@ import logging
 
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN
+from .const import DOMAIN, SERVICE_OFF
 from .hub import (
     CozytouchConfigEntry,
+    CozytouchDeviceEntity,
     Hub,
     add_capability_entities,
     away_window_is_valid,
@@ -35,8 +37,75 @@ async def async_setup_entry(
         {
             CapabilityType.SWITCH: CozytouchSwitch,
             CapabilityType.AWAY_MODE_SWITCH: CozytouchAwayModeSwitch,
+            CapabilityType.SYSTEM_SERVICE: CozytouchRoomSwitch,
         },
     )
+
+
+# A room's own service, which the room's climate entity is built on.
+ROOM_SERVICE_CAPABILITY_ID = 7
+
+
+class CozytouchRoomSwitch(CozytouchDeviceEntity, SwitchEntity):
+    """One room of a system on or off, the rest of the house untouched.
+
+    Built beside 102020 because only a room that belongs to a system needs
+    it : elsewhere the climate entity's off already is the room's. On writes
+    the service the house runs, as the app's toggle does. See
+    docs/decisions.md.
+    """
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_icon = "mdi:power"
+    _attr_device_class = SwitchDeviceClass.SWITCH
+
+    def __init__(
+        self,
+        coordinator: Hub,
+        capability,
+        config_title: str,
+        config_uniq_id: str,
+    ) -> None:
+        """Initialize a switch entity."""
+        super().__init__(coordinator)
+
+        capabilityId = capability.capabilityId
+        self._capability = capability
+        self._device_uniq_id = config_uniq_id
+        self._attr_translation_key = capability.name
+        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_switch_{capabilityId!s}"
+
+    @property
+    def is_on(self) -> bool | None:
+        """Whether this room runs."""
+        value = self.coordinator.get_capability_value(
+            ROOM_SERVICE_CAPABILITY_ID, None
+        )
+        if value is None:
+            return None
+        return str(value) != SERVICE_OFF
+
+    async def async_turn_on(self, **kwargs) -> None:
+        """Join the service the house runs."""
+        service = self.coordinator.get_capability_value(
+            self._capability.capabilityId, None
+        )
+        if service is None or str(service) == SERVICE_OFF:
+            raise HomeAssistantError(
+                "The whole system is stopped: pick a mode on the climate first"
+            )
+        await self.coordinator.set_capability_value(
+            ROOM_SERVICE_CAPABILITY_ID, str(service)
+        )
+        await self.coordinator.async_request_refresh()
+
+    async def async_turn_off(self, **kwargs) -> None:
+        """Switch this room off ; the others keep running."""
+        await self.coordinator.set_capability_value(
+            ROOM_SERVICE_CAPABILITY_ID, SERVICE_OFF
+        )
+        await self.coordinator.async_request_refresh()
 
 
 class CozytouchSwitch(SwitchEntity, CozytouchSensor):

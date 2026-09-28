@@ -2981,7 +2981,7 @@ CAPABILITIES: dict[int, Entity] = {
         # Named `AIR_MIXING_ACTUAL_MODE` by the vendor and read as air
         # circulation here for a year : it is the service the whole system
         # runs, and writing it is what moves every room -- 0 is the app's
-        # general stop, and the select platform offers it. See
+        # general stop. See
         # docs/decisions.md.
         name="system_service",
         type=CapabilityType.SYSTEM_SERVICE,

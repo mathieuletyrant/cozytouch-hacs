@@ -54,10 +54,11 @@ overturn one, edit the line here in the same pull request.
   is what would settle it.
 - A "house" climate entity on the HUB carrying the system's modes, with the
   rooms cut down to off and the current mode : declined by the maintainer
-  (2026-09-28). So were a stop button, a per-room system switch and a
-  `system_stopped` attribute. The answer is the app's own shape : a select on
-  each room for the system's service (general stop included), and the
-  climate's off for the room alone. `docs/decisions.md`.
+  (2026-09-28). So were a stop button, a per-room system switch, a
+  `system_stopped` attribute and a per-room select copying the app's
+  dropdown. The answer : every climate mode, off included, is the house's
+  (102020) ; a switch per room is the room's own on/off (7).
+  `docs/decisions.md`.
 
 ## Parked — each needs one specific piece of evidence
 

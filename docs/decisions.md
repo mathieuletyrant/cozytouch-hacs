@@ -3150,9 +3150,11 @@ genuinely the room's is `0`. Switching a room back on writes the service the
 house is already running, never one of its own, which is why turning a room on
 *into* a different mode is two gestures there and one write pair here.
 
-So `async_set_hvac_mode` writes 102020 when the device reports it, 7 when the
-mode is off, and both when a room that was off is asked for a mode. A device
-with no 102020 -- a boiler, a towel rail -- keeps the write it always had.
+So `async_set_hvac_mode` writes 102020 when the device reports it, and 7 too
+when a room that was off is asked for a mode. Off was written to 7 at first ;
+it goes to 102020 now, as the entry on the general stop below explains. A
+device with no 102020 -- a boiler, a towel rail -- keeps the write it always
+had.
 
 ### What it is not, which took the whole investigation
 
@@ -3212,34 +3214,35 @@ dump ; it has not been seen.
 So the climate entities read off on their own after a stop, with nothing to
 add.
 
-### The system's service is a select on each room, as the app draws it
+### The climate is the house, the room's switch is the room
 
 The app's room page (screenshots from the maintainer, 2026-09-28) has two
-controls, and their reach is plain from their shape : a toggle for the room,
-and a dropdown -- *"Choose the service for your system"* -- listing System off,
-Heat, Cool, Auto, Dehumidify. Everything in the dropdown moves every room ;
-the toggle moves only its own. `CozytouchSystemServiceSelect` is that
-dropdown : 102020 as a select, its options the room's climate modes narrowed
-by 100022 (the same five on 557-559, fan removed) in the app's order. The
-room's toggle is the climate entity's off and on, already writing 7.
+controls, and their reach is plain from their shape : a dropdown -- *"Choose
+the service for your system"* : System off, Heat, Cool, Auto, Dehumidify --
+that moves every room, and a toggle that moves only its own.
 
-Three shapes came before it the same day, each dropped by the maintainer :
+Here the climate entity is the dropdown : every one of its modes goes to
+102020, off included, so off on any room is the general stop. Beside it, each
+room reporting 102020 gets a switch (`CozytouchRoomSwitch`) that is the
+toggle : off writes the room's 7 at 0, on writes into 7 the service the house
+runs, which is what the 2026-09-21 capture saw the app write. While the house
+is stopped the switch refuses to turn on -- 166 permits only off then, and
+the way back is a mode on the climate.
+
+Four shapes came before it the same day, each dropped by the maintainer :
 
 - **A button** for the stop. No state and no `turn_off`, so no automation or
   voice assistant could switch the house off.
-- **A switch per room.** On had to write *some* service, and nothing on the
-  device keeps the one it left -- 102020 and every room's 7 read 0 -- so the
-  entity remembered the last one it saw across restarts. Working, but a
-  third control with a third reach, beside a climate whose modes are the
-  house's and whose off is the room's.
-- **The switch renamed "whole house", plus a `system_stopped` attribute** on
+- **A system switch per room**, remembering the last service to turn back on.
+  A third control with a third reach, beside a climate whose modes were the
+  house's and whose off was the room's.
+- **That switch renamed "whole house", plus a `system_stopped` attribute** on
   each climate. The attribute showed only under Details.
-
-The select needs no memory : starting again is a service picked in the same
-list, which is exactly what the app asks for.
+- **A select per room copying the app's dropdown**, off on the climate left
+  to the room. The climate's mode list still mixed two reaches in one menu.
 
 The capability gets its own type, `system_service`, so the sensor platform
-keeps reading it and the select platform can find it : a row names one type,
+keeps reading it and the switch platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.
 
 The fake cloud under `scripts/test_ha/` plays the stop the way the dump reads,
