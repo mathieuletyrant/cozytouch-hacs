@@ -252,6 +252,19 @@
                     "eco_plus": "Eco+",
                     "prog": "Prog"
                 }
+            },
+            "system_service":
+            {
+                "name": "System service",
+                "state":
+                {
+                    "off": "System off",
+                    "heat": "Heat",
+                    "cool": "Cool",
+                    "auto": "Auto",
+                    "dry": "Dehumidify",
+                    "fan": "Fan"
+                }
             }
         },
         "sensor": {
@@ -691,8 +704,7 @@
             "prog_mode":          { "name": "Prog Mode" },
             "quiet_mode":         { "name": "Quiet Mode" },
             "schedule_anticipation": { "name": "Schedule Anticipation" },
-            "swing_mode":         { "name": "Swing Mode" },
-            "system_service":     { "name": "Room on" }
+            "swing_mode":         { "name": "Swing Mode" }
         }
     },
     "device_automation": {

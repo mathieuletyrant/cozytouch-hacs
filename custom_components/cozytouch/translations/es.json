@@ -252,6 +252,19 @@
                     "eco_plus": "Eco+",
                     "prog": "Prog"
                 }
+            },
+            "system_service":
+            {
+                "name": "Servicio del sistema",
+                "state":
+                {
+                    "off": "Parada general",
+                    "heat": "Calefacción",
+                    "cool": "Frío",
+                    "auto": "Auto",
+                    "dry": "Deshumidificación",
+                    "fan": "Ventilación"
+                }
             }
         },
         "sensor": {
@@ -691,8 +704,7 @@
             "prog_mode":          { "name": "Modo programa" },
             "quiet_mode":         { "name": "Modo silencioso" },
             "schedule_anticipation": { "name": "Anticipación de la programación" },
-            "swing_mode":         { "name": "Oscilación" },
-            "system_service":     { "name": "Habitación encendida" }
+            "swing_mode":         { "name": "Oscilación" }
         }
     },
     "device_automation": {

@@ -9,7 +9,8 @@ What the real cloud does beyond storing a write is guessed, and only where
 a capture showed the effect :
 
 - 102020 written on any device reaches every room of the account
-  (MEMORY.md, settled by capturing the iOS app).
+  (MEMORY.md, settled by capturing the iOS app), and a room that runs takes
+  the new service into its own 7 -- the house stops being split.
 - 102020 at 0, the app's general stop, takes every room with it : 7 and
   181 to 0 and 166 to 1 (only off permitted), as the 2026-09-28 Navizone
   dump reads five seconds after the stop. What starting again does to the
@@ -152,8 +153,17 @@ class FakeAtlantic:
             if capabilityId == 102020 and value == "0":
                 for stoppedId, stoppedValue in STOPPED_ROOM.items():
                     self.store(other, stoppedId, stoppedValue)
+            elif capabilityId == 102020 and self.runs(other):
+                self.store(other, 7, value)
 
         return True
+
+    def runs(self, device: dict) -> bool:
+        """Whether a room reports a service of its own other than off."""
+        return any(
+            c["capabilityId"] == 7 and c["value"] not in (None, "0")
+            for c in device["capabilities"]
+        )
 
     async def token(self, request: web.Request) -> web.Response:
         form = await request.post()

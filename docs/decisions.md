@@ -3150,11 +3150,10 @@ genuinely the room's is `0`. Switching a room back on writes the service the
 house is already running, never one of its own, which is why turning a room on
 *into* a different mode is two gestures there and one write pair here.
 
-So `async_set_hvac_mode` writes 102020 when the device reports it, and 7 too
-when a room that was off is asked for a mode. Off was written to 7 at first ;
-it goes to 102020 now, as the entry on the general stop below explains. A
-device with no 102020 -- a boiler, a towel rail -- keeps the write it always
-had.
+So the system's service is written to 102020, and a room's own on and off to
+7. Which entity does which settled later -- see the entry on the room's
+climate below. A device with no 102020 -- a boiler, a towel rail -- keeps the
+write it always had.
 
 ### What it is not, which took the whole investigation
 
@@ -3214,22 +3213,35 @@ dump ; it has not been seen.
 So the climate entities read off on their own after a stop, with nothing to
 add.
 
-### The climate is the house, the room's switch is the room
+### A room's climate is on or off ; the system's service is a select beside it
 
 The app's room page (screenshots from the maintainer, 2026-09-28) has two
 controls, and their reach is plain from their shape : a dropdown -- *"Choose
 the service for your system"* : System off, Heat, Cool, Auto, Dehumidify --
 that moves every room, and a toggle that moves only its own.
 
-Here the climate entity is the dropdown : every one of its modes goes to
-102020, off included, so off on any room is the general stop. Beside it, each
-room reporting 102020 gets a switch (`CozytouchRoomSwitch`) that is the
-toggle : off writes the room's 7 at 0, on writes into 7 the service the house
-runs, which is what the 2026-09-21 capture saw the app write. While the house
-is stopped the switch refuses to turn on -- 166 permits only off then, and
-the way back is a mode on the climate.
+Home Assistant has both shapes, and each gets one reach :
 
-Four shapes came before it the same day, each dropped by the maintainer :
+- **The select** (`CozytouchSystemServiceSelect`) is the dropdown : 102020,
+  its options the room's modes narrowed by 100022 (the same five on 557-559,
+  fan removed), in the app's order. "System off" is the general stop ;
+  picking a service starts the house again.
+- **The climate** is the toggle. For a room reporting 102020 its mode list is
+  off and the one mode the house runs -- `[off, cool]` while it cools,
+  `[off]` while it is stopped -- rebuilt at each poll. Off writes the room's
+  7 at 0 ; on writes into 7 the service the house runs, which is what the
+  2026-09-21 capture saw the app write. Asked to turn on while the house is
+  stopped, it refuses : 166 permits only off then. Presets (basic, prog,
+  override) are the room's own and untouched.
+
+This is the moving mode list the entry on narrowing by 100022 refused for the
+season, and the cost it named is paid here on purpose : an automation asking a
+room for `heat` fails while the house cools, because the house's mode is the
+select's to change. Home Assistant's own turn_on works for free -- with two
+modes, one of them off, it picks the other. A device with no 102020 keeps the
+whole table.
+
+Five shapes came before it the same day, each dropped by the maintainer :
 
 - **A button** for the stop. No state and no `turn_off`, so no automation or
   voice assistant could switch the house off.
@@ -3238,15 +3250,19 @@ Four shapes came before it the same day, each dropped by the maintainer :
   house's and whose off was the room's.
 - **That switch renamed "whole house", plus a `system_stopped` attribute** on
   each climate. The attribute showed only under Details.
-- **A select per room copying the app's dropdown**, off on the climate left
-  to the room. The climate's mode list still mixed two reaches in one menu.
+- **The same select, the climate keeping every mode.** Its menu mixed two
+  reaches : Heat, Cool, Auto, Dehumidify moved the house, Off the room.
+- **Every climate mode the house's, off included, and a room switch.** The
+  climate's turn_on then fell back on HA's default -- the first of heat_cool,
+  heat, cool it has -- and put the whole house in heat.
 
 The capability gets its own type, `system_service`, so the sensor platform
-keeps reading it and the switch platform can find it : a row names one type,
+keeps reading it and the select platform can find it : a row names one type,
 and `string` is every unnamed capability in the table.
 
 The fake cloud under `scripts/test_ha/` plays the stop the way the dump reads,
-rooms included, and plays nothing on the way back.
+rooms included, and a new service reaching the rooms that run ; it plays
+nothing else on the way back.
 
 ### Capability 91 is which circuit is active, named for that rather than the valve
 
