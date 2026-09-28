@@ -2947,6 +2947,20 @@ its list, and `tests/test_llm_tools.py` skips itself where the platform is
 missing.
 
 
+### The absence tools hand the model's dates to the services as they are
+
+The program tools do their own merging because a day on the device has to
+be rewritten whole. An absence has nothing to merge into : it is a window and
+a switch, and `set_away_mode` already writes both, on every account, as
+programmed when the start is still to come. So the tools take a start and an
+end as the model says them, in the home's local time, and call the service ;
+what they answer with is read back from the devices, off, programmed or on,
+so the assistant reports what was set rather than what it asked for.
+
+They are offered where an away switch is exposed to Assist, found by its
+translation key, and not otherwise : a room reports the absence but has
+nothing to set it with, and a switch kept from Assist is not a tool either.
+
 ## `custom_components/cozytouch/www/cozytouch-schedule-card.js`
 
 The calendar came first and is the wrong shape for this. Home Assistant's

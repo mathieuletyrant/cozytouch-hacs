@@ -181,6 +181,9 @@ the window on the account and switches every device that has an away mode.
   now until you move it, and with no end the absence lasts two days.
 - **From an automation** : `cozytouch.set_away_mode` does both in one action,
   and `cozytouch.clear_away_mode` ends it.
+- **By voice** : Assist can read, set and end the absence ("on part du 3 au
+  10 octobre"), if the away switch is exposed to it and your conversation
+  agent can use tools.
 
 ```yaml
 action: cozytouch.set_away_mode
