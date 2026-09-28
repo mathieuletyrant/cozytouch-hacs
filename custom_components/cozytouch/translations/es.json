@@ -449,7 +449,16 @@
             "available_fan_speeds":     { "name": "Velocidades de ventilador disponibles" },
             "available_schedule_types": { "name": "Tipos de programación disponibles" },
             "available_thermostat_modes": { "name": "Modos de termostato disponibles" },
-            "away_mode":                { "name": "Modo ausencia" },
+            "away_mode":
+            {
+                "name": "Modo ausencia",
+                "state":
+                {
+                    "off": "Desactivada",
+                    "pending": "Programada",
+                    "on": "En curso"
+                }
+            },
             "away_mode_cooling_temperature": { "name": "Temperatura de frío en modo ausencia" },
             "away_mode_start":          { "name": "Inicio del modo ausencia" },
             "away_mode_stop":           { "name": "Fin del modo ausencia" },

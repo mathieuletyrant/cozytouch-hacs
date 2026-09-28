@@ -15,10 +15,13 @@ same trick `tests/test_diagnostics.py` uses on the `Hub`.
 """
 
 import datetime
+import json
 import zoneinfo
 
+from _harness import TRANSLATIONS
 import pytest
 
+from custom_components.cozytouch.capability_table import CAPABILITIES
 from custom_components.cozytouch.const import CozytouchCapabilityVariableType
 from custom_components.cozytouch.infos import CapabilityInfos
 from custom_components.cozytouch.sensor import (
@@ -154,23 +157,35 @@ def test_a_time_programme_reads_as_from_dash_to(program, expected):
 # ------------------------------------------------------------ away mode text
 
 
-AWAY_VALUES = {"value_off": "0", "value_pending": "1", "value_on": "2"}
+# As the rows declare them, on 152 and 227.
+AWAY_VALUES = {"value_off": "0", "value_on": "1", "value_pending": "2"}
 
 
 @pytest.mark.parametrize(
     ("value", "expected"),
     [
-        ("0", "Off"),
-        ("1", "Pending"),
-        ("2", "On"),
-        # A value none of the three claim is reported as unknown rather than
-        # guessed at, which is what the initial assignment is for.
-        ("9", "Unknown"),
+        ("0", "off"),
+        ("1", "on"),
+        ("2", "pending"),
+        # A value none of the three claim is unknown rather than a word of
+        # our own, like every other state Home Assistant cannot name.
+        ("9", None),
     ],
 )
-def test_away_mode_reads_as_one_of_three_states(value, expected):
+def test_away_mode_reads_as_a_translatable_state(value, expected):
+    """Keys, not words : the translations name them, "pending" as scheduled."""
     stub = sensor(CozytouchAwayModeSensor, value, capability=AWAY_VALUES)
     assert CozytouchAwayModeSensor.get_value(stub) == expected
+
+
+def test_every_away_state_is_translated():
+    """The gateway's sensor and a room's 100261 share the key "away_mode"."""
+    states = {"off", "on", "pending"}
+    assert set(CAPABILITIES[100261].reads_as.values()) == states
+    for path in TRANSLATIONS:
+        with open(path, encoding="utf-8") as handle:
+            content = json.load(handle)
+        assert set(content["entity"]["sensor"]["away_mode"]["state"]) == states, path
 
 
 def test_away_mode_not_reported_is_none_rather_than_unknown():

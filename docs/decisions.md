@@ -2090,6 +2090,14 @@ owner programmed an absence from the app alone, at 11:18 for a start on
 at 2 too. A switch reading 2 counts as on for the pickers ; the away preset
 and the stopped action wait for 1, since the unit runs until the start.
 
+The same dump shows the rooms' 100261 at 2, so it is three states like the
+switch rather than a flag : it reads as `off`, `on` or `pending` instead of a
+binary sensor that said `off` for a programmed absence. The gateway's own
+sensor gives the same three keys rather than the English words it used to
+return untranslated, and both carry the `away_mode` state translations --
+"Programmée" in French. An automation comparing the old "On" or "Pending"
+has to compare the keys instead.
+
 What was not seen is the turn to 1 when the start comes. The 2026-09-25 dump
 fits it -- 152 and every 100261 changed eighteen seconds after its start --
 but that absence had been touched from Home Assistant first, so nothing

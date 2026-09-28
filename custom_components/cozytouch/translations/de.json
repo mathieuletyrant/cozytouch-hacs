@@ -449,7 +449,16 @@
             "available_fan_speeds":     { "name": "Verfügbare Lüfterstufen" },
             "available_schedule_types": { "name": "Verfügbare Zeitplantypen" },
             "available_thermostat_modes": { "name": "Verfügbare Thermostatmodi" },
-            "away_mode":                { "name": "Abwesenheitsmodus" },
+            "away_mode":
+            {
+                "name": "Abwesenheitsmodus",
+                "state":
+                {
+                    "off": "Aus",
+                    "pending": "Geplant",
+                    "on": "Aktiv"
+                }
+            },
             "away_mode_cooling_temperature": { "name": "Kühltemperatur im Abwesenheitsmodus" },
             "away_mode_start":          { "name": "Beginn Abwesenheitsmodus" },
             "away_mode_stop":           { "name": "Ende Abwesenheitsmodus" },

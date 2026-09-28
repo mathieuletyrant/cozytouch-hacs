@@ -318,18 +318,13 @@ class CozytouchAwayModeSensor(CozytouchSensor):
     def get_value(self) -> str:
         """Retrieve value from hub."""
         value = self.coordinator.get_capability_value(self._capability.capabilityId)
-        if value is not None:
-            strValue = "Unknown"
-            if value == self._capability.value_off:
-                strValue = "Off"
-            elif value == self._capability.value_pending:
-                strValue = "Pending"
-            elif value == self._capability.value_on:
-                strValue = "On"
-
-            return strValue
-
-        return None
+        # Keys, which the translations turn into words ; a value none of the
+        # three is unknown rather than a word of our own.
+        return {
+            self._capability.value_off: "off",
+            self._capability.value_pending: "pending",
+            self._capability.value_on: "on",
+        }.get(value)
 
 
 class CozytouchUnitSensor(CozytouchSensor):
