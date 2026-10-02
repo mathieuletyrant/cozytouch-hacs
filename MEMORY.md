@@ -73,6 +73,11 @@ overturn one, edit the line here in the same pull request.
 
 ## Working here
 
+- When writing about a capability id -- to the maintainer, on an issue, in a
+  PR -- put its Atlantic name in parentheses after it : `103150
+  (ROOM_AmbientTemperature_Status)`. The names are in
+  `scripts/capability_catalogue.jsonl`. Asked by the maintainer, 2026-10-02.
+
 - Pull requests go to `mathieuletyrant/cozytouch-hacs`, base `main` ; the
   repository is no longer tied to `gduteil/cozytouch` or
   `mathieuletyrant/cozytouch`. A Claude Code on the web session has no `gh`
