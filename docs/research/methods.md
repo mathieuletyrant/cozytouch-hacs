@@ -42,22 +42,17 @@ Version used: `fr.atlantic.cozytouch` **3.31.0**, versionCode **737**
 
 ### Getting it
 
-The Play Store does not hand out the APK; APKPure serves the XAPK bundle:
+Obtain the APK of the version above from a device you own, then decompile it:
 
 ```sh
-curl -L -A "Mozilla/5.0" \
-     -e "https://apkpure.net/fr/cozytouch/fr.atlantic.cozytouch/download" \
-     -o cozytouch.xapk \
-     "https://d.apkpure.net/b/XAPK/fr.atlantic.cozytouch?version=latest"
-unzip -q cozytouch.xapk -d xapk
-jadx -d out --no-res --no-debug-info xapk/fr.atlantic.cozytouch.apk
+jadx -d out --no-res --no-debug-info fr.atlantic.cozytouch.apk
 ```
 
 `--no-res` skips resources (nothing in them is capability data: the only
 data assets are Lottie animations and an Overkiz demo setup with no
 `capabilityId`), `--no-debug-info` keeps jadx from inventing variable
 names. jadx itself takes about three minutes; the whole job is an hour.
-`version=latest` is whatever is current -- note the version you got.
+Note the version you decompiled.
 
 ### Where the capability semantics live
 
@@ -66,7 +61,6 @@ names. jadx itself takes about three minutes; the whole job is an hour.
 | `fr/modulotech/app/domain/model/devices/Capabilities.java` | The id enum, `NAME(id)`, nothing else. |
 | `fr/modulotech/app/domain/model/devices/features/` | The readers: one `I*Feature` interface per domain. The type lives here, as the decoder each reader calls. |
 | `.../devices/features/*/<Enum>.java` | The value spaces and masks (`Service`, `Mode`, `DHWMode`, `VentilationControls`...). |
-| `.../devices/fake/` | One `*FakeHelper` per product family: complete fake devices with capability values. |
 | `.../devices/CapabilitiesKt.java` | Where the enum says it comes from: an internal spreadsheet that is not in the APK. |
 | `com/modulotech/atlantic/devices/gacoma/` | Per-product classes: which device implements which feature. |
 | `com/modulotech/atlantic/views/devices/steering/` | The views: whether a capability is *shown* or only read. |

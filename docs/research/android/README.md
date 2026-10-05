@@ -23,7 +23,6 @@ corpus ([`../corpus.md`](../corpus.md)) is the check on both.
 | `android_bitfields_331.tsv` | Every enum decoded by `fromBitField`: 16 enums, 93 members, with the mask and, where the member doubles as a value, its API value. |
 | `android_value_enums.txt` | The non-mask enums: member and the API value it decodes from. |
 | `android_writable_capabilities.tsv` | `NAME<TAB>id` for the 87 ids that appear at a write call site. |
-| `android_fake_device_corpus.tsv` | Values from the app's own fake devices (`*FakeHelper`, one per product family), 288 literal pairs. Encodings, not models: the fixtures' `modelId` is random. Room-name placeholders were dropped. |
 
 ## How to read them
 
@@ -65,9 +64,6 @@ exist on the API.
   member, so every id the app writes appears beside a write call; the grep
   is in `docs/decisions.md`, *What the Android app is willing to write*. An
   id absent from it is only never written by this version.
-- **Fixtures:** string literals passed to the fake devices' builders. 169
-  more pairs are enum references (`Service.HEAT.getValue()`), which give a
-  nominal value rather than an example, and are not in the table.
 
 ## What was concluded from them
 
