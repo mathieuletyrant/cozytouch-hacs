@@ -166,14 +166,16 @@ against the reporter's dump and HA version when there is one :
 
    `body.md` references each shot by its file name, in a table such as
    `| ![Before: ...](./before.png) | ![After: ...](./after.png) |`, with the
-   HA version, the dump used and how it was adapted. The script stores the
-   images under `refs/uploads/pr-<n>` -- not a branch, nothing in the diff,
-   the releases or HACS -- rewrites the references and posts the comment,
-   all over REST through `gh api`. Run again, it replaces the images. Once
+   HA version, the dump used and how it was adapted. The script pushes the
+   images with git under `refs/uploads/pr-<n>` -- not a branch, nothing in
+   the diff, the releases or HACS -- rewrites the references and posts the
+   comment over REST ; where the comment is refused, it prints the body to
+   post with the GitHub MCP tools. Run again, it replaces the images. Once
    the pull request is merged : `attach.py <n> --delete`.
 
    Not `gh pr comment --attach` : it goes through GraphQL, which a cloud
-   session's GitHub proxy refuses with a 403 whatever the token. Never commit
+   session's GitHub proxy refuses with a 403 whatever the token, as it
+   refuses REST writes to the Git Data API. Never commit
    the shots to a branch.
 
 ## What the fake does not know

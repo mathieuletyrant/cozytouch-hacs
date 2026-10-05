@@ -80,8 +80,9 @@ overturn one, edit the line here in the same pull request.
   repository is no longer tied to `gduteil/cozytouch` or
   `mathieuletyrant/cozytouch`. A Claude Code on the web session opens them
   through the GitHub MCP tools, scoped to this repository. Its proxy refuses
-  GraphQL (so `gh pr comment --attach`) whatever the token ; REST works.
-  Screenshots go through `scripts/test_ha/attach.py` (2026-10-05).
+  GraphQL (so `gh pr comment --attach`) and REST writes to the Git Data
+  API, whatever the token ; git push works. Screenshots go through
+  `scripts/test_ha/attach.py` (2026-10-05).
 - `scripts/check.sh` runs ruff, pyright and pytest, CI's three checks ; run
   it before every push.
 - Releases are the maintainer's call : never run the release workflow, tag or
