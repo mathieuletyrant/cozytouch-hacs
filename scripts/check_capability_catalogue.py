@@ -2,10 +2,11 @@ r"""Re-read Atlantic's catalogues and say what moved since last time.
 
 `GET /magellan/productmodels/capabilities` is the vendor's own list : every
 capability id with its name, description, type, unit, bounds, enum members and
-an accessType bitmask. `capability_table.py` was built from a run of it, and
-nothing tells us when Atlantic edits it -- a new id, a renamed one, an enum
-that gained a value. A device reporting an unmapped id eventually says so
-through the diagnostics dump, but only once somebody owns that hardware.
+an accessType bitmask, kept here without the descriptions.
+`capability_table.py` was built from a run of it, and nothing tells us when
+Atlantic edits it -- a new id, a renamed one, an enum that gained a value. A
+device reporting an unmapped id eventually says so through the diagnostics
+dump, but only once somebody owns that hardware.
 
 `GET /magellan/productmodels/models` is the same for model ids : the name
 and `productId` that `model_catalogue.py` and `model_product_ids.py` were
@@ -80,6 +81,15 @@ def catalogue(access_token: str, route: str) -> list[dict]:
         return json.loads(response.read().decode())
 
 
+def kept(item):
+    """The item without Atlantic's free-text descriptions. See docs/decisions.md."""
+    if isinstance(item, dict):
+        return {k: kept(v) for k, v in item.items() if k != "description"}
+    if isinstance(item, list):
+        return [kept(v) for v in item]
+    return item
+
+
 def rendered(items: list[dict]) -> str:
     """One item per line, sorted, so a diff points at what changed.
 
@@ -87,7 +97,9 @@ def rendered(items: list[dict]) -> str:
     promised and a reshuffle would read as every item changing.
     """
     lines = [
-        json.dumps(item, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        json.dumps(
+            kept(item), sort_keys=True, ensure_ascii=False, separators=(",", ":")
+        )
         for item in sorted(items, key=lambda item: item["id"])
     ]
     return "\n".join(lines) + "\n"

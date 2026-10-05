@@ -3626,6 +3626,21 @@ an `accessType` bitmask. `capability_table.py` was reverse-engineered from one
 user's dump and from the Android app, so this is the first time any of it can
 be checked against what the vendor says.
 
+### The committed catalogues carry no description
+
+`scripts/capability_catalogue.jsonl` keeps every field the code or a reader
+relies on -- id, name, type, unit, bounds, enum members, `accessType` -- and
+drops `description`, at the top and inside `enum`. Those are Atlantic's own
+sentences : the ids and their encodings are facts an interoperable client
+needs, a copy of the vendor's prose is not, and a whole catalogue committed
+verbatim leans on the database right as well (EU 96/9). Decided 2026-10-05
+with the research move, `docs/research/methods.md` has the legal note.
+
+What it costs : the watcher no longer notices an edit that only rewords a
+description, and an agent naming a new row reads the description from a
+reporter's diagnostics dump (`atlanticSays`, fetched live on their install)
+rather than from the repository.
+
 ### It is a check, not a replacement
 
 Three reasons the table stays hand-written.
