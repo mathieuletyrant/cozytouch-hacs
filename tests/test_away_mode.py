@@ -149,6 +149,32 @@ def test_every_device_of_the_account_is_switched_with_it():
     assert heater.get_away_mode_start() == START
 
 
+def test_a_device_that_refuses_does_not_keep_the_others_from_following():
+    """A write that fails raises now, so the loop has to outlive it.
+
+    Every device is still asked and refreshed, and the refusal reaches whoever
+    pressed once they all have been.
+    """
+    account = FakeAccount()
+    log = []
+    heater = hub_over(account, {227: "0", 226: "[0,0]"}, log=log)
+    boiler = hub_over(account, {152: "0", 222: "[0,0]"}, [heater], log)
+
+    async def offline(capabilityId, value):
+        raise HomeAssistantError("offline")
+
+    boiler.set_capability_value = offline
+
+    with pytest.raises(HomeAssistantError, match="offline"):
+        asyncio.run(boiler.set_away_mode(START, END))
+
+    assert log == [
+        (id(heater), 226, f"[{START},{END}]"),
+        (id(heater), 227, "2"),
+    ]
+    assert (boiler.refreshed, heater.refreshed) == (1, 1)
+
+
 def test_a_refused_window_switches_nothing():
     account = FakeAccount(accepts=False)
     hub = hub_over(account, {152: "0", 222: "[0,0]"})
