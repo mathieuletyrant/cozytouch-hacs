@@ -150,22 +150,22 @@ against the reporter's dump and HA version when there is one :
 2. `git checkout <branch> -- custom_components/` (or check the branch out),
    `R restart`, the same shots as "after".
 3. `git checkout main -- custom_components/` to put the tree back.
-4. Upload : the shots go on the `pr-screenshots` branch, which shares no
-   history with `main` and is never merged. One commit per pull request,
-   files under `pr-<number>/` :
+4. Comment on the pull request with the shots attached -- `gh` 2.99 or
+   later uploads them as GitHub attachments, nothing is committed. Write the
+   body in a file, reference each shot by its relative path, and run it from
+   the directory holding them ; `gh` rewrites each reference to the uploaded
+   asset :
 
    ```bash
-   # one hash-object per file, then the tree pr-<n>/ under the old tip
-   git fetch -q origin pr-screenshots
+   cd <scratchpad>/shots
+   gh pr comment <n> --repo mathieuletyrant/cozytouch-hacs -F body.md \
+       --attach before.png --attach after.png
    ```
 
-   Build the commit with `git hash-object -w`, `git mktree` and
-   `git commit-tree -p origin/pr-screenshots`, push it with
-   `git push origin "${C}:refs/heads/pr-screenshots"` -- the braces matter
-   under zsh, where `$C:r` is a modifier.
-5. Comment on the pull request with a Before / After table of
-   `https://raw.githubusercontent.com/mathieuletyrant/cozytouch-hacs/<commit>/pr-<n>/<file>.png`
-   images, the HA version, the dump used and how it was adapted.
+   with, in `body.md`, a table such as
+   `| ![Before: ...](./before.png) | ![After: ...](./after.png) |`, the HA
+   version, the dump used and how it was adapted. `--edit-last` replaces
+   your previous comment instead of adding one.
 
 ## What the fake does not know
 
