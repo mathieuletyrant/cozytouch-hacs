@@ -401,7 +401,7 @@ until it stops complaining. What that yielded:
 The payload is the gateway's room slots:
 
     [{"id": 0, "name": "Chambre parentale", "type": 1, "compatible": true},
-     {"id": 1, "name": "Bureau Julie",      "type": 1, "compatible": true},
+     {"id": 1, "name": "Bureau",            "type": 1, "compatible": true},
      {"id": 2, "name": "Chambre enfant",    "type": 1, "compatible": true}]
 
 Three slots on a gateway with three room units, ids counting from 0 like the

@@ -1641,7 +1641,7 @@ neither.
 
 ### A timeout that stringifies to nothing named nothing
 
-The same log carries `Error requesting Cozytouch_27906640 data: Network error
+The same log carries `Error requesting Cozytouch_1000 data: Network error
 reading the setup view: , forcing reconnect`. The message is not truncated:
 `asyncio.TimeoutError` -- what aiohttp raises past `REQUEST_TIMEOUT`, and the
 commonest failure on this API -- carries no args, so `f"{err}"` is the empty
@@ -1996,8 +1996,8 @@ every five seconds, and only while somebody has it open. See the entry under
 routes until each agrees. Air circulation (102024) on ROOM_0 of the reporting
 account, three rooms behind one HUB Navizone :
 
-    wrote '1' on 27906641, execution 18612101 -> state 3
-      +0.0s  /capabilities(27906641)='1'  setupviewv2 agreeing: [27906641, 27906642, 27906643]
+    wrote '1' on 1001, execution 18612101 -> state 3
+      +0.0s  /capabilities(1001)='1'  setupviewv2 agreeing: [1001, 1002, 1003]
 
 Both planes carried the new value on the first read after the execution
 reported completion, and all three rooms flipped together. So :
