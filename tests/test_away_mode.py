@@ -216,6 +216,36 @@ def test_the_switch_sends_the_window_the_pickers_hold():
     assert hub.account.absences == [(START, END)]
 
 
+@pytest.mark.parametrize(
+    ("turn", "reported"),
+    [
+        (CozytouchAwayModeSwitch.async_turn_on, "0"),
+        (CozytouchAwayModeSwitch.async_turn_off, "1"),
+    ],
+)
+def test_a_refused_switch_reads_the_device_again_at_once(turn, reported):
+    """A refusal raises now, and used to skip what ends the switch's guess.
+
+    It kept the state it had guessed for five reads, beside the error saying
+    the opposite.
+    """
+    hub = hub_over(FakeAccount(), {152: reported, 222: "[0,0]"})
+
+    async def refused(start, end):
+        raise HomeAssistantError("offline")
+
+    hub.set_away_mode = refused
+    switch = switch_over(hub)
+    switch._capability = SimpleNamespace(capabilityId=152)
+    switch._value_off = "0"
+    switch._value_pending = "2"
+
+    with pytest.raises(HomeAssistantError):
+        asyncio.run(turn(switch))
+
+    assert CozytouchAwayModeSwitch.is_on.fget(switch) is (reported != "0")
+
+
 def test_the_switch_replaces_a_window_already_over():
     """It used to send a past window as it was."""
     hub = hub_over(FakeAccount(), {152: "0", 222: "[0,0]"})
