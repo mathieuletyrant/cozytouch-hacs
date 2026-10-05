@@ -1153,7 +1153,7 @@ that, which is what migration 2.3 is for.
 ### Seventeen names the iOS list got wrong
 
 The mapping's names came from an extraction of the iOS app. The Android
-enum (`docs/research/android/capability_id_to_name_android.tsv`) disagrees on
+enum (`Capabilities`, app 3.31.0) disagrees on
 seventeen, and where the two differ the Android one is the enum itself,
 read in clear Kotlin, not a string recovered from a compiled binary.
 
@@ -1276,7 +1276,7 @@ already gone.
 There was a `SELF_DESCRIBING_CAPABILITIES` table saying "the name is
 everything we know", one name per id. For twenty ids that stopped being
 true once the vendor app's readers were read
-(`docs/research/android/android_capability_types.tsv`), and `STRING` is still what
+(app 3.31.0, `docs/research/methods.md`), and `STRING` is still what
 most of them say. They stay diag and stay **off by default**: knowing the
 encoding is not a reason to put twenty more entities on everybody's device
 page, and the flag is what makes the descriptor family cost nothing.
@@ -1346,7 +1346,7 @@ Left as raw strings on purpose:
 ### Six more masks, and the two bits the corpus could not place
 
 The vendor app's `fromBitField` classes were read whole in September 2026
-(`docs/research/android/android_bitfields_331.tsv`, app 3.31.0). The twelve tables
+(app 3.31.0, `docs/research/methods.md`). The twelve tables
 already here matched it member for member, which is the useful part: it is
 the check that says the reverse-engineered ones were right.
 
@@ -1711,7 +1711,7 @@ same reason.
 
 ### Five hot-water ids named off the Android enum, not off a capture
 
-`docs/research/android/capability_id_to_name_android.tsv` names 244, 105011, 105122,
+The app's `Capabilities` enum names 244, 105011, 105122,
 105906 and 105907, and the mapping had nothing for the first three and the
 placeholders `Target 105906` / `Target 105907` for the last two. The names
 here are the app's, transliterated to the naming already in the table:
@@ -1751,7 +1751,7 @@ weaker than a capture.
 
 ### Twelve more ids the enum names and the corpus confirms
 
-Walking the whole of `capability_id_to_name_android.tsv` against the mapping,
+Walking the app's whole `Capabilities` enum against the mapping,
 rather than only the ids the fork happened to touch, left 14 named by the app
 and mapped nowhere here. Eleven are taken. `9812 DEBUG` and `106 POWER` are
 not, because a name that vague buys an entity nobody can read, and `100014
@@ -3407,8 +3407,8 @@ Nothing on the wire says a capability is writable. `CapabilityEntity` is
 What the app has instead is its own call sites. `IGacomaDevice` exposes
 `getCapabilityValue` and `writeCapabilitySuspend`, both taking a
 `Capabilities` enum member, so every capability the app ever writes appears
-as a literal next to a write call. Collecting them gives 87 ids, recorded in
-`docs/research/android/android_writable_capabilities.tsv` :
+as a literal next to a write call. Collecting them gives 87 ids (app
+3.31.0), with :
 
     grep -rh writeCapabilit sources/ | grep -v @Metadata |
       grep -oE 'Capabilities\.[A-Z_0-9]+'
@@ -3527,8 +3527,8 @@ capability were mistyped.
 `ANTIFROST = 16`, and the app gates its antifrost control on it. Gating
 `antifrost_temperature` (103199) the same way would add nothing: the mapping
 already builds it only for a device that reports 103199, and a device
-without the feature does not report it. The bit is recorded in
-`docs/research/android/android_bitfields_331.tsv` for the day something needs it.
+without the feature does not report it. The app's enum names the bit, for
+the day something needs it.
 
 ## Atlantic named eleven capabilities, and two of ours were wrong
 

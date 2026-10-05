@@ -3,9 +3,11 @@
 The API sends `{capabilityId, value}` and nothing else, so most of what this
 integration knows about a capability came from watching the vendor's own
 client. This page says how, so it can be redone on a newer version. What
-was *concluded* lives in `docs/decisions.md` and `docs/api-surface.md`; the
-facts extracted from the Android app are in [`android/`](android/README.md),
-and the capture corpus in [`corpus.md`](corpus.md).
+was *concluded* lives in `docs/decisions.md` and `docs/api-surface.md`, and
+the capture corpus in [`corpus.md`](corpus.md). The tables extracted from
+the app (enum names, bit masks, decoders, write sites) are not committed :
+everything they settled is in the code and in `docs/decisions.md`, and the
+recipe below rebuilds them for a newer version.
 
 Three routes, in the order to reach for them today:
 
@@ -72,8 +74,7 @@ Note the version you decompiled.
 There is no declared type. `getCapabilityValue()` returns a `String?`, and
 the type is whatever the call site does with it: `fromBitField` is a mask,
 `fromValue` an enum member, `toFloatOrMaxValue` a number, and so on. The
-full table of decoders, and how the extracted files were built from them,
-is in [`android/README.md`](android/README.md).
+full table of decoders is under *Reading what jadx gives* below.
 
 The trap: jadx folds a literal id into an unrelated constant that happens
 to have the same value (`NSType.TKEY` for 249), and the enum is not
@@ -157,3 +158,64 @@ through a 179-case Swift enum read from the `__swift5_fieldmd` reflection
 metadata. Two pitfalls: a `case` with an empty body falls to the default
 rather than to the next case, and two codes are shared by hundreds of ids
 and say nothing. 161 ids were named this way.
+
+## The Android app, in detail
+
+### Reading what jadx gives
+
+The app declares **no type** for a capability. The model is
+`Capability(id, value: String?, modificationDate)` and the value is a string
+on the wire, as it is here. The type is the decoder called where the value
+is used, under `fr/modulotech/app/domain/model/devices/features/`:
+
+| Decoder | What the value is |
+| ------- | ----------------- |
+| `fromBitField` | a sum of powers of two |
+| `fromValue` / `fromGacomaValue` | one enum member |
+| `buildListFromValue` | a number naming a whole set (350, 100800) |
+| `toFloatOrMaxValue` / `toIntOrNull` / `toLongOrNull` | a number |
+| `parseToArrayOfArrays` | a matrix; the caller decides the column count |
+| `getProgrammingState` | a JSON `[temperature, offState]` |
+
+`toFloatOrMaxValue` is the app's default numeric parser: it proves
+"numeric", not "fractional". And a signature can mislead: 224's reader is
+`boolean getEstimationSupport`, whose body is a mask test.
+
+In a bit enum, a member's mask may cover several bits (`Service.AUTO`
+is 6), and `-1` means "a possible value, never announced in a mask". The
+decoder keeps every member with `mask > 0 && (mask & value) != 0`.
+
+Ids below zero (`-100`) are the app's synthetic capabilities and do not
+exist on the API.
+
+### Extracting a table
+
+- **Names:** the enum `Capabilities` is `NAME(id)`. jadx folds some literal
+  ids into unrelated constants that happen to share the number
+  (`NSType.TKEY` for 249, a Compose constant for 100000), and the
+  declaration order does not follow the ids, so those were resolved by the
+  constant's real value, never by position.
+- **Types:** every method in `features/` that takes a `Capabilities` member,
+  with its return type and the decoder in its body.
+- **Writability:** `IGacomaDevice.writeCapabilitySuspend` takes the enum
+  member, so every id the app writes appears beside a write call; the grep
+  is in `docs/decisions.md`, *What the Android app is willing to write*. An
+  id absent from it is only never written by this version.
+
+### Read in the app, not used yet
+
+No entry in `docs/decisions.md` relies on these yet; they are here so the
+next change does not have to decompile the app again for them.
+
+- **Programmes.** Whether a block is pairs `[minutes, temperature]` or
+  triplets `[minutes, temperature, mode]` is bit `ON_OFF` of 100013, not the
+  id family. A write sorts the milestones, pads with `[0,0]` to 10 slots (4
+  for hot water) and drops `.0`. The third column is `ProgramMilestoneMode`
+  (0 default, 1 on/off, 2 boost). Hot water also has *ranges*,
+  `[startMinutes, endMinutes]` on 3 slots (245-251), with their own bounds.
+- **Fault codes.** `[system, major, minor, level]`; the app's `hasError()` is
+  `system != 0`; `level` 0-1 is blocking, 2-3 non-blocking, 4 information;
+  a room without `ERROR_CODE_HOME` reads its gateway's.
+- **Bounds the device declares:** 306 milestones per day, 100301 per week,
+  295 time step, 296 minimum gap, 160-163 heating and cooling setpoint
+  bounds, 294 setpoint step.
