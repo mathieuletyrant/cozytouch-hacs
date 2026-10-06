@@ -159,32 +159,40 @@ against the reporter's dump and HA version when there is one :
    `R restart`, the same shots as "after".
 3. `git checkout main -- custom_components/` to put the tree back.
 4. Upload the shots with [uploads.sh](https://uploads.sh) and comment on
-   the pull request with the Markdown it returns. Nothing is committed, and
+   the pull request with the images it serves. Nothing is committed, and
    it works the same in a local session and in a Claude Code on the web
    one, whose GitHub proxy refuses every native way to attach an image.
 
    ```bash
    cd <scratchpad>/shots
    uploads --json put before.png --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --state before --meta path=<page> --alt "Before: ..." --width 430
+       --no-comment --state before --meta path=<page> --alt "Before: ..." --width 430
    uploads --json put after.png  --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --state after  --meta path=<page> --alt "After: ..."  --width 430
+       --no-comment --state after  --meta path=<page> --alt "After: ..."  --width 430
    ```
 
-   Each answer carries an `embedUrl` on `embed.uploads.sh`, which GitHub's
-   image proxy revalidates. Put it in an HTML tag, `<img src="<embedUrl>"
-   alt="..." width="430">`, not the `markdown` field : the web session's
-   GitHub MCP tools drop the leading `!` of `![alt](url)`, and the image
-   lands as a bare link (#183, 2026-10-06). Then post one
-   comment -- through the GitHub MCP tools on the web, `gh pr comment -F
-   body.md` locally -- with a table such as `| before | after |` holding
-   the two images, the HA version, the dump used and how it was adapted.
-   A `--pr` key is stable : putting the same name again replaces the image
-   in place, and the comment follows without being edited.
+   `--state` takes only `before`, `after`, `empty`, `error` or `loading`.
+   `--no-comment` skips the CLI's own attachments comment, which fails here
+   (the repository is not linked to the uploads workspace) : yours is the
+   record.
 
-   If the uploads GitHub App is installed on the repository, `put --pr` also
-   keeps an attachments comment of its own (`uploads-sh[bot]`) ; without it
-   that step is declined, the upload is not, and your comment is the record.
+   Each answer carries an `embedUrl` on `embed.uploads.sh`, which GitHub's
+   image proxy revalidates. Embed it as Markdown, `![<alt>](<embedUrl>)`,
+   not the answer's `markdown` field, which is an `<img>` tag. The web
+   session's GitHub MCP tools have mangled both forms on different calls
+   the same day -- the `!` of `![alt](url)` dropped on #183, an `<img>`
+   HTML-escaped into visible text on umbrel-community-app-store#228 --
+   so the form is not the guarantee, the read-back is. Post one comment
+   -- through the GitHub MCP tools on the web, `gh pr comment -F body.md`
+   locally -- with a table such as `| before | after |` holding the two
+   images, the HA version, the dump used and how it was adapted. Then read
+   it back (`pull_request_read`, `get_comments`) : the body must still hold
+   `![` (or a raw `<img`, not `&lt;img`). If it does not, fix that comment
+   with `update_issue_comment`, switching to the other form -- never a
+   second comment. A `--pr` key is stable : putting the same name again
+   replaces the image in place, and the comment follows without being
+   edited.
+
    Before the pull request exists, a bare `uploads put` on the branch stages
    the shot, and `uploads attach --promote` moves it once the PR is open.
 
