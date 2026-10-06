@@ -158,33 +158,47 @@ against the reporter's dump and HA version when there is one :
 2. `git checkout <branch> -- custom_components/` (or check the branch out),
    `R restart`, the same shots as "after".
 3. `git checkout main -- custom_components/` to put the tree back.
-4. Upload the shots with [uploads.sh](https://uploads.sh) and comment on
-   the pull request with the Markdown it returns. Nothing is committed, and
-   it works the same in a local session and in a Claude Code on the web
-   one, whose GitHub proxy refuses every native way to attach an image.
+4. Upload the shots with [uploads.sh](https://uploads.sh). Its GitHub App
+   is installed on this repository, so `put --pr` keeps one attachments
+   comment of its own (`uploads-sh[bot]`) holding every shot of the pull
+   request : do not post a comment of yours. Nothing is committed, and it
+   works the same in a local session and in a Claude Code on the web one,
+   whose GitHub proxy refuses every native way to attach an image.
 
    ```bash
    cd <scratchpad>/shots
    uploads --json put before.png --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --state before --meta path=<page> --alt "Before: ..." --width 430
+       --name <page>-before.png --state before --app web \
+       --meta "path=<page> | HA <version> | dump <fixture>" \
+       --meta ha=<version> --meta dump=<fixture> --width 430
    uploads --json put after.png  --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --state after  --meta path=<page> --alt "After: ..."  --width 430
+       --name <page>-after.png  --state after  --app web \
+       --meta "path=<page> | HA <version> | dump <fixture>" \
+       --meta ha=<version> --meta dump=<fixture> --width 430
    ```
 
-   Each answer carries an `embedUrl` on `embed.uploads.sh`, which GitHub's
-   image proxy revalidates. Put it in an HTML tag, `<img src="<embedUrl>"
-   alt="..." width="430">`, not the `markdown` field : the web session's
-   GitHub MCP tools drop the leading `!` of `![alt](url)`, and the image
-   lands as a bare link (#183, 2026-10-06). Then post one
-   comment -- through the GitHub MCP tools on the web, `gh pr comment -F
-   body.md` locally -- with a table such as `| before | after |` holding
-   the two images, the HA version, the dump used and how it was adapted.
-   A `--pr` key is stable : putting the same name again replaces the image
-   in place, and the comment follows without being edited.
+   Every upload carries all it knows, because the bot's comment is the
+   whole record -- and that comment prints two things under each image :
+   `path` and `state`. So the context a reviewer needs goes into `path`,
+   one line : the page, the HA version, the dump, and how it was adapted
+   when it was (`dump navizone.json, rooms renamed`). It is printable ASCII
+   only (`|` as separator, no `·`), at most 512 characters. `--name` is
+   the key's leaf and the image's alt text, not a visible label ; the bot
+   ignores `--alt`. `ha` and `dump` are repeated as their own `--meta` so
+   they stay queryable. `--state` takes only `before`,
+   `after`, `empty`, `error` or `loading`. The answer's `comment` must
+   read `"via": "bot"` ; read the pull request's comments back once to see
+   the line under the image (#184, 2026-10-06). A `--pr` key is stable :
+   putting the same name again replaces the image in place, and the bot
+   updates its comment.
 
-   If the uploads GitHub App is installed on the repository, `put --pr` also
-   keeps an attachments comment of its own (`uploads-sh[bot]`) ; without it
-   that step is declined, the upload is not, and your comment is the record.
+   Only where the App is not installed does the bot's comment fail (as on
+   umbrel-community-app-store#228) : there, pass `--no-comment` and post
+   the answer's `embedUrl` yourself in an `<img>` tag, then read the
+   comment back. The web session's GitHub MCP tools have dropped the `!`
+   of a Markdown image here (#183, #184) and escaped an `<img>` there, so
+   fix a mangled one with `update_issue_comment`, never a second comment.
+
    Before the pull request exists, a bare `uploads put` on the branch stages
    the shot, and `uploads attach --promote` moves it once the PR is open.
 
