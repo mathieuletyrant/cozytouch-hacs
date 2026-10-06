@@ -177,18 +177,19 @@ against the reporter's dump and HA version when there is one :
    record.
 
    Each answer carries an `embedUrl` on `embed.uploads.sh`, which GitHub's
-   image proxy revalidates. Embed it as Markdown, `![<alt>](<embedUrl>)`,
-   not the answer's `markdown` field, which is an `<img>` tag. The web
-   session's GitHub MCP tools have mangled both forms on different calls
-   the same day -- the `!` of `![alt](url)` dropped on #183, an `<img>`
-   HTML-escaped into visible text on umbrel-community-app-store#228 --
-   so the form is not the guarantee, the read-back is. Post one comment
-   -- through the GitHub MCP tools on the web, `gh pr comment -F body.md`
+   image proxy revalidates. Embed it in an HTML tag, `<img src="<embedUrl>"
+   alt="..." width="430">` -- the answer's `markdown` field is that tag.
+   On this repository the web session's GitHub MCP tools drop the `!` of
+   `![alt](url)`, and the image lands as a bare link (#183, #184), while
+   `<img>` came through both times. umbrel-community-app-store#228 saw the
+   reverse the same day, an `<img>` HTML-escaped into visible text, so the
+   form is not the guarantee, the read-back is. Post one comment --
+   through the GitHub MCP tools on the web, `gh pr comment -F body.md`
    locally -- with a table such as `| before | after |` holding the two
    images, the HA version, the dump used and how it was adapted. Then read
    it back (`pull_request_read`, `get_comments`) : the body must still hold
-   `![` (or a raw `<img`, not `&lt;img`). If it does not, fix that comment
-   with `update_issue_comment`, switching to the other form -- never a
+   a raw `<img` (not `&lt;img`). If it does not, fix that comment with
+   `update_issue_comment`, switching to `![<alt>](<embedUrl>)` -- never a
    second comment. A `--pr` key is stable : putting the same name again
    replaces the image in place, and the comment follows without being
    edited.
