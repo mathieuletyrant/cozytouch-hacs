@@ -168,23 +168,29 @@ against the reporter's dump and HA version when there is one :
    ```bash
    cd <scratchpad>/shots
    uploads --json put before.png --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --name <page>-before.png --state before --app web --meta path=<page> \
-       --meta ha=<version> --meta dump=<fixture> --alt "Before: ..." --width 430
+       --name <page>-before.png --state before --app web \
+       --meta "path=<page> | HA <version> | dump <fixture>" \
+       --meta ha=<version> --meta dump=<fixture> --width 430
    uploads --json put after.png  --pr <n> --repo mathieuletyrant/cozytouch-hacs \
-       --name <page>-after.png  --state after  --app web --meta path=<page> \
-       --meta ha=<version> --meta dump=<fixture> --alt "After: ..."  --width 430
+       --name <page>-after.png  --state after  --app web \
+       --meta "path=<page> | HA <version> | dump <fixture>" \
+       --meta ha=<version> --meta dump=<fixture> --width 430
    ```
 
    Every upload carries all it knows, because the bot's comment is the
-   whole record. That comment shows each image under its `--name` (not its
-   `--alt`), with its `path` and `state` beneath it ; the other `--meta`
-   pairs (`ha`, `dump`, and how the dump was adapted when it was) stay on
-   the file, queryable on uploads.sh. `--state` takes only `before`,
-   `after`, `empty`, `error` or `loading` ; `--meta` keys are lowercase,
-   values printable ASCII. The answer's `comment` must read `"via": "bot"` ;
-   read the pull request's comments back once to see the image there
-   (#184, 2026-10-06). A `--pr` key is stable : putting the same name
-   again replaces the image in place, and the bot's comment follows.
+   whole record -- and that comment prints two things under each image :
+   `path` and `state`. So the context a reviewer needs goes into `path`,
+   one line : the page, the HA version, the dump, and how it was adapted
+   when it was (`dump navizone.json, rooms renamed`). It is printable ASCII
+   only (`|` as separator, no `·`), at most 512 characters. `--name` is
+   the key's leaf and the image's alt text, not a visible label ; the bot
+   ignores `--alt`. `ha` and `dump` are repeated as their own `--meta` so
+   they stay queryable. `--state` takes only `before`,
+   `after`, `empty`, `error` or `loading`. The answer's `comment` must
+   read `"via": "bot"` ; read the pull request's comments back once to see
+   the line under the image (#184, 2026-10-06). A `--pr` key is stable :
+   putting the same name again replaces the image in place, and the bot
+   updates its comment.
 
    Only where the App is not installed does the bot's comment fail (as on
    umbrel-community-app-store#228) : there, pass `--no-comment` and post
