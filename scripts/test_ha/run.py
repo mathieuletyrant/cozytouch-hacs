@@ -144,7 +144,7 @@ def wait_for(url, seconds):
                 return
         except OSError:
             pass
-        time.sleep(2)
+        time.sleep(0.2)
     raise SystemExit(f"{url} did not come up within {seconds}s ; see {WORK}/*.log")
 
 
@@ -171,9 +171,9 @@ def kill(name):
     pid = int(pidfile.read_text())
     try:
         os.killpg(pid, signal.SIGTERM)
-        for _ in range(30):
+        for _ in range(150):
             os.kill(pid, 0)
-            time.sleep(1)
+            time.sleep(0.2)
         os.killpg(pid, signal.SIGKILL)
     except ProcessLookupError:
         pass
@@ -224,7 +224,7 @@ def wait_running(seconds):
                 return
         except (SystemExit, OSError):
             pass
-        time.sleep(1)
+        time.sleep(0.2)
     raise SystemExit(f"Home Assistant did not reach RUNNING within {seconds}s")
 
 
@@ -354,6 +354,10 @@ def start(dump):
     start_ha()
     onboard()
     add_account()
+    # Onboarding answers before startup is over ; stopped before RUNNING,
+    # Home Assistant does not write its auth store, and the next command's
+    # refresh token is refused.
+    wait_running(900)
     print(f"Home Assistant is up on {HA_URL}, owner {OWNER['username']}")
 
 
