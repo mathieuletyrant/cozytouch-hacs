@@ -83,7 +83,9 @@ overturn one, edit the line here in the same pull request.
   refuses every native way to attach an image (GraphQL, Git Data writes,
   any pushed ref but a branch ; tested 2026-10-05, #179), so screenshots go
   through uploads.sh with `UPLOADS_TOKEN` : `verify-cozytouch`, *Before
-  and after*. Uploads are public.
+  and after*, in an `<img>` tag : the MCP tools strip the `!` of a
+  Markdown image (#183). Uploads are public, and the session token cannot
+  delete them (no `files:delete` scope).
 - `scripts/check.sh` runs ruff, pyright and pytest, CI's three checks ; run
   it before every push.
 - Releases are the maintainer's call : never run the release workflow, tag or

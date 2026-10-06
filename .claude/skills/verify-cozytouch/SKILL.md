@@ -171,8 +171,11 @@ against the reporter's dump and HA version when there is one :
        --state after  --meta path=<page> --alt "After: ..."  --width 430
    ```
 
-   Each answer carries a `markdown` field : paste it as is, it points at
-   `embed.uploads.sh`, which GitHub's image proxy revalidates. Then post one
+   Each answer carries an `embedUrl` on `embed.uploads.sh`, which GitHub's
+   image proxy revalidates. Put it in an HTML tag, `<img src="<embedUrl>"
+   alt="..." width="430">`, not the `markdown` field : the web session's
+   GitHub MCP tools drop the leading `!` of `![alt](url)`, and the image
+   lands as a bare link (#183, 2026-10-06). Then post one
    comment -- through the GitHub MCP tools on the web, `gh pr comment -F
    body.md` locally -- with a table such as `| before | after |` holding
    the two images, the HA version, the dump used and how it was adapted.
