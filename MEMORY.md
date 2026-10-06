@@ -83,10 +83,11 @@ overturn one, edit the line here in the same pull request.
   refuses every native way to attach an image (GraphQL, Git Data writes,
   any pushed ref but a branch ; tested 2026-10-05, #179), so screenshots go
   through uploads.sh with `UPLOADS_TOKEN` : `verify-cozytouch`, *Before
-  and after*, with `--no-comment`, in an `<img>` tag and the comment read
-  back : here the MCP tools drop the `!` of a Markdown image (#183, #184),
-  but umbrel-community-app-store#228 saw an `<img>` escaped, so neither
-  form is safe unchecked. Uploads are public, and the session token
+  and after*. Its GitHub App is installed here, so `put --pr` posts the
+  comment as `uploads-sh[bot]` (#184) : give each upload `--name`,
+  `--state` and `--meta`, and post no comment of ours. Writing one by hand
+  is the fallback : the MCP tools drop the `!` of a Markdown image (#183,
+  #184). Uploads are public, and the session token
   cannot delete them (no `files:delete` scope).
 - `scripts/check.sh` runs ruff, pyright and pytest, CI's three checks ; run
   it before every push.
