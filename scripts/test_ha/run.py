@@ -200,15 +200,32 @@ def copy_integration():
     const.write_text(text.replace(REAL_API, FAKE_URL))
 
 
-def start_ha():
+def start_ha(onboarded=False):
     if not pathlib.Path(PYTHON).exists():
         raise SystemExit(f"No Home Assistant interpreter at {PYTHON} ; run setup")
     spawn("hass", [PYTHON, "-m", "homeassistant", "-c", str(CONFIG)])
     # The API answers before startup is over ; onboarding only once the
     # default integrations are set up, which on a first start includes
-    # installing their requirements.
+    # installing their requirements. Once onboarded, Home Assistant no longer
+    # serves /api/onboarding at all, so a restart waits for RUNNING instead.
     wait_for(HA_URL + "/api/", 900)
-    wait_for(HA_URL + "/api/onboarding", 900)
+    if onboarded:
+        wait_running(900)
+    else:
+        wait_for(HA_URL + "/api/onboarding", 900)
+
+
+def wait_running(seconds):
+    deadline = time.time() + seconds
+    while time.time() < deadline:
+        try:
+            config = request("GET", "/api/config", token=access_token())
+            if config["state"] == "RUNNING":
+                return
+        except (SystemExit, OSError):
+            pass
+        time.sleep(1)
+    raise SystemExit(f"Home Assistant did not reach RUNNING within {seconds}s")
 
 
 def onboard():
@@ -343,7 +360,7 @@ def start(dump):
 def restart():
     kill("hass")
     copy_integration()
-    start_ha()
+    start_ha(onboarded=True)
     print(f"Restarted on {HA_URL}")
 
 
