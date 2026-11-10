@@ -138,6 +138,22 @@ needs >= 3.14.2 — so a floating minor would let the runner image decide which
 Home Assistant is installable, which is the drift the pinned requirements
 exist to remove.
 
+### The jobs that pin a patch pin their runner too
+
+`actions/setup-python` installs from a manifest built per Ubuntu release,
+and a patch it never built for that release is not installable there. When
+`ubuntu-latest` moved to 26.04 (November 2026), every job asking for 3.14.2
+or 3.13.7 failed at setup, before any test ran : the manifest carries both
+for 22.04 and 24.04 only, and its 26.04 builds start at 3.14.6. `main` went
+red on the push for #170 and the next pull request with it.
+
+So `pyright` and the pytest matrix run on `ubuntu-24.04`. The patch pin is
+the point (the section above), so the runner follows it rather than the pin
+following the runner. `ruff` asks for `"3.14"`, which any image resolves,
+and stays on `ubuntu-latest`. Moving these jobs to 26.04 means raising the
+pins past what it was built for, which for the floor job is raising the
+floor -- the maintainer's call (CLAUDE.md, *Tests*).
+
 ### pyright, on the typed core
 
 The declared fields on `ModelInfos`/`CapabilityInfos` are only worth what
