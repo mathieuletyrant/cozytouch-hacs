@@ -2712,7 +2712,7 @@
     "enabled_by_default": false,
     "modelId": 1381,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -5964,7 +5964,7 @@
     "enabled_by_default": false,
     "modelId": 1457,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -9212,7 +9212,7 @@
     "enabled_by_default": false,
     "modelId": 1505,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -12477,7 +12477,7 @@
     "enabled_by_default": false,
     "modelId": 1641,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -15718,7 +15718,7 @@
     "enabled_by_default": false,
     "modelId": 1734,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -19033,7 +19033,7 @@
     "enabled_by_default": false,
     "modelId": 211,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -22262,7 +22262,7 @@
     "enabled_by_default": false,
     "modelId": 2374,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -25525,7 +25525,7 @@
     "enabled_by_default": false,
     "modelId": 418,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -28766,7 +28766,7 @@
     "enabled_by_default": false,
     "modelId": 557,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -32043,7 +32043,7 @@
     "enabled_by_default": false,
     "modelId": 56,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -35308,7 +35308,7 @@
     "enabled_by_default": false,
     "modelId": 562,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -38567,7 +38567,7 @@
     "enabled_by_default": false,
     "modelId": 76,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,
@@ -41828,7 +41828,7 @@
     "enabled_by_default": false,
     "modelId": 999999,
     "name": "boost_duration_supported",
-    "type": "string"
+    "type": "binary"
    },
    "38": {
     "capabilityId": 38,

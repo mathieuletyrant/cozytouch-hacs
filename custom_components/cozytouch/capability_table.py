@@ -2405,7 +2405,7 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     371: Entity(
         name="boost_duration_supported",
-        type=CapabilityType.STRING,
+        type=CapabilityType.BINARY,
         category=CapabilityCategory.DIAG,
         enabled_by_default=False,
     ),
