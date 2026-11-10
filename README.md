@@ -168,8 +168,8 @@ Four ways to reach it, all documented in **[docs/scheduling.md](docs/scheduling.
 
 ![The schedule card, one program open and one closed.](docs/images/schedule-card.png)
 
-A day holds ten slots at most, the first has to start at `00:00`, and
-temperatures are whole degrees. Heating and cooling only.
+A day holds ten slots at most, and temperatures are whole degrees. A day need
+not start at `00:00` : until its first slot, the previous day's last one holds. Heating and cooling only.
 
 ## ✈️ Away mode
 
