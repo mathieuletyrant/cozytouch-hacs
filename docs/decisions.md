@@ -3575,6 +3575,26 @@ project has a rule against, so the row carries the name and waits for a
 reading. 281 and 288 are a demand and a state whose encodings nobody has
 seen; one corpus reading each, `0` and `2`.
 
+### 278 is watts
+
+The zero the row was waiting on has a reading now. This repository's #185
+reports 278 at `1681` on a Calypso Connecté 240 L, model 1658, sold as TD
+240 VS AT 1200M -- a heat pump tank whose name carries its 1200 W element.
+1681 W is that element with the compressor running beside it. As kilowatts
+it is a power station; as deciwatts it is 168 W, less than the compressor
+alone draws. Only watts survives the hardware.
+
+So the row is `POWER` in W, out of `DIAG` and on by default: it is the tank's
+live draw, which is what an energy dashboard wants, and a device that does not
+report 278 gets no entity either way. Unique ids are built from the capability
+id, so an install that had turned the string on keeps the entity and gains a
+unit.
+
+The limits. It is one non-zero reading on one model, not set beside a meter,
+and Atlantic's own name for it, `DHW_pwrElecTankEstimation`, says it is an
+estimate -- the catalogue gives no unit. Other water heaters that report 278
+are typed by the same row on the strength of this one.
+
 ### What was read and not taken
 
 Issue #129 also records that a capability which disappears from the cloud
