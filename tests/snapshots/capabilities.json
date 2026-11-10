@@ -1060,8 +1060,8 @@
    },
    "153": {
     "capabilityId": 153,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "enabled_by_default": true,
     "icon": "mdi:heat-wave",
     "modelId": 1381,
     "name": "heating_status",
@@ -23873,8 +23873,8 @@
    },
    "153": {
     "capabilityId": 153,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "enabled_by_default": true,
     "icon": "mdi:heat-wave",
     "modelId": 418,
     "name": "heating_status",
@@ -30399,8 +30399,8 @@
    },
    "153": {
     "capabilityId": 153,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "enabled_by_default": true,
     "icon": "mdi:heat-wave",
     "modelId": 56,
     "name": "heating_status",
