@@ -116,8 +116,10 @@ class FakeDeviceRegistry:
     def __init__(self, devices):
         self._devices = devices
 
-    def async_get_device(self, identifiers):
-        ((_, subentry_id),) = identifiers
+    def async_get_device_by_identifier(self, identifier, config_entry_id):
+        # The gateway is a subentry of the same account entry as its children.
+        assert config_entry_id == "entry123"
+        _, subentry_id = identifier
         if subentry_id not in self._devices:
             return None
         return SimpleNamespace(id=self._devices[subentry_id])
@@ -161,6 +163,7 @@ def registering_hub(via_device, hass=None):
         get_serial_number=lambda: "1234-5678-0000",
         get_software_version=lambda: None,
         get_via_device=lambda: via_device,
+        config_entry=SimpleNamespace(entry_id="entry123"),
     )
 
 
@@ -219,7 +222,7 @@ def test_a_gateway_is_registered_without_a_link():
 
 def test_the_link_names_the_gateways_registry_id():
     """Not its identifiers: that is the deprecated spelling."""
-    info = via_device_info(FakeHass(), (DOMAIN, "abc123"))
+    info = via_device_info(FakeHass(), (DOMAIN, "abc123"), "entry123")
 
     assert info == {"via_device_id": "registry-id-of-abc123"}
     assert "via_device" not in info
@@ -227,14 +230,14 @@ def test_the_link_names_the_gateways_registry_id():
 
 def test_no_link_is_declared_for_a_gateway_the_registry_does_not_hold():
     """A `via_device_id` naming nothing raises; this has to stay silent."""
-    assert via_device_info(FakeHass(devices={}), (DOMAIN, "abc123")) == {}
+    assert via_device_info(FakeHass(devices={}), (DOMAIN, "abc123"), "entry123") == {}
 
 
 def test_the_floor_still_gets_the_only_key_it_knows(monkeypatch):
     """DeviceInfo has no `via_device_id` before 2026.8; the floor is below it."""
     monkeypatch.setattr(hub_module, "_VIA_DEVICE_ID_SUPPORTED", False)
 
-    assert via_device_info(FakeHass(), (DOMAIN, "abc123")) == {
+    assert via_device_info(FakeHass(), (DOMAIN, "abc123"), "entry123") == {
         "via_device": (DOMAIN, "abc123")
     }
 
@@ -324,6 +327,6 @@ def test_the_cloud_sensor_describes_the_same_device_as_everything_else():
     sensor._title = "Cozytouch"
     sensor._device_uniq_id = "def456"
 
-    expected = device_info_for(hub, "def456") | {"name": "Cozytouch"}
+    expected = {**device_info_for(hub, "def456"), "name": "Cozytouch"}
 
     assert sensor.device_info == expected
