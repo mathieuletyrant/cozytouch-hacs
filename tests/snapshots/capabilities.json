@@ -2002,12 +2002,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 1381,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -5238,12 +5238,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 1457,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -8470,12 +8470,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 1505,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -11719,12 +11719,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 1641,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -14944,12 +14944,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 1734,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -18243,12 +18243,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 211,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -21456,12 +21456,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 2374,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -24703,12 +24703,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 418,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -27928,12 +27928,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 557,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -31189,12 +31189,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 56,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -34438,12 +34438,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 562,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -37681,12 +37681,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 76,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
@@ -40926,12 +40926,12 @@
    },
    "278": {
     "capabilityId": 278,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "displayed_unit_of_measurement": "W",
     "icon": "mdi:flash",
     "modelId": 999999,
     "name": "dhw_instant_power",
-    "type": "string"
+    "type": "power"
    },
    "28": {
     "capabilityId": 28,
