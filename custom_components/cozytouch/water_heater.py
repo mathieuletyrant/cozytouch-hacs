@@ -90,7 +90,6 @@ class CozytouchWaterHeater(WaterHeaterEntity, CozytouchSensor):
             attr_uniq_id=(
                 f"{DOMAIN}_{config_uniq_id}_water_heater_{capability.capabilityId!s}"
             ),
-            name="hot_water",
             translation_key="hot_water",
             icon="mdi:water-boiler",
         )
