@@ -1719,8 +1719,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 1381,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -4971,8 +4971,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 1457,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -8219,8 +8219,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 1505,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -11483,8 +11483,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 1641,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -14725,8 +14725,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 1734,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -18040,8 +18040,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 211,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -21268,8 +21268,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 2374,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -24532,8 +24532,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 418,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -27773,8 +27773,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 557,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -31050,8 +31050,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 56,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -34315,8 +34315,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 562,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -37574,8 +37574,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 76,
     "name": "dhw_operating_mode",
     "type": "string"
@@ -40835,8 +40835,8 @@
    },
    "230": {
     "capabilityId": 230,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "icon": "mdi:clock-time-four-outline",
     "modelId": 999999,
     "name": "dhw_operating_mode",
     "type": "string"

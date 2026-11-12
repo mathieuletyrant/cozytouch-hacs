@@ -492,7 +492,7 @@
             "cooling_temperature_max":  { "name": "Cooling Temperature Max" },
             "cooling_temperature_min":  { "name": "Cooling Temperature Min" },
             "dhw_estimation_supported": { "name": "DHW Estimation Supported" },
-            "dhw_operating_mode":       { "name": "DHW Operating Mode" },
+            "dhw_operating_mode":       { "name": "Heating Allowed" },
             "dhw_heating_demand":       { "name": "DHW Heating Demand" },
             "dhw_instant_power":        { "name": "DHW Instant Power" },
             "dhw_panel_capabilities":   { "name": "DHW Panel Capabilities" },
@@ -708,6 +708,16 @@
             "quiet_mode":         { "name": "Quiet Mode" },
             "schedule_anticipation": { "name": "Schedule Anticipation" },
             "swing_mode":         { "name": "Swing Mode" }
+        },
+        "water_heater": {
+            "hot_water": {
+                "name": "Hot Water",
+                "state": {
+                    "eco_plus": "Eco+",
+                    "manual":   "Manual",
+                    "prog":     "Prog"
+                }
+            }
         }
     },
     "device_automation": {

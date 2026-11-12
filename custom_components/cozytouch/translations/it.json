@@ -492,7 +492,7 @@
             "cooling_temperature_max":  { "name": "Temperatura max. raffrescamento" },
             "cooling_temperature_min":  { "name": "Temperatura min. raffrescamento" },
             "dhw_estimation_supported": { "name": "Stima ACS supportata" },
-            "dhw_operating_mode":       { "name": "Modalità di funzionamento ACS" },
+            "dhw_operating_mode":       { "name": "Riscaldamento consentito" },
             "dhw_heating_demand":       { "name": "Richiesta di riscaldamento ACS" },
             "dhw_instant_power":        { "name": "Potenza istantanea ACS" },
             "dhw_panel_capabilities":   { "name": "Capacità del pannello ACS" },
@@ -708,6 +708,16 @@
             "quiet_mode":         { "name": "Modalità silenziosa" },
             "schedule_anticipation": { "name": "Anticipo della programmazione" },
             "swing_mode":         { "name": "Oscillazione" }
+        },
+        "water_heater": {
+            "hot_water": {
+                "name": "Acqua calda",
+                "state": {
+                    "eco_plus": "Eco+",
+                    "manual":   "Manuale",
+                    "prog":     "Prog"
+                }
+            }
         }
     },
     "device_automation": {

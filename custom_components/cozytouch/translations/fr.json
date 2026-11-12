@@ -492,7 +492,7 @@
             "cooling_temperature_max":  { "name": "Consigne froid max" },
             "cooling_temperature_min":  { "name": "Consigne froid min" },
             "dhw_estimation_supported": { "name": "Estimation eau chaude disponible" },
-            "dhw_operating_mode":       { "name": "Mode de fonctionnement eau chaude" },
+            "dhw_operating_mode":       { "name": "Chauffe autorisée" },
             "dhw_heating_demand":       { "name": "Besoin Chauffage ECS" },
             "dhw_instant_power":        { "name": "Puissance Instantanée ECS" },
             "dhw_panel_capabilities":   { "name": "Capacités du panneau eau chaude" },
@@ -708,6 +708,16 @@
             "quiet_mode":         { "name": "Mode Silence" },
             "schedule_anticipation": { "name": "Anticipation du programme" },
             "swing_mode":         { "name": "Mode Oscillation" }
+        },
+        "water_heater": {
+            "hot_water": {
+                "name": "Eau chaude",
+                "state": {
+                    "eco_plus": "Eco+",
+                    "manual":   "Manuel",
+                    "prog":     "Prog"
+                }
+            }
         }
     },
     "device_automation": {

@@ -1643,9 +1643,10 @@ CAPABILITIES: dict[int, Entity] = {
             "0": "heat",
             "1": "scheduled_heat",
             "2": "off_peak_heat",
+            "3": "self_consumption_heat",
         },
-        category=CapabilityCategory.DIAG,
-        enabled_by_default=False,
+        enabled_by_default=True,
+        icon="mdi:clock-time-four-outline",
     ),
     231: Entity(
         name="target_temperature",

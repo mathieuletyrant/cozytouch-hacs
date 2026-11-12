@@ -492,7 +492,7 @@
             "cooling_temperature_max":  { "name": "Max. Kühltemperatur" },
             "cooling_temperature_min":  { "name": "Min. Kühltemperatur" },
             "dhw_estimation_supported": { "name": "Warmwasser-Schätzung unterstützt" },
-            "dhw_operating_mode":       { "name": "Warmwasser-Betriebsart" },
+            "dhw_operating_mode":       { "name": "Heizfreigabe" },
             "dhw_heating_demand":       { "name": "Warmwasser-Heizbedarf" },
             "dhw_instant_power":        { "name": "Warmwasser-Momentanleistung" },
             "dhw_panel_capabilities":   { "name": "Fähigkeiten des Warmwasser-Bedienfelds" },
@@ -708,6 +708,16 @@
             "quiet_mode":         { "name": "Leisemodus" },
             "schedule_anticipation": { "name": "Zeitplan-Vorlauf" },
             "swing_mode":         { "name": "Schwenkmodus" }
+        },
+        "water_heater": {
+            "hot_water": {
+                "name": "Warmwasser",
+                "state": {
+                    "eco_plus": "Eco+",
+                    "manual":   "Manuell",
+                    "prog":     "Prog"
+                }
+            }
         }
     },
     "device_automation": {

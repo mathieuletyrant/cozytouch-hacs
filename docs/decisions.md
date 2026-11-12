@@ -4695,3 +4695,53 @@ Navizone's air conditioners (557-559) and the dump attached to #157 :
 
 All four rows are shared, so every device reporting the id moves with them.
 Only the Navizone's rooms were looked at.
+
+## A water heater entity for the tanks
+
+Read on 2026-11-12 from a LINEO CONNECTE VM 120L 2400W (model 1959,
+productId 47, behind a FLAT/S4 IOTHUB) : a diagnostics dump and the
+Cozytouch app's screens beside it. Nothing was written to the tank.
+
+The tanks had a select for the mode (87), a number for the setpoint (231)
+and a sensor per probe, and no entity Home Assistant draws as a water heater
+or offers to Assist and HomeKit as one. The app's main screen is those same
+three things : the setpoint (55 °C on 231), the share of hot water left
+(72 % on 271) and the Manuel / Eco+ / Prog tabs (87 at 0).
+
+- **One `water_heater` per tank, built beside the mode select.** It is
+  offered only where the device is a `WATER_HEATER` and reports 231, and it
+  writes 87 and 231 exactly as the select and the number do, so it adds no
+  write of its own. The select and the number stay : removing them would
+  break the automations that use them.
+- **The current temperature is the tank's middle probe (265).** The app
+  shows none ; 265 is the closest to the water drawn, and the bottom probe
+  (264) reads the cold water coming in.
+- **The bounds are 253 and 252**, the same `_DHW_USER_TARGET_BOUNDS` the
+  number uses (50 and 70 on the Lineo), 50 to 65 °C until they arrive.
+- **Boost and absence stay switches.** The absence goes through the setup
+  PUT and its dates (see *The setup PUT is what sets an absence*), and an
+  `away_mode` on the entity would be a second way into that path for no gain.
+
+### 230 is when the tank may heat, and it is on by default
+
+The app's second page offers "Chauffe autorisée en permanence" or "pendant
+les plages personnalisées", and the Lineo's tank had it on the first. The
+catalogue names 230 `DHW_stOperatingRangeMode` (0 `Heat_Permanently`,
+1 `Heat_Schedule`, 2 `Heat_OffPeak`, 3 `Heat_SelfConsumption`) and 223,
+its mask, reads 3 on the Lineo : exactly the two choices the app shows. 230
+read 0, the first one. So the row gets the fourth value, leaves Diagnostic
+and is on by default, named for what the app asks ("Heating Allowed").
+
+It stays a sensor. The catalogue marks it writable, but no capture says what
+the app writes when the choice changes, and the hot-water block is read-only
+until one does. The prog sensors (245-251) are the time slots of the second
+choice, not a temperature program.
+
+### Left alone
+
+- 105906/105907, the V40 rows, still read as °C. The catalogue says a
+  state of charge in % (`DHW_V40StateOfChargeSetpoint`, 0-100) and the Lineo
+  reports 75 on both, but the app shows no V40 anywhere to check a reading
+  against. MEMORY.md's parked line stands.
+- Only model 1959 was looked at. Every `WATER_HEATER` reporting 87 and 231
+  gets the entity, so other tanks' modes come from their own `HeatingModes`.
