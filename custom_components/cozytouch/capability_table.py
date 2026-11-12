@@ -830,6 +830,14 @@ CAPABILITIES: dict[int, Entity] = {
         icon="mdi:water-boiler",
         extra={
             "modelList": "HeatingModes",
+            "dhwModesCapabilityId": 105011,
+        },
+        per_type={
+            (CozytouchDeviceType.WATER_HEATER,): {
+                "setpointCapabilityId": 231,
+                "currentValueCapabilityId": 265,
+                **_DHW_USER_TARGET_BOUNDS,
+            }
         },
     ),
     88: Entity(
@@ -1643,10 +1651,9 @@ CAPABILITIES: dict[int, Entity] = {
             "0": "heat",
             "1": "scheduled_heat",
             "2": "off_peak_heat",
-            "3": "self_consumption_heat",
         },
-        enabled_by_default=True,
-        icon="mdi:clock-time-four-outline",
+        category=CapabilityCategory.DIAG,
+        enabled_by_default=False,
     ),
     231: Entity(
         name="target_temperature",

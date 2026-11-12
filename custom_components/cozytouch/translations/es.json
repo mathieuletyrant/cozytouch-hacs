@@ -249,6 +249,7 @@
                 "state":
                 {
                     "manual": "Manual",
+                    "eco_comfort_schedule": "Programa Eco/Confort",
                     "eco_plus": "Eco+",
                     "prog": "Prog"
                 }
@@ -492,7 +493,7 @@
             "cooling_temperature_max":  { "name": "Temperatura máx. de frío" },
             "cooling_temperature_min":  { "name": "Temperatura mín. de frío" },
             "dhw_estimation_supported": { "name": "Estimación de ACS admitida" },
-            "dhw_operating_mode":       { "name": "Calentamiento permitido" },
+            "dhw_operating_mode":       { "name": "Modo de funcionamiento ACS" },
             "dhw_heating_demand":       { "name": "Demanda de calentamiento ACS" },
             "dhw_instant_power":        { "name": "Potencia instantánea ACS" },
             "dhw_panel_capabilities":   { "name": "Capacidades del panel ACS" },
@@ -713,6 +714,7 @@
             "hot_water": {
                 "name": "Agua caliente",
                 "state": {
+                    "eco_comfort_schedule": "Programa Eco/Confort",
                     "eco_plus": "Eco+",
                     "manual":   "Manual",
                     "prog":     "Prog"

@@ -249,6 +249,7 @@
                 "state":
                 {
                     "manual": "Manuell",
+                    "eco_comfort_schedule": "Eco/Komfort-Zeitplan",
                     "eco_plus": "Eco+",
                     "prog": "Prog"
                 }
@@ -492,7 +493,7 @@
             "cooling_temperature_max":  { "name": "Max. Kühltemperatur" },
             "cooling_temperature_min":  { "name": "Min. Kühltemperatur" },
             "dhw_estimation_supported": { "name": "Warmwasser-Schätzung unterstützt" },
-            "dhw_operating_mode":       { "name": "Heizfreigabe" },
+            "dhw_operating_mode":       { "name": "Warmwasser-Betriebsart" },
             "dhw_heating_demand":       { "name": "Warmwasser-Heizbedarf" },
             "dhw_instant_power":        { "name": "Warmwasser-Momentanleistung" },
             "dhw_panel_capabilities":   { "name": "Fähigkeiten des Warmwasser-Bedienfelds" },
@@ -713,6 +714,7 @@
             "hot_water": {
                 "name": "Warmwasser",
                 "state": {
+                    "eco_comfort_schedule": "Eco/Komfort-Zeitplan",
                     "eco_plus": "Eco+",
                     "manual":   "Manuell",
                     "prog":     "Prog"

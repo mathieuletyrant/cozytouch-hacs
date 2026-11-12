@@ -53,10 +53,11 @@ overturn one, edit the line here in the same pull request.
 - **The CozyBox drives air conditioners too** (Murao, Takao), so a room's
   gateway never says what is in it ; and 100004 is no swing signal, since
   Takao rooms read 9 and swing. `docs/decisions.md`, *issue #190*.
-- **230 is the app's "Chauffe autorisée" choice** : 0 permanently, 1 during
-  the custom slots (245-251), 223 masking which the tank offers. Lineo 1959,
-  app beside a dump, 2026-11-12. `docs/decisions.md`, *A water heater entity
-  for the tanks*.
+- **105011 is the tank's mode list**, as the app reads it : the Lineo 1959
+  reads 7941 (no prog) and the app greys PROG out. 230 is its "Chauffe
+  autorisée" choice, 0 permanently, 1 during the slots (245-251) ; 105012
+  reads 3 there. 2026-11-12, app beside a dump. `docs/decisions.md`, *The
+  hot-water modes come from 105011*.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.
 

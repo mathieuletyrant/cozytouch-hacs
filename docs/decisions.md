@@ -4708,41 +4708,52 @@ or offers to Assist and HomeKit as one. The app's main screen is those same
 three things : the setpoint (55 °C on 231), the share of hot water left
 (72 % on 271) and the Manuel / Eco+ / Prog tabs (87 at 0).
 
-- **One `water_heater` per tank, built beside the mode select.** It is
-  offered only where the device is a `WATER_HEATER` and reports 231, and it
-  writes 87 and 231 exactly as the select and the number do, so it adds no
-  write of its own. The select and the number stay : removing them would
-  break the automations that use them.
+- **One `water_heater` per tank, built beside the mode select.** It writes
+  87 and 231 exactly as the select and the number do, so it adds no write of
+  its own. The select and the number stay : automations use them.
+- **Its ids are on row 87, not in `water_heater.py`** : a `per_type` on
+  `WATER_HEATER` names the setpoint (231), the current temperature (265) and
+  the bounds (`_DHW_USER_TARGET_BOUNDS`, 253/252), the way row 102024 names
+  the fan's speed. A tank that keeps its setpoint elsewhere needs a row, not
+  code, and one that does not report its setpoint id gets no entity.
 - **The current temperature is the tank's middle probe (265).** The app
   shows none ; 265 is the closest to the water drawn, and the bottom probe
   (264) reads the cold water coming in.
-- **The bounds are 253 and 252**, the same `_DHW_USER_TARGET_BOUNDS` the
-  number uses (50 and 70 on the Lineo), 50 to 65 °C until they arrive.
 - **Boost and absence stay switches.** The absence goes through the setup
   PUT and its dates (see *The setup PUT is what sets an absence*), and an
   `away_mode` on the entity would be a second way into that path for no gain.
 
-### 230 is when the tank may heat, and it is on by default
+## The hot-water modes come from 105011 (issue #206)
 
-The app's second page offers "Chauffe autorisée en permanence" or "pendant
-les plages personnalisées", and the Lineo's tank had it on the first. The
-catalogue names 230 `DHW_stOperatingRangeMode` (0 `Heat_Permanently`,
-1 `Heat_Schedule`, 2 `Heat_OffPeak`, 3 `Heat_SelfConsumption`) and 223,
-its mask, reads 3 on the Lineo : exactly the two choices the app shows. 230
-read 0, the first one, and the app's Prog tab said the same thing its own
-way : "Horaires personnalisés : OFF", with the tank in MANUEL. So the row gets the fourth value, leaves Diagnostic
-and is on by default, named for what the app asks ("Heating Allowed").
+The mode select offered the per-model `HeatingModes` table : manual,
+eco_plus and prog on every tank typed through `DHW` or `HDG2`. The device
+says which modes it has on 105011, and the vendor's app builds its list from
+it ; #206 has the Android reading and the corpus.
 
-It stays a sensor. The catalogue marks it writable, but no capture says what
-the app writes when the choice changes, and the hot-water block is read-only
-until one does. The prog sensors (245-251) are the time slots of the second
-choice, not a temperature program.
+The Lineo confirms it on hardware : 105011 reads 7941 (manual, auto, boost,
+absence, antilegionella -- no prog) and the app greys PROG out, while the
+select offered it.
+
+- The options of 87 are the writable masks 105011 sets : 1 manual (0),
+  2 eco_comfort_schedule (2), 4 eco_plus (3), 8 prog (4). Row 87 names 105011
+  as `dhwModesCapabilityId` ; the select and the water heater both read it
+  through `declared_dhw_modes`.
+- Without 105011 (model 211), or with a mask naming none of the four, the
+  table stands.
+- `eco_comfort_schedule` is new, for 1376 reading 87 = 2.
+- A value outside the list reads unknown instead of the last option the
+  select knew. That is every `CozytouchSelect`, not only this one.
 
 ### Left alone
 
-- 105906/105907, the V40 rows, still read as °C. The catalogue says a
-  state of charge in % (`DHW_V40StateOfChargeSetpoint`, 0-100) and the Lineo
-  reports 75 on both, but the app shows no V40 anywhere to check a reading
-  against. MEMORY.md's parked line stands.
-- Only model 1959 was looked at. Every `WATER_HEATER` reporting 87 and 231
-  gets the entity, so other tanks' modes come from their own `HeatingModes`.
+- The `OVERRIDES` the mask now reproduces stay until each model's 105011 is
+  seen, 1954-1957 first : no dump of them has it.
+- 230, permanent or scheduled heating, is #207's. The Lineo adds a reading
+  for it : 105012 = 3 (permanently, schedule), a mask the corpus did not
+  have ; 230 = 0, which the app shows as "Chauffe autorisée en permanence"
+  and, on its Prog tab, "Horaires personnalisés : OFF". The prog sensors
+  (245-251) hold the slots of the second choice.
+- 105906/105907, the V40 rows, still read as °C. The catalogue says a state
+  of charge in % (0-100) and the Lineo reports 75 on both, but the app shows
+  no V40 anywhere to check a reading against.
+- Only model 1959 was seen. Other tanks get the entity from row 87.

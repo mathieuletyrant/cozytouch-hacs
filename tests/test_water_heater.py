@@ -6,7 +6,8 @@ here is built from the same ids and writes through the same two capabilities
 the select and the number write, so it adds no write of its own.
 
 The readings are a LINEO CONNECTE VM 120L 2400W's (model 1959), from a
-diagnostics dump of 2026-11-12, beside the app showing 55 °C and Manuel.
+diagnostics dump of 2026-11-12, beside the app showing 55 °C and Manuel, with
+PROG greyed out : 105011 = 7941 declares manual and auto, not prog.
 """
 
 import asyncio
@@ -28,6 +29,7 @@ READINGS = {
     253: "50.0000000000000000000",
     264: "48.25",
     265: "56.35",
+    105011: "7941",
 }
 
 
@@ -85,6 +87,27 @@ def test_only_the_mode_capability_builds_it():
     assert build(coordinator(), capabilityId=165) == []
 
 
+def test_the_ids_come_from_the_mode_row():
+    """No id is written in water_heater.py: a tank wired differently needs a
+    row, not code.
+    """
+    entity = build(coordinator())
+
+    assert entity._capability.setpointCapabilityId == 231
+    assert entity._capability.currentValueCapabilityId == 265
+
+
+def test_prog_is_not_offered_to_a_tank_that_does_not_declare_it():
+    """105011 = 7941 has no prog bit, and the app greys PROG out."""
+    hub = coordinator()
+    entity = updated(hub)
+
+    asyncio.run(entity.async_set_operation_mode("prog"))
+
+    assert "prog" not in entity.operation_list
+    assert hub.written == []
+
+
 def test_a_tank_without_a_setpoint_gets_none():
     """A tank that reports no 231 has nothing to set from the card."""
     hub = coordinator()
@@ -100,7 +123,7 @@ def test_it_reads_the_tank_as_the_app_shows_it():
     assert entity.target_temperature == 55.0
     assert entity.current_temperature == 56.35
     assert entity.current_operation == "manual"
-    assert entity.operation_list == ["manual", "eco_plus", "prog"]
+    assert entity.operation_list == ["manual", "eco_plus"]
     assert (entity.min_temp, entity.max_temp) == (50.0, 70.0)
 
 
