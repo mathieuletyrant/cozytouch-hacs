@@ -161,3 +161,13 @@ def test_a_mode_the_tank_does_not_have_writes_nothing():
     asyncio.run(entity.async_set_operation_mode("vacation"))
 
     assert hub.written == []
+
+
+def test_a_tanks_second_setpoint_slider_starts_off():
+    """22 and 231 both read 55 on the Lineo ; the entity writes 231, and
+    which one the app writes is #215's question. Existing installs keep 22.
+    """
+    hub = coordinator()
+    capability = get_capability_infos(hub.modelInfos, 22, "55", set(READINGS) | {22})
+
+    assert capability.enabled_by_default is False

@@ -4719,6 +4719,12 @@ three things : the setpoint (55 °C on 231), the share of hot water left
 - **The current temperature is the tank's middle probe (265).** The app
   shows none ; 265 is the closest to the water drawn, and the bottom probe
   (264) reads the cold water coming in.
+- **The 22 slider starts off on a tank.** It and 231 both read 55 on the
+  Lineo, side by side as two "Température Consigne" sliders. The entity
+  writes 231, which the catalogue marks writable and calls the manual
+  mode's setpoint ; the app reads 22 and, per its code, never writes it.
+  Which one the app's control moves is #215's question. Turned off by
+  default, so only new installs lose it.
 - **Boost and absence stay switches.** The absence goes through the setup
   PUT and its dates (see *The setup PUT is what sets an absence*), and an
   `away_mode` on the entity would be a second way into that path for no gain.

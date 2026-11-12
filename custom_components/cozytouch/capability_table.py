@@ -397,7 +397,12 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
         enabled_by_default=True,
         extra={"lowestValueCapabilityId": 160, "highestValueCapabilityId": 161},
-        per_type={(CozytouchDeviceType.WATER_HEATER,): _DHW_USER_TARGET_BOUNDS},
+        per_type={
+            (CozytouchDeviceType.WATER_HEATER,): {
+                **_DHW_USER_TARGET_BOUNDS,
+                "enabled_by_default": False,
+            }
+        },
     ),
     23: Entity(
         name="dhw_comfort_setpoint",

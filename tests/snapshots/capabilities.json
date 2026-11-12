@@ -11380,6 +11380,7 @@
    "22": {
     "capabilityId": 22,
     "category": "sensor",
+    "enabled_by_default": false,
     "highestValueCapabilityId": 252,
     "lowestValueCapabilityId": 253,
     "modelId": 1641,
@@ -21173,6 +21174,7 @@
    "22": {
     "capabilityId": 22,
     "category": "sensor",
+    "enabled_by_default": false,
     "highestValueCapabilityId": 252,
     "lowestValueCapabilityId": 253,
     "modelId": 2374,
