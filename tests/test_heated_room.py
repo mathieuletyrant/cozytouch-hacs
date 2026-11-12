@@ -6,17 +6,19 @@ two apart. Capability 103026, `thermal_generator`, does : the room's own list
 of what heats or cools it.
 
     radiators behind a CozyBox (gduteil/cozytouch#172)   128  panel heater, I2G
+    an OROSI 2 behind a CozyBox (#190)                    16  panel heater
     Fujitsu splits behind a HUB Cozytouch (#61)            8  air-to-air split
     the Navizone rooms (scripts/test_ha/navizone.json)     8  air-to-air split
     Takao M3 behind a Naviclim (gduteil/cozytouch#1, #12)  absent
 
 A room declaring electric heaters and nothing else loses what only an air
 conditioner has : the cool, auto, fan and dry modes, the fan speed, the swing,
-the quiet mode and the cooling setpoint. Everything else answers as before,
+the quiet mode, the powerful mode and the cooling setpoint. Everything else
+answers as before,
 and so does every room that reports 8, a mix, or no 103026 at all.
 
-The values below are the #172 capture's own, cut to the ids this reads. Issue
-#190 (an OROSI 2) and its comments are the same report.
+The values below are the #172 capture's own, cut to the ids this reads. The
+#190 room reads the same on every one of them but 103026.
 """
 
 import pytest
@@ -43,6 +45,7 @@ RADIATOR = {
     100802: "0",
     100803: "1",
     100804: "0",
+    100505: "0",
     103026: "128",
 }
 
@@ -52,6 +55,7 @@ AC_ONLY = (
     "swingOnCapabilityId",
     "quietModeCapabilityId",
     "targetCoolCapabilityId",
+    "boostCapabilityId",
 )
 
 
@@ -100,10 +104,11 @@ def test_its_climate_is_wired_to_none_of_the_air_conditioner_controls():
     assert not [key for key in AC_ONLY if key in climate]
 
 
-@pytest.mark.parametrize("capabilityId", [177, 100802, 100804])
-def test_the_swing_quiet_and_cooling_entities_are_not_built(capabilityId):
-    """The three a radiator showed on its device page : `swing_mode`,
-    `quiet_mode` and `target_cool_temperature`.
+@pytest.mark.parametrize("capabilityId", [177, 100505, 100802, 100804])
+def test_the_air_conditioner_entities_are_not_built(capabilityId):
+    """The four a radiator showed on its device page : `swing_mode`,
+    `quiet_mode`, `powerful_mode` and `target_cool_temperature`. A radiator's
+    own boost is 104044, which stays.
     """
     infos, available = room(RADIATOR)
 
@@ -146,7 +151,7 @@ def test_a_room_that_does_not_say_heater_only_keeps_everything(
     }
     climate = entity(infos, available, 7, "3")
     assert all(key in climate for key in AC_ONLY)
-    for capabilityId in (177, 100802, 100804):
+    for capabilityId in (177, 100505, 100802, 100804):
         assert entity(infos, available, capabilityId).get("name")
 
 
@@ -162,9 +167,9 @@ def test_a_room_that_does_not_say_heater_only_keeps_everything(
     ],
 )
 def test_every_electric_heater_reads_the_same(generator, what):
-    """Only 128 has been seen on a room. The other four are the members the
-    catalogue lists beside it, and a room in front of any of them has no
-    compressor either.
+    """128 and 16 have been seen on a room (#172, #190). The other three are
+    the members the catalogue lists beside them, and a room in front of any of
+    them has no compressor either.
     """
     infos, _ = room(RADIATOR | {103026: generator})
 
@@ -180,3 +185,9 @@ def test_a_room_in_front_of_a_heat_pump_or_a_boiler_is_left_alone(generator):
     infos, _ = room(RADIATOR | {103026: generator})
 
     assert HVACMode.COOL in infos.HVACModes.values()
+
+
+def test_a_radiator_room_keeps_its_own_boost():
+    infos, available = room(RADIATOR | {104044: "0"})
+
+    assert entity(infos, available, 104044).get("name") == "boost_mode"

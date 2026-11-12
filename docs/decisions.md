@@ -966,6 +966,30 @@ and anything older. Nothing here was checked on hardware : the maintainer's
 rooms read 8, and the change was seen in a test Home Assistant against the
 #172 values.
 
+### The powerful mode goes too, and the room's boost is 104044
+
+The #190 reporter sent their dump once 2026.11.2 had the change above : an
+OROSI 2 1000W behind a CozyBox, its room reading 103026 = 16, the plain
+panel heater -- the first room seen with one of the bits the entry above
+took from the catalogue alone. Everything listed there was gone.
+
+One air conditioner control was left : `powerful_mode` (100505), on by
+default, and the climate's boost preset, which a room wires to the same id.
+It is the split's Powerful run. Neither radiator room offers it :
+`ventilation_controls_available` (100004) reads 1 on #172's and on #190's,
+without the `powerful_mode` bit (8) the Takao rooms set at 9. So a heated
+room drops both, through `powerfulModeAvailable`, the same way it drops the
+swing and the quiet mode.
+
+A radiator's own boost is `boost_mode` (104044), reported by both rooms and
+already a switch ; it stays. The climate's boost preset is not rewired to it
+: nothing shows what writing 104044 does without its duration (103115), and
+the switch is what the app's boost is until it does.
+
+100004 decides nothing here, for the reason the entry above dropped it :
+the Fujitsu splits of #61 read 197, without bit 8 either, and nobody has
+said whether their app offers Powerful.
+
 ### The dump carries every device, the config flow still chooses (issue #110)
 
 A zone was left out of both the dump and the device list on one argument: a
@@ -4556,8 +4580,11 @@ project, implemented it from a Thermor Duralis ACI HYB (model 393), with a
 proxied capture of the iOS app and the app's own tariff screen to check
 against. What is here is read from that work, and from its sanitised
 fixture, now `tests/fixtures/consumptions_daily.json`. Nothing in this
-repository has seen the endpoint answer, which is the first thing to say
-about it.
+repository had seen the endpoint answer until issue #190's dump (2026-11-12) :
+a CozyBox reading 164 = 2, electric heating, and one series of `type` 1,
+`unit` 1, `currency` 101, `mode` 0 on every day, with `zoneId` set to the
+room's zone. The sensors read it as the day's energy and cost and skip the
+peak and off-peak split, which is what the mode says.
 
 ### What the answer is
 

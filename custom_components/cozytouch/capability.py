@@ -116,7 +116,10 @@ def _wire_presets(
         and 100507 in availableCapabilityIds
     ):
         capability.ecoCapabilityId = 100507
-    if 100505 in availableCapabilityIds:
+    if (
+        modelInfos.get("powerfulModeAvailable", True)
+        and 100505 in availableCapabilityIds
+    ):
         capability.boostCapabilityId = 100505
 
 
