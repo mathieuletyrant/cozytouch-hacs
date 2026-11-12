@@ -4729,7 +4729,8 @@ les plages personnalisées", and the Lineo's tank had it on the first. The
 catalogue names 230 `DHW_stOperatingRangeMode` (0 `Heat_Permanently`,
 1 `Heat_Schedule`, 2 `Heat_OffPeak`, 3 `Heat_SelfConsumption`) and 223,
 its mask, reads 3 on the Lineo : exactly the two choices the app shows. 230
-read 0, the first one. So the row gets the fourth value, leaves Diagnostic
+read 0, the first one, and the app's Prog tab said the same thing its own
+way : "Horaires personnalisés : OFF", with the tank in MANUEL. So the row gets the fourth value, leaves Diagnostic
 and is on by default, named for what the app asks ("Heating Allowed").
 
 It stays a sensor. The catalogue marks it writable, but no capture says what
