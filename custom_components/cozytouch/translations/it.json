@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "binary_sensor": {
+            "device_availability": { "name": "Disponibile" }
+        },
         "calendar": {
             "heating_program":         { "name": "Programma di riscaldamento" },
             "cooling_program":         { "name": "Programma di raffrescamento" },

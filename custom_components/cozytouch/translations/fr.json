@@ -73,6 +73,9 @@
         }
     },
     "entity": {
+        "binary_sensor": {
+            "device_availability": { "name": "Disponible" }
+        },
         "calendar": {
             "heating_program":         { "name": "Programme Chauffage" },
             "cooling_program":         { "name": "Programme Refroidissement" },
@@ -518,7 +521,7 @@
             "heating_period_max_duration": { "name": "Durée maximale de période de chauffe" },
             "heating_period_min_duration": { "name": "Durée minimale de période de chauffe" },
             "home_services":            { "name": "Services du logement" },
-            "hot_water_available":      { "name": "Hot Water Available" },
+            "hot_water_available":      { "name": "Eau chaude disponible" },
             "hot_water_showers_expected": { "name": "Douches attendues" },
             "hot_water_showers_remaining": { "name": "Douches restantes" },
             "hub_movable_subproducts":  { "name": "Déplacement des sous-produits par le hub" },
