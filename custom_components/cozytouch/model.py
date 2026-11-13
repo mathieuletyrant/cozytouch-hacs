@@ -287,7 +287,7 @@ def product_type(productId: int | None) -> str | None:
 # not here because the interface they hang off decides their word too.
 SLOT_LABELS: dict[str, tuple[str, int]] = {
     "AIR_CONDITIONER_UI": ("Air Conditioner User Interface", 30),
-    "TESC": ("Heating circuit", 54),
+    "TESC": ("Water circuit", 54),
 }
 
 
@@ -508,7 +508,7 @@ def apply_capabilities(
     # so it is offered as a device whether a room drives it or not (issues
     # #110, #219). See docs/decisions.md.
     if modelInfos.type is CozytouchDeviceType.ZONE and modelInfos.name.startswith(
-        "Heating circuit"
+        "Water circuit"
     ):
         modelInfos.type = CozytouchDeviceType.THERMOSTAT
         return

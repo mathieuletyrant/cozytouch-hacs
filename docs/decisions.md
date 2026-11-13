@@ -1061,8 +1061,7 @@ circuit with nothing asked of it ; no capture pairs the two to say so.
 So a `TESC` circuit is a device as soon as it reports anything, and 106000
 decides nothing. Offered is not added : the config flow still asks, so an
 existing install gains an entry in the list and no entity. A circuit added
-gets 19 and 109 as read-only temperatures and no climate, as above. 106000
-stays a diagnostic, named for what the five room-driven captures share.
+gets 19 and 109 as read-only temperatures and no climate, as above.
 
 Gating on 19 not being 0, as the issue suggests, was not taken : a circuit
 with nothing asked of it reads 0, and the device would come and go with the
@@ -1072,8 +1071,21 @@ The vendor's catalogue says the same in its own words, and had all along :
 19 is `TESC1_NrjFlowSetpointRequest`, *"the NRJ flow setpoint in circuit
 1"*, read-only (`accessType` 3) ; 109 is `GENERATOR_WaterOut1`, the flow
 water temperature. And 106000 is `TESC_RoomPresent`, *"the number of Room
-managed in the Heating Circuit"* -- a count, which every capture has at 0
-or 1, and which our binary row reads correctly only that far.
+managed in the Heating Circuit"*, unit `nb` -- a count, not the flag the
+row read it as. Every capture has it at 0 or 1, so nothing displayed was
+wrong yet ; a circuit managing two rooms would have read as off. The row is
+now `circuit_room_count`, an integer, still a diagnostic and off by
+default. Being a new platform, it is a new entity : the old binary sensor
+is left behind in the registry, disabled, as it was.
+
+The circuit is renamed `Water circuit` while it is here. Offered beside the
+room slot that drives it, it would have carried the same name -- the dump
+reads `Heating circuit (#1)` on both, since a room behind an Alfea is
+already called that. The room is the circuit's control and the one people
+have on their dashboards, so it keeps the name ; the circuit is the water
+side, which is what it reports. Renaming changes only what is displayed,
+for the one circuit already added anywhere (#110's `Pièces de vie`) ; the
+unique ids do not move.
 
 The reporter's dump (2026-11-13, integration 2026.11.2) shows the circuit
 the way this change finds it : `TESC_0` reading 19 = 29.66, 109 = 28.82,

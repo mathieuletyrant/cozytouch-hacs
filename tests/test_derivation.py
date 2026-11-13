@@ -211,7 +211,7 @@ def test_a_circuit_that_holds_its_own_setpoint_is_a_device():
     assert get_device_model_infos([alone], alone, "Pièces de vie") == {
         **get_device_model_infos([alone], alone, "Pièces de vie"),
         "type": CozytouchDeviceType.THERMOSTAT,
-        "name": "Heating circuit (Pièces de vie)",
+        "name": "Water circuit (Pièces de vie)",
     }
 
 
@@ -236,7 +236,7 @@ def test_a_circuit_a_room_drives_is_a_device_too(setpoint):
     infos = get_device_model_infos([driven], driven, "Chambres")
 
     assert infos["type"] is CozytouchDeviceType.THERMOSTAT
-    assert infos["name"] == "Heating circuit (Chambres)"
+    assert infos["name"] == "Water circuit (Chambres)"
     assert infos["HVACModes"] == {}
 
 
@@ -247,3 +247,26 @@ def test_a_circuit_with_no_capabilities_yet_stays_out_of_the_way():
     infos = get_model_infos(1389)
 
     assert infos["type"] is CozytouchDeviceType.ZONE
+
+
+def test_a_circuit_and_the_room_that_drives_it_are_told_apart():
+    """Issue #219's account : an Alfea Excellia S, its circuit, and the room
+    slot that drives it. The room is the heating circuit's control and keeps
+    that name ; the circuit carries the water, and both were called
+    "Heating circuit (#1)" once the circuit was offered.
+    """
+    alfea = {"deviceId": 6, "modelId": 1691, "productId": 54, "name": "ALFEA"}
+    driven = circuit(7, 1388, driven_by_room=True, setpoint="29.66") | {
+        "masterDeviceId": 6
+    }
+    room = {
+        "deviceId": 8,
+        "modelId": 557,
+        "productId": 26,
+        "masterDeviceId": 6,
+        "name": "ROOM_0",
+    }
+    devices = [alfea, driven, room]
+
+    assert get_device_model_infos(devices, driven)["name"] == "Water circuit (#1)"
+    assert get_device_model_infos(devices, room)["name"] == "Heating circuit (#1)"
