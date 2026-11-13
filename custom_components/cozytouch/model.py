@@ -504,16 +504,13 @@ def apply_capabilities(
     if not capabilities:
         return
 
-    # A heating circuit whose setpoint is held by a room slot is that room's
-    # business, and offering it as a device of its own would put the same
-    # circuit on the account twice. One that holds its own is the only control
-    # there is, and was invisible until now (issue #110). The device says
-    # which it is on 106000. See docs/decisions.md.
+    # A heating circuit reports its own water side, which no room slot does,
+    # so it is offered as a device whether a room drives it or not (issues
+    # #110, #219). See docs/decisions.md.
     if modelInfos.type is CozytouchDeviceType.ZONE and modelInfos.name.startswith(
         "Heating circuit"
     ):
-        if capabilities.get(106000) == "0":
-            modelInfos.type = CozytouchDeviceType.THERMOSTAT
+        modelInfos.type = CozytouchDeviceType.THERMOSTAT
         return
 
     if modelInfos.type is CozytouchDeviceType.ROOM and heated_only(
