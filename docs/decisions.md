@@ -1068,10 +1068,22 @@ Gating on 19 not being 0, as the issue suggests, was not taken : a circuit
 with nothing asked of it reads 0, and the device would come and go with the
 hour it was polled.
 
-Limits. The meaning of 19 on a room-driven circuit rests on one reporter's
-three readings against their display ; that it is 0 for want of demand is
-inferred, not measured. Nothing here was checked on hardware : the
-maintainer has no heat pump.
+The vendor's catalogue says the same in its own words, and had all along :
+19 is `TESC1_NrjFlowSetpointRequest`, *"the NRJ flow setpoint in circuit
+1"*, read-only (`accessType` 3) ; 109 is `GENERATOR_WaterOut1`, the flow
+water temperature. And 106000 is `TESC_RoomPresent`, *"the number of Room
+managed in the Heating Circuit"* -- a count, which every capture has at 0
+or 1, and which our binary row reads correctly only that far.
+
+The reporter's dump (2026-11-13, integration 2026.11.2) shows the circuit
+the way this change finds it : `TESC_0` reading 19 = 29.66, 109 = 28.82,
+106000 = 1, typed `ZONE`, and absent from the entry's devices. Their app
+draws two tiles, the room (`chauffage`, setpoint and ambient, BASIC / PROG)
+and the water heater, and nothing for the circuit -- so read-only is what
+the app offers too, which is nothing.
+
+Limits. That 19 reads 0 for want of demand is inferred, not measured.
+Nothing here was checked on hardware : the maintainer has no heat pump.
 
 ## `custom_components/cozytouch/climate.py`
 
