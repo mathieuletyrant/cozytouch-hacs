@@ -20,6 +20,7 @@ Optional :
     * quietModeAvailable : enable quiet mode availability (default : False)
     * swingModeAvailable : enable the swing switch (default : True)
     * coolingAvailable : enable the cooling setpoint (default : True)
+    * powerfulModeAvailable : enable the powerful mode (default : True)
     * awayModeTemperatureAvailable : enable the absence setpoint (default : True)
     * ecoModeAvailable : enable eco mode availability (default : True)
 
@@ -560,6 +561,7 @@ def apply_capabilities(
         modelInfos.quietModeAvailable = False
         modelInfos.swingModeAvailable = False
         modelInfos.coolingAvailable = False
+        modelInfos.powerfulModeAvailable = False
 
     for key, capabilityId in _SPEED_SET_IDS.items():
         if key not in modelInfos:
