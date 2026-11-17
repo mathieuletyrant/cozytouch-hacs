@@ -2860,6 +2860,7 @@ CAPABILITIES: dict[int, Entity] = {
         type=CapabilityType.SWITCH,
         enabled_by_default=True,
         icon="mdi:wind-power",
+        needs_flag="powerfulModeAvailable",
     ),
     100506: Entity(
         # Towel dryers only: no capture has one reporting it, and the branch

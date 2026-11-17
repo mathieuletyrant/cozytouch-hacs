@@ -16,9 +16,10 @@ overturn one, edit the line here in the same pull request.
   what a device is called.
 - **No second data plane.** `setupviewv2` is the whole functional payload,
   but for consumption : `GET /magellan/setups/<setupId>/consumptions?periodicity=daily`,
-  implemented from `mmnlfrrr/cozytouch`'s ACI HYB capture and never seen
-  answering here. Capability 164 gates it : the Navizone reads 0 and is never
-  asked, the fork's Duralis 1040. `docs/decisions.md`, *Consumption*.
+  implemented from `mmnlfrrr/cozytouch`'s ACI HYB capture ; first seen
+  answering on #190's CozyBox (164 = 2, one series, mode 0). Capability 164
+  gates it : the Navizone reads 0 and is never asked, the fork's Duralis
+  1040. `docs/decisions.md`, *Consumption*.
 - **The Overkiz plane is empty for us.** The token mints an Overkiz JWT, but
   `enduserAPI/login` answers 401. `docs/api-surface.md`.
 - **`productId` classifies a device, not `modelId`** -- the vendor app resolves
@@ -46,10 +47,11 @@ overturn one, edit the line here in the same pull request.
 - **A model the catalogue drops keeps its name** and its productId, listed in
   `DROPPED_FROM_CATALOGUE` ; the sync test subtracts it. Maintainer's call
   on #198 (180 ids, 2026-11-10). `docs/decisions.md`.
-- **103026 says whether a room is a heater** : 128 on the CozyBox radiators
-  (gduteil#172), 8 on every split (#61, Navizone), absent on 2024 Takao. A
-  room naming only electric heaters loses the air conditioner's modes and
-  controls (#190). `docs/decisions.md`.
+- **103026 says whether a room is a heater** : 128 on the Taluha radiators
+  (gduteil#172), 16 on an OROSI 2 (#190), 8 on every split (#61, Navizone),
+  absent on 2024 Takao. A room naming only electric heaters loses the air
+  conditioner's modes and controls, powerful mode included ; its boost is
+  104044. `docs/decisions.md`.
 - **The CozyBox drives air conditioners too** (Murao, Takao), so a room's
   gateway never says what is in it ; and 100004 is no swing signal, since
   Takao rooms read 9 and swing. `docs/decisions.md`, *issue #190*.
