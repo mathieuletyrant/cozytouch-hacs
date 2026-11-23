@@ -1,0 +1,117 @@
+name: Issue attachments
+
+# A device report brings its diagnostics dump and app screenshots as GitHub
+# attachments, and a Claude Code on the web session cannot read them : its
+# proxy lets github.com through only on repository paths, and
+# github.com/user-attachments is not one. This copies every attachment of an
+# issue -- body and comments -- onto the `issue-attachments` branch, under
+# the issue's number, where a session reads them with a plain git fetch.
+#
+# The branch is orphan and never merged. The files are already public on the
+# issue, so the copy exposes nothing new ; delete a folder once its issue is
+# closed if the branch grows.
+#
+# The issue text is written by anyone, so it is never interpolated into a
+# command : the script reads it through the API, takes only URLs under
+# github.com/user-attachments/, and names each file from the URL alone.
+on:
+  issues:
+    types: [opened, edited]
+  issue_comment:
+    types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Issue number
+        required: true
+
+permissions:
+  contents: write
+  issues: read
+
+# One writer at a time on the branch ; a second run waits rather than races.
+concurrency:
+  group: issue-attachments
+  cancel-in-progress: false
+
+jobs:
+  copy:
+    # A comment on a pull request is an issue_comment too, and has no report.
+    if: github.event_name != 'issue_comment' || !github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy the attachments onto the branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          ISSUE: ${{ inputs.issue || github.event.issue.number }}
+          SERVER: ${{ github.server_url }}
+        run: |
+          set -euo pipefail
+          case "$ISSUE" in ''|*[!0-9]*) echo "Not an issue number: $ISSUE"; exit 1;; esac
+
+          {
+            gh api "repos/$REPO/issues/$ISSUE" --jq '.body // ""'
+            gh api --paginate "repos/$REPO/issues/$ISSUE/comments" --jq '.[].body // ""'
+          } > text.md
+
+          grep -oE 'https://github\.com/user-attachments/(assets|files)/[A-Za-z0-9._/-]+' text.md \
+            | sort -u > urls.txt || true
+          if [ ! -s urls.txt ]; then
+            echo "No attachment on #$ISSUE."
+            exit 0
+          fi
+
+          git init -q work
+          cd work
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "$SERVER/$REPO.git"
+          git config http.extraheader "AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          if git fetch -q --depth 1 origin issue-attachments; then
+            git checkout -q -B issue-attachments FETCH_HEAD
+          else
+            git checkout -q --orphan issue-attachments
+          fi
+
+          mkdir -p "$ISSUE"
+          : > "$ISSUE/sources.tsv"
+          while read -r url; do
+            last=${url##*/}
+            tmp=$(mktemp)
+            # 25 MB is far above any dump or screenshot seen ; anything bigger
+            # is not a report.
+            if ! curl -fsSL --max-filesize 26214400 -o "$tmp" "$url"; then
+              echo "Could not fetch $url"
+              printf '%s\t%s\n' "-" "$url" >> "$ISSUE/sources.tsv"
+              continue
+            fi
+            case "$url" in
+              */files/*)
+                name=$(printf '%s' "$last" | tr -c 'A-Za-z0-9._-' '_')
+                ;;
+              *)
+                case "$(file -b --mime-type "$tmp")" in
+                  image/png) ext=png ;;
+                  image/jpeg) ext=jpg ;;
+                  image/gif) ext=gif ;;
+                  image/webp) ext=webp ;;
+                  video/mp4) ext=mp4 ;;
+                  video/quicktime) ext=mov ;;
+                  *) ext=bin ;;
+                esac
+                name="$(printf '%s' "$last" | tr -c 'A-Za-z0-9-' '_').$ext"
+                ;;
+            esac
+            mv "$tmp" "$ISSUE/$name"
+            printf '%s\t%s\n' "$name" "$url" >> "$ISSUE/sources.tsv"
+          done < urls.txt
+
+          git add -A "$ISSUE"
+          if git diff --cached --quiet; then
+            echo "Nothing new for #$ISSUE."
+            exit 0
+          fi
+          git commit -q -m "Copy the attachments of #$ISSUE"
+          git push -q origin HEAD:issue-attachments
+          git show --stat --format= HEAD
