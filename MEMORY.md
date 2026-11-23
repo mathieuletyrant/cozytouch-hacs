@@ -111,6 +111,10 @@ overturn one, edit the line here in the same pull request.
   is the fallback : the MCP tools drop the `!` of a Markdown image (#183,
   #184). Uploads are public, and the session token
   cannot delete them (no `files:delete` scope).
+- **Issue attachments are on the `issue-attachments` branch**, `<n>/`,
+  copied by the `Issue attachments` workflow : the session proxy refuses
+  github.com/user-attachments, Full network or not, and Crawl4ai refuses the
+  dump as a download (2026-11-23, #224).
 - `scripts/check.sh` runs ruff, pyright and pytest, CI's three checks ; run
   it before every push.
 - Releases are the maintainer's call : never run the release workflow, tag or

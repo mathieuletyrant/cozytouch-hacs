@@ -176,6 +176,14 @@ and only the app says what it lets you *do*, which is the difference between a
 control that works and one that writes into the void.
 `.github/ISSUE_TEMPLATE/device_report.yml` asks for both.
 
+A web session cannot open an issue's attachments : its proxy lets github.com
+through only on repository paths. The `Issue attachments` workflow copies
+them, body and comments, onto the orphan `issue-attachments` branch under the
+issue's number whenever an issue or comment is posted or edited ; read them
+with `git fetch origin issue-attachments` and
+`git show FETCH_HEAD:<issue>/sources.tsv`. For an issue older than the
+workflow, dispatch it with the number.
+
 The `Create entities for unknown capabilities` option turns each unnamed
 capability into an entity, which is for working out what a value means rather
 than for reporting.
