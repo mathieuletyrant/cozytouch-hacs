@@ -819,6 +819,15 @@
                 "duration": { "name": "Durata", "description": "Quanto dura l'assenza dal suo inizio, al posto di una fine." }
             }
         },
+        "set_periods": {
+            "name": "Impostare le fasce comfort di un giorno",
+            "description": "Scrive le stesse fasce comfort su uno o più giorni, su una pompa di calore che conserva il programma come fasce (Alfea). Al di fuori il dispositivo mantiene eco.",
+            "fields": {
+                "program":  { "name": "Programma", "description": "Riscaldamento o raffrescamento." },
+                "days":     { "name": "Giorni", "description": "I giorni che riceveranno queste fasce. Tutti i giorni, Giorni feriali e Fine settimana valgono per i giorni che nominano." },
+                "periods":  { "name": "Fasce", "description": "Inizio e fine di ogni fascia comfort, tre al massimo. Vuoto, il giorno resta in eco." }
+            }
+        },
         "set_schedule": {
             "name": "Impostare un programma giornaliero",
             "description": "Scrive lo stesso programma orario su uno o più giorni, per riscaldamento o raffrescamento.",

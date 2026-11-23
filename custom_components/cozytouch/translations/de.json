@@ -819,6 +819,15 @@
                 "duration": { "name": "Dauer", "description": "Wie lange die Abwesenheit ab ihrem Beginn dauert, anstelle eines Endes." }
             }
         },
+        "set_periods": {
+            "name": "Komfortzeiträume eines Tages festlegen",
+            "description": "Schreibt dieselben Komfortzeiträume auf einen oder mehrere Tage, bei einer Wärmepumpe, die ihr Programm als Zeiträume speichert (Alfea). Außerhalb hält das Gerät Eco.",
+            "fields": {
+                "program":  { "name": "Programm", "description": "Heizen oder Kühlen." },
+                "days":     { "name": "Tage", "description": "Die Tage, die diese Zeiträume erhalten. Jeden Tag, Wochentage und Wochenende stehen für die Tage, die sie benennen." },
+                "periods":  { "name": "Zeiträume", "description": "Beginn und Ende jedes Komfortzeitraums, höchstens drei. Leer bleibt der Tag auf Eco." }
+            }
+        },
         "set_schedule": {
             "name": "Ein Tagesprogramm festlegen",
             "description": "Schreibt dasselbe Zeitprogramm auf einen oder mehrere Tage, für Heizen oder Kühlen.",

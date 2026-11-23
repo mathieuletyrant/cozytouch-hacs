@@ -29,6 +29,7 @@ from .services import (
     add_period,
     build_matrix,
     build_week,
+    editable_week,
     in_charge_at,
     parse_periods,
     parse_slots,
@@ -407,19 +408,9 @@ class CozytouchPeriodCalendar(CozytouchDeviceEntity, CalendarEntity):
         return parse_periods(self.coordinator.get_capability_value(self._week, None))
 
     def _editable(self) -> dict[str, list[dict]]:
-        """The stored week, refused unless all seven days read.
-
-        The week is written whole, so a day that did not read would be
-        written back empty.
-        """
-        week = self._stored()
-        if len(week) != len(PROGRAM_DAYS):
-            raise HomeAssistantError(
-                f"The {self._program} program does not read as a whole week, "
-                "so it is not rewritten"
-            )
-
-        return week
+        return editable_week(
+            self.coordinator.get_capability_value(self._week, None), self._program
+        )
 
     def _events_between(
         self, start_date: datetime, end_date: datetime

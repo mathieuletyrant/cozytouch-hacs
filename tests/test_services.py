@@ -114,11 +114,12 @@ def registered(hass, name):
 
 def call_with(**data):
     """A ServiceCall stand-in whose data went through the real schema."""
-    schema = (
-        services.GET_SCHEDULE_SCHEMA
-        if "slots" not in data
-        else services.SET_SCHEDULE_SCHEMA
-    )
+    if "periods" in data:
+        schema = services.SET_PERIODS_SCHEMA
+    elif "slots" in data:
+        schema = services.SET_SCHEDULE_SCHEMA
+    else:
+        schema = services.GET_SCHEDULE_SCHEMA
     return SimpleNamespace(data=schema(data))
 
 
@@ -498,6 +499,7 @@ def test_the_services_are_registered_once_for_every_config_entry(monkeypatch):
         "clear_away_mode",
         "get_schedule",
         "set_away_mode",
+        "set_periods",
         "set_schedule",
     ]
 
@@ -657,6 +659,119 @@ def test_set_schedule_points_a_period_program_at_its_calendar(monkeypatch):
     )
 
     with pytest.raises(ServiceValidationError, match="calendar"):
+        asyncio.run(handler(call))
+
+    assert hub.written == []
+
+
+class CachingHub(FakeHub):
+    """A hub that keeps what it wrote, as the real one does."""
+
+    async def set_capability_value(self, capabilityId, value):
+        await super().set_capability_value(capabilityId, value)
+        self.values[capabilityId] = value
+
+
+def periods_of(value, day):
+    return services.parse_periods(value)[day]
+
+
+def test_set_periods_rewrites_only_the_days_named(monkeypatch):
+    hub = CachingHub({103: PERIOD_WEEK, 176: "1"})
+    hass = make_hass(monkeypatch, hub)
+    handler = registered(hass, "set_periods")
+
+    asyncio.run(
+        handler(
+            call_with(
+                entity_id=["climate.alfea"],
+                program="heating",
+                days=["weekend"],
+                periods=[
+                    {"start": "08:00", "end": "12:00"},
+                    {"start": "17:00", "end": "23:00"},
+                ],
+            )
+        )
+    )
+
+    assert [capabilityId for capabilityId, _ in hub.written] == [103]
+    assert periods_of(hub.values[103], "saturday") == [
+        {"start": "08:00", "end": "12:00"},
+        {"start": "17:00", "end": "23:00"},
+    ]
+    assert periods_of(hub.values[103], "friday") == [
+        {"start": "06:00", "end": "22:00"}
+    ]
+    assert hub.refreshed == 1
+
+
+def test_set_periods_with_none_leaves_the_day_on_eco(monkeypatch):
+    hub = CachingHub({103: PERIOD_WEEK, 176: "1"})
+    hass = make_hass(monkeypatch, hub)
+    handler = registered(hass, "set_periods")
+
+    asyncio.run(
+        handler(
+            call_with(
+                entity_id=["climate.alfea"],
+                program="heating",
+                days=["monday"],
+                periods=[],
+            )
+        )
+    )
+
+    assert periods_of(hub.values[103], "monday") == []
+
+
+def test_two_calls_in_a_row_keep_each_other(monkeypatch):
+    """The card saves one day per call ; the second must not undo the first."""
+    hub = CachingHub({103: PERIOD_WEEK, 176: "1"})
+    hass = make_hass(monkeypatch, hub)
+    handler = registered(hass, "set_periods")
+
+    for day, start in (("monday", "05:00"), ("tuesday", "07:00")):
+        asyncio.run(
+            handler(
+                call_with(
+                    entity_id=["climate.alfea"],
+                    program="heating",
+                    days=[day],
+                    periods=[{"start": start, "end": "21:00"}],
+                )
+            )
+        )
+
+    assert periods_of(hub.values[103], "monday")[0]["start"] == "05:00"
+    assert periods_of(hub.values[103], "tuesday")[0]["start"] == "07:00"
+
+
+def test_set_periods_refuses_more_than_a_day_holds():
+    with pytest.raises(vol.Invalid):
+        call_with(
+            entity_id=["climate.alfea"],
+            program="heating",
+            days=["monday"],
+            periods=[
+                {"start": f"0{hour}:00", "end": f"0{hour}:30"} for hour in range(4)
+            ],
+        )
+
+
+def test_set_periods_refuses_a_device_with_setpoint_slots(monkeypatch):
+    hub = FakeHub(days(196))
+    hass = make_hass(monkeypatch, hub)
+    handler = registered(hass, "set_periods")
+
+    call = call_with(
+        entity_id=["climate.salon"],
+        program="heating",
+        days=["monday"],
+        periods=[{"start": "06:00", "end": "22:00"}],
+    )
+
+    with pytest.raises(ServiceValidationError, match="set_schedule"):
         asyncio.run(handler(call))
 
     assert hub.written == []

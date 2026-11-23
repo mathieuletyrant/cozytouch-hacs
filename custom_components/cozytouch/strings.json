@@ -808,6 +808,15 @@
                 "duration": { "name": "Duration", "description": "How long the absence lasts from its start, instead of an end." }
             }
         },
+        "set_periods": {
+            "name": "Set a day's comfort periods",
+            "description": "Writes the same comfort periods to one or more days, on a heat pump that keeps its program as periods (Alfea). Outside them the device holds eco.",
+            "fields": {
+                "program":  { "name": "Program", "description": "Heating or cooling." },
+                "days":     { "name": "Days", "description": "The days that will receive these periods. Every day, Weekdays and Weekend stand for the days they name." },
+                "periods":  { "name": "Periods", "description": "Start and end of each comfort period, three at most. Empty leaves the day on eco." }
+            }
+        },
         "set_schedule": {
             "name": "Set a day program",
             "description": "Writes the same time program to one or more days, for heating or cooling.",

@@ -69,6 +69,61 @@ set_schedule:
                   # both given -- unusable inside a slot row.
                   mode: box
 
+set_periods:
+  target:
+    entity:
+      integration: cozytouch
+      domain: climate
+  fields:
+    program:
+      required: true
+      example: heating
+      selector:
+        select:
+          translation_key: program
+          options:
+            - heating
+            - cooling
+    days:
+      required: true
+      example: '["weekdays"]'
+      selector:
+        select:
+          multiple: true
+          translation_key: days
+          options:
+            - all
+            - weekdays
+            - weekend
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+    periods:
+      required: true
+      example: |
+        - start: "06:00"
+          end: "22:00"
+      selector:
+        object:
+          multiple: true
+          label_field: start
+          description_field: end
+          fields:
+            start:
+              required: true
+              label: Start
+              selector:
+                time:
+            end:
+              required: true
+              label: End
+              selector:
+                time:
+
 get_schedule:
   target:
     entity:
