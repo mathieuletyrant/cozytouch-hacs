@@ -21,6 +21,8 @@ Optional :
     * swingModeAvailable : enable the swing switch (default : True)
     * coolingAvailable : enable the cooling setpoint (default : True)
     * powerfulModeAvailable : enable the powerful mode (default : True)
+    * heatingStatusAvailable : let 153 turn a room's heating into idle
+      (default : True)
     * awayModeTemperatureAvailable : enable the absence setpoint (default : True)
     * ecoModeAvailable : enable eco mode availability (default : True)
 
@@ -477,15 +479,26 @@ ELECTRIC_GENERATORS = 16 | 32 | 64 | 128 | 256
 _HEATER_MODES = frozenset({HVACMode.OFF, HVACMode.HEAT})
 
 
+# The split among 103026's generators, and the TEMPERATURE bit of 100024 the
+# app's room tile needs before it shows 117. See docs/decisions.md.
+SPLIT_GENERATOR = 8
+TEMPERATURE_OPTION = 1
+
+
+def read_mask(value: str | None) -> int | None:
+    """A bitmask capability as an int, None where it is absent or unreadable."""
+    if value is None:
+        return None
+    try:
+        return int(float(value))
+    except ValueError:
+        return None
+
+
 def heated_only(thermalGenerator: str | None) -> bool:
     """Whether a room's 103026 names electric heaters and nothing else."""
-    if thermalGenerator is None:
-        return False
-    try:
-        mask = int(float(thermalGenerator))
-    except ValueError:
-        return False
-    return mask > 0 and not mask & ~ELECTRIC_GENERATORS
+    mask = read_mask(thermalGenerator)
+    return bool(mask) and not mask & ~ELECTRIC_GENERATORS
 
 
 # What 100800 and 350 declare : one value naming a whole set of speeds, the
@@ -562,6 +575,15 @@ def apply_capabilities(
         modelInfos.swingModeAvailable = False
         modelInfos.coolingAvailable = False
         modelInfos.powerfulModeAvailable = False
+
+    if modelInfos.type is CozytouchDeviceType.ROOM:
+        # What a split's room does not have. See docs/decisions.md (#224).
+        generators = read_mask(capabilities.get(103026)) or 0
+        if generators & SPLIT_GENERATOR and not generators & ELECTRIC_GENERATORS:
+            modelInfos.heatingStatusAvailable = False
+        options = read_mask(capabilities.get(100024))
+        if options is not None and not options & TEMPERATURE_OPTION:
+            modelInfos.currentTemperatureAvailable = False
 
     for key, capabilityId in _SPEED_SET_IDS.items():
         if key not in modelInfos:

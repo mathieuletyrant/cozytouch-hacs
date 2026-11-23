@@ -3849,6 +3849,37 @@ other room captured.
 103150 stays a diagnostic binary sensor, disabled by default, for whoever
 wants to see it.
 
+### A split's room reads neither 153 nor a temperature the app hides (issue #224)
+
+Two Murao splits behind a CozyBox (rooms 557 and 558) heated -- 181 at 4,
+the app's sun icon on both tiles -- and Home Assistant said `idle` with a
+room at 0.0 degrees.
+
+*The action.* A room wired 153 as the radiator's element whatever was in
+front of it, so 153 at 0 turned the heating action into idle. On a split 153
+never moves : 0 on #224's rooms while heating, 0 on the Navizone's while
+cooling (*Capability 153 has three states*, above). A room whose 103026
+names the split (8) and no electric heater no longer wires it, through
+`heatingStatusAvailable`. A radiator room keeps it, and so does a room
+naming a split and a heater both, one naming a heat pump or a boiler (never
+seen), or one reporting no 103026 (the 2024 Takao captures) : what 153 does
+there is not known.
+
+*The temperature.* 117 read 0 on both rooms, unchanged for twelve days, and
+the app showed no ambient reading anywhere. Its room tile shows 117 only
+with the `TEMPERATURE` bit (1) set in 100002 and 100024 (entry above) ;
+#224's rooms read 111 and 0, the Navizone's 1 and 1. A room reporting 100024
+with that bit clear now shows no current temperature, through
+`currentTemperatureAvailable`, rather than a 0 that a thermostat card plots
+as a real reading. Only 100024 is read : it is the one seen clear, and a
+room that does not report it keeps 117.
+
+Both rules read what the room declares, never a model id, so they cover any
+split behind any gateway. Limits : one account, two rooms, one capture, in
+the heating season ; nothing checked on hardware, since the maintainer's
+Navizone rooms read 100024 at 1 and are unchanged by the second rule. The
+first one does change them : their heating action no longer falls to idle.
+
 ### The third one, not taken
 
 103034 `room_controls_capabilities` is a mask whose only named bit is

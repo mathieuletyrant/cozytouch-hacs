@@ -134,7 +134,9 @@ def _room_entity(
     # docs/decisions.md.
     capability.name = "room"
     capability.icon = "mdi:home-thermometer"
-    if 153 in availableCapabilityIds:
+    if 153 in availableCapabilityIds and modelInfos.get(
+        "heatingStatusAvailable", True
+    ):
         capability.heatingActiveCapabilityId = 153
     if 184 in availableCapabilityIds:
         capability.progCapabilityId = 184
