@@ -1,0 +1,1456 @@
+{
+  "home_assistant": {
+    "arch": "x86_64",
+    "dev": false,
+    "docker": true,
+    "hassio": true,
+    "installation_type": "Home Assistant OS",
+    "os_name": "Linux",
+    "os_version": "6.18.58-haos",
+    "python_version": "3.14.10",
+    "timezone": "Europe/Paris",
+    "version": "2026.11.2",
+    "virtualenv": false,
+    "container_arch": "amd64",
+    "supervisor": "2026.11.0",
+    "host_os": "Home Assistant OS 18.4",
+    "docker_version": "29.8.2",
+    "chassis": "vm",
+    "run_as_root": true
+  },
+  "custom_components": {
+    "zha_toolkit": {
+      "documentation": "https://github.com/mdeweerd/zha-toolkit",
+      "version": "v1.2.7",
+      "requirements": [
+        "aiofiles>=0.4.0",
+        "pytz>=2016.10"
+      ]
+    },
+    "roborock_q10": {
+      "documentation": "https://github.com/schlusenbaum/roborock-q10",
+      "version": "1.0.15",
+      "requirements": []
+    },
+    "cozytouch": {
+      "documentation": "https://github.com/mathieuletyrant/cozytouch-hacs",
+      "version": "2026.11.4",
+      "requirements": []
+    },
+    "enphase_ev": {
+      "documentation": "https://github.com/barneyonline/ha-enphase-energy",
+      "version": "5.4.0",
+      "requirements": []
+    },
+    "roborock_custom_map": {
+      "documentation": "https://github.com/msc5/RoborockCustomMap",
+      "version": "2.0.0",
+      "requirements": []
+    },
+    "scheduler": {
+      "documentation": "https://github.com/nielsfaber/scheduler-component",
+      "version": "3.3.9",
+      "requirements": []
+    },
+    "ble_adv": {
+      "documentation": "https://github.com/NicoIIT/ha-ble-adv",
+      "version": "v2.2.0",
+      "requirements": [
+        "pycryptodome",
+        "btsocket"
+      ]
+    },
+    "electrolux": {
+      "documentation": "https://github.com/TTLucian/ha-electrolux",
+      "version": "3.8.7",
+      "requirements": [
+        "electrolux-group-developer-sdk>=0.7.0"
+      ]
+    },
+    "hon": {
+      "documentation": "https://github.com/gvigroux/hon",
+      "version": "0.8.7",
+      "requirements": []
+    },
+    "ha_urbansolar_bv": {
+      "documentation": "https://github.com/chourmovs/ha-urbansolar-bv/wiki",
+      "version": "0.90",
+      "requirements": []
+    },
+    "browser_mod": {
+      "documentation": "https://github.com/thomasloven/hass-browser_mod/blob/master/README.md",
+      "version": "3.4.2",
+      "requirements": []
+    },
+    "xiaomi_cloud_map_extractor": {
+      "documentation": "https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor",
+      "version": "v2.2.5",
+      "requirements": [
+        "pillow",
+        "pybase64",
+        "python-miio",
+        "requests",
+        "pycryptodome"
+      ]
+    },
+    "vesync": {
+      "documentation": "https://github.com/micahqcade/custom_vesync",
+      "version": "1.3.2",
+      "requirements": [
+        "pyvesync==2.1.12"
+      ]
+    },
+    "enigma": {
+      "documentation": "https://github.com/cinzas/homeassistant-enigma-player",
+      "version": "1.9.1",
+      "requirements": [
+        "beautifulsoup4>=4.6.3"
+      ]
+    },
+    "alexa_media": {
+      "documentation": "https://github.com/alandtse/alexa_media_player/wiki",
+      "version": "5.22.1",
+      "requirements": [
+        "alexapy==1.36.0",
+        "wrapt>=1.14.0",
+        "dictor>=0.1.12,<0.2"
+      ]
+    },
+    "uix": {
+      "documentation": "https://uix.lf.technology",
+      "version": "9.1.0",
+      "requirements": []
+    }
+  },
+  "integration_manifest": {
+    "domain": "cozytouch",
+    "name": "Atlantic Cozytouch",
+    "codeowners": [
+      "mathieuletyrant"
+    ],
+    "config_flow": true,
+    "dependencies": [
+      "http",
+      "repairs"
+    ],
+    "documentation": "https://github.com/mathieuletyrant/cozytouch-hacs",
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/mathieuletyrant/cozytouch-hacs/issues",
+    "requirements": [],
+    "version": "2026.11.4",
+    "is_built_in": false,
+    "overwrites_built_in": true
+  },
+  "setup_times": {},
+  "data": {
+    "entry": {
+      "options": {
+        "create_unknown": true,
+        "dump_json": true
+      },
+      "data": {},
+      "devices": {
+        "01M84M8SET2AH6C0FMXHVGPHH6": 26133387
+      }
+    },
+    "online": true,
+    "writeRefusals": [],
+    "consumptions": {
+      "declared": null,
+      "status": 200,
+      "answer": [
+        {
+          "serialNumber": "**REDACTED**",
+          "deviceId": 26133387,
+          "category": 3,
+          "type": 1,
+          "unit": 0,
+          "currency": 101,
+          "deviceUrl": "**REDACTED**",
+          "zoneId": null,
+          "zoneLabel": null,
+          "consumptionPeriods": []
+        },
+        {
+          "serialNumber": "**REDACTED**",
+          "deviceId": 26133387,
+          "category": 2,
+          "type": 1,
+          "unit": 1,
+          "currency": 101,
+          "deviceUrl": "**REDACTED**",
+          "zoneId": null,
+          "zoneLabel": null,
+          "consumptionPeriods": [
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1792800000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 2,
+              "cost": 0.4032,
+              "date": 1792886400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 5,
+              "cost": 1.008,
+              "date": 1792972800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1793059200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793145600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 2,
+              "cost": 0.4032,
+              "date": 1793232000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1793318400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1793404800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1793491200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1793577600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1793664000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1793750400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1793836800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1793923200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1794009600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1794096000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 2,
+              "cost": 0.4032,
+              "date": 1794182400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1794268800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 2,
+              "cost": 0.4032,
+              "date": 1794355200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1794441600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1794528000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 6,
+              "cost": 1.2096,
+              "date": 1794614400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1794700800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1794787200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1794873600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1794960000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1795046400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1795132800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 3,
+              "cost": 0.6048,
+              "date": 1795219200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 4,
+              "cost": 0.8064,
+              "date": 1795305600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 2,
+              "cost": 0.4032,
+              "date": 1795392000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            }
+          ]
+        },
+        {
+          "serialNumber": "**REDACTED**",
+          "deviceId": 26133387,
+          "category": 1,
+          "type": 1,
+          "unit": 0,
+          "currency": 101,
+          "deviceUrl": "**REDACTED**",
+          "zoneId": null,
+          "zoneLabel": null,
+          "consumptionPeriods": [
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1792972800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793059200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793145600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1793232000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793318400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793404800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793491200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1793577600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793664000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793750400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1793836800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1793923200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794009600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794096000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1794182400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794268800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794355200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794441600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1794528000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794614400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794700800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 1,
+              "cost": 0.2016,
+              "date": 1794787200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794873600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 0,
+              "cost": 0,
+              "date": 1794960000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 5,
+              "cost": 1.008,
+              "date": 1795046400,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 11,
+              "cost": 2.2176,
+              "date": 1795132800,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 6,
+              "cost": 1.2096,
+              "date": 1795219200,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 18,
+              "cost": 3.6288,
+              "date": 1795305600,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            },
+            {
+              "consumedQuantity": 21,
+              "cost": 4.2336,
+              "date": 1795392000,
+              "mode": 0,
+              "producedQuantity": 0,
+              "profil": 0
+            }
+          ]
+        }
+      ]
+    },
+    "setup": {
+      "absence": {
+        "endDate": 1761302880,
+        "startDate": 1760784526
+      },
+      "address": "**REDACTED**",
+      "area": 270,
+      "currency": "EUR",
+      "id": 249061,
+      "mainDHWEnergy": 1,
+      "mainHeatingEnergy": 1,
+      "name": "zone1",
+      "numberOfPersons": 0,
+      "numberOfRooms": 8,
+      "rateLimit": 30,
+      "setupBuildingDate": 4,
+      "type": 2
+    },
+    "zones": [
+      {
+        "id": 381313,
+        "name": "Zone 1",
+        "zoneType": 2,
+        "numberOfDevices": 1
+      }
+    ],
+    "devices": [
+      {
+        "deviceId": 26133387,
+        "name": "Alfea Excellia Duo AI UE: 11kW1Phi, 14kW1Phi App: 6kW",
+        "modelId": 73,
+        "productId": 2,
+        "zoneId": 381313,
+        "zoneName": "Zone 1",
+        "tags": [],
+        "isConfiguredHere": true,
+        "customName": "Alfea Excellia Duo AI UE: 11kW1Phi, 14kW1Phi App: 6kW",
+        "longName": "Alfea Excellia Duo AI UE: 11kW1Phi, 14kW1Phi App: 6kW",
+        "modelFamily": "Heat_Pump",
+        "productRange": null,
+        "masterDeviceId": null,
+        "isAvailable": false,
+        "model": {
+          "name": "Alfea Excellia Duo AI UE: 11kW1Phi, 14kW1Phi App: 6kW",
+          "type": "heat_pump",
+          "infos": {
+            "modelId": "73",
+            "HVACModesCapabilityId": "{8, 7}",
+            "HVACModes": "{0: <HVACMode.OFF: 'off'>, 4: <HVACMode.HEAT: 'heat'>}"
+          }
+        },
+        "capabilities": {
+          "mapped": {
+            "3": "dhw_profile",
+            "4": "cooling_profile_z1",
+            "6": "generator_error_code",
+            "7": "heat_pump_z1",
+            "8": "heat_pump_z2",
+            "9": "extra_heating_power_z2",
+            "11": "extra_dhw_power",
+            "15": "dhw_service_type",
+            "17": "control_setpoint",
+            "22": "target_temperature_dhw",
+            "23": "dhw_comfort_setpoint",
+            "39": "dhw_eco_setpoint",
+            "41": "target_temperature_eco_z1",
+            "57": "power_consumption",
+            "59": "power_consumption",
+            "60": "total_electricity_consumption",
+            "73": "available_thermostat_modes",
+            "86": "domestic_hot_water",
+            "87": "domestic_hot_water_mode",
+            "88": "model_name",
+            "93": "zones_count",
+            "94": "product_number",
+            "96": "target_temperature_comfort_cool_z1",
+            "97": "target_temperature_eco_cool_z1",
+            "101": "Capability_101",
+            "102": "Capability_102",
+            "103": "Capability_103",
+            "104": "Capability_104",
+            "106": "nominal_heating_power",
+            "107": "nominal_dhw_power",
+            "117": "thermostat_temperature_z1",
+            "119": "outside_temperature",
+            "120": "product_type",
+            "148": "away_period_start",
+            "149": "away_period_end",
+            "152": "away_mode",
+            "154": "zone_1",
+            "159": "override_remain_time_z1",
+            "165": "domestic_hot_water_boost",
+            "169": "radio_signal",
+            "170": "signal_quality",
+            "171": "away_mode_cooling_temperature",
+            "172": "away_mode_temperature",
+            "176": "heating_schedule_available_z1",
+            "184": "prog_mode",
+            "185": "prog_mode_z2",
+            "188": "home_services",
+            "190": "cooling_schedule_available_z1",
+            "218": "connectivity_diagnosis",
+            "335": "serial_number",
+            "58773": "target_temperature_comfort_z1",
+            "107106": "generator_setpoint_mode"
+          },
+          "suppressed": [
+            1
+          ],
+          "unmapped": [],
+          "values": {
+            "1": "1",
+            "3": "2",
+            "4": "0",
+            "6": "0",
+            "7": "4",
+            "8": "3",
+            "9": "0",
+            "11": "1",
+            "15": "2",
+            "17": "18.0",
+            "22": "45",
+            "23": "46",
+            "39": "45",
+            "41": "19.0",
+            "57": "7591000",
+            "59": "2596000",
+            "60": "10188000",
+            "73": "2",
+            "86": null,
+            "87": null,
+            "88": "R002411610",
+            "93": "1",
+            "94": "      305325",
+            "96": "24.0",
+            "97": "26.0",
+            "101": "[{\"monday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"tuesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"wednesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"thursday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"friday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"saturday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"sunday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]}]",
+            "102": "[{\"monday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"tuesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"wednesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"thursday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"friday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"saturday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"sunday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]}]",
+            "103": "[{\"monday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"tuesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"wednesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"thursday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"friday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"saturday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"sunday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]}]",
+            "104": "[{\"monday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"tuesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"wednesday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"thursday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"friday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"saturday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]},{\"sunday\": [{\"start\": \"06:00\",\"end\": \"22:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"},{\"start\": \"00:00\",\"end\": \"00:00\"}]}]",
+            "106": "14",
+            "107": "14",
+            "117": "19.4",
+            "119": "8.6",
+            "120": "5",
+            "148": "{\"month\": 10,\"hour\": 12,\"year\": 2025,\"day\": 18,\"minute\": 48}",
+            "149": "{\"month\": 10,\"hour\": 0,\"year\": 0,\"day\": 24,\"minute\": 0}",
+            "152": "2",
+            "154": "Zone 1",
+            "159": "0",
+            "165": null,
+            "169": "96.0",
+            "170": "0",
+            "171": "35.0",
+            "172": "8.0",
+            "176": "1",
+            "184": "1",
+            "185": null,
+            "188": "3",
+            "190": "0",
+            "218": "5",
+            "335": "002411610305325",
+            "58773": "18.0",
+            "107106": null
+          },
+          "modificationDates": {
+            "1": 1795447458,
+            "3": 1795452782,
+            "4": 1756900830,
+            "6": 1756900826,
+            "7": 1795022286,
+            "8": 1756900825,
+            "9": 1756900825,
+            "11": 1756900825,
+            "15": 1756900827,
+            "17": 1795446476,
+            "22": 1795452782,
+            "23": 1792600705,
+            "39": 1756900827,
+            "41": 1789077045,
+            "57": 1795445636,
+            "59": 1795413235,
+            "60": 1795449240,
+            "73": 1756900829,
+            "86": 1795072763,
+            "87": 1795175529,
+            "88": 1756900824,
+            "93": 1756900824,
+            "94": 1756900824,
+            "96": 1756900830,
+            "97": 1756900830,
+            "101": 1772204263,
+            "102": 1774175528,
+            "103": 1774175528,
+            "104": 1772204263,
+            "106": 1756900824,
+            "107": 1756900825,
+            "117": 1795453690,
+            "119": 1795452787,
+            "120": 1756900824,
+            "148": 1760784541,
+            "149": 1760784560,
+            "152": 1760784560,
+            "154": 1756900832,
+            "159": 1795449236,
+            "165": 1795171950,
+            "169": 1795362374,
+            "170": 1795361026,
+            "171": 1756900826,
+            "172": 1756900826,
+            "176": 1756900829,
+            "184": 1795022286,
+            "185": 1795171936,
+            "188": 1756900824,
+            "190": 1756900830,
+            "218": 1773120007,
+            "335": 1756900824,
+            "58773": 1795171963,
+            "107106": 1795175529
+          }
+        }
+      }
+    ],
+    "atlanticSays": {
+      "1": {
+        "name": "ROOM1_PassAPCHeatingProfileState",
+        "description": "Current heating profile for zone 1",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "stop",
+          "1": "comfort",
+          "2": "eco",
+          "3": "externalSetpoint",
+          "4": "absence",
+          "5": "manu",
+          "6": "frostprotection",
+          "7": "derogation"
+        }
+      },
+      "3": {
+        "name": "PassAPCDHWProfileState",
+        "description": "Current domestic hot water profile",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "stop",
+          "1": "comfort",
+          "2": "eco",
+          "3": "externalSetpoint",
+          "4": "absence",
+          "5": "manu",
+          "6": "frostprotection",
+          "7": "derogation"
+        }
+      },
+      "4": {
+        "name": "ROOM1_PassAPCCoolingProfileState",
+        "description": "Current cooling profile for zone 1",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "stop",
+          "1": "comfort",
+          "2": "eco",
+          "3": "externalSetpoint",
+          "4": "absence",
+          "5": "manu",
+          "6": "frostprotection",
+          "7": "derogation"
+        }
+      },
+      "6": {
+        "name": "GENERATOR_Errors",
+        "description": "Error\u00a0code\u00a0of\u00a0the\u00a0generator",
+        "type": "int",
+        "writable": false,
+        "min": 0.0,
+        "max": 255.0,
+        "resolution": 1.0
+      },
+      "7": {
+        "name": "ROOM1_SystemOperatingMode",
+        "description": "Defines\u00a0the\u00a0user\u00a0Operating\u00a0mode\u00a0available\u00a0in\u00a0the\u00a0ROOM",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "Off",
+          "1": "Auto",
+          "3": "Cool",
+          "4": "Heat",
+          "5": "EmergencyHeating",
+          "6": "Precooling",
+          "7": "FanOnly",
+          "8": "Dry",
+          "9": "Sleep"
+        }
+      },
+      "8": {
+        "name": "HeatingPowerConsumptionExtra1State",
+        "description": "Electrical Extra power for heating in zone 1",
+        "type": "int",
+        "writable": false,
+        "unit": "kW",
+        "min": 0.0,
+        "max": 20.0,
+        "resolution": 1.0
+      },
+      "9": {
+        "name": "HeatingPowerConsumptionExtra2State",
+        "description": "Electrical Extra power for heating in zone 2",
+        "type": "int",
+        "writable": false,
+        "unit": "kW",
+        "min": 0.0,
+        "max": 20.0,
+        "resolution": 1.0
+      },
+      "11": {
+        "name": "ECSPowerConsumptionExtra1State",
+        "description": "Electrical Extra power for domestic hot water in zone 1",
+        "type": "int",
+        "writable": false,
+        "unit": "kW",
+        "min": 0.0,
+        "max": 20.0,
+        "resolution": 1.0
+      },
+      "15": {
+        "name": "DHW_ServiceCapabilities",
+        "description": "Type of the DHW service",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "Instantaneous",
+          "1": "SemiAccumulated",
+          "2": "Accumulated"
+        }
+      },
+      "17": {
+        "name": "ROOM1_ControlSetpoint",
+        "description": "Current heating temperature setpoint for room 1",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": -273.15,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "22": {
+        "name": "DHW_WaterSetpoint",
+        "description": "Defines\u00a0the\u00a0temperature\u00a0setpoint\u00a0applie\u00a0without\u00a0override",
+        "type": "float",
+        "writable": false,
+        "unit": "\u00b0C",
+        "min": -273.15,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "23": {
+        "name": "DHW_ComfortSetpoint",
+        "description": "Comfort domestic hot water temperature setpoint",
+        "type": "int",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": -273.15,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "39": {
+        "name": "DHW_EcoSetpoint",
+        "description": "Eco Temperature Setpoint for DHW",
+        "type": "int",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": -273.15,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "41": {
+        "name": "ROOM1_EcoHeatingTargetTemperatureState",
+        "description": "Eco Heating Temperature Setpoint for room 1",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": 7.0,
+        "max": 28.0,
+        "resolution": 0.01
+      },
+      "57": {
+        "name": "HOME_ElecHeatConsumptionCumulated",
+        "description": "Defines\u00a0the\u00a0electricity\u00a0consumption\u00a0for\u00a0heating",
+        "type": "float",
+        "writable": false,
+        "unit": "kWh",
+        "min": 0.0,
+        "max": 2147483.648,
+        "resolution": 0.001
+      },
+      "59": {
+        "name": "HOME_ElecDHWConsumptionCumulated",
+        "description": "Defines\u00a0the\u00a0electricity\u00a0consumption\u00a0for\u00a0DHW\u00a0production",
+        "type": "float",
+        "writable": false,
+        "unit": "kWh",
+        "min": 0.0,
+        "max": 2147483.648,
+        "resolution": 0.001
+      },
+      "60": {
+        "name": "HOME_ElecTotalConsumptionCumulated",
+        "description": "All time total cumulated electrical consumption",
+        "type": "float",
+        "writable": false,
+        "unit": "kWh",
+        "min": 0.0,
+        "max": 2147483.648,
+        "resolution": 0.001
+      },
+      "73": {
+        "name": "ROOM1_ThermostatOperatingModeCapabilities",
+        "description": "Defines\u00a0the\u00a0operating\u00a0mode\u00a0available\u00a0in\u00a0the\u00a0ROOM 1",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "CoolingOnly",
+          "1": "CoolingWithReheat",
+          "2": "HeatingOnly",
+          "3": "HeatingWithReheat",
+          "4": "CoolingAndHeating",
+          "5": "CoolingAndHeatingWithReheat"
+        }
+      },
+      "86": {
+        "name": "DHW_ServiceOn",
+        "description": "Defines\u00a0the\u00a0activation\u00a0of\u00a0the\u00a0DHW\u00a0production",
+        "type": "bool",
+        "writable": true
+      },
+      "87": {
+        "name": "DHW_TemperatureSetpointMode",
+        "description": "Defines the operating range of DHW production",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "ConstantSetpoint",
+          "2": "EcoComfortScheduleSetpoint",
+          "3": "AutomaticSetpoint",
+          "4": "MilestoneScheduleSetpoint"
+        }
+      },
+      "88": {
+        "name": "ProductIdentification_DEVICE_1",
+        "description": "Defines\u00a0the\u00a0Product\u00a0Identification\u00a0of\u00a0the\u00a0device",
+        "type": "string",
+        "writable": false
+      },
+      "93": {
+        "name": "THAMB_ThermalEnergySupplyPresent",
+        "description": "Defines\u00a0the\u00a0number\u00a0of\u00a0thermal\u00a0Energy\u00a0Supply\u00a0circuit",
+        "type": "int",
+        "writable": false,
+        "unit": "nb",
+        "min": 0.0,
+        "max": 16.0,
+        "resolution": 1.0
+      },
+      "94": {
+        "name": "SerialNumber_DEVICE_1",
+        "description": "Defines\u00a0the\u00a0Serial\u00a0Number\u00a0of\u00a0the\u00a0device",
+        "type": "string",
+        "writable": false
+      },
+      "96": {
+        "name": "ROOM1_ComfortCoolingTargetTemperatureState",
+        "description": "Comfort cooling temperature setpoint for room 1",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": 15.0,
+        "max": 35.0,
+        "resolution": 0.01
+      },
+      "97": {
+        "name": "ROOM1_EcoCoolingTargetTemperatureState",
+        "description": "Eco cooling temperature setpoint for room 1",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": 15.0,
+        "max": 35.0,
+        "resolution": 0.01
+      },
+      "101": {
+        "name": "ROOM2_WeekProgrammingTimeSlot_Heating",
+        "description": "Heating programming time slot of the week for zone 2 [0..6] of {Plage1 : tPlage, Plage2 : tPlage, Plage3 : tPlage},  : tPlage : {Hd, Hf}",
+        "type": "string",
+        "writable": true
+      },
+      "102": {
+        "name": "ROOM2_WeekProgrammingTimeSlot_Cooling",
+        "description": "Cooling programming time slot of the week for zone 2 [0..6] of {Plage1 : tPlage, Plage2 : tPlage, Plage3 : tPlage},  : tPlage : {Hd, Hf}",
+        "type": "string",
+        "writable": true
+      },
+      "103": {
+        "name": "ROOM1_WeekProgrammingTimeSlot_Heating",
+        "description": "Heating programming time slot of the week for zone 1 [0..6] of {Plage1 : tPlage, Plage2 : tPlage, Plage3 : tPlage},  : tPlage : {Hd, Hf}",
+        "type": "string",
+        "writable": true
+      },
+      "104": {
+        "name": "ROOM1_WeekProgrammingTimeSlot_Cooling",
+        "description": "Cooling programming time slot of the week for zone 1 [0..6] of {Plage1 : tPlage, Plage2 : tPlage, Plage3 : tPlage},  : tPlage : {Hd, Hf}",
+        "type": "string",
+        "writable": true
+      },
+      "106": {
+        "name": "HeatingPowerConsumptionState",
+        "description": "Provides heating or thermic nominal power",
+        "type": "int",
+        "writable": false,
+        "unit": "kW",
+        "min": 0.0,
+        "max": 20.0,
+        "resolution": 1.0
+      },
+      "107": {
+        "name": "ECSPowerConsumptionState",
+        "description": "Provides DHW nominal power",
+        "type": "int",
+        "writable": false,
+        "unit": "kW",
+        "min": 0.0,
+        "max": 20.0,
+        "resolution": 1.0
+      },
+      "117": {
+        "name": "ROOM1_AmbientRoom",
+        "description": "Ambient\u00a0temperature\u00a0in\u00a0the\u00a0Room 1",
+        "type": "float",
+        "writable": false,
+        "unit": "\u00b0C",
+        "min": 4.0,
+        "max": 40.0,
+        "resolution": 0.01
+      },
+      "119": {
+        "name": "HOME_OutsideTempSensor",
+        "description": "Measurement of the outside temperature given by an external sensor",
+        "type": "float",
+        "writable": false,
+        "unit": "\u00b0C",
+        "min": -40.0,
+        "max": 50.0,
+        "resolution": 0.01
+      },
+      "120": {
+        "name": "ProductType",
+        "description": "Type of the product",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "accumulationDomesticHotWater",
+          "1": "airConditioning",
+          "2": "boiler",
+          "3": "convector",
+          "4": "doubleFlowControlledMechanicalVentilation",
+          "5": "heatPump",
+          "6": "heater",
+          "7": "hybrid",
+          "8": "singleFlowControlledMechanicalVentilation",
+          "9": "thermodynamicDomesticHotWater",
+          "10": "zoneController",
+          "11": "undefined"
+        }
+      },
+      "148": {
+        "name": "DateAwayStart",
+        "description": "Away period date of start ",
+        "type": "string",
+        "writable": true
+      },
+      "149": {
+        "name": "DateAwayEnd",
+        "description": "Away period date of end ",
+        "type": "string",
+        "writable": true
+      },
+      "152": {
+        "name": "HOME_AwayModeStatus",
+        "description": "Status of the away mode",
+        "type": "enum",
+        "writable": false,
+        "min": 0.0,
+        "max": 2.0,
+        "resolution": 1.0,
+        "values": {
+          "0": "Disabled",
+          "1": "Enabled",
+          "2": "Scheduled"
+        }
+      },
+      "154": {
+        "name": "ROOM1_Name",
+        "description": "Defines the name of the room 1",
+        "type": "string",
+        "writable": true
+      },
+      "159": {
+        "name": "ROOM1_OverrideSetpointRemaining ",
+        "description": "Defines\u00a0the\u00a0time\u00a0remaining\u00a0in\u00a0minutes\u00a0for\u00a0which\u00a0a\u00a0setpoint\u00a0hold\u00a0is\u00a0active",
+        "type": "int",
+        "writable": false,
+        "unit": "min",
+        "min": 0.0,
+        "max": 1440.0,
+        "resolution": 1.0
+      },
+      "165": {
+        "name": "DHW_BoostOn",
+        "description": "Activates a Boost DHW and inform when the boost is on progress",
+        "type": "int",
+        "writable": true,
+        "unit": "b",
+        "min": 0.0,
+        "max": 1.0,
+        "values": {
+          "0": "Off",
+          "1": "On"
+        }
+      },
+      "169": {
+        "name": "RSSIPercentageQuality",
+        "description": "Defines the quality of the RSSI signal in %",
+        "type": "int",
+        "writable": false,
+        "unit": "%",
+        "min": 0.0,
+        "max": 100.0,
+        "resolution": 1.0
+      },
+      "170": {
+        "name": "RSSIQualityState",
+        "description": "Defines the RSSI quality",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "0": "good",
+          "1": "normal",
+          "2": "low",
+          "3": "verylow"
+        }
+      },
+      "171": {
+        "name": "HOME_AwayCooling",
+        "description": "Defines the cooling temperature setpoint in Away mode ",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": -273.2,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "172": {
+        "name": "HOME_AwayHeating",
+        "description": "Defines the heating temperature setpoint in Away mode ",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": -273.2,
+        "max": 327.7,
+        "resolution": 0.01
+      },
+      "176": {
+        "name": "ROOM1_HeatingSchedulingAvailability",
+        "description": "Define the availability heating internal scheduling in room 1",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "unavailable",
+          "1": "available"
+        }
+      },
+      "184": {
+        "name": "ROOM1_SystemSetpointMode",
+        "description": "Defines the user Mode in the room 1 : 0: BASIC 1: PROG",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "BASIC",
+          "1": "PROG",
+          "2": "AUTO",
+          "4": "PROG_OFF"
+        }
+      },
+      "185": {
+        "name": "ROOM2_SystemSetpointMode",
+        "description": "Defines the user Mode in the room 2 : 0: BASIC 1: PROG",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "BASIC",
+          "1": "PROG",
+          "2": "AUTO",
+          "4": "PROG_OFF"
+        }
+      },
+      "188": {
+        "name": "HOME_ServicesCapabilities",
+        "description": "Defines\u00a0the\u00a0services\u00a0available\u00a0in\u00a0the\u00a0HOME.",
+        "type": "enum",
+        "writable": false,
+        "values": {
+          "1": "ThermalAmbient",
+          "2": "DHW",
+          "4": "Ventilation",
+          "8": "Ligthing",
+          "16": "Reserved",
+          "256": "Away"
+        }
+      },
+      "190": {
+        "name": "ROOM1_CoolingSchedulingAvailability",
+        "description": "Define the availability cooling internal scheduling in zone 1",
+        "type": "enum",
+        "writable": true,
+        "values": {
+          "0": "unavailable",
+          "1": "available"
+        }
+      },
+      "218": {
+        "name": "ConnectivityDiagnosis",
+        "description": "Defines the connectivity of our system",
+        "type": "int",
+        "writable": false
+      },
+      "335": {
+        "name": "GeneratorSerialNumber",
+        "description": "Define the generator complete serial number",
+        "type": "string",
+        "writable": false
+      },
+      "58773": {
+        "name": "ROOM1_ComfortHeatingTargetTemperatureState",
+        "description": "Defines the comfort heating temperature setpoint for room 1",
+        "type": "float",
+        "writable": true,
+        "unit": "\u00b0C",
+        "min": 7.0,
+        "max": 28.0,
+        "resolution": 0.01
+      },
+      "107106": {
+        "name": "Generator_TemperatureSetpointMode",
+        "description": "Defines the DHW temperature setpoint mode",
+        "type": "enum",
+        "writable": true,
+        "min": 0.0,
+        "max": 4.0,
+        "resolution": 1.0,
+        "values": {
+          "4": "Schedule",
+          "5": "peakAndOffpeak_Schedule",
+          "6": "peakAndOffpeak",
+          "0": "Off",
+          "2": "Eco",
+          "3": "Comfort"
+        }
+      }
+    }
+  },
+  "issues": []
+}
