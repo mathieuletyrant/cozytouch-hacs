@@ -41,9 +41,12 @@ overturn one, edit the line here in the same pull request.
 - **The setup PUT is what sets an absence** ; the Navizone refuses the
   152/222 mirror writes (403, state 4) and still turns programmed.
   2026-10-05 HA history, `docs/decisions.md`.
-- **153 stays 0 on the Navizone rooms while cooling**, so it is no running
-  signal there. **Absence timestamps are plain unix time** ; 315 is not
-  added. Both from the 2026-09-25 dump, `docs/decisions.md`.
+- **153 stays 0 on a split's room**, cooling (Navizone) or heating (#224
+  Murao), so it is no running signal there and a room naming only a split
+  no longer reads it. **100024 without bit 1 hides 117** in the app, which
+  #224's rooms read at 0. `docs/decisions.md`.
+- **Absence timestamps are plain unix time** ; 315 is not
+  added. 2026-09-25 dump, `docs/decisions.md`.
 - **A model the catalogue drops keeps its name** and its productId, listed in
   `DROPPED_FROM_CATALOGUE` ; the sync test subtracts it. Maintainer's call
   on #198 (180 ids, 2026-11-10). `docs/decisions.md`.

@@ -139,6 +139,7 @@ class ModelInfos(AttributeDict):
     swingModeAvailable: bool
     coolingAvailable: bool
     powerfulModeAvailable: bool
+    heatingStatusAvailable: bool
     awayModeTemperatureAvailable: bool
     ecoModeAvailable: bool
     overrideModeAvailable: bool
