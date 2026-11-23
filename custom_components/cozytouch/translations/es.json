@@ -78,7 +78,9 @@
         },
         "calendar": {
             "heating_program":         { "name": "Programa de calefacción" },
+            "heating_program_z2":      { "name": "Programa de calefacción Z2" },
             "cooling_program":         { "name": "Programa de refrigeración" },
+            "cooling_program_z2":      { "name": "Programa de refrigeración Z2" },
             "hot_water_program":       { "name": "Programa de agua caliente" }
         },
         "climate": {
@@ -309,6 +311,8 @@
             "cooling_activation_threshold":   { "name": "Umbral de activación del frío" },
             "cooling_flow_temperature_at_thirty_five": { "name": "Temperatura de impulsión de frío a 35 °C" },
             "cooling_flow_temperature_at_twenty_five": { "name": "Temperatura de impulsión de frío a 25 °C" },
+            "cooling_periods_z1":             { "name": "Franjas de frío Z1" },
+            "cooling_periods_z2":             { "name": "Franjas de frío Z2" },
             "cooling_power_consumption":      { "name": "Consumo de refrigeración" },
             "cooling_profile_z1":             { "name": "Perfil de refrigeración Z1" },
             "cooling_profile_z2":             { "name": "Perfil de refrigeración Z2" },
@@ -400,6 +404,8 @@
             "heat_cool_request":              { "name": "Solicitud de calor/frío" },
             "heat_cool_switch_type":          { "name": "Tipo de conmutación calor/frío" },
             "heating_cooling_switch_temperature": { "name": "Temperatura de conmutación calor/frío" },
+            "heating_periods_z1":             { "name": "Franjas de calefacción Z1" },
+            "heating_periods_z2":             { "name": "Franjas de calefacción Z2" },
             "heating_schedule_available_z1":  { "name": "Programación de calefacción disponible Z1" },
             "heating_schedule_available_z2":  { "name": "Programación de calefacción disponible Z2" },
             "home_active_errors":             { "name": "Fallos activos" },

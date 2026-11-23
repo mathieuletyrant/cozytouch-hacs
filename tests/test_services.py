@@ -613,3 +613,50 @@ def test_what_a_period_produces_can_be_written():
 def test_a_period_that_ends_before_it_starts_is_refused():
     with pytest.raises(ServiceValidationError):
         services.apply_period(DAY, "17:00", "09:00", 21)
+
+
+# --- the comfort periods of issue #229 ------------------------------------
+
+PERIOD_WEEK = (
+    "["
+    + ",".join(
+        f'{{"{day}": [{{"start": "06:00","end": "22:00"}},{{"start": "00:00",'
+        f'"end": "00:00"}},{{"start": "00:00","end": "00:00"}}]}}'
+        for day in PROGRAM_DAYS
+    )
+    + "]"
+)
+
+
+def test_a_week_of_comfort_periods_reads_back_as_periods(monkeypatch):
+    """The Alfea holds its week in 103 ; get_schedule answers it as is."""
+    hass = make_hass(monkeypatch, FakeHub({103: PERIOD_WEEK, 176: "1"}))
+    handler = registered(hass, "get_schedule")
+
+    response = asyncio.run(
+        handler(call_with(entity_id=["climate.alfea"], program="heating"))
+    )
+
+    assert response["climate.alfea"]["periods"]["monday"] == [
+        {"start": "06:00", "end": "22:00"}
+    ]
+    assert list(response["climate.alfea"]["periods"]) == list(PROGRAM_DAYS)
+
+
+def test_set_schedule_points_a_period_program_at_its_calendar(monkeypatch):
+    """A slot carries a temperature, a period does not : nothing is written."""
+    hub = FakeHub({103: PERIOD_WEEK, 176: "1"})
+    hass = make_hass(monkeypatch, hub)
+    handler = registered(hass, "set_schedule")
+
+    call = call_with(
+        entity_id=["climate.alfea"],
+        program="heating",
+        days=["monday"],
+        slots=[{"time": "00:00", "temperature": 19}],
+    )
+
+    with pytest.raises(ServiceValidationError, match="calendar"):
+        asyncio.run(handler(call))
+
+    assert hub.written == []

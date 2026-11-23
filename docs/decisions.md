@@ -2683,6 +2683,52 @@ the zone 2 program outside air conditioners, which is the same unresolved naming
 `set_schedule` carries ; the program exists in both cool and heat, so nothing
 here decides it either.
 
+### The Alfea's program is a week of comfort periods (issue #229)
+
+An Alfea Excellia Duo AI (model 73, productId 2) reports no setpoint block at
+196 or 100320, so it got no calendar and `get_schedule` refused it. Its program
+is elsewhere, in the shape the catalogue describes for 101-104
+(`ROOM<n>_WeekProgrammingTimeSlot_<Heating|Cooling>`, "[0..6] of {Plage1,
+Plage2, Plage3}, tPlage : {Hd, Hf}") : one capability for the whole week,
+JSON, three periods a day, an unused one 00:00 to 00:00.
+
+| id | program | zone | offered when |
+| -- | ------- | ---- | ------------ |
+| 103 | heating | 1 | 176 reads 1 |
+| 104 | cooling | 1 | 190 reads 1 |
+| 101 | heating | 2 | 189 reads 1 |
+| 102 | cooling | 2 | 191 reads 1 |
+
+The availability gates it because the dump reports all four weeks, the zone 2
+and cooling ones included, on a one-zone heating-only unit ; only 176 reads 1.
+
+**A period is comfort, the rest eco.** One reading supports it : the dump was
+taken at 18:08 local, inside 06:00-22:00, and reads profile 1 (`comfort`) with
+the control setpoint equal to the comfort one (58773 = 18, eco 41 = 19). So
+an event is a period, titled "Comfort", and nothing is drawn outside them.
+The title is ignored on writing : a period has no temperature.
+
+**An edit writes the week back in the device's own string**, spacing
+included (`json.dumps` with `(",", ": ")`), and the test holds that an
+untouched week comes back byte for byte. Nothing has measured how strict the
+cloud is about it, nor whether the write lands : the catalogue says the four
+are writable (`accessType` 7), and that is all. A new period merges into any
+it overlaps or touches ; a fourth is refused. A week that does not read as
+seven days is not rewritten, since a day that did not read would go back
+empty.
+
+**A period ending at midnight is read, not written.** The device's empty
+period is 00:00 to 00:00, so 20:00 to 00:00 reads as running to midnight ;
+whether the device stores it that way, or as 24:00, is unseen, so the
+calendar refuses to write one and asks for 23:59.
+
+`get_schedule` answers such a device with `periods` instead of `days`, a
+different key so nothing reading slots mistakes one for the other ;
+`set_schedule`, whose slots carry a temperature, refuses it and points at the
+calendar. The schedule card still speaks slots only. The four raw sensors are
+named and go diagnostic, off by default, as the per-day sensors did once a
+calendar covered them.
+
 ## `custom_components/cozytouch/account.py`
 
 ### The account owns the session, the token and the setup view

@@ -78,7 +78,9 @@
         },
         "calendar": {
             "heating_program":         { "name": "Heating Program" },
+            "heating_program_z2":      { "name": "Heating Program Z2" },
             "cooling_program":         { "name": "Cooling Program" },
+            "cooling_program_z2":      { "name": "Cooling Program Z2" },
             "hot_water_program":       { "name": "Hot Water Program" }
         },
         "climate": {
@@ -309,6 +311,8 @@
             "cooling_activation_threshold":   { "name": "Cooling Activation Threshold" },
             "cooling_flow_temperature_at_thirty_five": { "name": "Cooling Flow Temperature at 35 °C" },
             "cooling_flow_temperature_at_twenty_five": { "name": "Cooling Flow Temperature at 25 °C" },
+            "cooling_periods_z1":             { "name": "Cooling Periods Z1" },
+            "cooling_periods_z2":             { "name": "Cooling Periods Z2" },
             "cooling_power_consumption":      { "name": "Cooling Consumption" },
             "cooling_profile_z1":             { "name": "Cooling Profile Z1" },
             "cooling_profile_z2":             { "name": "Cooling Profile Z2" },
@@ -400,6 +404,8 @@
             "heat_cool_request":              { "name": "Heating/Cooling Request" },
             "heat_cool_switch_type":          { "name": "Heating/Cooling Switch Type" },
             "heating_cooling_switch_temperature": { "name": "Heating/Cooling Switch Temperature" },
+            "heating_periods_z1":             { "name": "Heating Periods Z1" },
+            "heating_periods_z2":             { "name": "Heating Periods Z2" },
             "heating_schedule_available_z1":  { "name": "Heating Schedule Available Z1" },
             "heating_schedule_available_z2":  { "name": "Heating Schedule Available Z2" },
             "home_active_errors":             { "name": "Active Errors" },

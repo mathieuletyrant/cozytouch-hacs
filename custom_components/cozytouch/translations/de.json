@@ -78,7 +78,9 @@
         },
         "calendar": {
             "heating_program":         { "name": "Heizprogramm" },
+            "heating_program_z2":      { "name": "Heizprogramm Z2" },
             "cooling_program":         { "name": "Kühlprogramm" },
+            "cooling_program_z2":      { "name": "Kühlprogramm Z2" },
             "hot_water_program":       { "name": "Warmwasserprogramm" }
         },
         "climate": {
@@ -309,6 +311,8 @@
             "cooling_activation_threshold":   { "name": "Einschaltschwelle Kühlen" },
             "cooling_flow_temperature_at_thirty_five": { "name": "Kühl-Vorlauftemperatur bei 35 °C" },
             "cooling_flow_temperature_at_twenty_five": { "name": "Kühl-Vorlauftemperatur bei 25 °C" },
+            "cooling_periods_z1":             { "name": "Kühlzeiträume Z1" },
+            "cooling_periods_z2":             { "name": "Kühlzeiträume Z2" },
             "cooling_power_consumption":      { "name": "Kühlverbrauch" },
             "cooling_profile_z1":             { "name": "Kühlprofil Z1" },
             "cooling_profile_z2":             { "name": "Kühlprofil Z2" },
@@ -400,6 +404,8 @@
             "heat_cool_request":              { "name": "Heiz-/Kühlanforderung" },
             "heat_cool_switch_type":          { "name": "Umschaltart Heizen/Kühlen" },
             "heating_cooling_switch_temperature": { "name": "Umschalttemperatur Heizen/Kühlen" },
+            "heating_periods_z1":             { "name": "Heizzeiträume Z1" },
+            "heating_periods_z2":             { "name": "Heizzeiträume Z2" },
             "heating_schedule_available_z1":  { "name": "Heizprogramm verfügbar Z1" },
             "heating_schedule_available_z2":  { "name": "Heizprogramm verfügbar Z2" },
             "home_active_errors":             { "name": "Aktive Fehler" },

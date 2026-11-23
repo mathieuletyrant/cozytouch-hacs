@@ -17,9 +17,24 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS
+from .const import (
+    DOMAIN,
+    PROGRAM_BLOCKS,
+    PROGRAM_DAYS,
+    WRITABLE_PROGRAM_BLOCKS,
+    period_programs,
+)
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
-from .services import build_matrix, in_charge_at, parse_slots, slot_limit, where_stored
+from .services import (
+    add_period,
+    build_matrix,
+    build_week,
+    in_charge_at,
+    parse_periods,
+    parse_slots,
+    slot_limit,
+    where_stored,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -50,6 +65,25 @@ async def async_setup_entry(
                 for program in PROGRAM_BLOCKS
             )
             if first is not None
+        ]
+
+        # A program already held as setpoints keeps its calendar ; no device
+        # has been seen holding both shapes.
+        held = {calendar._program for calendar in calendars}
+        calendars += [
+            CozytouchPeriodCalendar(
+                coordinator=hub,
+                config_uniq_id=subentry_id,
+                program=program,
+                zone=zone,
+                week=week,
+            )
+            for program, zone, week in period_programs(
+                lambda capabilityId, hub=hub: hub.get_capability_value(
+                    capabilityId, None
+                )
+            )
+            if not (zone == 1 and program in held)
         ]
 
         if calendars:
@@ -303,6 +337,212 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
         await self.coordinator.set_capability_value(
             capabilityId, build_matrix(slots)
         )
+        await self.coordinator.async_request_refresh()
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Publish the program the poll just brought back."""
+        self.async_write_ha_state()
+
+
+class CozytouchPeriodCalendar(CozytouchDeviceEntity, CalendarEntity):
+    """A week of comfort periods, the program of the Alfea heat pumps.
+
+    An event is a period, when the device holds its comfort setpoint ; the
+    rest of the day is eco and shows as nothing. The whole week is one
+    capability, so every edit rewrites it. See docs/decisions.md, *issue #229*.
+    """
+
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+    _attr_supported_features = (
+        CalendarEntityFeature.CREATE_EVENT
+        | CalendarEntityFeature.DELETE_EVENT
+        | CalendarEntityFeature.UPDATE_EVENT
+    )
+
+    def __init__(
+        self,
+        coordinator: Hub,
+        config_uniq_id: str,
+        program: str,
+        zone: int,
+        week: int,
+    ) -> None:
+        """Initialize a period calendar."""
+        super().__init__(coordinator)
+
+        self._program = program
+        self._week = week
+        self._device_uniq_id = config_uniq_id
+        # Zone 1 shares the setpoint calendars' key, so a heat pump's
+        # heating program reads the same as anybody else's.
+        key = f"{program}_program" if zone == 1 else f"{program}_program_z{zone}"
+        self._key = key
+        self._attr_translation_key = key
+        self._attr_unique_id = f"{DOMAIN}_{config_uniq_id}_{key}"
+
+    @property
+    def event(self) -> CalendarEvent | None:
+        """The comfort period running now, if one is."""
+        now = dt_util.now()
+        for event in self._events_between(
+            now - CURRENT_EVENT_WINDOW, now + CURRENT_EVENT_WINDOW
+        ):
+            if event.start <= now < event.end:
+                return event
+
+        return None
+
+    async def async_get_events(
+        self,
+        hass: HomeAssistant,
+        start_date: datetime,
+        end_date: datetime,
+    ) -> list[CalendarEvent]:
+        """Every comfort period between two dates."""
+        return self._events_between(start_date, end_date)
+
+    def _stored(self) -> dict[str, list[dict]]:
+        return parse_periods(self.coordinator.get_capability_value(self._week, None))
+
+    def _editable(self) -> dict[str, list[dict]]:
+        """The stored week, refused unless all seven days read.
+
+        The week is written whole, so a day that did not read would be
+        written back empty.
+        """
+        week = self._stored()
+        if len(week) != len(PROGRAM_DAYS):
+            raise HomeAssistantError(
+                f"The {self._program} program does not read as a whole week, "
+                "so it is not rewritten"
+            )
+
+        return week
+
+    def _events_between(
+        self, start_date: datetime, end_date: datetime
+    ) -> list[CalendarEvent]:
+        """Expand the stored week over a range of real dates, local time."""
+        zone = dt_util.DEFAULT_TIME_ZONE
+        week = self._stored()
+        day = dt_util.as_local(start_date).date() - timedelta(days=1)
+        last = dt_util.as_local(end_date).date()
+
+        events: list[CalendarEvent] = []
+        while day <= last:
+            for period in week.get(PROGRAM_DAYS[day.weekday()], []):
+                start_time = time.fromisoformat(period["start"])
+                end_time = time.fromisoformat(period["end"])
+                start = datetime.combine(day, start_time, tzinfo=zone)
+                # 00:00 as an end is midnight, the end of the day.
+                end = datetime.combine(
+                    day + timedelta(days=1) if end_time == time(0, 0) else day,
+                    end_time,
+                    tzinfo=zone,
+                )
+
+                if end > start_date and start < end_date:
+                    events.append(
+                        CalendarEvent(
+                            start=start,
+                            end=end,
+                            summary="Comfort",
+                            uid=self._uid(day.weekday(), start_time),
+                        )
+                    )
+
+            day += timedelta(days=1)
+
+        return events
+
+    def _uid(self, weekday: int, start: time) -> str:
+        return f"{self._key}-{weekday}-{start.hour * 60 + start.minute}"
+
+    def _period_of(self, uid: str) -> tuple[int, time]:
+        """Read a uid back, refusing one this calendar did not write."""
+        try:
+            key, weekday, minute = uid.rsplit("-", 2)
+            if key != self._key:
+                raise ValueError
+            hours, minutes = divmod(int(minute), 60)
+            return int(weekday), time(hours, minutes)
+        except ValueError:
+            raise HomeAssistantError(
+                f"{uid} is not a period of the {self._program} program"
+            ) from None
+
+    async def async_create_event(self, **kwargs: Any) -> None:
+        """Add a comfort period on the event's weekday, merged with its neighbours."""
+        start = dt_util.as_local(kwargs["dtstart"])
+        end = dt_util.as_local(kwargs["dtend"])
+        if end.date() != start.date() and end.time() != time(0, 0):
+            raise HomeAssistantError("A comfort period has to end on the day it starts")
+
+        week = self._editable()
+        day = PROGRAM_DAYS[start.weekday()]
+        week[day] = add_period(
+            week.get(day, []),
+            start.time().replace(second=0, microsecond=0),
+            end.time().replace(second=0, microsecond=0),
+        )
+        await self._write(week)
+
+    async def async_delete_event(
+        self,
+        uid: str,
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Drop a period : that stretch of the day goes back to eco."""
+        weekday, start = self._period_of(uid)
+        week = self._editable()
+        day = PROGRAM_DAYS[weekday]
+        week[day] = [
+            period
+            for period in week.get(day, [])
+            if time.fromisoformat(period["start"]) != start
+        ]
+        await self._write(week)
+
+    async def async_update_event(
+        self,
+        uid: str,
+        event: dict[str, Any],
+        recurrence_id: str | None = None,
+        recurrence_range: str | None = None,
+    ) -> None:
+        """Move or resize a period : the old one goes, the new one lands.
+
+        One write, so a refused new period leaves the old one where it was.
+        """
+        weekday, start = self._period_of(uid)
+        moved_start = dt_util.as_local(event["dtstart"])
+        moved_end = dt_util.as_local(event["dtend"])
+        if (
+            moved_end.date() != moved_start.date()
+            and moved_end.time() != time(0, 0)
+        ):
+            raise HomeAssistantError("A comfort period has to end on the day it starts")
+
+        week = self._editable()
+        old_day = PROGRAM_DAYS[weekday]
+        week[old_day] = [
+            period
+            for period in week.get(old_day, [])
+            if time.fromisoformat(period["start"]) != start
+        ]
+        new_day = PROGRAM_DAYS[moved_start.weekday()]
+        week[new_day] = add_period(
+            week.get(new_day, []),
+            moved_start.time().replace(second=0, microsecond=0),
+            moved_end.time().replace(second=0, microsecond=0),
+        )
+        await self._write(week)
+
+    async def _write(self, week: dict[str, list[dict]]) -> None:
+        await self.coordinator.set_capability_value(self._week, build_week(week))
         await self.coordinator.async_request_refresh()
 
     @callback

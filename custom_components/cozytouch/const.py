@@ -97,6 +97,33 @@ def stored_in(program: str, reports) -> int | None:
     return None
 
 
+# A week of comfort periods in one capability, the Alfea's program. See
+# docs/decisions.md, *issue #229*.
+PERIOD_PROGRAMS = (
+    # (program, zone, week, availability)
+    ("heating", 1, 103, 176),
+    ("cooling", 1, 104, 190),
+    ("heating", 2, 101, 189),
+    ("cooling", 2, 102, 191),
+)
+
+# How many periods a day holds, the unused ones being 00:00 to 00:00.
+PERIODS_PER_DAY = 3
+
+
+def period_programs(reports) -> list[tuple[str, int, int]]:
+    """The period programs a device holds, as (program, zone, week).
+
+    `reports` answers a capability id with its value, or None when the device
+    does not send it.
+    """
+    return [
+        (program, zone, week)
+        for program, zone, week, availability in PERIOD_PROGRAMS
+        if reports(week) is not None and str(reports(availability)) == "1"
+    ]
+
+
 SERVICE_VALUES = {
     "0": "off",
     "1": "auto",

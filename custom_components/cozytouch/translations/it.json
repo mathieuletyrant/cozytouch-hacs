@@ -78,7 +78,9 @@
         },
         "calendar": {
             "heating_program":         { "name": "Programma di riscaldamento" },
+            "heating_program_z2":      { "name": "Programma di riscaldamento Z2" },
             "cooling_program":         { "name": "Programma di raffrescamento" },
+            "cooling_program_z2":      { "name": "Programma di raffrescamento Z2" },
             "hot_water_program":       { "name": "Programma acqua calda" }
         },
         "climate": {
@@ -309,6 +311,8 @@
             "cooling_activation_threshold":   { "name": "Soglia di attivazione del freddo" },
             "cooling_flow_temperature_at_thirty_five": { "name": "Temperatura di mandata freddo a 35 °C" },
             "cooling_flow_temperature_at_twenty_five": { "name": "Temperatura di mandata freddo a 25 °C" },
+            "cooling_periods_z1":             { "name": "Fasce freddo Z1" },
+            "cooling_periods_z2":             { "name": "Fasce freddo Z2" },
             "cooling_power_consumption":      { "name": "Consumo per raffrescamento" },
             "cooling_profile_z1":             { "name": "Profilo di raffrescamento Z1" },
             "cooling_profile_z2":             { "name": "Profilo di raffrescamento Z2" },
@@ -400,6 +404,8 @@
             "heat_cool_request":              { "name": "Richiesta caldo/freddo" },
             "heat_cool_switch_type":          { "name": "Tipo di commutazione caldo/freddo" },
             "heating_cooling_switch_temperature": { "name": "Temperatura di commutazione caldo/freddo" },
+            "heating_periods_z1":             { "name": "Fasce riscaldamento Z1" },
+            "heating_periods_z2":             { "name": "Fasce riscaldamento Z2" },
             "heating_schedule_available_z1":  { "name": "Programmazione riscaldamento disponibile Z1" },
             "heating_schedule_available_z2":  { "name": "Programmazione riscaldamento disponibile Z2" },
             "home_active_errors":             { "name": "Guasti attivi" },
