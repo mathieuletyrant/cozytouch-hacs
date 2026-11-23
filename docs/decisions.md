@@ -2724,8 +2724,13 @@ calendar refuses to write one and asks for 23:59.
 
 `get_schedule` answers such a device with `periods` instead of `days`, a
 different key so nothing reading slots mistakes one for the other ;
-`set_schedule`, whose slots carry a temperature, refuses it and points at the
-calendar. The schedule card still speaks slots only. The four raw sensors are
+`set_schedule`, whose slots carry a temperature, refuses it, and
+`set_periods` writes the same periods to the days named, the rest of the
+week untouched. The schedule card reads which key came back and edits
+periods (start and end, three a day, none left meaning eco all day) through
+`set_periods`, one day per call as it does slots : the hub keeps what it
+wrote, so the second call reads the first one back rather than undoing it.
+Reading `days` blind, it threw on an Alfea before this. The four raw sensors are
 named and go diagnostic, off by default, as the per-day sensors did once a
 calendar covered them.
 

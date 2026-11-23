@@ -817,6 +817,15 @@
                 "duration": { "name": "Durée", "description": "Combien de temps dure l'absence à partir de son début, à la place d'une fin." }
             }
         },
+        "set_periods": {
+            "name": "Programmer les plages confort d'une journée",
+            "description": "Écrit les mêmes plages confort sur un ou plusieurs jours, sur une pompe à chaleur qui garde son programme en plages (Alfea). En dehors, l'appareil est en éco.",
+            "fields": {
+                "program":  { "name": "Programme", "description": "Chauffage ou refroidissement." },
+                "days":     { "name": "Jours", "description": "Les jours qui recevront ces plages. Tous les jours, Jours de semaine et Week-end désignent les jours qu'ils nomment." },
+                "periods":  { "name": "Plages", "description": "Début et fin de chaque plage confort, trois au maximum. Vide, la journée reste en éco." }
+            }
+        },
         "set_schedule": {
             "name": "Programmer une journée",
             "description": "Écrit le même programme horaire sur un ou plusieurs jours, pour le chauffage ou le refroidissement.",

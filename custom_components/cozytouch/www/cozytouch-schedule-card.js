@@ -21,6 +21,10 @@ const DAYS = [
 // MAX_SLOTS in services.py; the service refuses anything longer anyway.
 const MAX_SLOTS = 10;
 
+// A heat pump that keeps its program as comfort periods (Alfea, issue #229)
+// holds three a day. Mirrors PERIODS_PER_DAY in const.py.
+const MAX_PERIODS = 3;
+
 /* The day names are the browser's, in Home Assistant's language :
  * `hass.language` is what the user picked in their profile, and Intl already
  * knows how every locale abbreviates a weekday. The times need no help at
@@ -45,6 +49,12 @@ const dayNames = (language) => {
 
 const STRINGS = {
   en: { save: "Save", reload: "Reload", loading: "Loading…",
+        comfort: "Comfort", eco: "Eco",
+        addPeriod: "Add a comfort period", removePeriod: "Remove this period",
+        order: "A period ends after it starts",
+        overlap: "Two periods cannot overlap",
+        fullPeriods: "A day holds %s periods at most",
+        noComfort: "Eco all day",
         writing: "Writing…", written: "Written to the device",
         add: "Add a slot", remove: "Remove this slot",
         empty: "A day keeps at least one slot",
@@ -53,6 +63,12 @@ const STRINGS = {
         heating: "Heating program", cooling: "Cooling program",
         hot_water: "Hot water program" },
   fr: { save: "Enregistrer", reload: "Recharger", loading: "Chargement…",
+        comfort: "Confort", eco: "Éco",
+        addPeriod: "Ajouter une plage confort", removePeriod: "Supprimer cette plage",
+        order: "Une plage finit après son début",
+        overlap: "Deux plages ne peuvent pas se chevaucher",
+        fullPeriods: "Un jour ne tient que %s plages",
+        noComfort: "Éco toute la journée",
         writing: "Écriture…", written: "Écrit dans l'appareil",
         add: "Ajouter un créneau", remove: "Supprimer ce créneau",
         empty: "Une journée garde au moins un créneau",
@@ -61,6 +77,12 @@ const STRINGS = {
         heating: "Programme chauffage", cooling: "Programme refroidissement",
         hot_water: "Programme eau chaude" },
   es: { save: "Guardar", reload: "Recargar", loading: "Cargando…",
+        comfort: "Confort", eco: "Eco",
+        addPeriod: "Añadir una franja de confort", removePeriod: "Eliminar esta franja",
+        order: "Una franja termina después de empezar",
+        overlap: "Dos franjas no pueden solaparse",
+        fullPeriods: "Un día admite %s franjas como máximo",
+        noComfort: "Eco todo el día",
         writing: "Escribiendo…", written: "Escrito en el dispositivo",
         add: "Añadir una franja", remove: "Eliminar esta franja",
         empty: "Un día conserva al menos una franja",
@@ -69,6 +91,12 @@ const STRINGS = {
         heating: "Programa de calefacción", cooling: "Programa de refrigeración",
         hot_water: "Programa de agua caliente" },
   de: { save: "Speichern", reload: "Neu laden", loading: "Wird geladen…",
+        comfort: "Komfort", eco: "Eco",
+        addPeriod: "Komfortzeitraum hinzufügen", removePeriod: "Diesen Zeitraum entfernen",
+        order: "Ein Zeitraum endet nach seinem Beginn",
+        overlap: "Zwei Zeiträume dürfen sich nicht überschneiden",
+        fullPeriods: "Ein Tag fasst höchstens %s Zeiträume",
+        noComfort: "Den ganzen Tag Eco",
         writing: "Wird geschrieben…", written: "Auf das Gerät geschrieben",
         add: "Zeitfenster hinzufügen", remove: "Dieses Zeitfenster entfernen",
         empty: "Ein Tag behält mindestens ein Zeitfenster",
@@ -77,6 +105,12 @@ const STRINGS = {
         heating: "Heizprogramm", cooling: "Kühlprogramm",
         hot_water: "Warmwasserprogramm" },
   it: { save: "Salva", reload: "Ricarica", loading: "Caricamento…",
+        comfort: "Comfort", eco: "Eco",
+        addPeriod: "Aggiungi una fascia comfort", removePeriod: "Rimuovi questa fascia",
+        order: "Una fascia finisce dopo il suo inizio",
+        overlap: "Due fasce non possono sovrapporsi",
+        fullPeriods: "Un giorno tiene al massimo %s fasce",
+        noComfort: "Eco tutto il giorno",
         writing: "Scrittura…", written: "Scritto sul dispositivo",
         add: "Aggiungi una fascia", remove: "Rimuovi questa fascia",
         empty: "Una giornata tiene almeno una fascia",
@@ -152,6 +186,10 @@ const STYLE = `
                  width: 20px; padding: 0; }
   .slot button:hover { color: rgba(0, 0, 0, .8); }
   .slot.fixed { padding-right: 8px; }
+  .slot.period { background: rgb(240, 213, 138); }
+  .slot.period .unit { padding: 0 6px; opacity: .6; }
+  .none { font-size: 12px; line-height: var(--chip-height);
+          color: var(--secondary-text-color); }
 
   .add { width: 30px; height: var(--chip-height); border-radius: var(--chip-radius);
          border: none; cursor: pointer; background: var(--fill);
@@ -264,6 +302,76 @@ export const addSlot = (slots, carried = null) => {
   ]);
 };
 
+/* A period's end in minutes, 00:00 standing for midnight at the end of the
+ * day, as the device writes it. */
+const endMinutes = (hhmm) => toMinutes(hhmm) || 24 * 60;
+
+/* Whether a minute falls in one of the day's comfort periods. */
+export const inPeriod = (periods, minute) =>
+  periods.some(
+    (period) => toMinutes(period.start) <= minute && minute < endMinutes(period.end)
+  );
+
+const checkedPeriods = (periods) => {
+  const sorted = [...periods].sort(
+    (a, b) => toMinutes(a.start) - toMinutes(b.start)
+  );
+  for (const period of sorted) {
+    if (endMinutes(period.end) <= toMinutes(period.start)) {
+      throw refuse("order", "A period ends after it starts");
+    }
+  }
+  for (let index = 1; index < sorted.length; index++) {
+    if (toMinutes(sorted[index].start) < endMinutes(sorted[index - 1].end)) {
+      throw refuse("overlap", "Two periods cannot overlap");
+    }
+  }
+  return sorted;
+};
+
+/* Change one period, or drop it when `change` is null. A day may be left
+ * with none : it is then on eco all day. */
+export const writePeriod = (periods, index, change) => {
+  const next = periods.map((period) => ({ ...period }));
+  if (change === null) {
+    next.splice(index, 1);
+  } else {
+    next[index] = { ...next[index], ...change };
+  }
+  return checkedPeriods(next);
+};
+
+/* A new period lands in the longest stretch of eco the day has, two hours
+ * long or the stretch if it is shorter, starting on a half hour. */
+export const addPeriod = (periods) => {
+  if (periods.length >= MAX_PERIODS) {
+    throw refuse("fullPeriods", `A day holds ${MAX_PERIODS} periods at most`);
+  }
+
+  const bounds = [0];
+  for (const period of checkedPeriods(periods)) {
+    bounds.push(toMinutes(period.start), endMinutes(period.end));
+  }
+  // Ends at 23:59 : how the device stores a period running to midnight has
+  // not been seen, and the service refuses one.
+  bounds.push(24 * 60 - 1);
+
+  let from = 0;
+  let widest = -1;
+  for (let index = 0; index < bounds.length; index += 2) {
+    const gap = bounds[index + 1] - bounds[index];
+    if (gap > widest) {
+      widest = gap;
+      from = bounds[index];
+    }
+  }
+  if (widest < 30) throw refuse("overlap", "Two periods cannot overlap");
+
+  const start = Math.ceil(from / 30) * 30;
+  const end = Math.min(start + 120, from + widest);
+  return checkedPeriods([...periods, { start: toClock(start), end: toClock(end) }]);
+};
+
 // The card's base in a browser, and something importable outside one : the
 // pure helpers above are held to their rules by tests/test_schedule_card.mjs,
 // which runs in node and has no DOM.
@@ -316,7 +424,10 @@ class CozytouchScheduleCard extends CardBase {
         target: { entity_id: this._config.entity },
         return_response: true,
       });
-      this._days = result.response[this._config.entity].days;
+      const answer = result.response[this._config.entity];
+      // A heat pump keeping comfort periods answers `periods`, not `days`.
+      this._periods = "periods" in answer;
+      this._days = (this._periods ? answer.periods : answer.days) || {};
     } catch (err) {
       this._status = `error|${this._say(err)}`;
     }
@@ -329,11 +440,12 @@ class CozytouchScheduleCard extends CardBase {
   _say(err) {
     const template = err.code && this._t[err.code];
     return template
-      ? template.replace("%s", MAX_SLOTS)
+      ? template.replace("%s", err.code === "fullPeriods" ? MAX_PERIODS : MAX_SLOTS)
       : err.message || String(err);
   }
 
   _temperaturesInUse() {
+    if (this._periods) return [];
     const seen = new Set();
     for (const slots of Object.values(this._days || {})) {
       for (const slot of slots) seen.add(slot.temperature);
@@ -381,12 +493,23 @@ class CozytouchScheduleCard extends CardBase {
     this._render();
     try {
       for (const day of this._dirty) {
-        await this._hass.callService("cozytouch", "set_schedule", {
-          entity_id: this._config.entity,
-          program: this._config.program,
-          days: [day],
-          slots: this._days[day],
-        });
+        await this._hass.callService(
+          "cozytouch",
+          this._periods ? "set_periods" : "set_schedule",
+          this._periods
+            ? {
+                entity_id: this._config.entity,
+                program: this._config.program,
+                days: [day],
+                periods: this._days[day],
+              }
+            : {
+                entity_id: this._config.entity,
+                program: this._config.program,
+                days: [day],
+                slots: this._days[day],
+              }
+        );
       }
       this._dirty.clear();
       this._status = `ok|${this._t.written}`;
@@ -427,6 +550,15 @@ class CozytouchScheduleCard extends CardBase {
     const { day, minute } = nowInWeek();
     const slots = this._days?.[day];
     if (!slots) return "";
+    if (this._periods) {
+      const comfort = inPeriod(slots, minute);
+      return `<div class="now" style="background:${
+        comfort ? "rgb(214,106,84)" : "rgb(124,165,214)"
+      }">
+        <span class="at">${toClock(minute)}</span>
+        <span>${comfort ? this._t.comfort : this._t.eco}</span>
+      </div>`;
+    }
     const temperature = inChargeAt(slots, minute, this._carriedInto(day));
     if (temperature === null) return "";
     return `<div class="now" style="background:${this._colour(temperature)}">
@@ -437,6 +569,7 @@ class CozytouchScheduleCard extends CardBase {
 
   /* What the day before `day` ends on, which holds until `day`'s first slot. */
   _carriedInto(day) {
+    if (this._periods) return null;
     const previous = this._days?.[DAYS[(DAYS.indexOf(day) + 6) % 7]];
     return previous?.length ? previous[previous.length - 1].temperature : null;
   }
@@ -458,7 +591,39 @@ class CozytouchScheduleCard extends CardBase {
       </div>`;
   }
 
+  _periodRow(day) {
+    const periods = this._days[day];
+    const chips = periods
+      .map(
+        (period, index) => `<div class="slot period">
+          <input type="time" value="${period.start}"
+                 data-day="${day}" data-index="${index}" data-field="start">
+          <span class="unit">→</span>
+          <input type="time" value="${period.end}"
+                 data-day="${day}" data-index="${index}" data-field="end">
+          <button data-drop="${day}" data-index="${index}"
+                  title="${this._t.removePeriod}">×</button>
+        </div>`
+      )
+      .join("");
+
+    const full = periods.length >= MAX_PERIODS;
+    return `<div class="day">
+      <div class="name">${this._labels[day]}</div>
+      <div class="slots">
+        ${chips || `<div class="none">${this._t.noComfort}</div>`}
+        <button class="add" data-add="${day}" ${full ? "disabled" : ""}
+                title="${
+                  full
+                    ? this._t.fullPeriods.replace("%s", MAX_PERIODS)
+                    : this._t.addPeriod
+                }">+</button>
+      </div>
+    </div>`;
+  }
+
   _row(day) {
+    if (this._periods) return this._periodRow(day);
     const slots = this._days[day];
     const chips = slots
       .map((slot, index) => {
@@ -502,20 +667,23 @@ class CozytouchScheduleCard extends CardBase {
     root.querySelectorAll("input[data-field]").forEach((el) =>
       el.addEventListener("change", () => {
         const { day, index, field } = el.dataset;
-        const value = field === "time" ? el.value : Number(el.value);
+        const value = field === "temperature" ? Number(el.value) : el.value;
         // An emptied time field parses as "", which would leave the day
         // without the slot the user is still editing.
-        if (field === "time" && !value) return this._render();
-        this._apply(day, (slots) =>
-          writeSlot(slots, Number(index), { [field]: value })
-        );
+        if (field !== "temperature" && !value) return this._render();
+        const write = this._periods ? writePeriod : writeSlot;
+        this._apply(day, (slots) => write(slots, Number(index), { [field]: value }));
       })
     );
 
     root.querySelectorAll("[data-drop]").forEach((el) =>
       el.addEventListener("click", () =>
         this._apply(el.dataset.drop, (slots) =>
-          writeSlot(slots, Number(el.dataset.index), null)
+          (this._periods ? writePeriod : writeSlot)(
+            slots,
+            Number(el.dataset.index),
+            null
+          )
         )
       )
     );
@@ -523,7 +691,9 @@ class CozytouchScheduleCard extends CardBase {
     root.querySelectorAll("[data-add]").forEach((el) =>
       el.addEventListener("click", () =>
         this._apply(el.dataset.add, (slots) =>
-          addSlot(slots, this._carriedInto(el.dataset.add))
+          this._periods
+            ? addPeriod(slots)
+            : addSlot(slots, this._carriedInto(el.dataset.add))
         )
       )
     );

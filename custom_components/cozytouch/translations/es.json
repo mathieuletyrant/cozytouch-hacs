@@ -817,6 +817,15 @@
                 "duration": { "name": "Duración", "description": "Cuánto dura la ausencia desde su inicio, en lugar de un fin." }
             }
         },
+        "set_periods": {
+            "name": "Programar las franjas de confort de un día",
+            "description": "Escribe las mismas franjas de confort en uno o varios días, en una bomba de calor que guarda su programa como franjas (Alfea). Fuera de ellas el dispositivo mantiene eco.",
+            "fields": {
+                "program":  { "name": "Programa", "description": "Calefacción o refrigeración." },
+                "days":     { "name": "Días", "description": "Los días que recibirán estas franjas. Todos los días, Entre semana y Fin de semana equivalen a los días que nombran." },
+                "periods":  { "name": "Franjas", "description": "Inicio y fin de cada franja de confort, tres como máximo. Vacío, el día queda en eco." }
+            }
+        },
         "set_schedule": {
             "name": "Definir un programa diario",
             "description": "Escribe el mismo programa horario en uno o varios días, para calefacción o refrigeración.",

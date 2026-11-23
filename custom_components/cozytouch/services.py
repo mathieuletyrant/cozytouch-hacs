@@ -36,6 +36,7 @@ _LOGGER = logging.getLogger(__name__)
 
 SERVICE_SET_SCHEDULE = "set_schedule"
 SERVICE_GET_SCHEDULE = "get_schedule"
+SERVICE_SET_PERIODS = "set_periods"
 SERVICE_SET_AWAY_MODE = "set_away_mode"
 SERVICE_CLEAR_AWAY_MODE = "clear_away_mode"
 
@@ -91,6 +92,33 @@ SET_SCHEDULE_SCHEMA = vol.Schema(
                     {
                         vol.Required("time"): cv.time,
                         vol.Required("temperature"): vol.Coerce(float),
+                    }
+                )
+            ],
+        ),
+    }
+)
+
+SET_PERIODS_SCHEMA = vol.Schema(
+    {
+        vol.Required("entity_id"): cv.entity_ids,
+        vol.Required("program"): vol.In(WRITABLE_PROGRAM_BLOCKS),
+        vol.Required("days"): vol.All(
+            cv.ensure_list,
+            vol.Length(min=1),
+            [vol.In([*PROGRAM_DAYS, *DAY_GROUPS])],
+            expand_days,
+        ),
+        # Empty is a day without comfort, which the device stores as three
+        # 00:00 to 00:00 periods.
+        vol.Required("periods"): vol.All(
+            cv.ensure_list,
+            vol.Length(max=PERIODS_PER_DAY),
+            [
+                vol.Schema(
+                    {
+                        vol.Required("start"): cv.time,
+                        vol.Required("end"): cv.time,
                     }
                 )
             ],
@@ -339,6 +367,22 @@ def build_week(week: dict[str, list[dict]]) -> str:
     return json.dumps(entries, separators=(",", ": "))
 
 
+def editable_week(value: str | None, program: str) -> dict[str, list[dict]]:
+    """A stored week to edit, refused unless all seven days read.
+
+    The week is written whole, so a day that did not read would be written
+    back empty.
+    """
+    week = parse_periods(value)
+    if len(week) != len(PROGRAM_DAYS):
+        raise ServiceValidationError(
+            f"The {program} program does not read as a whole week, so it is "
+            "not rewritten"
+        )
+
+    return week
+
+
 def period_week_of(hub, program: str) -> int | None:
     """The capability a device holds a zone 1 period program in, or None."""
     for found, zone, week in period_programs(
@@ -583,6 +627,38 @@ def async_register_services(hass: HomeAssistant) -> None:
 
         return response
 
+    async def async_set_periods(call: ServiceCall) -> None:
+        """Write the same comfort periods to every requested day."""
+        program = call.data["program"]
+
+        periods: list[dict] = []
+        for period in call.data["periods"]:
+            periods = add_period(periods, period["start"], period["end"])
+
+        for entity_id in call.data["entity_id"]:
+            hub = _resolve_hub(hass, entity_id)
+            week_id = period_week_of(hub, program)
+            if week_id is None:
+                raise ServiceValidationError(
+                    f"{entity_id} holds no {program} program as comfort "
+                    "periods; use set_schedule"
+                )
+
+            week = editable_week(hub.get_capability_value(week_id, None), program)
+            for day in call.data["days"]:
+                week[day] = periods
+
+            value = build_week(week)
+            _LOGGER.debug(
+                "set_periods %s %s -> capability %d = %s",
+                entity_id,
+                program,
+                week_id,
+                value,
+            )
+            await hub.set_capability_value(week_id, value)
+            await hub.async_request_refresh()
+
     async def async_set_away_mode(call: ServiceCall) -> None:
         """Send the window and switch the absence on, as one action."""
         timestampStart, timestampEnd = away_window(
@@ -606,6 +682,10 @@ def async_register_services(hass: HomeAssistant) -> None:
 
     hass.services.async_register(
         DOMAIN, SERVICE_SET_SCHEDULE, async_set_schedule, schema=SET_SCHEDULE_SCHEMA
+    )
+
+    hass.services.async_register(
+        DOMAIN, SERVICE_SET_PERIODS, async_set_periods, schema=SET_PERIODS_SCHEMA
     )
 
     hass.services.async_register(

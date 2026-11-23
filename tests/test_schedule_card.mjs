@@ -10,8 +10,11 @@ import { test } from "node:test";
 
 import {
   nowInWeek,
+  addPeriod,
   addSlot,
   inChargeAt,
+  inPeriod,
+  writePeriod,
   writeSlot,
 } from "../custom_components/cozytouch/www/cozytouch-schedule-card.js";
 
@@ -153,4 +156,56 @@ test("the week's now is a Monday-first day and a minute of it", () => {
 test("the setpoint in charge is the last slot before the minute", () => {
   assert.equal(inChargeAt(DAY, nowInWeek(new Date(2026, 8, 14, 0, 30)).minute),
     DAY[0].temperature);
+});
+
+
+// --- comfort periods, the Alfea's program (#229) -------------------------
+
+const ALFEA_DAY = [{ start: "06:00", end: "22:00" }];
+
+test("inside a period is comfort, outside is eco", () => {
+  assert.equal(inPeriod(ALFEA_DAY, 5 * 60 + 59), false);
+  assert.equal(inPeriod(ALFEA_DAY, 6 * 60), true);
+  assert.equal(inPeriod(ALFEA_DAY, 22 * 60), false);
+});
+
+test("a period ending at 00:00 runs to midnight", () => {
+  assert.equal(inPeriod([{ start: "20:00", end: "00:00" }], 23 * 60 + 59), true);
+});
+
+test("a new period lands in the longest stretch of eco", () => {
+  assert.deepEqual(addPeriod(ALFEA_DAY), [
+    { start: "00:00", end: "02:00" },
+    { start: "06:00", end: "22:00" },
+  ]);
+});
+
+test("a new period on an empty day takes two hours from midnight", () => {
+  assert.deepEqual(addPeriod([]), [{ start: "00:00", end: "02:00" }]);
+});
+
+test("a fourth period is refused", () => {
+  const full = [
+    { start: "01:00", end: "02:00" },
+    { start: "05:00", end: "06:00" },
+    { start: "09:00", end: "10:00" },
+  ];
+  assert.throws(() => addPeriod(full), { code: "fullPeriods" });
+});
+
+test("a period cannot end before it starts", () => {
+  assert.throws(() => writePeriod(ALFEA_DAY, 0, { end: "05:00" }), {
+    code: "order",
+  });
+});
+
+test("two periods cannot overlap", () => {
+  const day = [...ALFEA_DAY, { start: "22:30", end: "23:00" }];
+  assert.throws(() => writePeriod(day, 1, { start: "21:00" }), {
+    code: "overlap",
+  });
+});
+
+test("the last period can be removed, leaving eco all day", () => {
+  assert.deepEqual(writePeriod(ALFEA_DAY, 0, null), []);
 });
