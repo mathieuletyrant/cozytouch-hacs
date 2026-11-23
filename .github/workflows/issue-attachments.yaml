@@ -53,11 +53,11 @@ jobs:
           {
             gh api "repos/$REPO/issues/$ISSUE" --jq '.body // ""'
             gh api --paginate "repos/$REPO/issues/$ISSUE/comments" --jq '.[].body // ""'
-          } > text.md
+          } > "$RUNNER_TEMP/text.md"
 
-          grep -oE 'https://github\.com/user-attachments/(assets|files)/[A-Za-z0-9._/-]+' text.md \
-            | sort -u > urls.txt || true
-          if [ ! -s urls.txt ]; then
+          grep -oE 'https://github\.com/user-attachments/(assets|files)/[A-Za-z0-9._/-]+' "$RUNNER_TEMP/text.md" \
+            | sort -u > "$RUNNER_TEMP/urls.txt" || true
+          if [ ! -s "$RUNNER_TEMP/urls.txt" ]; then
             echo "No attachment on #$ISSUE."
             exit 0
           fi
@@ -105,7 +105,7 @@ jobs:
             esac
             mv "$tmp" "$ISSUE/$name"
             printf '%s\t%s\n' "$name" "$url" >> "$ISSUE/sources.tsv"
-          done < urls.txt
+          done < "$RUNNER_TEMP/urls.txt"
 
           git add -A "$ISSUE"
           if git diff --cached --quiet; then
