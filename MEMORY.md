@@ -72,6 +72,10 @@ overturn one, edit the line here in the same pull request.
   gduteil c88). 106000 is a count of rooms (`TESC_RoomPresent`) and decides
   nothing. The circuit is `Water circuit`, the room behind an Alfea keeps
   `Heating circuit`. `docs/decisions.md`.
+- **101-104 are a week of comfort periods**, JSON, three a day, gated by
+  176/189/190/191 ; inside a period is comfort, outside eco (one reading,
+  #229's Alfea model 73). Writing back is unmeasured. `docs/decisions.md`,
+  *The Alfea's program is a week of comfort periods*.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.
 

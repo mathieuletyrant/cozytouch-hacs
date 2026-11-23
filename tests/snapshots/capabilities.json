@@ -532,9 +532,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -548,9 +549,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -650,9 +652,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -770,9 +773,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1381,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -3799,9 +3803,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -3815,9 +3820,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -3917,9 +3923,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -4037,9 +4044,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1457,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -7040,9 +7048,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -7056,9 +7065,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -7158,9 +7168,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -7278,9 +7289,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1505,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -10295,9 +10307,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -10311,9 +10324,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -10413,9 +10427,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -10533,9 +10548,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1641,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -13559,9 +13575,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -13575,9 +13592,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -13677,9 +13695,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -13797,9 +13816,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 1734,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -16846,9 +16866,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -16862,9 +16883,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -16964,9 +16986,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -17084,9 +17107,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 211,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -20086,9 +20110,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -20102,9 +20127,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -20204,9 +20230,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -20324,9 +20351,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 2374,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -23357,9 +23385,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -23373,9 +23402,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -23475,9 +23505,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -23595,9 +23626,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 418,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -26613,9 +26645,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -26629,9 +26662,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -26731,9 +26765,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -26851,9 +26886,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 557,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -29883,9 +29919,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -29899,9 +29936,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -30001,9 +30039,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -30121,9 +30160,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 56,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -33140,9 +33180,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -33156,9 +33197,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -33258,9 +33300,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -33378,9 +33421,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 562,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -36403,9 +36447,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -36419,9 +36464,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -36521,9 +36567,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -36641,9 +36688,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 76,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -39660,9 +39708,10 @@
    },
    "101": {
     "capabilityId": 101,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
-    "name": "Capability_101",
+    "name": "heating_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -39676,9 +39725,10 @@
    },
    "102": {
     "capabilityId": 102,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
-    "name": "Capability_102",
+    "name": "cooling_periods_z2",
     "type": "string",
     "value_type": 4
    },
@@ -39778,9 +39828,10 @@
    },
    "103": {
     "capabilityId": 103,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
-    "name": "Capability_103",
+    "name": "heating_periods_z1",
     "type": "string",
     "value_type": 4
    },
@@ -39898,9 +39949,10 @@
    },
    "104": {
     "capabilityId": 104,
-    "category": "sensor",
+    "category": "diag",
+    "enabled_by_default": false,
     "modelId": 999999,
-    "name": "Capability_104",
+    "name": "cooling_periods_z1",
     "type": "string",
     "value_type": 4
    },

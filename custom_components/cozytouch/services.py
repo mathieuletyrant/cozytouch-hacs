@@ -24,9 +24,11 @@ from homeassistant.util import dt as dt_util
 from .capability import read_setpoint
 from .const import (
     DOMAIN,
+    PERIODS_PER_DAY,
     PROGRAM_BLOCKS,
     PROGRAM_DAYS,
     WRITABLE_PROGRAM_BLOCKS,
+    period_programs,
     stored_in,
 )
 
@@ -233,6 +235,121 @@ def parse_slots(value: str | None, capabilityId: int | None = None) -> list[dict
     return slots
 
 
+def parse_periods(value: str | None) -> dict[str, list[dict]]:
+    """Read a week of periods back, day by day, the empty ones left out.
+
+    The device stores `[{"monday": [{"start": "06:00","end": "22:00"}, ...]},
+    ...]`, three periods a day, an unused one being 00:00 to 00:00. A period
+    ending at 00:00 runs to midnight. Whatever cannot be read is dropped, so
+    one bad day does not take the week with it.
+    """
+    try:
+        entries = json.loads(value)
+    except (TypeError, ValueError):
+        return {}
+
+    if not isinstance(entries, list):
+        return {}
+
+    week: dict[str, list[dict]] = {}
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+
+        for day, periods in entry.items():
+            if day not in PROGRAM_DAYS or not isinstance(periods, list):
+                continue
+
+            kept = []
+            for period in periods:
+                try:
+                    start = time.fromisoformat(period["start"])
+                    end = time.fromisoformat(period["end"])
+                except (KeyError, TypeError, ValueError):
+                    continue
+
+                if start != end:
+                    kept.append({"start": f"{start:%H:%M}", "end": f"{end:%H:%M}"})
+
+            week[day] = sorted(kept, key=lambda period: period["start"])
+
+    return week
+
+
+def add_period(periods: list[dict], start: time, end: time) -> list[dict]:
+    """A day's periods with one more, merged into any it overlaps or touches.
+
+    Midnight as an end is refused : the device's own empty period is 00:00 to
+    00:00, and how it stores one running to midnight has not been seen. See
+    docs/decisions.md.
+    """
+    if end == time(0, 0):
+        raise ServiceValidationError(
+            "A period has to end by 23:59: how the device stores one running "
+            "to midnight is not known yet"
+        )
+
+    if end <= start:
+        raise ServiceValidationError(
+            f"A period has to end after it starts, and {end:%H:%M} is not "
+            f"after {start:%H:%M}"
+        )
+
+    merged = []
+    for period in periods:
+        other_start = _as_time(period["start"])
+        other_end = _as_time(period["end"])
+        runs_to_midnight = other_end == time(0, 0)
+        touches = other_start <= end and (runs_to_midnight or other_end >= start)
+        if touches:
+            start = min(start, other_start)
+            end = other_end if runs_to_midnight else max(end, other_end)
+            continue
+
+        merged.append({"start": f"{other_start:%H:%M}", "end": f"{other_end:%H:%M}"})
+
+    merged.append({"start": f"{start:%H:%M}", "end": f"{end:%H:%M}"})
+    merged.sort(key=lambda period: period["start"])
+
+    if len(merged) > PERIODS_PER_DAY:
+        raise ServiceValidationError(
+            f"A day holds {PERIODS_PER_DAY} periods at most, this would make "
+            f"{len(merged)}"
+        )
+
+    return merged
+
+
+def build_week(week: dict[str, list[dict]]) -> str:
+    """Write a week of periods the way the device stores it, spacing included.
+
+    Days missing from `week` are written empty.
+    """
+    entries = []
+    for day in PROGRAM_DAYS:
+        periods = [
+            {"start": period["start"], "end": period["end"]}
+            for period in week.get(day, [])
+        ]
+        periods += [{"start": "00:00", "end": "00:00"}] * (
+            PERIODS_PER_DAY - len(periods)
+        )
+        entries.append({day: periods})
+
+    return json.dumps(entries, separators=(",", ": "))
+
+
+def period_week_of(hub, program: str) -> int | None:
+    """The capability a device holds a zone 1 period program in, or None."""
+    for found, zone, week in period_programs(
+        lambda capabilityId: hub.get_capability_value(capabilityId, None)
+    ):
+        if found == program and zone == 1:
+            return week
+
+    return None
+
+
 def in_charge_at(
     slots: list[dict], moment: time, carried: float | None = None
 ) -> float | None:
@@ -382,6 +499,12 @@ def where_stored(hub, program: str) -> int | None:
 def _block_of(hub, entity_id: str, program: str) -> int:
     """Where this device stores a program, refusing one it does not hold."""
     first = where_stored(hub, program)
+    if first is None and period_week_of(hub, program) is not None:
+        raise ServiceValidationError(
+            f"{entity_id} holds its {program} program as comfort periods, "
+            "not setpoints: edit it from its calendar"
+        )
+
     if first is None:
         runs = " or ".join(str(candidate) for candidate in PROGRAM_BLOCKS[program])
         raise ServiceValidationError(
@@ -436,6 +559,15 @@ def async_register_services(hass: HomeAssistant) -> None:
         response: dict[str, Any] = {}
         for entity_id in call.data["entity_id"]:
             hub = _resolve_hub(hass, entity_id)
+
+            week = None if where_stored(hub, program) else period_week_of(hub, program)
+            if week is not None:
+                response[entity_id] = {
+                    "program": program,
+                    "periods": parse_periods(hub.get_capability_value(week, None)),
+                }
+                continue
+
             first = _block_of(hub, entity_id, program)
 
             days = {}
