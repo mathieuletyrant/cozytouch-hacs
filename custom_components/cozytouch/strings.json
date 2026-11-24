@@ -221,13 +221,15 @@
             "air_circulation":  { "name": "Air Circulation" }
         },
         "number": {
-            "away_mode_temperature":      { "name": "Away Mode Temperature" },
-            "boost_timeout_max":          { "name": "Boost Timeout Max." },
-            "target_cool_temperature":    { "name": "Target Cool Temperature" },
-            "target_temperature":         { "name": "Target Temperature" },
-            "target_temperature_dhw":     { "name": "Target Temperature DHW" },
-            "target_temperature_eco_z1":  { "name": "Target Temperature Eco Z1" },
-            "target_temperature_comfort_z2":{ "name": "Target Temperature Comfort Z2" }
+            "away_mode_temperature":         { "name": "Away Mode Temperature" },
+            "boost_timeout_max":             { "name": "Boost Timeout Max." },
+            "target_cool_temperature":       { "name": "Target Cool Temperature" },
+            "target_temperature":            { "name": "Target Temperature" },
+            "target_temperature_comfort_z1": { "name": "Target Temperature Comfort Z1" },
+            "target_temperature_comfort_z2": { "name": "Target Temperature Comfort Z2" },
+            "target_temperature_dhw":        { "name": "Target Temperature DHW" },
+            "target_temperature_eco_z1":     { "name": "Target Temperature Eco Z1" },
+            "target_temperature_eco_z2":     { "name": "Target Temperature Eco Z2" }
         },
         "select": {
             "air_circulation_speed":

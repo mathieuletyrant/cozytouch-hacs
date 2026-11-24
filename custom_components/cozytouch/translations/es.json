@@ -221,13 +221,15 @@
             "air_circulation":  { "name": "Circulación de aire" }
         },
         "number": {
-            "away_mode_temperature":      { "name": "Temperatura del modo ausencia" },
-            "boost_timeout_max":          { "name": "Duración máx. del Boost" },
-            "target_cool_temperature":    { "name": "Temperatura de consigna en frío" },
-            "target_temperature":         { "name": "Temperatura de consigna" },
-            "target_temperature_dhw":     { "name": "Temperatura de consigna ACS" },
-            "target_temperature_eco_z1":  { "name": "Temperatura de consigna Eco Z1" },
-            "target_temperature_comfort_z2":{ "name": "Consigna de confort Z2" }
+            "away_mode_temperature":         { "name": "Temperatura del modo ausencia" },
+            "boost_timeout_max":             { "name": "Duración máx. del Boost" },
+            "target_cool_temperature":       { "name": "Temperatura de consigna en frío" },
+            "target_temperature":            { "name": "Temperatura de consigna" },
+            "target_temperature_comfort_z1": { "name": "Consigna de confort Z1" },
+            "target_temperature_comfort_z2": { "name": "Consigna de confort Z2" },
+            "target_temperature_dhw":        { "name": "Temperatura de consigna ACS" },
+            "target_temperature_eco_z1":     { "name": "Temperatura de consigna Eco Z1" },
+            "target_temperature_eco_z2":     { "name": "Temperatura de consigna Eco Z2" }
         },
         "select": {
             "air_circulation_speed":

@@ -221,13 +221,15 @@
             "air_circulation":  { "name": "Brassage d'air" }
         },
         "number": {
-            "away_mode_temperature":      { "name": "Température Absence" },
-            "boost_timeout_max":          { "name": "Temporisation Max. Boost" },
-            "target_cool_temperature":    { "name": "Température Consigne Cool" },
-            "target_temperature":         { "name": "Température Consigne" },
-            "target_temperature_dhw":     { "name": "Température Consigne DHW" },
-            "target_temperature_eco_z1":  { "name": "Température Consigne Eco Z1" },
-            "target_temperature_comfort_z2":{ "name": "Consigne confort Z2" }
+            "away_mode_temperature":         { "name": "Température Absence" },
+            "boost_timeout_max":             { "name": "Temporisation Max. Boost" },
+            "target_cool_temperature":       { "name": "Température Consigne Cool" },
+            "target_temperature":            { "name": "Température Consigne" },
+            "target_temperature_comfort_z1": { "name": "Consigne confort Z1" },
+            "target_temperature_comfort_z2": { "name": "Consigne confort Z2" },
+            "target_temperature_dhw":        { "name": "Température Consigne DHW" },
+            "target_temperature_eco_z1":     { "name": "Température Consigne Eco Z1" },
+            "target_temperature_eco_z2":     { "name": "Température Consigne Eco Z2" }
         },
         "select": {
             "air_circulation_speed":
