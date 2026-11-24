@@ -2781,11 +2781,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 1381,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -6032,11 +6033,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 1457,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -9279,11 +9281,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 1505,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -12544,11 +12547,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 1641,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -15789,11 +15793,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 1734,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -19103,11 +19108,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 211,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -22332,11 +22338,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 2374,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -25599,11 +25606,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 418,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -28839,11 +28847,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 557,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -32115,11 +32124,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 56,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -35379,11 +35389,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 562,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -38637,11 +38648,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 76,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,
@@ -41897,11 +41909,12 @@
    },
    "43": {
     "capabilityId": 43,
-    "category": "diag",
-    "enabled_by_default": false,
+    "category": "sensor",
+    "highestValueCapabilityId": 161,
+    "lowestValueCapabilityId": 160,
     "modelId": 999999,
     "name": "target_temperature_eco_z2",
-    "type": "temperature"
+    "type": "temperature_adjustment_number"
    },
    "44": {
     "capabilityId": 44,

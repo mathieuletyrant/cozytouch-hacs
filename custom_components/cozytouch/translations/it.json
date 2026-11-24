@@ -221,13 +221,15 @@
             "air_circulation":  { "name": "Circolazione dell'aria" }
         },
         "number": {
-            "away_mode_temperature":      { "name": "Temperatura modalità assenza" },
-            "boost_timeout_max":          { "name": "Durata max. Boost" },
-            "target_cool_temperature":    { "name": "Temperatura target raffrescamento" },
-            "target_temperature":         { "name": "Temperatura target" },
-            "target_temperature_dhw":     { "name": "Temperatura target ACS" },
-            "target_temperature_eco_z1":  { "name": "Temperatura target Eco Z1" },
-            "target_temperature_comfort_z2":{ "name": "Setpoint comfort Z2" }
+            "away_mode_temperature":         { "name": "Temperatura modalità assenza" },
+            "boost_timeout_max":             { "name": "Durata max. Boost" },
+            "target_cool_temperature":       { "name": "Temperatura target raffrescamento" },
+            "target_temperature":            { "name": "Temperatura target" },
+            "target_temperature_comfort_z1": { "name": "Setpoint comfort Z1" },
+            "target_temperature_comfort_z2": { "name": "Setpoint comfort Z2" },
+            "target_temperature_dhw":        { "name": "Temperatura target ACS" },
+            "target_temperature_eco_z1":     { "name": "Temperatura target Eco Z1" },
+            "target_temperature_eco_z2":     { "name": "Temperatura target Eco Z2" }
         },
         "select": {
             "air_circulation_speed":

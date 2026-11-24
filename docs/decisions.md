@@ -4472,6 +4472,23 @@ everything written about it say comfort. Renaming the entity is the owner's
 call, and the alternative -- leaving the wrong name in place because the id
 would be stale -- is how a wrong reading becomes permanent.
 
+### Both room setpoints that were sensors are numbers
+
+The entry above put 43 and 58773 in their right place by name, and left them
+as what they had been : a disabled diagnostic temperature, which reads the
+setpoint and cannot change it. #231 (Alfea Excellia Duo AI, model 73, one
+zone) has the eco number from 41 and nothing to set comfort with, which the
+Cozytouch app does offer beside it.
+
+The catalogue gives 41, 42, 43 and 58773 the same row -- `accessType` 7,
+7-28 °C, 0.01 -- so the four are read and written alike, and 43 and 58773
+now carry 41's row : a temperature number, on by default, bounded by 160/161
+where the device sends them. Model 73 sends neither, so the range there is
+the number's default, the same as for its eco setpoint.
+
+What is unseen : a write to 58773 or 43 on hardware. The reporter's dump
+lists no refusal, and no one has yet written either.
+
 ### The two Fluid-TES families, twenty-three ids
 
 The generator itself and the legacy generation beside it: the DHW service type

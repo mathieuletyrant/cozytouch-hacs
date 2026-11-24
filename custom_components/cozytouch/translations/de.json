@@ -221,13 +221,15 @@
             "air_circulation":  { "name": "Luftumwälzung" }
         },
         "number": {
-            "away_mode_temperature":      { "name": "Temperatur im Abwesenheitsmodus" },
-            "boost_timeout_max":          { "name": "Max. Boost-Dauer" },
-            "target_cool_temperature":    { "name": "Soll-Kühltemperatur" },
-            "target_temperature":         { "name": "Solltemperatur" },
-            "target_temperature_dhw":     { "name": "Solltemperatur Warmwasser" },
-            "target_temperature_eco_z1":  { "name": "Solltemperatur Eco Z1" },
-            "target_temperature_comfort_z2":{ "name": "Komfort-Sollwert Z2" }
+            "away_mode_temperature":         { "name": "Temperatur im Abwesenheitsmodus" },
+            "boost_timeout_max":             { "name": "Max. Boost-Dauer" },
+            "target_cool_temperature":       { "name": "Soll-Kühltemperatur" },
+            "target_temperature":            { "name": "Solltemperatur" },
+            "target_temperature_comfort_z1": { "name": "Komfort-Sollwert Z1" },
+            "target_temperature_comfort_z2": { "name": "Komfort-Sollwert Z2" },
+            "target_temperature_dhw":        { "name": "Solltemperatur Warmwasser" },
+            "target_temperature_eco_z1":     { "name": "Solltemperatur Eco Z1" },
+            "target_temperature_eco_z2":     { "name": "Solltemperatur Eco Z2" }
         },
         "select": {
             "air_circulation_speed":

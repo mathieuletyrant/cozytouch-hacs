@@ -522,9 +522,12 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     43: Entity(
         name="target_temperature_eco_z2",
-        type=CapabilityType.TEMPERATURE,
-        category=CapabilityCategory.DIAG,
-        enabled_by_default=False,
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
+        extra={
+            "lowestValueCapabilityId": 160,
+            "highestValueCapabilityId": 161,
+        },
     ),
     44: Entity(
         name="ch_power_consumption",
@@ -2455,9 +2458,12 @@ CAPABILITIES: dict[int, Entity] = {
     ),
     58773: Entity(
         name="target_temperature_comfort_z1",
-        type=CapabilityType.TEMPERATURE,
-        category=CapabilityCategory.DIAG,
-        enabled_by_default=False,
+        type=CapabilityType.TEMPERATURE_ADJUSTMENT_NUMBER,
+        enabled_by_default=True,
+        extra={
+            "lowestValueCapabilityId": 160,
+            "highestValueCapabilityId": 161,
+        },
     ),
     100000: Entity(
         name="thermal_zones_count",
