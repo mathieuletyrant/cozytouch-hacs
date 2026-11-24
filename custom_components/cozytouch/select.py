@@ -120,8 +120,13 @@ class CozytouchSelect(SelectEntity, CozytouchSensor):
             value = int(
                 self.coordinator.get_capability_value(self._capability.capabilityId)
             )
+        except TypeError:
+            # The device lists the capability with no value. See
+            # docs/decisions.md.
+            self.current_option = None
+            return None
         except ValueError:
-            return
+            return None
 
         option = self._list.get(value)
         if option is None:

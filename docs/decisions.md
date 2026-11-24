@@ -1218,6 +1218,16 @@ job installed.
 
 ## `custom_components/cozytouch/select.py`
 
+### A select the device sends empty reads unknown (issue #229)
+
+An Alfea Excellia Duo AI (model 73) lists 86 and 87 in its capabilities with
+`value: null`, both dumps of #229 and #231. `int(None)` raised a `TypeError`
+the select caught only as `ValueError`, so the hot-water mode select threw on
+every poll, 47 times in 43 minutes in the reporter's log. It now reads as no
+option, as a value outside the list already did, rather than keeping the
+first option it was built with. Why the device sends the id empty is not
+known ; nothing is written to it on that account.
+
 ### The air-circulation duration is a select on the device's own grid
 
 Capability 102021 was a free number bounded 15-300, and the vendor app never

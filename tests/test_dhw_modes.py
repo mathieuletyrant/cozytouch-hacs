@@ -88,3 +88,11 @@ def test_a_mode_outside_the_list_reads_unknown_rather_than_stale():
     entity.get_value()
 
     assert entity.current_option is None
+
+
+def test_a_mode_the_device_sends_empty_reads_unknown_rather_than_raising():
+    """#229's Alfea lists 87 with no value : int(None) raised on every poll."""
+    entity = select({87: None})
+    assert entity.get_value() is None
+
+    assert entity.current_option is None
