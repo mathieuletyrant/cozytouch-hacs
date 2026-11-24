@@ -74,8 +74,9 @@ overturn one, edit the line here in the same pull request.
   `Heating circuit`. `docs/decisions.md`.
 - **101-104 are a week of comfort periods**, JSON, three a day, gated by
   176/189/190/191 ; inside a period is comfort, outside eco (one reading,
-  #229's Alfea model 73). The app writes 103 ; ours, same string but one
-  end time, ends in state 4 twice (2026-11-24). `docs/decisions.md`,
+  #229's Alfea model 73). The app writes 103 ; every write of ours to that
+  device fails (103 state 4, 86 and 184 never complete), which reads
+  isAvailable false and 218 = 5 since March (2026-11-24). `docs/decisions.md`,
   *The Alfea's program is a week of comfort periods*.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.

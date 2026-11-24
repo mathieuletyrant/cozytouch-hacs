@@ -2727,9 +2727,13 @@ reporter moved Monday's end to 20:30 from the app and 103 moved with it
 once with the old week and once with Monday ending at 22:30 after the app's
 edit. Both values are the stored string with only that end time differing,
 821 characters each, so the payload's shape is not what the cloud refuses.
-Whether it refuses every write from this account to this device, which
-reads `isAvailable: false` and 218 = 5 since March, or 103 alone, is the
-next thing to measure. A new period merges into any
+It refuses every write to this device, not 103 alone : the same afternoon
+86 = 1 (twice) and 184 = 0 ended "not completed after 6 polls", and the next
+dump still read 86 empty and 184 at 1, while 103 moved again from the app
+(14:03 UTC). The device reads `isAvailable: false` and 218 = 5 (`cloud_issue`)
+since 2026-03-10, which is the likeliest cause and nothing the integration
+decides ; how the app's writes still land is not known. A new period merges
+into any
 it overlaps or touches ; a fourth is refused. A week that does not read as
 seven days is not rewritten, since a day that did not read would go back
 empty.
