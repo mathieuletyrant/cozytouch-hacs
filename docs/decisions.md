@@ -2720,9 +2720,16 @@ The title is ignored on writing : a period has no temperature.
 
 **An edit writes the week back in the device's own string**, spacing
 included (`json.dumps` with `(",", ": ")`), and the test holds that an
-untouched week comes back byte for byte. Nothing has measured how strict the
-cloud is about it, nor whether the write lands : the catalogue says the four
-are writable (`accessType` 7), and that is all. A new period merges into any
+untouched week comes back byte for byte. The catalogue says the four are
+writable (`accessType` 7), and the app does write 103 : on 2026-11-24 the
+reporter moved Monday's end to 20:30 from the app and 103 moved with it
+(1795527516). Home Assistant's writes did not land, twice ending in state 4,
+once with the old week and once with Monday ending at 22:30 after the app's
+edit. Both values are the stored string with only that end time differing,
+821 characters each, so the payload's shape is not what the cloud refuses.
+Whether it refuses every write from this account to this device, which
+reads `isAvailable: false` and 218 = 5 since March, or 103 alone, is the
+next thing to measure. A new period merges into any
 it overlaps or touches ; a fourth is refused. A week that does not read as
 seven days is not rewritten, since a day that did not read would go back
 empty.
