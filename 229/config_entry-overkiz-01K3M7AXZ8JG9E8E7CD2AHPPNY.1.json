@@ -1,0 +1,2873 @@
+{
+  "home_assistant": {
+    "arch": "x86_64",
+    "dev": false,
+    "docker": true,
+    "hassio": true,
+    "installation_type": "Home Assistant OS",
+    "os_name": "Linux",
+    "os_version": "6.18.58-haos",
+    "python_version": "3.14.10",
+    "timezone": "Europe/Paris",
+    "version": "2026.11.3",
+    "virtualenv": false,
+    "container_arch": "amd64",
+    "supervisor": "2026.11.0",
+    "host_os": "Home Assistant OS 18.4",
+    "docker_version": "29.8.2",
+    "chassis": "vm",
+    "run_as_root": true
+  },
+  "custom_components": {
+    "zha_toolkit": {
+      "documentation": "https://github.com/mdeweerd/zha-toolkit",
+      "version": "v1.2.7",
+      "requirements": [
+        "aiofiles>=0.4.0",
+        "pytz>=2016.10"
+      ]
+    },
+    "roborock_q10": {
+      "documentation": "https://github.com/schlusenbaum/roborock-q10",
+      "version": "1.0.15",
+      "requirements": []
+    },
+    "cozytouch": {
+      "documentation": "https://github.com/mathieuletyrant/cozytouch-hacs",
+      "version": "2026.11.6b2",
+      "requirements": []
+    },
+    "enphase_ev": {
+      "documentation": "https://github.com/barneyonline/ha-enphase-energy",
+      "version": "5.4.0",
+      "requirements": []
+    },
+    "roborock_custom_map": {
+      "documentation": "https://github.com/msc5/RoborockCustomMap",
+      "version": "2.0.0",
+      "requirements": []
+    },
+    "scheduler": {
+      "documentation": "https://github.com/nielsfaber/scheduler-component",
+      "version": "3.3.9",
+      "requirements": []
+    },
+    "ble_adv": {
+      "documentation": "https://github.com/NicoIIT/ha-ble-adv",
+      "version": "v2.2.0",
+      "requirements": [
+        "pycryptodome",
+        "btsocket"
+      ]
+    },
+    "electrolux": {
+      "documentation": "https://github.com/TTLucian/ha-electrolux",
+      "version": "3.8.7",
+      "requirements": [
+        "electrolux-group-developer-sdk>=0.7.0"
+      ]
+    },
+    "hon": {
+      "documentation": "https://github.com/gvigroux/hon",
+      "version": "0.8.7",
+      "requirements": []
+    },
+    "ha_urbansolar_bv": {
+      "documentation": "https://github.com/chourmovs/ha-urbansolar-bv/wiki",
+      "version": "0.90",
+      "requirements": []
+    },
+    "browser_mod": {
+      "documentation": "https://github.com/thomasloven/hass-browser_mod/blob/master/README.md",
+      "version": "3.4.2",
+      "requirements": []
+    },
+    "xiaomi_cloud_map_extractor": {
+      "documentation": "https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor",
+      "version": "v2.2.5",
+      "requirements": [
+        "pillow",
+        "pybase64",
+        "python-miio",
+        "requests",
+        "pycryptodome"
+      ]
+    },
+    "vesync": {
+      "documentation": "https://github.com/micahqcade/custom_vesync",
+      "version": "1.3.2",
+      "requirements": [
+        "pyvesync==2.1.12"
+      ]
+    },
+    "enigma": {
+      "documentation": "https://github.com/cinzas/homeassistant-enigma-player",
+      "version": "1.9.1",
+      "requirements": [
+        "beautifulsoup4>=4.6.3"
+      ]
+    },
+    "alexa_media": {
+      "documentation": "https://github.com/alandtse/alexa_media_player/wiki",
+      "version": "5.22.1",
+      "requirements": [
+        "alexapy==1.36.0",
+        "wrapt>=1.14.0",
+        "dictor>=0.1.12,<0.2"
+      ]
+    },
+    "uix": {
+      "documentation": "https://uix.lf.technology",
+      "version": "9.1.0",
+      "requirements": []
+    }
+  },
+  "integration_manifest": {
+    "domain": "overkiz",
+    "name": "Overkiz",
+    "categories": [
+      "hubs_protocols.smart_home_hubs"
+    ],
+    "codeowners": [
+      "imicknl"
+    ],
+    "config_flow": true,
+    "connectivity": [
+      "cloud",
+      "network"
+    ],
+    "dependencies": [
+      "application_credentials"
+    ],
+    "dhcp": [
+      {
+        "hostname": "gateway*",
+        "macaddress": "F8811A*"
+      }
+    ],
+    "documentation": "https://www.home-assistant.io/integrations/overkiz",
+    "integration_type": "hub",
+    "iot_class": "local_polling",
+    "loggers": [
+      "boto3",
+      "botocore",
+      "pyoverkiz",
+      "s3transfer"
+    ],
+    "requirements": [
+      "pyoverkiz[nexity]==2.3.2"
+    ],
+    "zeroconf": [
+      {
+        "name": "gateway*",
+        "type": "_kizbox._tcp.local."
+      },
+      {
+        "name": "gateway*",
+        "type": "_kizboxdev._tcp.local."
+      }
+    ],
+    "is_built_in": true,
+    "overwrites_built_in": false
+  },
+  "setup_times": {
+    "null": {
+      "setup": 0.000283230998320505
+    },
+    "01KPN2ZFF7KEFWE1R1RQZNRFES": {
+      "wait_import_platforms": -0.17508078799983195,
+      "config_entry_setup": 0.7289147339997726
+    },
+    "01K3M7AXZ8JG9E8E7CD2AHPPNY": {
+      "config_entry_setup": 1.0749511060002988
+    }
+  },
+  "data": {
+    "setup": {
+      "creationTime": 1711443220000,
+      "lastUpdateTime": 1711443220000,
+      "id": "SETUP-****-****-0291",
+      "location": {
+        "creationTime": 1711443220000,
+        "lastUpdateTime": 1711443220000,
+        "city": "*",
+        "country": "*",
+        "postalCode": "*",
+        "addressLine1": "*",
+        "timezone": "Europe/Paris",
+        "longitude": "*",
+        "latitude": "*",
+        "twilightMode": 2,
+        "twilightAngle": "CIVIL",
+        "twilightCity": "paris",
+        "summerSolsticeDuskMinutes": 1290,
+        "winterSolsticeDuskMinutes": 990,
+        "twilightOffsetEnabled": false,
+        "dawnOffset": 0,
+        "duskOffset": 0,
+        "countryCode": "FR"
+      },
+      "gateways": [
+        {
+          "gatewayId": "****-****-2325",
+          "type": 105,
+          "subType": 0,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "autoUpdateEnabled": false,
+          "alive": true,
+          "timeReliable": true,
+          "connectivity": {
+            "status": "OK",
+            "protocolVersion": "2026.1.3"
+          },
+          "upToDate": true,
+          "updateStatus": "UP_TO_DATE",
+          "syncInProgress": false,
+          "mode": "ACTIVE",
+          "functions": "INTERNET_AUTHORIZATION,SCENARIO_DOWNLOAD,SCENARIO_AUTO_LAUNCHING,SCENARIO_TELECO_LAUNCHING,INTERNET_UPLOAD,INTERNET_UPDATE,TRIGGERS_SENSORS"
+        }
+      ],
+      "devices": [
+        {
+          "creationTime": 1711443223000,
+          "lastUpdateTime": 1711443223000,
+          "label": "*",
+          "deviceURL": "internal://****-****-2325/pod/0",
+          "shortcut": false,
+          "controllableName": "internal:PodV3Component",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "getName",
+                "nparams": 0
+              },
+              {
+                "commandName": "update",
+                "nparams": 0
+              },
+              {
+                "commandName": "setCountryCode",
+                "nparams": 1
+              },
+              {
+                "commandName": "activateCalendar",
+                "nparams": 0
+              },
+              {
+                "commandName": "deactivateCalendar",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPodMode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshUpdateStatus",
+                "nparams": 0
+              },
+              {
+                "commandName": "setCalendar",
+                "nparams": 1
+              },
+              {
+                "commandName": "setLightingLedPodMode",
+                "nparams": 1
+              },
+              {
+                "commandName": "setPodLedOff",
+                "nparams": 0
+              },
+              {
+                "commandName": "setPodLedOn",
+                "nparams": 0
+              }
+            ],
+            "states": [
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "offline",
+                  "online"
+                ],
+                "qualifiedName": "core:ConnectivityState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:CountryCodeState"
+              },
+              {
+                "eventBased": true,
+                "type": "DataState",
+                "qualifiedName": "core:LocalAccessProofState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:LocalIPv4AddressState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:NameState"
+              },
+              {
+                "eventBased": true,
+                "type": "DiscreteState",
+                "values": [
+                  "pressed",
+                  "stop"
+                ],
+                "qualifiedName": "internal:Button1State"
+              },
+              {
+                "eventBased": true,
+                "type": "DiscreteState",
+                "values": [
+                  "pressed",
+                  "stop"
+                ],
+                "qualifiedName": "internal:Button2State"
+              },
+              {
+                "eventBased": true,
+                "type": "DiscreteState",
+                "values": [
+                  "pressed",
+                  "stop"
+                ],
+                "qualifiedName": "internal:Button3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "internal:LightingLedPodModeState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "Pod",
+            "uiProfiles": [
+              "UpdatableComponent"
+            ],
+            "uiClass": "Pod",
+            "qualifiedName": "internal:PodV3Component",
+            "type": "ACTUATOR"
+          },
+          "states": [
+            {
+              "name": "core:NameState",
+              "type": 3,
+              "value": "*"
+            },
+            {
+              "name": "internal:LightingLedPodModeState",
+              "type": 2,
+              "value": 1.0
+            },
+            {
+              "name": "core:CountryCodeState",
+              "type": 3,
+              "value": "FR"
+            },
+            {
+              "name": "core:LocalIPv4AddressState",
+              "type": 3,
+              "value": "*"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "Pod",
+          "type": 1,
+          "oid": "d9916abf-bdfc-44f9-9265-c2c481ea56ae",
+          "uiClass": "Pod"
+        },
+        {
+          "creationTime": 1711443223000,
+          "lastUpdateTime": 1711443223000,
+          "label": "* (*/*)",
+          "deviceURL": "internal://****-****-2325/wifi/0",
+          "shortcut": false,
+          "controllableName": "internal:WifiComponent",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "clearCredentials",
+                "nparams": 0
+              },
+              {
+                "commandName": "setTargetInfraConfig",
+                "nparams": 2
+              },
+              {
+                "commandName": "setWifiMode",
+                "nparams": 1
+              }
+            ],
+            "states": [
+              {
+                "type": "DataState",
+                "qualifiedName": "internal:CurrentInfraConfigState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "internal:SignalStrengthState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "internal:WifiModeState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "Wifi",
+            "uiProfiles": [
+              "Specific"
+            ],
+            "uiClass": "Wifi",
+            "qualifiedName": "internal:WifiComponent",
+            "type": "ACTUATOR"
+          },
+          "states": [
+            {
+              "name": "internal:WifiModeState",
+              "type": 3,
+              "value": "infrastructure"
+            },
+            {
+              "name": "internal:CurrentInfraConfigState",
+              "type": 3,
+              "value": "*"
+            },
+            {
+              "name": "internal:SignalStrengthState",
+              "type": 1,
+              "value": 76
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "Wifi",
+          "type": 1,
+          "oid": "afcb8707-87de-45c9-9d73-dde7f7ba7da8",
+          "uiClass": "Wifi"
+        },
+        {
+          "creationTime": 1711455739000,
+          "lastUpdateTime": 1711455739000,
+          "label": "*",
+          "deviceURL": "io://****-****-2325/4108001#1",
+          "shortcut": false,
+          "controllableName": "io:AtlanticPassAPCHeatPumpMainComponent",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "addLockLevel",
+                "nparams": 2
+              },
+              {
+                "commandName": "advancedRefresh",
+                "nparams": 2
+              },
+              {
+                "commandName": "cancelAbsence",
+                "nparams": 0
+              },
+              {
+                "commandName": "delayedStopIdentify",
+                "nparams": 1
+              },
+              {
+                "commandName": "getName",
+                "nparams": 0
+              },
+              {
+                "commandName": "identify",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshDeviceSerialNumber",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshElectricEnergyConsumption",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshErrorCode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshHeatingDerogationAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshOperatingMode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshOutsideTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshTimeProgramById",
+                "nparams": 1
+              },
+              {
+                "commandName": "refreshZonesNumber",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "removeLockLevel",
+                "nparams": 1
+              },
+              {
+                "commandName": "resetLockLevels",
+                "nparams": 0
+              },
+              {
+                "commandName": "setAbsenceCoolingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setAbsenceEndDateTime",
+                "nparams": 1
+              },
+              {
+                "commandName": "setAbsenceHeatingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setAbsenceStartDateTime",
+                "nparams": 1
+              },
+              {
+                "commandName": "setName",
+                "nparams": 1
+              },
+              {
+                "commandName": "setTimeProgramById",
+                "nparams": 2
+              },
+              {
+                "commandName": "startIdentify",
+                "nparams": 0
+              },
+              {
+                "commandName": "stopIdentify",
+                "nparams": 0
+              },
+              {
+                "commandName": "wink",
+                "nparams": 1
+              },
+              {
+                "commandName": "pairOneWayController",
+                "nparams": 2
+              },
+              {
+                "commandName": "refreshAbsenceSchedulingAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshDHWAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshEnergyConsumptionAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshOutsideTemperatureSensorAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshProductType",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshThermalSchedulingAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesPassAPCCoolingProfile",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesPassAPCHeatingProfile",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesTemperatureSensorAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshZonesThermalConfiguration",
+                "nparams": 0
+              },
+              {
+                "commandName": "setPassAPCOperatingMode",
+                "nparams": 1
+              },
+              {
+                "commandName": "unpairAllOneWayControllers",
+                "nparams": 0
+              },
+              {
+                "commandName": "unpairOneWayController",
+                "nparams": 2
+              }
+            ],
+            "states": [
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:AbsenceCoolingTargetTemperatureState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:AbsenceEndDateTimeState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:AbsenceHeatingTargetTemperatureState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:AbsenceStartDateTimeState"
+              },
+              {
+                "eventBased": true,
+                "type": "DataState",
+                "qualifiedName": "core:CommandLockLevelsState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:DeviceSerialNumberState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "good",
+                  "low",
+                  "normal",
+                  "verylow"
+                ],
+                "qualifiedName": "core:DiscreteRSSILevelState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ECSPowerConsumptionExtra1State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ECSPowerConsumptionExtra2State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ECSPowerConsumptionExtra3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ECSPowerConsumptionState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:ErrorCodeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:HeatingDerogationAvailabilityState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:HeatingPowerConsumptionExtra1State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:HeatingPowerConsumptionExtra2State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:HeatingPowerConsumptionExtra3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:HeatingPowerConsumptionState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:NameState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:PriorityLockTimerState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:ProductModelNameState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:RSSILevelState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:TimeProgram1State"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:TimeProgram2State"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:TimeProgram3State"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:TimeProgram4State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:VersionState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:ZonesNumberState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:AbsenceSchedulingAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "dateScheduling",
+                  "numberOfDaysScheduling"
+                ],
+                "qualifiedName": "io:AbsenceSchedulingModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:DHWAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:EnergyConsumptionAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "cooling",
+                  "drying",
+                  "heating",
+                  "stop"
+                ],
+                "qualifiedName": "io:LastPassAPCOperatingModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "cooling",
+                  "drying",
+                  "heating",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCOperatingModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "accumulationDomesticHotWater",
+                  "airConditioning",
+                  "boiler",
+                  "convector",
+                  "doubleFlowControlledMechanicalVentilation",
+                  "heatPump",
+                  "heater",
+                  "hybrid",
+                  "singleFlowControlledMechanicalVentilation",
+                  "thermodynamicDomesticHotWater",
+                  "zoneController"
+                ],
+                "qualifiedName": "io:PassAPCProductTypeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "comfortLevel1",
+                  "comfortLevel2",
+                  "comfortLevel3",
+                  "comfortLevel4",
+                  "environmentProtection",
+                  "humanProtection",
+                  "userLevel1",
+                  "userLevel2"
+                ],
+                "qualifiedName": "io:PriorityLockLevelState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "LSC",
+                  "SAAC",
+                  "SFC",
+                  "UPS",
+                  "externalGateway",
+                  "localUser",
+                  "myself",
+                  "rain",
+                  "security",
+                  "temperature",
+                  "timer",
+                  "user",
+                  "wind"
+                ],
+                "qualifiedName": "io:PriorityLockOriginatorState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:ThermalSchedulingAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "heatingAndCoolingCommonScheduling",
+                  "heatingAndCoolingSeparatedScheduling"
+                ],
+                "qualifiedName": "io:ThermalSchedulingModeState"
+              }
+            ],
+            "dataProperties": [
+              {
+                "value": "500",
+                "qualifiedName": "core:identifyInterval"
+              }
+            ],
+            "widgetName": "AtlanticPassAPCHeatPump",
+            "uiProfiles": [
+              "Specific"
+            ],
+            "uiClass": "HeatingSystem",
+            "uiClassifiers": [
+              "generator"
+            ],
+            "qualifiedName": "io:AtlanticPassAPCHeatPumpMainComponent",
+            "type": "ACTUATOR"
+          },
+          "states": [
+            {
+              "name": "core:NameState",
+              "type": 3,
+              "value": "*"
+            },
+            {
+              "name": "core:VersionState",
+              "type": 3,
+              "value": "43363637323130202020"
+            },
+            {
+              "name": "core:CommandLockLevelsState",
+              "type": 3,
+              "value": "[]",
+              "lastUpdateTime": 1795549738000
+            },
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:DiscreteRSSILevelState",
+              "type": 3,
+              "value": "good"
+            },
+            {
+              "name": "core:RSSILevelState",
+              "type": 2,
+              "value": 100.0
+            },
+            {
+              "name": "core:ProductModelNameState",
+              "type": 3,
+              "value": "R002411610"
+            },
+            {
+              "name": "core:DeviceSerialNumberState",
+              "type": 3,
+              "value": "      *"
+            },
+            {
+              "name": "io:PassAPCProductTypeState",
+              "type": 3,
+              "value": "heatPump"
+            },
+            {
+              "name": "core:ZonesNumberState",
+              "type": 1,
+              "value": 1
+            },
+            {
+              "name": "io:DHWAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:HeatingPowerConsumptionState",
+              "type": 1,
+              "value": 14
+            },
+            {
+              "name": "core:HeatingPowerConsumptionExtra1State",
+              "type": 1,
+              "value": 3
+            },
+            {
+              "name": "core:HeatingPowerConsumptionExtra2State",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "core:HeatingPowerConsumptionExtra3State",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "core:ECSPowerConsumptionState",
+              "type": 1,
+              "value": 14
+            },
+            {
+              "name": "core:ECSPowerConsumptionExtra1State",
+              "type": 1,
+              "value": 1
+            },
+            {
+              "name": "core:ECSPowerConsumptionExtra2State",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "core:ECSPowerConsumptionExtra3State",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "io:EnergyConsumptionAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:PassAPCOperatingModeState",
+              "type": 3,
+              "value": "heating"
+            },
+            {
+              "name": "core:HeatingDerogationAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:ThermalSchedulingAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:ThermalSchedulingModeState",
+              "type": 3,
+              "value": "heatingAndCoolingSeparatedScheduling"
+            },
+            {
+              "name": "core:TimeProgram1State",
+              "type": 10,
+              "value": [
+                {
+                  "monday": [
+                    {
+                      "start": "06:00",
+                      "end": "23:30"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "tuesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "wednesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "thursday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "friday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "saturday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "sunday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "core:TimeProgram2State",
+              "type": 10,
+              "value": [
+                {
+                  "monday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "tuesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "wednesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "thursday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "friday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "saturday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "sunday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "core:TimeProgram3State",
+              "type": 10,
+              "value": [
+                {
+                  "monday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "tuesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "wednesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "thursday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "friday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "saturday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "sunday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "core:TimeProgram4State",
+              "type": 10,
+              "value": [
+                {
+                  "monday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "tuesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "wednesday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "thursday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "friday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "saturday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                },
+                {
+                  "sunday": [
+                    {
+                      "start": "06:00",
+                      "end": "22:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    },
+                    {
+                      "start": "00:00",
+                      "end": "00:00"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "io:AbsenceSchedulingAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:AbsenceSchedulingModeState",
+              "type": 3,
+              "value": "dateScheduling"
+            },
+            {
+              "name": "core:AbsenceHeatingTargetTemperatureState",
+              "type": 2,
+              "value": 8.0
+            },
+            {
+              "name": "core:AbsenceCoolingTargetTemperatureState",
+              "type": 2,
+              "value": 35.0
+            },
+            {
+              "name": "core:ErrorCodeState",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "io:LastPassAPCOperatingModeState",
+              "type": 3,
+              "value": "heating"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:ElectricPowerConsumptionStateMeasuredValueType",
+              "type": 3,
+              "value": "core:ElectricalPowerInkW"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "AtlanticPassAPCHeatPump",
+          "type": 1,
+          "oid": "184b58a3-ef6d-49b1-a13d-74a27469c3e7",
+          "uiClass": "HeatingSystem"
+        },
+        {
+          "creationTime": 1711455750000,
+          "lastUpdateTime": 1711455750000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#2",
+          "shortcut": false,
+          "controllableName": "io:AtlanticPassAPCDHWComponent",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "addLockLevel",
+                "nparams": 2
+              },
+              {
+                "commandName": "advancedRefresh",
+                "nparams": 2
+              },
+              {
+                "commandName": "refreshComfortTargetDHWTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshDHWDerogationAvailability",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshDHWOnOffState",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshEcoTargetDHWTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshTargetDHWTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "removeLockLevel",
+                "nparams": 1
+              },
+              {
+                "commandName": "resetLockLevels",
+                "nparams": 0
+              },
+              {
+                "commandName": "setBoostOnOffState",
+                "nparams": 1
+              },
+              {
+                "commandName": "setComfortTargetDHWTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setDHWOnOffState",
+                "nparams": 1
+              },
+              {
+                "commandName": "setEcoTargetDHWTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "refreshDHWConfiguration",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCDHWMode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCDHWProfile",
+                "nparams": 0
+              },
+              {
+                "commandName": "setPassAPCDHWMode",
+                "nparams": 1
+              }
+            ],
+            "states": [
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "off",
+                  "on"
+                ],
+                "qualifiedName": "core:BoostOnOffState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ComfortTargetDHWTemperatureState"
+              },
+              {
+                "eventBased": true,
+                "type": "DataState",
+                "qualifiedName": "core:CommandLockLevelsState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:DHWDerogationAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "off",
+                  "on"
+                ],
+                "qualifiedName": "core:DHWOnOffState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:EcoTargetDHWTemperatureState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:TargetDHWTemperatureState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "cumulated",
+                  "snapshot"
+                ],
+                "qualifiedName": "io:PassAPCDHWConfigurationState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "comfort",
+                  "eco",
+                  "externalScheduling",
+                  "internalScheduling",
+                  "manu",
+                  "peakAndOffPeakScheduling",
+                  "peakAndOffPeakTimes",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCDHWModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "absence",
+                  "comfort",
+                  "derogation",
+                  "eco",
+                  "externalSetpoint",
+                  "frostprotection",
+                  "manu",
+                  "other",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCDHWProfileState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "AtlanticPassAPCDHW",
+            "uiProfiles": [
+              "DHWThermostatTargetReader"
+            ],
+            "uiClass": "WaterHeatingSystem",
+            "qualifiedName": "io:AtlanticPassAPCDHWComponent",
+            "type": "ACTUATOR"
+          },
+          "states": [
+            {
+              "name": "core:CommandLockLevelsState",
+              "type": 3,
+              "value": "[]",
+              "lastUpdateTime": 1795549738000
+            },
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:PassAPCDHWConfigurationState",
+              "type": 3,
+              "value": "cumulated"
+            },
+            {
+              "name": "io:PassAPCDHWModeState",
+              "type": 3,
+              "value": "peakAndOffPeakScheduling"
+            },
+            {
+              "name": "io:PassAPCDHWProfileState",
+              "type": 3,
+              "value": "eco"
+            },
+            {
+              "name": "core:ComfortTargetDHWTemperatureState",
+              "type": 1,
+              "value": 46
+            },
+            {
+              "name": "core:EcoTargetDHWTemperatureState",
+              "type": 1,
+              "value": 45
+            },
+            {
+              "name": "core:TargetDHWTemperatureState",
+              "type": 1,
+              "value": 45
+            },
+            {
+              "name": "core:DHWDerogationAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:BoostOnOffState",
+              "type": 3,
+              "value": "off"
+            },
+            {
+              "name": "core:DHWOnOffState",
+              "type": 3,
+              "value": "on"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "AtlanticPassAPCDHW",
+          "type": 1,
+          "oid": "e8534897-cb75-48af-851d-8e3494db33fc",
+          "uiClass": "WaterHeatingSystem"
+        },
+        {
+          "creationTime": 1711455750000,
+          "lastUpdateTime": 1711455750000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#3",
+          "shortcut": false,
+          "controllableName": "io:AtlanticPassAPCOutsideTemperatureSensor",
+          "definition": {
+            "commands": [],
+            "states": [
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:TemperatureState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "TemperatureSensor",
+            "uiProfiles": [
+              "Temperature"
+            ],
+            "uiClass": "TemperatureSensor",
+            "qualifiedName": "io:AtlanticPassAPCOutsideTemperatureSensor",
+            "type": "SENSOR"
+          },
+          "states": [
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:TemperatureState",
+              "type": 2,
+              "value": 9.0
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:MeasuredValueType",
+              "type": 3,
+              "value": "core:TemperatureInCelcius"
+            },
+            {
+              "name": "core:PowerSourceType",
+              "type": 3,
+              "value": "mainSupply"
+            },
+            {
+              "name": "core:MaxSensedValue",
+              "type": 2,
+              "value": 45.0
+            },
+            {
+              "name": "core:MinSensedValue",
+              "type": 2,
+              "value": -20.0
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "TemperatureSensor",
+          "type": 2,
+          "oid": "db57d813-ac6a-4b4d-91b5-d79b9bb9336b",
+          "uiClass": "TemperatureSensor"
+        },
+        {
+          "creationTime": 1711455751000,
+          "lastUpdateTime": 1711455751000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#4",
+          "shortcut": false,
+          "controllableName": "io:TotalElectricalEnergyConsumptionSensor",
+          "definition": {
+            "commands": [],
+            "states": [
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff0State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff1State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff2State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff4State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff5State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff6State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff7State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff8State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff9State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ElectricEnergyConsumptionState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "CumulativeElectricPowerConsumptionSensor",
+            "uiProfiles": [
+              "ElectricEnergyConsumption"
+            ],
+            "uiClass": "ElectricitySensor",
+            "qualifiedName": "io:TotalElectricalEnergyConsumptionSensor",
+            "type": "SENSOR"
+          },
+          "states": [
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:ElectricEnergyConsumptionState",
+              "type": 1,
+              "value": 10236000
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:PowerSourceType",
+              "type": 3,
+              "value": "mainSupply"
+            },
+            {
+              "name": "core:MeasuredValueType",
+              "type": 3,
+              "value": "core:ElectricalEnergyInWh"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "CumulativeElectricPowerConsumptionSensor",
+          "type": 2,
+          "oid": "8693a023-87d1-4a02-9911-bd4607324176",
+          "uiClass": "ElectricitySensor"
+        },
+        {
+          "creationTime": 1711455751000,
+          "lastUpdateTime": 1711455751000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#5",
+          "shortcut": false,
+          "controllableName": "io:DHWRelatedElectricalEnergyConsumptionSensor",
+          "definition": {
+            "commands": [],
+            "states": [
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff0State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff1State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff2State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff4State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff5State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff6State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff7State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff8State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff9State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ElectricEnergyConsumptionState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "CumulativeElectricPowerConsumptionSensor",
+            "uiProfiles": [
+              "ElectricEnergyConsumption"
+            ],
+            "uiClass": "ElectricitySensor",
+            "qualifiedName": "io:DHWRelatedElectricalEnergyConsumptionSensor",
+            "type": "SENSOR"
+          },
+          "states": [
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:ElectricEnergyConsumptionState",
+              "type": 1,
+              "value": 2605000
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:PowerSourceType",
+              "type": 3,
+              "value": "mainSupply"
+            },
+            {
+              "name": "core:MeasuredValueType",
+              "type": 3,
+              "value": "core:ElectricalEnergyInWh"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "CumulativeElectricPowerConsumptionSensor",
+          "type": 2,
+          "oid": "b6ed2d76-4d44-425a-83b3-a60dede5cca7",
+          "uiClass": "ElectricitySensor"
+        },
+        {
+          "creationTime": 1711455751000,
+          "lastUpdateTime": 1711455751000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#6",
+          "shortcut": false,
+          "controllableName": "io:HeatingRelatedElectricalEnergyConsumptionSensor",
+          "definition": {
+            "commands": [],
+            "states": [
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff0State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff1State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff2State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff3State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff4State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff5State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff6State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff7State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff8State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ConsumptionTariff9State"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ElectricEnergyConsumptionState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "CumulativeElectricPowerConsumptionSensor",
+            "uiProfiles": [
+              "ElectricEnergyConsumption"
+            ],
+            "uiClass": "ElectricitySensor",
+            "qualifiedName": "io:HeatingRelatedElectricalEnergyConsumptionSensor",
+            "type": "SENSOR"
+          },
+          "states": [
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:ElectricEnergyConsumptionState",
+              "type": 1,
+              "value": 7632000
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:PowerSourceType",
+              "type": 3,
+              "value": "mainSupply"
+            },
+            {
+              "name": "core:MeasuredValueType",
+              "type": 3,
+              "value": "core:ElectricalEnergyInWh"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "CumulativeElectricPowerConsumptionSensor",
+          "type": 2,
+          "oid": "591b26b6-eef5-4e43-8528-3431946ef14b",
+          "uiClass": "ElectricitySensor"
+        },
+        {
+          "creationTime": 1711455749000,
+          "lastUpdateTime": 1711455749000,
+          "label": "* *",
+          "deviceURL": "io://****-****-2325/4108001#8",
+          "shortcut": false,
+          "controllableName": "io:AtlanticPassAPCHeatingAndCoolingZoneComponent",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "addLockLevel",
+                "nparams": 2
+              },
+              {
+                "commandName": "advancedRefresh",
+                "nparams": 2
+              },
+              {
+                "commandName": "refreshComfortCoolingTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshComfortHeatingTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshEcoCoolingTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshEcoHeatingTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshTargetTemperature",
+                "nparams": 0
+              },
+              {
+                "commandName": "removeLockLevel",
+                "nparams": 1
+              },
+              {
+                "commandName": "resetLockLevels",
+                "nparams": 0
+              },
+              {
+                "commandName": "setActiveCoolingTimeProgram",
+                "nparams": 1
+              },
+              {
+                "commandName": "setActiveHeatingTimeProgram",
+                "nparams": 1
+              },
+              {
+                "commandName": "setComfortCoolingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setComfortHeatingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setCoolingOnOffState",
+                "nparams": 1
+              },
+              {
+                "commandName": "setDerogatedTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setDerogationOnOffState",
+                "nparams": 1
+              },
+              {
+                "commandName": "setDerogationTime",
+                "nparams": 1
+              },
+              {
+                "commandName": "setEcoCoolingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setEcoHeatingTargetTemperature",
+                "nparams": 1
+              },
+              {
+                "commandName": "setHeatingOnOffState",
+                "nparams": 1
+              },
+              {
+                "commandName": "setName",
+                "nparams": 1
+              },
+              {
+                "commandName": "refreshDerogationRemainingTime",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCCoolingMode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCCoolingProfile",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCHeatingMode",
+                "nparams": 0
+              },
+              {
+                "commandName": "refreshPassAPCHeatingProfile",
+                "nparams": 0
+              },
+              {
+                "commandName": "setPassAPCCoolingMode",
+                "nparams": 1
+              },
+              {
+                "commandName": "setPassAPCHeatingMode",
+                "nparams": 1
+              }
+            ],
+            "states": [
+              {
+                "type": "DataState",
+                "qualifiedName": "core:ActiveCoolingTimeProgramState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:ActiveHeatingTimeProgramState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ComfortCoolingTargetTemperatureState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:ComfortHeatingTargetTemperatureState"
+              },
+              {
+                "eventBased": true,
+                "type": "DataState",
+                "qualifiedName": "core:CommandLockLevelsState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "off",
+                  "on"
+                ],
+                "qualifiedName": "core:CoolingOnOffState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:DerogatedTargetTemperatureState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "off",
+                  "on"
+                ],
+                "qualifiedName": "core:DerogationOnOffState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:EcoCoolingTargetTemperatureState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:EcoHeatingTargetTemperatureState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "off",
+                  "on"
+                ],
+                "qualifiedName": "core:HeatingOnOffState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "core:NameState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:TargetTemperatureState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "cooling",
+                  "heating",
+                  "heatingAndCooling"
+                ],
+                "qualifiedName": "core:ThermalConfigurationState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:CoolingInternalSchedulingAvailabilityState"
+              },
+              {
+                "type": "DataState",
+                "qualifiedName": "io:DerogationRemainingTimeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "io:HeatingInternalSchedulingAvailabilityState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "absence",
+                  "auto",
+                  "comfort",
+                  "eco",
+                  "externalScheduling",
+                  "internalScheduling",
+                  "manu",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCCoolingModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "absence",
+                  "comfort",
+                  "derogation",
+                  "eco",
+                  "externalSetpoint",
+                  "frostprotection",
+                  "manu",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCCoolingProfileState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "absence",
+                  "auto",
+                  "comfort",
+                  "eco",
+                  "externalScheduling",
+                  "internalScheduling",
+                  "manu",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCHeatingModeState"
+              },
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "absence",
+                  "comfort",
+                  "derogation",
+                  "eco",
+                  "externalSetpoint",
+                  "frostprotection",
+                  "manu",
+                  "stop"
+                ],
+                "qualifiedName": "io:PassAPCHeatingProfileState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "AtlanticPassAPCHeatingAndCoolingZone",
+            "uiProfiles": [
+              "ThermostatTargetReader"
+            ],
+            "uiClass": "HeatingSystem",
+            "uiClassifiers": [
+              "emitter",
+              "heatingSystem",
+              "coolingSystem"
+            ],
+            "qualifiedName": "io:AtlanticPassAPCHeatingAndCoolingZoneComponent",
+            "type": "ACTUATOR"
+          },
+          "states": [
+            {
+              "name": "core:CommandLockLevelsState",
+              "type": 3,
+              "value": "[]",
+              "lastUpdateTime": 1795549738000
+            },
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:ThermalConfigurationState",
+              "type": 3,
+              "value": "heating"
+            },
+            {
+              "name": "io:HeatingInternalSchedulingAvailabilityState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "io:PassAPCHeatingModeState",
+              "type": 3,
+              "value": "internalScheduling"
+            },
+            {
+              "name": "io:CoolingInternalSchedulingAvailabilityState",
+              "type": 3,
+              "value": "unavailable"
+            },
+            {
+              "name": "io:PassAPCCoolingModeState",
+              "type": 3,
+              "value": "stop"
+            },
+            {
+              "name": "io:PassAPCHeatingProfileState",
+              "type": 3,
+              "value": "comfort"
+            },
+            {
+              "name": "io:PassAPCCoolingProfileState",
+              "type": 3,
+              "value": "stop"
+            },
+            {
+              "name": "core:ComfortHeatingTargetTemperatureState",
+              "type": 2,
+              "value": 19.5
+            },
+            {
+              "name": "core:EcoHeatingTargetTemperatureState",
+              "type": 2,
+              "value": 19.0
+            },
+            {
+              "name": "core:ComfortCoolingTargetTemperatureState",
+              "type": 2,
+              "value": 24.0
+            },
+            {
+              "name": "core:EcoCoolingTargetTemperatureState",
+              "type": 2,
+              "value": 26.0
+            },
+            {
+              "name": "core:TargetTemperatureState",
+              "type": 2,
+              "value": 19.5
+            },
+            {
+              "name": "core:DerogatedTargetTemperatureState",
+              "type": 2,
+              "value": 15.5
+            },
+            {
+              "name": "io:DerogationRemainingTimeState",
+              "type": 1,
+              "value": 0
+            },
+            {
+              "name": "core:ActiveHeatingTimeProgramState",
+              "type": 3,
+              "value": "1"
+            },
+            {
+              "name": "core:ActiveCoolingTimeProgramState",
+              "type": 3,
+              "value": "3"
+            },
+            {
+              "name": "core:NameState",
+              "type": 3,
+              "value": "* *"
+            },
+            {
+              "name": "core:HeatingOnOffState",
+              "type": 3,
+              "value": "on"
+            },
+            {
+              "name": "core:CoolingOnOffState",
+              "type": 3,
+              "value": "off"
+            },
+            {
+              "name": "core:DerogationOnOffState",
+              "type": 3,
+              "value": "off"
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "AtlanticPassAPCHeatingAndCoolingZone",
+          "type": 1,
+          "oid": "4fc02fb8-3bc5-4c76-b79c-1052adcc0728",
+          "uiClass": "HeatingSystem"
+        },
+        {
+          "creationTime": 1711455749000,
+          "lastUpdateTime": 1711455749000,
+          "label": "* (*#*)",
+          "deviceURL": "io://****-****-2325/4108001#9",
+          "shortcut": false,
+          "controllableName": "io:AtlanticPassAPCZoneTemperatureSensor",
+          "definition": {
+            "commands": [],
+            "states": [
+              {
+                "type": "DiscreteState",
+                "values": [
+                  "available",
+                  "unavailable"
+                ],
+                "qualifiedName": "core:StatusState"
+              },
+              {
+                "type": "ContinuousState",
+                "qualifiedName": "core:TemperatureState"
+              }
+            ],
+            "dataProperties": [],
+            "widgetName": "TemperatureSensor",
+            "uiProfiles": [
+              "Temperature"
+            ],
+            "uiClass": "TemperatureSensor",
+            "qualifiedName": "io:AtlanticPassAPCZoneTemperatureSensor",
+            "type": "SENSOR"
+          },
+          "states": [
+            {
+              "name": "core:StatusState",
+              "type": 3,
+              "value": "available"
+            },
+            {
+              "name": "core:TemperatureState",
+              "type": 2,
+              "value": 19.2
+            }
+          ],
+          "attributes": [
+            {
+              "name": "core:FirmwareRevision",
+              "type": 3,
+              "value": "C667210"
+            },
+            {
+              "name": "core:Manufacturer",
+              "type": 3,
+              "value": "Atlantic Group"
+            },
+            {
+              "name": "core:MeasuredValueType",
+              "type": 3,
+              "value": "core:TemperatureInCelcius"
+            },
+            {
+              "name": "core:PowerSourceType",
+              "type": 3,
+              "value": "mainSupply"
+            },
+            {
+              "name": "core:MaxSensedValue",
+              "type": 2,
+              "value": 30.0
+            },
+            {
+              "name": "core:MinSensedValue",
+              "type": 2,
+              "value": 5.0
+            }
+          ],
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "TemperatureSensor",
+          "type": 2,
+          "oid": "66a068fd-8816-44b8-8e3e-07e4e81994a2",
+          "uiClass": "TemperatureSensor"
+        },
+        {
+          "creationTime": 1711443419000,
+          "lastUpdateTime": 1711443419000,
+          "label": "* (*)",
+          "deviceURL": "io://****-****-2325/9317102",
+          "shortcut": false,
+          "controllableName": "io:StackComponent",
+          "definition": {
+            "commands": [
+              {
+                "commandName": "advancedSomfyDiscover",
+                "nparams": 1
+              },
+              {
+                "commandName": "discover1WayController",
+                "nparams": 2
+              },
+              {
+                "commandName": "discoverActuators",
+                "nparams": 1
+              },
+              {
+                "commandName": "discoverSensors",
+                "nparams": 1
+              },
+              {
+                "commandName": "discoverSomfyUnsetActuators",
+                "nparams": 0
+              },
+              {
+                "commandName": "joinNetwork",
+                "nparams": 0
+              },
+              {
+                "commandName": "resetNetworkSecurity",
+                "nparams": 0
+              },
+              {
+                "commandName": "shareNetwork",
+                "nparams": 0
+              }
+            ],
+            "states": [],
+            "dataProperties": [],
+            "widgetName": "IOStack",
+            "uiProfiles": [
+              "Specific"
+            ],
+            "uiClass": "ProtocolGateway",
+            "qualifiedName": "io:StackComponent",
+            "type": "PROTOCOL_GATEWAY"
+          },
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "IOStack",
+          "type": 5,
+          "oid": "a9bed7ef-164c-45fb-92af-51547d17163c",
+          "uiClass": "ProtocolGateway"
+        },
+        {
+          "creationTime": 1711443222000,
+          "lastUpdateTime": 1711443222000,
+          "label": "* (*)",
+          "deviceURL": "zigbee://****-****-2325/65535",
+          "shortcut": false,
+          "controllableName": "zigbee:TransceiverV3_0Component",
+          "definition": {
+            "commands": [],
+            "states": [],
+            "dataProperties": [],
+            "widgetName": "ZigbeeStack",
+            "uiProfiles": [
+              "Specific"
+            ],
+            "uiClass": "ProtocolGateway",
+            "qualifiedName": "zigbee:TransceiverV3_0Component",
+            "type": "PROTOCOL_GATEWAY"
+          },
+          "available": true,
+          "enabled": true,
+          "placeOID": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+          "widget": "ZigbeeStack",
+          "type": 5,
+          "oid": "54b49ee8-0f4d-46c1-b819-19413a33c3d0",
+          "uiClass": "ProtocolGateway"
+        }
+      ],
+      "zones": [],
+      "resellerDelegationType": "NEVER",
+      "oid": "cf5c166a-5cc7-4990-ba4b-15a5d90ecbf3",
+      "rootPlace": {
+        "creationTime": 1711443220000,
+        "lastUpdateTime": 1711443220000,
+        "label": "* *",
+        "type": 0,
+        "oid": "23394f88-c4c0-4d52-b897-3cb5982225d1",
+        "subPlaces": []
+      },
+      "features": []
+    },
+    "action_groups": [],
+    "server": "atlantic_cozytouch",
+    "api_type": "cloud",
+    "execution_history": [
+      "HistoryExecution(id='11e4318d-0a1b-4482-20f1-8d1f382a0fec', event_time=1795596497295, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596502642, effective_start_time=1795596497295, duration=5347, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='11e43116-0a1b-4482-20f1-8d1f0e242908', event_time=1795596497176, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596502078, effective_start_time=1795596497176, duration=4902, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='11e43095-0a1b-4482-20f1-8d1f12414ead', event_time=1795596497046, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596499969, effective_start_time=1795596497047, duration=2922, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[19.5])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='11e1f08d-0a1b-4482-20f1-8d1fd820eefc', event_time=1795596349583, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596354489, effective_start_time=1795596349583, duration=4906, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='11e1f017-0a1b-4482-20f1-8d1f17aec143', event_time=1795596349465, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596353701, effective_start_time=1795596349465, duration=4236, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='11e1efa0-0a1b-4482-20f1-8d1f936bf59d', event_time=1795596349346, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795596350668, effective_start_time=1795596349347, duration=1321, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[20.0])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0fa70d7e-0a1b-4482-20f1-8d1f65c85612', event_time=1795558935937, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795558940680, effective_start_time=1795558935937, duration=4743, label='atlantic Android 3.34.0#755 - Leave Absence mode', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='cancelAbsence', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0fa4f76c-0a1b-4482-20f1-8d1f31ceecaa', event_time=1795558799214, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795558804708, effective_start_time=1795558799215, duration=5493, label='atlantic Android 3.34.0#755 - Mode Absence end (2026-11-26)', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setAbsenceStartDateTime', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[{'year': 2026, 'minute': 19, 'hour': 23, 'month': 11, 'day': 24}]), HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setAbsenceEndDateTime', rank=1, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[{'year': 2026, 'minute': 19, 'hour': 23, 'month': 11, 'day': 26}])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0f9cc0ca-0a1b-4482-20f1-8d1f1f9f92e9', event_time=1795558260940, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795558265424, effective_start_time=1795558260940, duration=4484, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#2, command='setDHWOnOffState', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['on'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0f9cc054-0a1b-4482-20f1-8d1f090e35fc', event_time=1795558260821, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795558262733, effective_start_time=1795558260822, duration=1911, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#2, command='setBoostOnOffState', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['off'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0f9c81d8-0a1b-4482-20f1-8d1f8c6d9978', event_time=1795558244827, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795558249192, effective_start_time=1795558244827, duration=4365, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#2, command='setDHWOnOffState', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['off'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0f9c814c-0a1b-4482-20f1-8d1f8ea1f57d', event_time=1795558244687, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795558246024, effective_start_time=1795558244688, duration=1336, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#2, command='setBoostOnOffState', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['off'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='GacomaRWCapaExec_10622939_REFRESH', event_time=1795550967035, owner=$atlantic, source='webservices', end_time=1795550968403, effective_start_time=1795550967035, duration=1368, label='RefreshCapability_EposHighLevelRg_25', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='refreshOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=None)], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='GacomaRWCapaExec_10605100_REFRESH', event_time=1795549954306, owner=$atlantic, source='webservices', end_time=1795549955480, effective_start_time=1795549954307, duration=1173, label='RefreshCapability_EposHighLevelRg_25', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='refreshOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=None)], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0f0d9ac1-0a1b-4481-29c6-ce2480e352bc', event_time=1795548879560, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795548883521, effective_start_time=1795548879560, duration=3961, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '23:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='GacomaRWCapaExec_10406934_REFRESH', event_time=1795538250301, owner=$atlantic, source='webservices', end_time=1795538251579, effective_start_time=1795538250302, duration=1277, label='RefreshCapability_EposHighLevelRg_25', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='refreshOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=None)], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0dde1df1-0a1b-4481-29c6-ce249b7b7f7d', event_time=1795528990194, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795528993774, effective_start_time=1795528990195, duration=3579, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0dc787e6-0a1b-4481-29c6-ce249070a202', event_time=1795527509992, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795527515228, effective_start_time=1795527509993, duration=5235, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '20:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0db2743a-0a1b-4481-29c6-ce240fae9fbe', event_time=1795526128702, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795526132076, effective_start_time=1795526128702, duration=3374, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '23:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0da8c72b-0a1b-4481-29c6-ce24e50f6da1', event_time=1795525494576, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795525498400, effective_start_time=1795525494576, duration=3824, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0d9e5a42-0a1b-4481-29c6-ce248ebb528c', event_time=1795524811334, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795524815373, effective_start_time=1795524811335, duration=4038, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '23:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0d9065dc-0a1b-4481-29c6-ce2407bfe652', event_time=1795523896809, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795523900255, effective_start_time=1795523896810, duration=3445, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '20:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0cb215b3-0a1b-4481-29c6-ce244767f5a8', event_time=1795509327286, owner=GACOMA_Production_250720, source='mobile:mobile', end_time=1795509331257, effective_start_time=1795509327286, duration=3971, label='atlantic Android 3.34.0#755 - Set PassAPC Time program', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setTimeProgramById', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['1', [{'monday': [{'start': '06:00', 'end': '22:30'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'tuesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'wednesday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'thursday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'friday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'saturday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}, {'sunday': [{'start': '06:00', 'end': '22:00'}, {'start': '00:00', 'end': '00:00'}, {'start': '00:00', 'end': '00:00'}]}]])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f69a9-0a1b-4482-20f1-8d1f213d2e86', event_time=1795474549162, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474557612, effective_start_time=1795474549162, duration=8450, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f6930-0a1b-4482-20f1-8d1f23d08be7', event_time=1795474549042, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474557222, effective_start_time=1795474549042, duration=8180, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f68b8-0a1b-4482-20f1-8d1f505f02d2', event_time=1795474548921, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474553234, effective_start_time=1795474548921, duration=4313, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[19.5])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f62b0-0a1b-4482-20f1-8d1f136363de', event_time=1795474547377, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474552378, effective_start_time=1795474547378, duration=5000, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f6239-0a1b-4482-20f1-8d1f4b897e2e', event_time=1795474547258, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474551594, effective_start_time=1795474547258, duration=4336, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f61c3-0a1b-4482-20f1-8d1f89cb6076', event_time=1795474547140, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474548534, effective_start_time=1795474547140, duration=1394, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[20.0])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f1efa-0a1b-4482-20f1-8d1f4e363e5a', event_time=1795474530044, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474536936, effective_start_time=1795474530044, duration=6892, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f1e83-0a1b-4482-20f1-8d1f34346bb4', event_time=1795474529925, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474536541, effective_start_time=1795474529925, duration=6616, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f1e08-0a1b-4482-20f1-8d1f19e754df', event_time=1795474529802, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474533244, effective_start_time=1795474529802, duration=3442, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[19.5])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f1816-0a1b-4482-20f1-8d1fc867568e', event_time=1795474528280, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474532268, effective_start_time=1795474528281, duration=3987, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f179f-0a1b-4482-20f1-8d1fe60084d8', event_time=1795474528161, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474531547, effective_start_time=1795474528161, duration=3386, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='0a9f1725-0a1b-4482-20f1-8d1fc303f854', event_time=1795474528040, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795474529482, effective_start_time=1795474528041, duration=1441, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[21.0])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='eff2dadc-0a1b-4481-29c6-ce24ee7e8da4', event_time=1795027032798, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795027036747, effective_start_time=1795027032798, duration=3949, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='eff2da65-0a1b-4481-29c6-ce24c648ac61', event_time=1795027032679, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795027036078, effective_start_time=1795027032679, duration=3399, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='eff2d9ef-0a1b-4481-29c6-ce249dded061', event_time=1795027032561, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795027033925, effective_start_time=1795027032561, duration=1364, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[18.0])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaae41a-0a1b-4481-29c6-ce2454eec5ec', event_time=1795022316572, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022333242, effective_start_time=1795022316573, duration=16669, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingProfile', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaae3a0-0a1b-4481-29c6-ce24d279e851', event_time=1795022316451, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022331873, effective_start_time=1795022316451, duration=15422, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[]), HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=1, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaae329-0a1b-4481-29c6-ce24e918a390', event_time=1795022316332, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022330183, effective_start_time=1795022316332, duration=13851, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[]), HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshComfortHeatingTargetTemperature', rank=1, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaae2b0-0a1b-4481-29c6-ce24a5acb555', event_time=1795022316212, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022325975, effective_start_time=1795022316212, duration=9763, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setDerogationOnOffState', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['on']), HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setComfortHeatingTargetTemperature', rank=1, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[17.5])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaae21b-0a1b-4481-29c6-ce242e80099b', event_time=1795022316062, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022320380, effective_start_time=1795022316062, duration=4318, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setDerogatedTargetTemperature', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[15.5])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaad881-0a1b-4481-29c6-ce2432206052', event_time=1795022313603, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022319075, effective_start_time=1795022313603, duration=5472, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingProfile', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaad7ff-0a1b-4481-29c6-ce24953d8e27', event_time=1795022313473, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022318444, effective_start_time=1795022313473, duration=4971, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaad781-0a1b-4481-29c6-ce249c0d9427', event_time=1795022313354, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022315249, effective_start_time=1795022313354, duration=1895, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['internalScheduling'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaac07c-0a1b-4481-29c6-ce2450a85248', event_time=1795022307455, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022314506, effective_start_time=1795022307455, duration=7051, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingProfile', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaabd22-0a1b-4481-29c6-ce2488a6c8d0', event_time=1795022306597, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022313456, effective_start_time=1795022306597, duration=6859, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaabcab-0a1b-4481-29c6-ce248bca470a', event_time=1795022306478, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022309025, effective_start_time=1795022306478, duration=2547, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['comfort'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='efaa62fd-0a1b-4481-29c6-ce2440b8c1aa', event_time=1795022283540, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795022285250, effective_start_time=1795022283540, duration=1710, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setPassAPCOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['heating'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef7eb19e-0a1b-4481-29c6-ce2442e4b9be', event_time=1795019420065, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795019421685, effective_start_time=1795019420065, duration=1620, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setPassAPCOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['stop'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef783fe0-0a1b-4481-29c6-ce241be1b6bc', event_time=1795018997731, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018999401, effective_start_time=1795018997731, duration=1670, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setPassAPCOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['heating'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef7553e9-0a1b-4481-29c6-ce243bcf14fa', event_time=1795018806252, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018807892, effective_start_time=1795018806252, duration=1640, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setPassAPCOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['stop'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef752ea1-0a1b-4481-29c6-ce243c412330', event_time=1795018796708, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018802709, effective_start_time=1795018796708, duration=6001, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingProfile', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef752e2a-0a1b-4481-29c6-ce248b87af8d', event_time=1795018796588, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018802091, effective_start_time=1795018796588, duration=5503, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='refreshPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=[])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef752da1-0a1b-4481-29c6-ce24ccfa3a71', event_time=1795018796452, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018797884, effective_start_time=1795018796453, duration=1431, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#8, command='setPassAPCHeatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['comfort'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)",
+      "HistoryExecution(id='ef744d84-0a1b-4481-29c6-ce24cd2b3fff', event_time=1795018739079, owner=GACOMA_Production_250720, source='mobile:tool', end_time=1795018741036, effective_start_time=1795018739079, duration=1957, label='Home Assistant', type='Immediate execution - MANUAL_CONTROL', state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', commands=[HistoryExecutionCommand(device_url=io://****-****-2325/4108001#1, command='setPassAPCOperatingMode', rank=0, dynamic=False, state=<ExecutionState.COMPLETED: 'COMPLETED'>, failure_type='NO_FAILURE', parameters=['heating'])], execution_type=<ExecutionType.IMMEDIATE_EXECUTION: 'Immediate execution'>, execution_sub_type=<ExecutionSubType.MANUAL_CONTROL: 'MANUAL_CONTROL'>)"
+    ]
+  },
+  "issues": []
+}
