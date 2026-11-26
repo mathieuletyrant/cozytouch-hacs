@@ -613,3 +613,40 @@ def test_what_a_period_produces_can_be_written():
 def test_a_period_that_ends_before_it_starts_is_refused():
     with pytest.raises(ServiceValidationError):
         services.apply_period(DAY, "17:00", "09:00", 21)
+
+
+def test_the_extended_runs_store_triplets():
+    """The 100320 runs take [minute, setpoint, 0] per slot, as the app writes them.
+
+    A pair there is refused with "execution ended in state 4"
+    (docs/decisions.md).
+    """
+    value = services.build_matrix(
+        [
+            {"time": time(7, 0), "temperature": 21},
+            {"time": time(9, 0), "temperature": 17},
+        ],
+        extended=True,
+    )
+
+    assert json.loads(value) == [[420, 21, 0], [540, 17, 0]] + [[0, 0, 0]] * 8
+
+
+def test_only_the_100320_and_100327_runs_are_extended():
+    assert services.stores_extended(100320)
+    assert services.stores_extended(100327)
+    assert not services.stores_extended(196)
+    assert not services.stores_extended(203)
+
+
+def test_a_triplet_program_reads_back_as_the_slots_that_were_written():
+    slots = [
+        {"time": time(7, 0), "temperature": 21},
+        {"time": time(9, 0), "temperature": 17},
+    ]
+    stored = services.build_matrix(slots, extended=True)
+
+    assert services.parse_slots(stored, 100320) == [
+        {"time": "07:00", "temperature": 21},
+        {"time": "09:00", "temperature": 17},
+    ]
