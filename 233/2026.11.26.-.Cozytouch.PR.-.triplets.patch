@@ -1,0 +1,182 @@
+From 434d4a7ffdb5d0f6513d6a4ae09e67c52f3fd6e7 Mon Sep 17 00:00:00 2001
+From: x <x@x>
+Date: Thu, 26 Nov 2026 10:53:19 +0000
+Subject: [PATCH] Write [minute, setpoint, 0] triplets to the 100320 and 100327
+ program runs
+
+---
+ custom_components/cozytouch/calendar.py | 11 ++++++--
+ custom_components/cozytouch/services.py | 21 +++++++++++---
+ docs/decisions.md                       | 18 ++++++++++++
+ tests/test_services.py                  | 37 +++++++++++++++++++++++++
+ 4 files changed, 81 insertions(+), 6 deletions(-)
+
+diff --git a/custom_components/cozytouch/calendar.py b/custom_components/cozytouch/calendar.py
+index 6c3a318..490063d 100644
+--- a/custom_components/cozytouch/calendar.py
++++ b/custom_components/cozytouch/calendar.py
+@@ -19,7 +19,14 @@ from homeassistant.util import dt as dt_util
+ 
+ from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS
+ from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
+-from .services import build_matrix, in_charge_at, parse_slots, slot_limit, where_stored
++from .services import (
++    build_matrix,
++    in_charge_at,
++    parse_slots,
++    slot_limit,
++    stores_extended,
++    where_stored,
++)
+ 
+ _LOGGER = logging.getLogger(__name__)
+ 
+@@ -301,7 +308,7 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
+         # build_matrix is set_schedule's, checks included : at least one
+         # slot, no two at the same time.
+         await self.coordinator.set_capability_value(
+-            capabilityId, build_matrix(slots)
++            capabilityId, build_matrix(slots, stores_extended(self._first_capability))
+         )
+         await self.coordinator.async_request_refresh()
+ 
+diff --git a/custom_components/cozytouch/services.py b/custom_components/cozytouch/services.py
+index a83572d..63eb6fc 100644
+--- a/custom_components/cozytouch/services.py
++++ b/custom_components/cozytouch/services.py
+@@ -47,6 +47,7 @@ DAY_GROUPS = {
+ 
+ # The device always stores ten slots, unused ones being [0,0].
+ MAX_SLOTS = 10
++EXTENDED_PROGRAM_FIRSTS = (100320, 100327)
+ 
+ # The device advertises how many slots a day may hold. Its encoding has never
+ # been confirmed against a capture, so it is only ever allowed to tighten the
+@@ -171,11 +172,21 @@ def _as_time(value: time | str) -> time:
+     return value if isinstance(value, time) else time.fromisoformat(value)
+ 
+ 
+-def build_matrix(slots: list[dict]) -> str:
++def stores_extended(first: int) -> bool:
++    """Whether a program run stores [minute, setpoint, state] triplets.
++
++    The 100320 and 100327 runs hold the extended state of each transition ; the
++    app writes a triplet there and the device refuses a pair (state 4).
++    """
++    return first in EXTENDED_PROGRAM_FIRSTS
++
++
++def build_matrix(slots: list[dict], extended: bool = False) -> str:
+     """Turn slots into the [[minutes,temperature],...] string the device stores.
+ 
+     Public because calendar.py writes programs through it too, so the two
+-    cannot disagree about what a day may hold.
++    cannot disagree about what a day may hold. `extended` adds the third,
++    zero element the 100320 runs store per slot.
+     """
+     entries = sorted(
+         (
+@@ -198,7 +209,9 @@ def build_matrix(slots: list[dict]) -> str:
+         [minute, int(temperature) if temperature == int(temperature) else temperature]
+         for minute, temperature in entries
+     ]
+-    matrix += [[0, 0]] * (MAX_SLOTS - len(matrix))
++    if extended:
++        matrix = [[*entry, 0] for entry in matrix]
++    matrix += [[0, 0, 0] if extended else [0, 0]] * (MAX_SLOTS - len(matrix))
+ 
+     return json.dumps(matrix, separators=(",", ":"))
+ 
+@@ -401,7 +414,6 @@ def async_register_services(hass: HomeAssistant) -> None:
+     async def async_set_schedule(call: ServiceCall) -> None:
+         """Write the same day program to every requested day."""
+         slots = call.data["slots"]
+-        value = build_matrix(slots)
+         program = call.data["program"]
+ 
+         for entity_id in call.data["entity_id"]:
+@@ -415,6 +427,7 @@ def async_register_services(hass: HomeAssistant) -> None:
+                     f"{len(slots)} were given"
+                 )
+ 
++            value = build_matrix(slots, stores_extended(first))
+             for day in call.data["days"]:
+                 capabilityId = first + PROGRAM_DAYS.index(day)
+                 _LOGGER.debug(
+diff --git a/docs/decisions.md b/docs/decisions.md
+index 694a0ca..f975e42 100644
+--- a/docs/decisions.md
++++ b/docs/decisions.md
+@@ -2637,6 +2637,24 @@ the zone 2 program outside air conditioners, which is the same unresolved naming
+ `set_schedule` carries ; the program exists in both cool and heat, so nothing
+ here decides it either.
+ 
++### The 100320 runs store triplets
++
++`set_schedule` and the calendar wrote `[[minute,setpoint],...]` to every program
++run. On the runs at 100320 and 100327 the device refuses that with
++"execution ended in state 4". Atlantic describes 100320 as "the start time and
++the extended state of the schedule transition", and the app writes
++`[[minute,setpoint,0],...]` there, padded with `[0,0,0]`.
++
++Measured 2026-11-26 on two Thermor Riva 5 (model 1560, product 53, Wi-Fi,
++no bridge): five refusals in the diagnostics dump, the last one with no 00:00
++slot, so the missing 00:00 is not the cause. With triplets the write is
++accepted and `get_schedule` reads the same seven days back, on both devices.
++
++`build_matrix` takes `extended` and `stores_extended(first)` decides it from
++the run's first id. The 196 and 203 runs keep pairs : nothing measured says
++they changed. A device that stores 100320 but accepts pairs, if one exists,
++is not known ; the extra zero is what the app sends.
++
+ ## `custom_components/cozytouch/account.py`
+ 
+ ### The account owns the session, the token and the setup view
+diff --git a/tests/test_services.py b/tests/test_services.py
+index 4722f7e..c297b52 100644
+--- a/tests/test_services.py
++++ b/tests/test_services.py
+@@ -613,3 +613,40 @@ def test_what_a_period_produces_can_be_written():
+ def test_a_period_that_ends_before_it_starts_is_refused():
+     with pytest.raises(ServiceValidationError):
+         services.apply_period(DAY, "17:00", "09:00", 21)
++
++
++def test_the_extended_runs_store_triplets():
++    """The 100320 runs take [minute, setpoint, 0] per slot, as the app writes them.
++
++    A pair there is refused with "execution ended in state 4"
++    (docs/decisions.md).
++    """
++    value = services.build_matrix(
++        [
++            {"time": time(7, 0), "temperature": 21},
++            {"time": time(9, 0), "temperature": 17},
++        ],
++        extended=True,
++    )
++
++    assert json.loads(value) == [[420, 21, 0], [540, 17, 0]] + [[0, 0, 0]] * 8
++
++
++def test_only_the_100320_and_100327_runs_are_extended():
++    assert services.stores_extended(100320)
++    assert services.stores_extended(100327)
++    assert not services.stores_extended(196)
++    assert not services.stores_extended(203)
++
++
++def test_a_triplet_program_reads_back_as_the_slots_that_were_written():
++    slots = [
++        {"time": time(7, 0), "temperature": 21},
++        {"time": time(9, 0), "temperature": 17},
++    ]
++    stored = services.build_matrix(slots, extended=True)
++
++    assert services.parse_slots(stored, 100320) == [
++        {"time": "07:00", "temperature": 21},
++        {"time": "09:00", "temperature": 17},
++    ]
+-- 
+2.53.0
+

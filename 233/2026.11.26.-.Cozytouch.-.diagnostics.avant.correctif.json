@@ -1,0 +1,1269 @@
+{
+ "home_assistant": {
+  "arch": "x86_64",
+  "dev": false,
+  "docker": true,
+  "hassio": false,
+  "installation_type": "Home Assistant Container",
+  "os_name": "Linux",
+  "os_version": "3.10.108",
+  "python_version": "3.14.9",
+  "timezone": "Europe/Paris",
+  "version": "2026.10.4",
+  "virtualenv": false,
+  "container_arch": "amd64",
+  "run_as_root": true
+ },
+ "custom_components": {
+  "nest_protect": {
+   "documentation": "https://github.com/imicknl/ha-nest-protect",
+   "version": "0.4.4",
+   "requirements": []
+  },
+  "cozytouch": {
+   "documentation": "https://github.com/mathieuletyrant/cozytouch-hacs",
+   "version": "2026.11.4",
+   "requirements": []
+  },
+  "danfoss_ally": {
+   "documentation": "https://github.com/MTrab/danfoss_ally/blob/master/README.md",
+   "version": "2.3.0",
+   "requirements": [
+    "pydanfossally==1.3.1"
+   ]
+  }
+ },
+ "integration_manifest": {
+  "domain": "cozytouch",
+  "name": "Atlantic Cozytouch",
+  "codeowners": [
+   "mathieuletyrant"
+  ],
+  "config_flow": true,
+  "dependencies": [
+   "http",
+   "repairs"
+  ],
+  "documentation": "https://github.com/mathieuletyrant/cozytouch-hacs",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/mathieuletyrant/cozytouch-hacs/issues",
+  "requirements": [],
+  "version": "2026.11.4",
+  "is_built_in": false,
+  "overwrites_built_in": true
+ },
+ "setup_times": {
+  "null": {
+   "setup": 5.5775999953766586e-05
+  },
+  "01M84BX9SH311ECE56JDCA2KY9": {
+   "wait_import_platforms": -14.29851332599992,
+   "wait_base_component": -0.0026652610001747234,
+   "config_entry_setup": 20.13883072999988
+  }
+ },
+ "data": {
+  "entry": {
+   "options": {
+    "create_unknown": false,
+    "dump_json": false
+   },
+   "data": {},
+   "devices": {
+    "01M84BX9SHDD8E8YCJQWW2J7C3": 26801434,
+    "01M84BX9SH9QERTX0CHGRZ82K0": 26801547
+   }
+  },
+  "online": true,
+  "writeRefusals": [
+   {
+    "at": 1795683656,
+    "deviceId": 26801547,
+    "capabilityId": 100320,
+    "value": "[[0,17],[420,21],[540,17],[1080,21],[1260,17],[0,0],[0,0],[0,0],[0,0],[0,0]]",
+    "reason": "execution ended in state 4"
+   },
+   {
+    "at": 1795683664,
+    "deviceId": 26801434,
+    "capabilityId": 100320,
+    "value": "[[0,17],[420,21],[540,17],[1080,21],[1260,17],[0,0],[0,0],[0,0],[0,0],[0,0]]",
+    "reason": "execution ended in state 4"
+   },
+   {
+    "at": 1795683672,
+    "deviceId": 26801547,
+    "capabilityId": 100320,
+    "value": "[[0,15.5],[360,19],[540,15.5],[1080,19],[1260,15.5],[0,0],[0,0],[0,0],[0,0],[0,0]]",
+    "reason": "execution ended in state 4"
+   },
+   {
+    "at": 1795683695,
+    "deviceId": 26801434,
+    "capabilityId": 152,
+    "value": "1",
+    "reason": "HTTP 403"
+   },
+   {
+    "at": 1795683701,
+    "deviceId": 26801547,
+    "capabilityId": 152,
+    "value": "1",
+    "reason": "HTTP 403"
+   },
+   {
+    "at": 1795685773,
+    "deviceId": 26801547,
+    "capabilityId": 100320,
+    "value": "[[420,21],[540,17],[1080,21],[1260,17],[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]]",
+    "reason": "execution ended in state 4"
+   }
+  ],
+  "consumptions": {
+   "declared": true,
+   "status": 200,
+   "answer": []
+  },
+  "setup": {
+   "absence": {
+    "endDate": 1798297200,
+    "startDate": 1790844683
+   },
+   "address": "**REDACTED**",
+   "area": 100,
+   "currency": "EUR",
+   "id": 943452,
+   "mainDHWEnergy": 6,
+   "mainHeatingEnergy": 7,
+   "name": "setup1",
+   "numberOfPersons": 6,
+   "numberOfRooms": 4,
+   "rateLimit": 30,
+   "setupBuildingDate": 3,
+   "type": 1
+  },
+  "zones": [
+   {
+    "id": 714559,
+    "name": "Master Bed SdB",
+    "zoneType": 29,
+    "numberOfDevices": 1
+   },
+   {
+    "id": 714673,
+    "name": "Salle de bains",
+    "zoneType": 29,
+    "numberOfDevices": 1
+   }
+  ],
+  "devices": [
+   {
+    "deviceId": 26801434,
+    "name": "RIVA 5 0750W BLC BRI ",
+    "modelId": 1560,
+    "productId": 53,
+    "zoneId": 714673,
+    "zoneName": "Salle de bains",
+    "tags": [],
+    "isConfiguredHere": true,
+    "customName": "RIVA 5 0750W BLC BRI ",
+    "longName": "RIVA 5 0750W BLC BRI ",
+    "modelFamily": "Towel_Dryer",
+    "productRange": null,
+    "masterDeviceId": null,
+    "isAvailable": true,
+    "model": {
+     "name": "RIVA 5 0750W BLC BRI",
+     "type": "towel_rack",
+     "infos": {
+      "modelId": "1560",
+      "HVACModesCapabilityId": "{8, 7}",
+      "winkable": "True",
+      "HVACModes": "{0: <HVACMode.OFF: 'off'>, 4: <HVACMode.HEAT: 'heat'>}"
+     }
+    },
+    "capabilities": {
+     "mapped": {
+      "7": "heat",
+      "40": "target_temperature",
+      "57": "power_consumption",
+      "73": "available_thermostat_modes",
+      "88": "model_name",
+      "98": "product_number",
+      "117": "thermostat_temperature_z1",
+      "121": "version",
+      "152": "away_mode",
+      "153": "heating_status",
+      "154": "zone_1",
+      "157": "override_setpoint_activation",
+      "158": "override_total_time",
+      "159": "override_remain_time",
+      "160": "temperature_adjustment_min",
+      "161": "temperature_adjustment_max",
+      "164": "energy_consumption_supported",
+      "166": "system_operating_mode",
+      "172": "away_mode_temperature",
+      "179": "wifi_signal",
+      "181": "service_in_progress",
+      "184": "prog_mode",
+      "188": "home_services",
+      "217": "system_setpoint_mode",
+      "218": "connectivity_diagnosis",
+      "222": "away_mode",
+      "294": "target_temperature_step",
+      "295": "schedule_time_step",
+      "296": "schedule_minimum_interval",
+      "306": "max_schedule_slots_per_day",
+      "315": "timezone",
+      "358": "thermal_ambiance_scope",
+      "360": "boost_end_time",
+      "361": "boost_duration_step",
+      "362": "boost_duration_min",
+      "370": "hub_movable_subproducts",
+      "381": "ble_pairing_compatibility",
+      "100002": "ventilation_options_supported",
+      "100004": "ventilation_controls_available",
+      "100013": "available_schedule_types",
+      "100021": "ventilation_controls_supported",
+      "100022": "supported_system_operating_modes",
+      "100023": "supported_system_modes",
+      "100024": "ventilation_options_available",
+      "100078": "identify_request",
+      "100260": "away_mode",
+      "100261": "away_mode",
+      "100300": "schedule_start_day",
+      "100301": "max_schedule_slots_per_week",
+      "100320": "prog_heat_monday",
+      "100321": "prog_heat_tuesday",
+      "100322": "prog_heat_wednesday",
+      "100323": "prog_heat_thursday",
+      "100324": "prog_heat_friday",
+      "100325": "prog_heat_saturday",
+      "100326": "prog_heat_sunday",
+      "100450": "schedule_anticipation",
+      "103114": "boost_with_fan",
+      "103115": "boost_duration",
+      "103116": "boost_duration_max",
+      "103150": "ambient_temperature_available",
+      "104044": "boost_mode",
+      "104050": "open_window_detection",
+      "104051": "open_window_state"
+     },
+     "suppressed": [],
+     "unmapped": [],
+     "values": {
+      "7": "4",
+      "40": "17",
+      "57": "853511",
+      "73": "2",
+      "88": "100047126600",
+      "98": "100924224506008",
+      "117": "8.76",
+      "121": "1.2.4",
+      "152": "1",
+      "153": "0",
+      "154": "Salle de bains",
+      "157": "0",
+      "158": "1440",
+      "159": "0",
+      "160": "7.0000000000000000000",
+      "161": "28.0000000000000000000",
+      "164": "2",
+      "166": "17",
+      "172": "7.0000000000000000000",
+      "179": "-36",
+      "181": "4",
+      "184": "1",
+      "188": "1",
+      "217": "3075",
+      "218": "0",
+      "222": "[1790844683,1798297200]",
+      "294": "0.5000000000000000000",
+      "295": "15",
+      "296": "60",
+      "306": "6",
+      "315": "3600",
+      "358": "0",
+      "360": "1795558994",
+      "361": "5",
+      "362": "15",
+      "370": "0",
+      "381": "0",
+      "100002": "11",
+      "100004": "49",
+      "100013": "1",
+      "100021": "49",
+      "100022": "17",
+      "100023": "3075",
+      "100024": "9",
+      "100078": "0",
+      "100260": "[1790844683,1798297200]",
+      "100261": "1",
+      "100300": "1",
+      "100301": "42",
+      "100320": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100321": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100322": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100323": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100324": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100325": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100326": "[[420,21,0],[540,17,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100450": "0",
+      "103114": "0",
+      "103115": "60",
+      "103116": "60",
+      "103150": "1",
+      "104044": "0",
+      "104050": "0",
+      "104051": "0"
+     },
+     "modificationDates": {
+      "7": 1790841042,
+      "40": 1795680010,
+      "57": 1790838271,
+      "73": 1765462725,
+      "88": 1765462725,
+      "98": 1765462725,
+      "117": 1795558259,
+      "121": 1765462725,
+      "152": 1790841092,
+      "153": 1790838010,
+      "154": 1765463235,
+      "157": 1772349661,
+      "158": 1768381674,
+      "159": 1772349661,
+      "160": 1765462725,
+      "161": 1765462725,
+      "164": 1765462725,
+      "166": 1765462725,
+      "172": 1765462725,
+      "179": 1795687227,
+      "181": 1790841047,
+      "184": 1790425667,
+      "188": 1768908796,
+      "217": 1765462725,
+      "218": 1795555392,
+      "222": 1795683695,
+      "294": 1765462726,
+      "295": 1765462726,
+      "296": 1765462726,
+      "306": 1765462725,
+      "315": 1792890921,
+      "358": 1782206215,
+      "360": 1795555394,
+      "361": 1783512111,
+      "362": 1783512091,
+      "370": 1790760801,
+      "381": 1765462725,
+      "100002": 1765462725,
+      "100004": 1765462725,
+      "100013": 1765462725,
+      "100021": 1765462725,
+      "100022": 1765462725,
+      "100023": 1765462725,
+      "100024": 1765462725,
+      "100078": 1765462725,
+      "100260": 1795683695,
+      "100261": 1790841092,
+      "100300": 1765462725,
+      "100301": 1765462725,
+      "100320": 1790426075,
+      "100321": 1790426053,
+      "100322": 1790426076,
+      "100323": 1790426074,
+      "100324": 1790426076,
+      "100325": 1790426075,
+      "100326": 1790426075,
+      "100450": 1773742064,
+      "103114": 1789412751,
+      "103115": 1789412751,
+      "103116": 1789412751,
+      "103150": 1795558259,
+      "104044": 1784486871,
+      "104050": 1765462725,
+      "104051": 1765462725
+     }
+    }
+   },
+   {
+    "deviceId": 26801547,
+    "name": "RIVA 5 0750W BLC BRI ",
+    "modelId": 1560,
+    "productId": 53,
+    "zoneId": 714559,
+    "zoneName": "Master Bed SdB",
+    "tags": [],
+    "isConfiguredHere": true,
+    "customName": "RIVA 5 0750W BLC BRI ",
+    "longName": "RIVA 5 0750W BLC BRI ",
+    "modelFamily": "Towel_Dryer",
+    "productRange": null,
+    "masterDeviceId": null,
+    "isAvailable": true,
+    "model": {
+     "name": "RIVA 5 0750W BLC BRI",
+     "type": "towel_rack",
+     "infos": {
+      "modelId": "1560",
+      "HVACModesCapabilityId": "{8, 7}",
+      "winkable": "True",
+      "HVACModes": "{0: <HVACMode.OFF: 'off'>, 4: <HVACMode.HEAT: 'heat'>}"
+     }
+    },
+    "capabilities": {
+     "mapped": {
+      "7": "heat",
+      "40": "target_temperature",
+      "57": "power_consumption",
+      "73": "available_thermostat_modes",
+      "88": "model_name",
+      "98": "product_number",
+      "117": "thermostat_temperature_z1",
+      "121": "version",
+      "152": "away_mode",
+      "153": "heating_status",
+      "154": "zone_1",
+      "157": "override_setpoint_activation",
+      "158": "override_total_time",
+      "159": "override_remain_time",
+      "160": "temperature_adjustment_min",
+      "161": "temperature_adjustment_max",
+      "164": "energy_consumption_supported",
+      "166": "system_operating_mode",
+      "172": "away_mode_temperature",
+      "179": "wifi_signal",
+      "181": "service_in_progress",
+      "184": "prog_mode",
+      "188": "home_services",
+      "217": "system_setpoint_mode",
+      "218": "connectivity_diagnosis",
+      "222": "away_mode",
+      "294": "target_temperature_step",
+      "295": "schedule_time_step",
+      "296": "schedule_minimum_interval",
+      "306": "max_schedule_slots_per_day",
+      "315": "timezone",
+      "358": "thermal_ambiance_scope",
+      "360": "boost_end_time",
+      "361": "boost_duration_step",
+      "362": "boost_duration_min",
+      "370": "hub_movable_subproducts",
+      "381": "ble_pairing_compatibility",
+      "100002": "ventilation_options_supported",
+      "100004": "ventilation_controls_available",
+      "100013": "available_schedule_types",
+      "100021": "ventilation_controls_supported",
+      "100022": "supported_system_operating_modes",
+      "100023": "supported_system_modes",
+      "100024": "ventilation_options_available",
+      "100078": "identify_request",
+      "100260": "away_mode",
+      "100261": "away_mode",
+      "100300": "schedule_start_day",
+      "100301": "max_schedule_slots_per_week",
+      "100320": "prog_heat_monday",
+      "100321": "prog_heat_tuesday",
+      "100322": "prog_heat_wednesday",
+      "100323": "prog_heat_thursday",
+      "100324": "prog_heat_friday",
+      "100325": "prog_heat_saturday",
+      "100326": "prog_heat_sunday",
+      "100450": "schedule_anticipation",
+      "103114": "boost_with_fan",
+      "103115": "boost_duration",
+      "103116": "boost_duration_max",
+      "103150": "ambient_temperature_available",
+      "104044": "boost_mode",
+      "104050": "open_window_detection",
+      "104051": "open_window_state"
+     },
+     "suppressed": [],
+     "unmapped": [],
+     "values": {
+      "7": "4",
+      "40": "15.5",
+      "57": "807172",
+      "73": "2",
+      "88": "100047126600",
+      "98": "100924224506001",
+      "117": "7.5",
+      "121": "1.2.4",
+      "152": "1",
+      "153": "0",
+      "154": "Master Bed SdB",
+      "157": "0",
+      "158": "1440",
+      "159": "0",
+      "160": "7.0000000000000000000",
+      "161": "28.0000000000000000000",
+      "164": "2",
+      "166": "17",
+      "172": "7.0000000000000000000",
+      "179": "-47",
+      "181": "4",
+      "184": "1",
+      "188": "1",
+      "217": "3075",
+      "218": "0",
+      "222": "[1790844683,1798297200]",
+      "294": "0.5000000000000000000",
+      "295": "15",
+      "296": "60",
+      "306": "6",
+      "315": "3600",
+      "358": "0",
+      "360": "1795279263",
+      "361": "5",
+      "362": "15",
+      "370": "0",
+      "381": "0",
+      "100002": "11",
+      "100004": "49",
+      "100013": "1",
+      "100021": "49",
+      "100022": "17",
+      "100023": "3075",
+      "100024": "9",
+      "100078": "0",
+      "100260": "[1790844683,1798297200]",
+      "100261": "1",
+      "100300": "1",
+      "100301": "42",
+      "100320": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100321": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100322": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100323": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100324": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100325": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100326": "[[0,15.5,0],[360,19,0],[540,15.5,0],[1080,19,0],[1260,15.5,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]",
+      "100450": "0",
+      "103114": "0",
+      "103115": "30",
+      "103116": "60",
+      "103150": "1",
+      "104044": "0",
+      "104050": "0",
+      "104051": "0"
+     },
+     "modificationDates": {
+      "7": 1790841045,
+      "40": 1795680010,
+      "57": 1790406353,
+      "73": 1765463386,
+      "88": 1765463385,
+      "98": 1765463385,
+      "117": 1795555393,
+      "121": 1765463385,
+      "152": 1790841094,
+      "153": 1790400680,
+      "154": 1765463459,
+      "157": 1770889525,
+      "158": 1768381625,
+      "159": 1770889520,
+      "160": 1765463389,
+      "161": 1765463389,
+      "164": 1765463386,
+      "166": 1765463387,
+      "172": 1765463386,
+      "179": 1795555398,
+      "181": 1790841050,
+      "184": 1765469786,
+      "188": 1768908796,
+      "217": 1765463386,
+      "218": 1795555389,
+      "222": 1795683700,
+      "294": 1765463386,
+      "295": 1765463386,
+      "296": 1765463386,
+      "306": 1765463388,
+      "315": 1792890911,
+      "358": 1782206215,
+      "360": 1795277463,
+      "361": 1783512111,
+      "362": 1783512091,
+      "370": 1790760801,
+      "381": 1765463385,
+      "100002": 1765463386,
+      "100004": 1765463386,
+      "100013": 1765463386,
+      "100021": 1765463386,
+      "100022": 1765463386,
+      "100023": 1765463386,
+      "100024": 1765463386,
+      "100078": 1765463385,
+      "100260": 1795683700,
+      "100261": 1790841094,
+      "100300": 1765463388,
+      "100301": 1765463388,
+      "100320": 1774208776,
+      "100321": 1774208776,
+      "100322": 1790426077,
+      "100323": 1790426077,
+      "100324": 1774208776,
+      "100325": 1774208776,
+      "100326": 1774208780,
+      "100450": 1773742064,
+      "103114": 1788368898,
+      "103115": 1788368898,
+      "103116": 1788368898,
+      "103150": 1795555393,
+      "104044": 1784485235,
+      "104050": 1765463388,
+      "104051": 1765463388
+     }
+    }
+   }
+  ],
+  "atlanticSays": {
+   "7": {
+    "name": "ROOM1_SystemOperatingMode",
+    "description": "Defines the user Operating mode available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "0": "Off",
+     "1": "Auto",
+     "3": "Cool",
+     "4": "Heat",
+     "5": "EmergencyHeating",
+     "6": "Precooling",
+     "7": "FanOnly",
+     "8": "Dry",
+     "9": "Sleep"
+    }
+   },
+   "40": {
+    "name": "ROOM1_SystemHeatSetpoint",
+    "description": "Defines the heating temperature setpoint for room 1",
+    "type": "float",
+    "writable": true,
+    "unit": "°C",
+    "min": 7.0,
+    "max": 40.0,
+    "resolution": 0.01
+   },
+   "57": {
+    "name": "HOME_ElecHeatConsumptionCumulated",
+    "description": "Defines the electricity consumption for heating",
+    "type": "float",
+    "writable": false,
+    "unit": "kWh",
+    "min": 0.0,
+    "max": 2147483.648,
+    "resolution": 0.001
+   },
+   "73": {
+    "name": "ROOM1_ThermostatOperatingModeCapabilities",
+    "description": "Defines the operating mode available in the ROOM 1",
+    "type": "enum",
+    "writable": false,
+    "values": {
+     "0": "CoolingOnly",
+     "1": "CoolingWithReheat",
+     "2": "HeatingOnly",
+     "3": "HeatingWithReheat",
+     "4": "CoolingAndHeating",
+     "5": "CoolingAndHeatingWithReheat"
+    }
+   },
+   "88": {
+    "name": "ProductIdentification_DEVICE_1",
+    "description": "Defines the Product Identification of the device",
+    "type": "string",
+    "writable": false
+   },
+   "98": {
+    "name": "SerialNumber_MAIN",
+    "description": "Defines the Serial Number of the device",
+    "type": "string",
+    "writable": false
+   },
+   "117": {
+    "name": "ROOM1_AmbientRoom",
+    "description": "Ambient temperature in the Room 1",
+    "type": "float",
+    "writable": false,
+    "unit": "°C",
+    "min": 4.0,
+    "max": 40.0,
+    "resolution": 0.01
+   },
+   "121": {
+    "name": "SoftwareRelease_DEVICE_1",
+    "description": "Defines the software release of the device",
+    "type": "string",
+    "writable": false
+   },
+   "152": {
+    "name": "HOME_AwayModeStatus",
+    "description": "Status of the away mode",
+    "type": "enum",
+    "writable": false,
+    "min": 0.0,
+    "max": 2.0,
+    "resolution": 1.0,
+    "values": {
+     "0": "Disabled",
+     "1": "Enabled",
+     "2": "Scheduled"
+    }
+   },
+   "153": {
+    "name": "ROOM1_HeatCoolOnGoing",
+    "description": "Indicates if the temperature in the room is rising in heating mode, of decreasing in cooling mode ",
+    "type": "enum",
+    "writable": true,
+    "min": 0.0,
+    "max": 3.0,
+    "resolution": 1.0,
+    "values": {
+     "0": "No",
+     "1": "HeatUp",
+     "2": "CoolDown"
+    }
+   },
+   "154": {
+    "name": "ROOM1_Name",
+    "description": "Defines the name of the room 1",
+    "type": "string",
+    "writable": true
+   },
+   "157": {
+    "name": "ROOM1_OverrideSetpointActivation",
+    "description": "Enable the override temperature setpoint mode",
+    "type": "bool",
+    "writable": true,
+    "min": 0.0,
+    "max": 1.0
+   },
+   "158": {
+    "name": "ROOM1_OverrideSetpointDuration",
+    "description": "Defines period in minutes for which a setpoint hold is active",
+    "type": "int",
+    "writable": true,
+    "unit": "min",
+    "min": 0.0,
+    "max": 1440.0,
+    "resolution": 1.0
+   },
+   "159": {
+    "name": "ROOM1_OverrideSetpointRemaining ",
+    "description": "Defines the time remaining in minutes for which a setpoint hold is active",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 1440.0,
+    "resolution": 1.0
+   },
+   "160": {
+    "name": "ROOM1_MinHeatSetpointLimit",
+    "description": "Reads and defines the minimum heating temperature setpoint allowed ",
+    "type": "int",
+    "writable": true,
+    "unit": "°C",
+    "min": -273.15,
+    "max": 327.7,
+    "resolution": 0.01
+   },
+   "161": {
+    "name": "ROOM1_MaxHeatSetpointLimit",
+    "description": "Reads and defines the maximum heating temperature setpoint allowed.",
+    "type": "int",
+    "writable": true,
+    "unit": "°C",
+    "min": -273.15,
+    "max": 327.7,
+    "resolution": 0.01
+   },
+   "164": {
+    "name": "HOME_EnergyConsumptionCapabilities",
+    "description": "Defines the consumption available on the system",
+    "type": "enum",
+    "writable": false,
+    "values": {
+     "1": "gaz_heating",
+     "2": "elec_heating",
+     "4": "elec_cooling",
+     "8": "gaz_dwh",
+     "16": "elec_dhw",
+     "32": "fuel_heating",
+     "64": "fuel_dhw"
+    }
+   },
+   "166": {
+    "name": "ROOM1_SystemOperatingModeCapabilities",
+    "description": "Defines the operating mode available in the ROOM 1",
+    "type": "enum",
+    "writable": false,
+    "values": {
+     "1": "Off",
+     "2": "AutoTemp",
+     "4": "AutoSeason",
+     "8": "Cool",
+     "16": "Heat",
+     "32": "Reserved_5",
+     "64": "Reserved_6",
+     "128": "Fan",
+     "256": "Dry"
+    }
+   },
+   "172": {
+    "name": "HOME_AwayHeating",
+    "description": "Defines the heating temperature setpoint in Away mode ",
+    "type": "float",
+    "writable": true,
+    "unit": "°C",
+    "min": -273.2,
+    "max": 327.7,
+    "resolution": 0.01
+   },
+   "179": {
+    "name": "WIFI_LevelRSSI",
+    "description": "RSSI level",
+    "type": "int",
+    "writable": false,
+    "unit": "dB",
+    "min": -128.0,
+    "max": 127.0,
+    "resolution": 1.0
+   },
+   "181": {
+    "name": "ROOM1_ThermostatOperatingMode",
+    "description": "Defines the thermostat running mode. It can only be Off, Cool or Heat",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "0": "Off",
+     "3": "Cool",
+     "4": "Heat"
+    }
+   },
+   "184": {
+    "name": "ROOM1_SystemSetpointMode",
+    "description": "Defines the user Mode in the room 1 : 0: BASIC 1: PROG",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "0": "BASIC",
+     "1": "PROG",
+     "2": "AUTO",
+     "4": "PROG_OFF"
+    }
+   },
+   "188": {
+    "name": "HOME_ServicesCapabilities",
+    "description": "Defines the services available in the HOME.",
+    "type": "enum",
+    "writable": false,
+    "values": {
+     "1": "ThermalAmbient",
+     "2": "DHW",
+     "4": "Ventilation",
+     "8": "Ligthing",
+     "16": "Reserved",
+     "256": "Away"
+    }
+   },
+   "217": {
+    "name": "ROOM_SystemSetpointModeCapabilities",
+    "description": "Defines the user Setpoint mode available in the ROOM",
+    "type": "enum",
+    "writable": false,
+    "values": {
+     "1": "BASIC",
+     "2": "PROG_INT",
+     "4": "OccupancySchedule",
+     "8": "ScheduleAnticipation",
+     "16": "OccupancyReaction",
+     "32": "Auto",
+     "64": "Reserved_6",
+     "128": "Reserved_7",
+     "256": "EnergySavingMode",
+     "512": "Reserved_9",
+     "1024": "Away",
+     "2048": "AwaySchedule"
+    }
+   },
+   "218": {
+    "name": "ConnectivityDiagnosis",
+    "description": "Defines the connectivity of our system",
+    "type": "int",
+    "writable": false
+   },
+   "222": {
+    "name": "HOME_DateAway",
+    "description": "Define the start and the end time of the away mode",
+    "type": "struct",
+    "writable": true
+   },
+   "294": {
+    "name": "ROOM_SetpointDisplayStep",
+    "description": "Display setpoint capacity. The setpoint should be a multiple of this step.",
+    "type": "float",
+    "writable": false,
+    "unit": "°C",
+    "min": 0.01,
+    "max": 3.0
+   },
+   "295": {
+    "name": "ROOM_TransitionDelayStep",
+    "description": "Delay transition step Schedule transition example: { 360 ,  20 ,  1320 ,  19}",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 1440.0
+   },
+   "296": {
+    "name": "ROOM_MinTimeBetweenTransitions",
+    "description": "The minimum time between two transitions Example: 60 minutes",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 1440.0
+   },
+   "306": {
+    "name": "ROOM_MaxDailyTransitions",
+    "description": "Determines how many daily schedule transitions the thermostat is capable of handling",
+    "type": "int",
+    "writable": false,
+    "min": 0.0,
+    "max": 255.0,
+    "resolution": 1.0
+   },
+   "315": {
+    "name": "HOME_TimeOffset",
+    "description": "The Offset attribute indicates the local time zone and eventually the daylight saving time offset,  as a signed offset in seconds from the Time attribute value",
+    "type": "int",
+    "writable": true,
+    "unit": "s",
+    "min": -86400.0,
+    "max": 86400.0,
+    "resolution": 1.0
+   },
+   "358": {
+    "name": "ROOM_ThermalAmbianceRange",
+    "description": "Indicates if the Room is controlled via the Thermal Ambiance range",
+    "type": "bool",
+    "writable": false
+   },
+   "360": {
+    "name": "ROOM_BoostEndTime",
+    "description": "Defines the boost end time",
+    "type": "int",
+    "writable": false,
+    "unit": "s",
+    "min": 0.0,
+    "max": 1.8446744073709552e+19,
+    "resolution": 1.0
+   },
+   "361": {
+    "name": "ROOM_BoostModeDurationStep",
+    "description": "Defines the product Boost mode duration step settable by user",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 120.0,
+    "resolution": 1.0
+   },
+   "362": {
+    "name": "ROOM_BoostModeDurationMin",
+    "description": "Defines the product Boost mode minimum duration settable by user",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 120.0,
+    "resolution": 1.0
+   },
+   "370": {
+    "name": "HubMovableSubproducts",
+    "description": "Return 1 if the Hub is able to move a subproduct (detach)",
+    "type": "bool",
+    "writable": false,
+    "unit": "b",
+    "min": 0.0,
+    "max": 1.0,
+    "resolution": 1.0
+   },
+   "381": {
+    "name": "DEVICE_BLEPairingCompatibility",
+    "description": "Defines if the product is compatible with BLE pairing method",
+    "type": "bool",
+    "writable": false
+   },
+   "100002": {
+    "name": "ROOM_stEstimationsCapabilities",
+    "description": "Defines the estimation available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "TemperatureEstimation",
+     "2": "WindowDetection",
+     "4": "OccupationDetection",
+     "8": "Reserved",
+     "16": "Reserved",
+     "32": "OccupancyScheduleLearning"
+    }
+   },
+   "100004": {
+    "name": "ROOM_stControlsCapabilities",
+    "description": "Defines the controls available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "HygroControl",
+     "2": "TemperatureControl",
+     "4": "EmergencyTemperatureControl",
+     "8": "PowerFullControl",
+     "16": "Boost",
+     "32": "BoostWithoutFan"
+    }
+   },
+   "100013": {
+    "name": "ROOM_stScheduleCapabilities",
+    "description": "Defines the schedule extended available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "Off",
+     "2": "Boost"
+    }
+   },
+   "100021": {
+    "name": "ROOM_stControlsCapabilitiesStatic",
+    "description": "Defines the controls possibly available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "HygroControl",
+     "2": "TemperatureControl",
+     "4": "EmergencyTemperatureControl",
+     "8": "PowerFullControl",
+     "16": "Boost",
+     "32": "BoostWithoutFan"
+    }
+   },
+   "100022": {
+    "name": "ROOM_stSystemOperatingModeCapabilitiesStatic",
+    "description": "Defines the user Operating mode possibly available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "Off",
+     "2": "AutoTemp",
+     "4": "AutoSeason",
+     "8": "Cool",
+     "16": "Heat",
+     "32": "Reserved_5",
+     "64": "Reserved_6",
+     "128": "Fan",
+     "256": "Dry"
+    }
+   },
+   "100023": {
+    "name": "ROOM_stSystemSetpointModeCapabilitiesStatic",
+    "description": "Defines the user Setpoint mode possibly available in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "BASIC",
+     "2": "PROG_INT",
+     "4": "OccupancySchedule",
+     "8": "ScheduleAnticipation",
+     "16": "OccupancyReaction",
+     "32": "Auto",
+     "64": "Reserved_6",
+     "128": "Reserved_7",
+     "256": "EnergySavingMode",
+     "512": "Reserved_9",
+     "1024": "Away",
+     "2048": "AwaySchedule"
+    }
+   },
+   "100024": {
+    "name": "ROOM_stEstimationsCapabilitiesDynamic",
+    "description": "Defines the estimation available dynamically in the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "1": "TemperatureEstimation",
+     "2": "WindowDetection",
+     "4": "OccupationDetection",
+     "8": "Reserved",
+     "16": "Reserved",
+     "32": "OccupancyScheduleLearning"
+    }
+   },
+   "100078": {
+    "name": "DEVICE_bWinkRequest",
+    "description": "Defines a wink request of the device",
+    "type": "bool",
+    "writable": true,
+    "min": 0.0,
+    "max": 1.0,
+    "resolution": 1.0
+   },
+   "100260": {
+    "name": "ROOM_DateAway",
+    "description": "Define the start and the end time of the away of the ROOM",
+    "type": "struct",
+    "writable": true
+   },
+   "100261": {
+    "name": "ROOM_stAwayModeStatus",
+    "description": "Status of the away mode of the ROOM",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "0": "Disabled",
+     "1": "Enabled",
+     "2": "Scheduled"
+    }
+   },
+   "100300": {
+    "name": "ROOM_idxStartOfWeek",
+    "description": "Defines the day of the week that this thermostat considers to be the start of week for weekly set point scheduling",
+    "type": "enum",
+    "writable": true,
+    "values": {
+     "5": "Friday",
+     "6": "Saturday",
+     "0": "Sunday",
+     "1": "Monday",
+     "2": "Tuesday",
+     "3": "Wednesday",
+     "4": "Thursday"
+    }
+   },
+   "100301": {
+    "name": "ROOM_nbMaxWeeklyTransitions",
+    "description": "Determines how many weekly schedule transitions the thermostat is capable of handling.",
+    "type": "int",
+    "writable": true,
+    "min": 0.0,
+    "max": 255.0,
+    "resolution": 1.0
+   },
+   "100320": {
+    "name": "ROOM_HeatScheduleXtdMonday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100321": {
+    "name": "ROOM_HeatScheduleXtdTuesday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100322": {
+    "name": "ROOM_HeatScheduleXtdWednesday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100323": {
+    "name": "ROOM_HeatScheduleXtdThursday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100324": {
+    "name": "ROOM_HeatScheduleXtdFriday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100325": {
+    "name": "ROOM_HeatScheduleXtdSaturday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100326": {
+    "name": "ROOM_HeatScheduleXtdSunday",
+    "description": "Defines the start time and the extended state of the schedule transition during the associated day",
+    "type": "struct",
+    "writable": true
+   },
+   "100450": {
+    "name": "ROOM_bAnticipationScheduleEnable",
+    "description": "End-user anticipation schedule enable",
+    "type": "int",
+    "writable": true,
+    "min": 0.0,
+    "max": 1.0,
+    "resolution": 1.0
+   },
+   "103114": {
+    "name": "ROOM_FanActivationDuringBoost",
+    "description": "Defines if user wants a boost with fan (via direct access, not in schedule)",
+    "type": "bool",
+    "writable": true,
+    "unit": "b",
+    "min": 0.0,
+    "max": 1.0
+   },
+   "103115": {
+    "name": "ROOM_BoostModeDuration",
+    "description": "Defines the Boost mode total duration.",
+    "type": "int",
+    "writable": true,
+    "unit": "min",
+    "min": 0.0,
+    "max": 120.0,
+    "resolution": 1.0
+   },
+   "103116": {
+    "name": "ROOM_BoostModeDurationMax",
+    "description": "Defines the product Boost mode maximum duration settable by user",
+    "type": "int",
+    "writable": false,
+    "unit": "min",
+    "min": 0.0,
+    "max": 120.0,
+    "resolution": 1.0
+   },
+   "103150": {
+    "name": "ROOM_AmbientTemperature_Status",
+    "description": "Defines the temperature information of the thermal zone valid. (case of sensor failure)",
+    "type": "bool",
+    "writable": false,
+    "min": 0.0,
+    "max": 1.0
+   },
+   "104044": {
+    "name": "ROOM_BoostMode",
+    "description": "Defines the Room Boost mode activation status",
+    "type": "bool",
+    "writable": true,
+    "unit": "b",
+    "min": 0.0,
+    "max": 1.0
+   },
+   "104050": {
+    "name": "ROOM_bOwdEnable",
+    "description": "End-user OWD enabling",
+    "type": "int",
+    "writable": true,
+    "min": 0.0,
+    "max": 1.0,
+    "resolution": 1.0
+   },
+   "104051": {
+    "name": "ROOM_bWindowOpened",
+    "description": "ROOM OWD status",
+    "type": "int",
+    "writable": true,
+    "min": 0.0,
+    "max": 1.0,
+    "resolution": 1.0
+   }
+  }
+ },
+ "issues": []
+}
