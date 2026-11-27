@@ -4959,3 +4959,18 @@ had no other row and is gone.
 
 Existing installs see the two numbers go unavailable and two sensors appear,
 off. A V40 control on an app screen would make one of them a setting again.
+
+## Issue #233
+
+### The extended program runs use triplets
+
+On two Wi-Fi Thermor Riva 5 towel rails (model 1560, product 53), writing pairs
+to capability 100320 failed with "execution ended in state 4", even without a
+midnight slot. The Cozytouch app stores `[minute, setpoint, 0]` entries there
+and pads unused slots with `[0, 0, 0]`. With that format, both devices accepted
+the write and `get_schedule` returned the same schedule for all seven days.
+
+`set_schedule` and calendar edits choose the format from the first capability
+of the selected run. The extended heating run (100320) and its cooling
+counterpart (100327) use triplets. The legacy runs (196 and 203) still use
+pairs. The hardware check covered the heating run, not the cooling run.

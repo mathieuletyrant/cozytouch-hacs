@@ -19,7 +19,14 @@ from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, PROGRAM_BLOCKS, WRITABLE_PROGRAM_BLOCKS
 from .hub import CozytouchConfigEntry, CozytouchDeviceEntity, Hub
-from .services import build_matrix, in_charge_at, parse_slots, slot_limit, where_stored
+from .services import (
+    build_matrix,
+    in_charge_at,
+    parse_slots,
+    slot_limit,
+    stores_extended,
+    where_stored,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -301,7 +308,7 @@ class CozytouchProgramCalendar(CozytouchDeviceEntity, CalendarEntity):
         # build_matrix is set_schedule's, checks included : at least one
         # slot, no two at the same time.
         await self.coordinator.set_capability_value(
-            capabilityId, build_matrix(slots)
+            capabilityId, build_matrix(slots, stores_extended(self._first_capability))
         )
         await self.coordinator.async_request_refresh()
 

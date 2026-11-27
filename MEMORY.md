@@ -74,6 +74,7 @@ overturn one, edit the line here in the same pull request.
   `Heating circuit`. `docs/decisions.md`.
 - **Atlantic named eleven hot-water ids once**, on gduteil/cozytouch#129
   (234-288). Check that list before reverse-engineering an id in that range.
+- **Extended programs use triplets** (100320/100327); legacy runs (196/203) keep pairs. `docs/decisions.md`, *Issue #233*.
 
 ## Rejected — do not re-propose
 

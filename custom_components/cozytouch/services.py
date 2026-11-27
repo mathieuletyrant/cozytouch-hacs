@@ -47,6 +47,7 @@ DAY_GROUPS = {
 
 # The device always stores ten slots, unused ones being [0,0].
 MAX_SLOTS = 10
+EXTENDED_PROGRAM_FIRSTS = (100320, 100327)
 
 # The device advertises how many slots a day may hold. Its encoding has never
 # been confirmed against a capture, so it is only ever allowed to tighten the
@@ -171,11 +172,21 @@ def _as_time(value: time | str) -> time:
     return value if isinstance(value, time) else time.fromisoformat(value)
 
 
-def build_matrix(slots: list[dict]) -> str:
+def stores_extended(first: int) -> bool:
+    """Whether a program run stores [minute, setpoint, state] triplets.
+
+    The 100320 and 100327 runs hold the extended state of each transition ; the
+    app writes a triplet there and the device refuses a pair (state 4).
+    """
+    return first in EXTENDED_PROGRAM_FIRSTS
+
+
+def build_matrix(slots: list[dict], extended: bool = False) -> str:
     """Turn slots into the [[minutes,temperature],...] string the device stores.
 
     Public because calendar.py writes programs through it too, so the two
-    cannot disagree about what a day may hold.
+    cannot disagree about what a day may hold. `extended` adds the third,
+    zero element the 100320 runs store per slot.
     """
     entries = sorted(
         (
@@ -198,7 +209,9 @@ def build_matrix(slots: list[dict]) -> str:
         [minute, int(temperature) if temperature == int(temperature) else temperature]
         for minute, temperature in entries
     ]
-    matrix += [[0, 0]] * (MAX_SLOTS - len(matrix))
+    if extended:
+        matrix = [[*entry, 0] for entry in matrix]
+    matrix += [[0, 0, 0] if extended else [0, 0]] * (MAX_SLOTS - len(matrix))
 
     return json.dumps(matrix, separators=(",", ":"))
 
@@ -401,7 +414,6 @@ def async_register_services(hass: HomeAssistant) -> None:
     async def async_set_schedule(call: ServiceCall) -> None:
         """Write the same day program to every requested day."""
         slots = call.data["slots"]
-        value = build_matrix(slots)
         program = call.data["program"]
 
         for entity_id in call.data["entity_id"]:
@@ -415,6 +427,7 @@ def async_register_services(hass: HomeAssistant) -> None:
                     f"{len(slots)} were given"
                 )
 
+            value = build_matrix(slots, stores_extended(first))
             for day in call.data["days"]:
                 capabilityId = first + PROGRAM_DAYS.index(day)
                 _LOGGER.debug(
